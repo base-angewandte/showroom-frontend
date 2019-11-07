@@ -1,12 +1,15 @@
 /* eslint-disable */
 
+require('dotenv').config({ path: './.env' });
+const resolve = require('path').resolve;
+
 export default {
   mode: 'universal',
   /*
   ** Headers of the page
   */
   head: {
-    title: 'Recherche | base Angewandte',
+    title: 'Showroom | base Angewandte',
     meta: [
       { charset: 'utf-8' },
       { lang: 'en' },
@@ -24,11 +27,10 @@ export default {
       {
         rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png',
       },
-      { rel: 'manifest', href: '/manifest.json', color: '#000000' },
       { rel: 'mask-icon', sizes: '180x180', href: '/safari-pinned-tab.svg' },
     ],
     script: [
-      { src: `${process.env.COMPONENT_REPO}/${process.env.HEADER}`, body: true },
+      { src: `${process.env.BASE_HEADER_REPO}/${process.env.HEADER}`, body: true },
     ],
   },
   /*
@@ -39,11 +41,27 @@ export default {
   ** Global CSS
   */
   css: [
+    'normalize.css/normalize.css',
+    '@/styles/main.scss',
   ],
+  styleResources: {
+    scss: [
+      resolve(__dirname, 'styles/variables.scss'),
+      resolve(__dirname, 'styles/fonts.scss')
+    ]
+  },
+  env: {
+    appBaseUrl: process.env.APP_BASE_URL,
+    appPrefix: process.env.APP_PREFIX,
+  },
+  router: {
+    middleware: 'i18n',
+  },
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/i18n.js',
   ],
   /*
   ** Nuxt.js dev-modules
@@ -58,6 +76,7 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/style-resources',
   ],
   /*
   ** Axios module configuration
