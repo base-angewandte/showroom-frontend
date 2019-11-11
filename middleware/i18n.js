@@ -3,7 +3,7 @@
 // TODO: this is currently just copy pasted from nuxtjs.org - adjust to our needs!!
 
 export default function ({
-  isHMR, app, store, route, params, error, redirect, req,
+  isHMR, app, store, route, params, error, redirect,
 }) {
   // If middleware is called from hot module replacement, ignore it
   if (isHMR) return;
@@ -20,8 +20,7 @@ export default function ({
     locale = params.lang;
   // else try to infer from request header or set default to en
   } else {
-    locale = req && req.headers && req.headers['accept-language']
-      ? req.headers['accept-language'].split(',')[0].slice(0, 2) || 'en' : 'en';
+    locale = navigator.language.slice(0, 2) || app.i18n.fallbackLocale;
   }
   // check if the requested locale exists
   if (!store.state.appData.locales.includes(locale)) {

@@ -4,6 +4,11 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 
+require('dotenv').config({ path: './.env' });
+
+const en = require('~/locales/en.json');
+const de = require('~/locales/de.json');
+
 Vue.use(VueI18n);
 
 export default ({ app, store }) => {
@@ -11,21 +16,10 @@ export default ({ app, store }) => {
   // This way we can use it in middleware and pages asyncData/fetch
   app.i18n = new VueI18n({
     locale: store.state.locale,
-    fallbackLocale: 'en',
+    fallbackLocale: process.env.DEFAULT_LOCALE,
     messages: {
-      en: require('~/locales/en.json'),
-      de: require('~/locales/de.json'),
+      en,
+      de,
     },
   });
-
-  app.i18n.path = (link) => {
-    // TODO: check if this at least in theory would have any effect at all
-    console.log('triggered i18n');
-    console.log(link);
-    if (app.i18n.locale === app.i18n.fallbackLocale) {
-      return `/${link}`;
-    }
-
-    return `/${app.i18n.locale}/${link}`;
-  };
 };

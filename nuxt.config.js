@@ -62,6 +62,10 @@ export default {
   */
   plugins: [
     '~/plugins/i18n.js',
+    {
+      src: '~/plugins/localstorage.js',
+      mode: 'client',
+    },
   ],
   /*
   ** Nuxt.js dev-modules
@@ -91,7 +95,10 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    extend(config, ctx) {
+    extend: function (config, {isDev, isClient}) {
+      config.node = {
+        fs: "empty"
+      };
     },
   },
 };
