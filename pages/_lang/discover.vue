@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1 class="title">
-      showroom-frontend
+      {{ $i18n.t('frontend') }}
     </h1>
     <h2 class="subtitle">
       {{ $t('showcase') }}

@@ -33,6 +33,9 @@ export default {
       { src: `${process.env.BASE_HEADER_REPO}/${process.env.HEADER}`, body: true },
     ],
   },
+  router: {
+    middleware: 'i18n'
+  },
   /*
   ** Customize the progress-bar color
   */
@@ -43,6 +46,7 @@ export default {
   css: [
     'normalize.css/normalize.css',
     '@/styles/main.scss',
+    'base-ui-components/dist/lib/base-ui-components.min.css',
   ],
   styleResources: {
     scss: [
@@ -53,9 +57,6 @@ export default {
   env: {
     appBaseUrl: process.env.APP_BASE_URL,
     appPrefix: process.env.APP_PREFIX,
-  },
-  router: {
-    middleware: 'i18n',
   },
   /*
   ** Plugins to load before mounting the App
@@ -92,13 +93,17 @@ export default {
   ** Build configuration
   */
   build: {
+    cache: false,
     /*
     ** You can extend webpack config here
     */
     extend: function (config, {isDev, isClient}) {
+      // for dotenv import error (fs not defined)
       config.node = {
         fs: "empty"
       };
+      // for preventing linter checking npm linked base-ui-components
+      if (isDev) config.resolve.symlinks = false;
     },
   },
 };
