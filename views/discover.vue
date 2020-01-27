@@ -15,7 +15,6 @@
 
 <script>
 import { BasePagination } from 'base-ui-components';
-import 'vue2-datepicker/index.css';
 
 export default {
   components: {
