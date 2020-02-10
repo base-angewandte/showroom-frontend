@@ -28,7 +28,26 @@ const mutations = {
 };
 
 const actions = {
-
+  init({ dispatch }) {
+    dispatch('fetchUser');
+  },
+  async fetchUser({ commit }) {
+    try {
+      const { data } = await this.$axios.get('http://localhost:8200/api/v1/user', {
+        withCredentials: true,
+        xsrfCookieName: 'csrftoken_portfolio',
+        xsrfHeaderName: 'X-CSRFToken',
+      });
+      if (data) {
+        commit('SET_USER', data);
+      }
+    } catch (e) {
+      // check if request failed because user is not authenticated and reset user
+      if (e.response && e.response.status === 403) {
+        commit('SET_USER');
+      }
+    }
+  },
 };
 
 export default {

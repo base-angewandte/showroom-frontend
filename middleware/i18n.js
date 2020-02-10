@@ -1,7 +1,4 @@
 /* eslint-disable consistent-return */
-
-// TODO: this is currently just copy pasted from nuxtjs.org - adjust to our needs!!
-
 export default function ({
   isHMR, app, store, route, params, error, redirect,
 }) {
@@ -24,7 +21,7 @@ export default function ({
   }
   // check if the requested locale exists
   if (!store.state.appData.locales.includes(locale)) {
-    return error({ message: 'This page could not be found.', statusCode: 404 });
+    return error({ message: 'This language could not be found.', statusCode: 404 });
   }
   // Finally set locale
   store.commit('appData/SET_LANG', locale);

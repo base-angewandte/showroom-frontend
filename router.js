@@ -2,7 +2,6 @@
 import Vue from 'vue';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Router from 'vue-router';
-import i18n from './plugins/i18n';
 
 import Discover from '~/views/discover';
 import ObjectView from '~/views/ObjectView';
@@ -14,6 +13,7 @@ Vue.use(Router);
 export function createRouter() {
   return new Router({
     mode: 'history',
+    base: process.env.appPrefix,
     routes: [
       {
         path: '/',
@@ -21,12 +21,6 @@ export function createRouter() {
       },
       {
         path: '/:lang([a-z]{2})',
-        async beforeEnter(to, from, next) {
-          const { lang } = to.params;
-          const path = to.path.replace(/^\/[a-z]{2}/, '');
-          i18n.locale = lang;
-          return next(path);
-        },
         children: [
           {
             path: '',

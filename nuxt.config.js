@@ -34,7 +34,8 @@ export default {
     ],
   },
   router: {
-    middleware: 'i18n'
+    base: process.env.APP_PREFIX || '/',
+    middleware: ['i18n'],
   },
   /*
   ** Customize the progress-bar color
@@ -57,12 +58,20 @@ export default {
   env: {
     appBaseUrl: process.env.APP_BASE_URL,
     appPrefix: process.env.APP_PREFIX,
+    headerJson: process.env.HEADER,
+    headerUrls: {
+      login: process.env.HEADER_URLS_LOGIN,
+      logout: process.env.HEADER_URLS_LOGOUT,
+      terms: process.env.HEADER_URLS_TERMS,
+      siteNotice: process.env.HEADER_URLS_NOTICE,
+    },
   },
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
     '~/plugins/i18n.js',
+    '~/plugins/axios.js',
     {
       src: '~/plugins/localstorage.js',
       mode: 'client',

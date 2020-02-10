@@ -1,32 +1,20 @@
 <template>
   <div class="wrapper">
-    <base-header
+    <component
+      :is="`${headerName}-header`"
       :lang="lang"
-      :active="'recherche'"
+      :active="'portfolio'"
       :profile.prop="profile"
-      :emit-navigation="true"
-      :urls.prop="{
-        de:'/recherche/de/',
-        en:'/recherche/en/',
-        login:'/recherche/login/',
-        logout:'/recherche/logout/'
-      }"
-      @navigate="navigate($event.detail[0])" />
+      :urls.prop="urls" />
     <main class="main-container">
       <nuxt />
     </main>
-    <base-footer
+    <component
+      :is="`${headerName}-footer`"
       :base-url="linkUrl"
       :lang="lang"
-      :logged-in="$store.state.isAuthenticated"
-      :emit-navigation="true"
-      :urls.prop="{
-        de:'/recherche/de/',
-        en:'/recherche/en/',
-        login:'/recherche/login/',
-        logout:'/recherche/logout/'
-      }"
-      @navigate="navigate($event.detail[0])" />
+      :logged-in="authenticated"
+      :urls.prop="urls" />
   </div>
 </template>
 
@@ -42,29 +30,29 @@ export default {
     profile() {
       return this.$store.state.appData.user;
     },
+    authenticated() {
+      return this.$store.state.appData.authenticated;
+    },
+    urls() {
+      return {
+        de: `${process.env.appPrefix}/de${this.$route.path}`,
+        en: `${process.env.appPrefix}/en${this.$route.path}`,
+        ...process.env.headerUrls,
+      };
+    },
+    headerName() {
+      return process.env.headerJson.match(/\/([a-z-]+)-header\.[a-z0-9]+\.js$/)[1];
+    },
   },
   mounted() {
+    // this is for fetchUser currently maincan only be done here because
+    // credentials are not available server side...
+    this.$store.dispatch('appData/init');
     // set html language attribute
-    document.getElementsByTagName('html')[0].setAttribute('lang', this.$store.state.locale);
+    // TODO: check if this influences SEO negatively in a way!
+    document.getElementsByTagName('html')[0].setAttribute('lang', this.lang);
   },
   methods: {
-    navigate(route) {
-      if (route === 'login' || route === 'logout') {
-        window.sessionStorage.setItem('lang', route);
-        // before changing route save filters if they exist
-        if (this.$store.state.filter.searchParams.length > 0) {
-          window.sessionStorage.setItem('mainFilters', JSON.stringify(this.$store.state.filter.searchParams));
-        }
-        if (this.$store.state.filter.itemSearchParams.length > 0) {
-          window.sessionStorage.setItem('itemFilters', JSON.stringify(this.$store.state.filter.itemSearchParams));
-        }
-        // now change route to login / logout page
-        this.$router.push({ path: `/${route}`, query: { returnTo: process.env.baseUrl + this.$route.fullPath, lang: this.$store.state.locale } });
-      } else {
-        const path = this.$route.fullPath;
-        this.$router.push(`/${route}${path}`);
-      }
-    },
   },
 };
 </script>
