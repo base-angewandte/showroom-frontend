@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 const state = () => ({
-  locales: ['de', 'en'],
-  locale: 'en',
+  locales: process.env.locales,
+  locale: '',
   authenticated: false,
   user: null,
 });

@@ -8,18 +8,21 @@ export default ({
   // eslint-disable-next-line consistent-return
   window.onNuxtReady(() => {
     // check if route contains locale
-    const locale = route && route.fullPath ? route.fullPath.split('/')[1] : '';
+    const localeMatch = route.fullPath.match(/^\/([a-z]{2})/);
+    const currentLocale = localeMatch ? localeMatch[1] : '';
+    const availableLocales = store.state.appData.locales;
     // if yes, set the new language and redirect to route without locale
-    if (store.state.appData.locales.some((l) => l === locale)) {
+    if (availableLocales.includes(currentLocale)) {
       const path = route && route.fullPath ? route.fullPath.slice(3) : '/';
-      window.localStorage.setItem('lang', locale);
-      // eslint-disable-next-line no-param-reassign
-      app.i18n.locale = store.state.appData.locale;
+      window.localStorage.setItem('lang', currentLocale);
       return redirect(path);
-    // if not, set the lang to what is stored in session storage
     }
-    store.commit('appData/SET_LANG', window.localStorage.getItem('lang'));
+    // if not, set the lang to what is stored in session storage or
+    // browser default or application default
+    const defaultLocale = window.localStorage.getItem('lang')
+      || navigator.language.slice(0, 2) || process.env.defaultLocale;
+    store.commit('appData/SET_LANG', defaultLocale);
     // eslint-disable-next-line no-param-reassign
-    app.i18n.locale = store.state.appData.locale;
+    app.i18n.locale = defaultLocale;
   });
 };

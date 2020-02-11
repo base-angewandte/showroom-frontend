@@ -65,6 +65,8 @@ export default {
       terms: process.env.HEADER_URLS_TERMS,
       siteNotice: process.env.HEADER_URLS_NOTICE,
     },
+    locales: JSON.parse(process.env.LOCALES),
+    defaultLocale: process.env.DEFAULT_LOCALE,
   },
   /*
   ** Plugins to load before mounting the App
