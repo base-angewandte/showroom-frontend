@@ -68,7 +68,7 @@ export default {
     min-height: 100vh;
 
     .main-container {
-      margin-top: $header-height;
+      padding-top: $header-height;
     }
   }
 
