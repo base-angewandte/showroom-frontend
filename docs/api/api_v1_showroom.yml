@@ -79,50 +79,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Search'
 
-  /search/{id}:
-    get:
-      description: 'Returns all possible results of a specific entity/persons.'
-      parameters:
-        - name: id
-          description: 'Id of entity.'
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: filter_values
-          in: query
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  oneOf:
-                    - $ref: '#/components/schemas/FilterType'
-                    - $ref: '#/components/schemas/FilterTypeOptions'
-        - name: collection
-          description: 'What exactly does the backend need for search results;'
-          in: query
-          schema:
-            type: string
-        - name: limit
-          description: 'Number of results to return per page.'
-          in: query
-          schema:
-            type: integer
-            default: 5
-        - name: offset
-          description: 'The initial index from which to return the results.'
-          in: query
-          schema:
-            type: integer
-      responses:
-        200:
-          description: 'Returns an array of search results'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Search'
-
   /activity/{id}:
     get:
       description: 'Returns a single activity object.'
@@ -190,6 +146,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommonList'
+
+  /entity/{id}/search:
+    get:
+      description: 'Returns all possible results of a specific entity, e.g. person.'
+      parameters:
+        - name: id
+          description: 'Id of entity.'
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: filter_values
+          in: query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/FilterType'
+                    - $ref: '#/components/schemas/FilterTypeOptions'
+        - name: collection
+          description: 'What exactly does the backend need for search results;'
+          in: query
+          schema:
+            type: string
+        - name: limit
+          description: 'Number of results to return per page.'
+          in: query
+          schema:
+            type: integer
+            default: 5
+        - name: offset
+          description: 'The initial index from which to return the results.'
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'Returns an array of search results'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Search'
 
   /collection/{id}:
     get:
