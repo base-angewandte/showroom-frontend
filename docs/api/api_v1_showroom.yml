@@ -4,12 +4,12 @@ info:
   description: 'Showroom API'
   version: 1.0.0
 paths:
-  /autocomplete:
+  /autocomplete/{searchstr}:
     get:
       description: 'Exact string search matching titles (also subtitles?)'
       parameters:
-        - name: queryString
-          in: query
+        - name: searchstr
+          in: path
           schema:
             type: string
             minLength: 3
@@ -78,13 +78,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Search'
 
-  /search/:id:
+  /search/{id}:
     get:
       description: 'Returns all possible results of a specific entity/persons.'
       parameters:
         - name: id
           description: 'Id of entity.'
-          in: query
+          in: path
           required: true
           schema:
             type: string
@@ -122,12 +122,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Search'
 
-  /activity/:id:
+  /activity/{id}:
     get:
       description: 'Returns a single activity object.'
       parameters:
         - name: id
-          in: query
+          in: path
           required: true
           schema:
             type: string
@@ -139,12 +139,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Activity'
 
-  /activity/:id/media:
+  /activity/{id}/media:
     get:
       description: 'Returns an array of media objects related to an specific activity.'
       parameters:
         - name: id
-          in: query
+          in: path
           required: true
           schema:
             type: string
@@ -156,12 +156,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Media'
 
-  /entity/:id:
+  /entity/{id}:
     get:
       description: 'Returns a single entity object.'
       parameters:
         - name: id
-          in: query
+          in: path
           required: true
           schema:
             type: string
@@ -173,12 +173,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Entity'
 
-  /entity/:id/activities:
+  /entity/{id}/activities:
     get:
       description: 'Returns array of activities related to an specific entity.'
       parameters:
         - name: id
-          in: query
+          in: path
           required: true
           schema:
             type: string
@@ -190,12 +190,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommonList'
 
-  /collection/:id:
+  /collection/{id}:
     get:
       description: 'Returns a single collection object.'
       parameters:
         - name: id
-          in: query
+          in: path
           required: true
           schema:
             type: string
