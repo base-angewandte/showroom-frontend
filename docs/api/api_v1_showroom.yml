@@ -1,0 +1,654 @@
+openapi: 3.0.0
+info:
+  title: 'Showroom API'
+  description: 'Showroom API'
+  version: 1.0.0
+paths:
+  /autocomplete:
+    get:
+      description: 'Exact string search matching titles (also subtitles?)'
+      parameters:
+        - name: queryString
+          in: query
+          schema:
+            type: string
+            minLength: 3
+        - name: filterName
+          description: 'Do we need that for backend.'
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'Returns an array of search results.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/autocomplete'
+
+  /filter:
+    get:
+      description: 'Returns all possible filters for the search.'
+      responses:
+        200:
+          description: 'Returns all possible filters for the search.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/filter'
+  /search:
+    get:
+      description: 'Returns all possible results.'
+      parameters:
+        - name: filterValues
+          in: query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/filterType'
+                    - $ref: '#/components/schemas/filterTypeOptions'
+        - name: collection
+          description: 'To be discussed with BE. what exactly does the backend need for search results;'
+          in: query
+          schema:
+            type: string
+        - name: limit
+          description: 'Number of results to return per page.'
+          in: query
+          schema:
+            type: integer
+            default: 5
+        - name: offset
+          description: 'The initial index from which to return the results.'
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'Returns an array of search results.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search'
+
+  /search/:id:
+    get:
+      description: 'Returns all possible results of a specific entity/persons.'
+      parameters:
+        - name: id
+          description: 'Id of entity.'
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: filterValues
+          in: query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/filterType'
+                    - $ref: '#/components/schemas/filterTypeOptions'
+        - name: collection
+          description: 'What exactly does the backend need for search results;'
+          in: query
+          schema:
+            type: string
+        - name: limit
+          description: 'Number of results to return per page.'
+          in: query
+          schema:
+            type: integer
+            default: 5
+        - name: offset
+          description: 'The initial index from which to return the results.'
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'Returns an array of search results'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search'
+
+  /activity/:id:
+    get:
+      description: 'Returns a single activity object.'
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Returns a single activity object.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/activity'
+
+  /activity/:id/media:
+    get:
+      description: 'Returns an array of media objects related to an specific activity.'
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Returns an array of media objects related to an specific activity.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/media'
+
+  /entity/:id:
+    get:
+      description: 'Returns a single entity object.'
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Returns a single entity object.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity'
+
+  /entity/:id/activities:
+    get:
+      description: 'Returns array of activities related to an specific entity.'
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Returns array of activities related to an specific entity.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commonList'
+
+  /collection/:id:
+    get:
+      description: 'Returns a single collection object.'
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Returns a single collection object.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/collection'
+
+components:
+  schemas:
+    #
+    # Autocomplete
+    #
+    autocompleteItem:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        subtext:
+          type: array
+          items:
+            type: string
+        source:
+          type: string
+
+    autocomplete:
+      type: array
+      items:
+        $ref: '#/components/schemas/autocompleteItem'
+
+    #
+    # Activity
+    #
+    activity:
+      type: object
+      properties:
+        id:
+          type: string
+        dateChanged:
+          type: string
+          format: date-time
+        dateCreated:
+          type: string
+          format: date-time
+        entries:
+          type: object
+          properties:
+            media:
+              type: array
+              items:
+                type: string
+              description: 'List of ids of linked media objects.'
+            linked:
+              type: object
+              properties:
+                parent:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/searchItem'
+                children:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/searchItem'
+        list:
+          type: array
+          description: 'Should that be a separated route like jartApi?'
+          items:
+            $ref: '#/components/schemas/commonList'
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/commonLocation'
+        media:
+          type: object
+        primaryDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/commonText'
+        title:
+          type: string
+          items:
+            type: string
+        secondaryDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/commonText'
+        sourceInstitution:
+          $ref: '#/components/schemas/commonSourceInstitution'
+        subtext:
+          type: array
+          items:
+            type: string
+        type:
+          type: string
+
+    #
+    # Entity
+    #
+    entity:
+      type: object
+      properties:
+        id:
+          type: string
+        dateChanged:
+          type: string
+          format: date-time
+        dateCreated:
+          type: string
+          format: date-time
+        expertise:
+          type: array
+          items:
+            type: string
+        list:
+          type: array
+          items:
+            $ref: '#/components/schemas/commonList'
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/commonLocation'
+        media:
+          type: object
+          description: 'Same as portfolio'
+        primaryDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/commonText'
+        secondaryDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/commonText'
+        showcase:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/entityShowcaseTypeCollection'
+              - $ref: '#/components/schemas/entityShowcaseTypeActivity'
+        sourceInstitution:
+          $ref: '#/components/schemas/commonSourceInstitution'
+        subtext:
+          type: array
+          items:
+            type: string
+        title:
+          type: string
+        type:
+          type: string
+          enum:
+            - person
+            - institution
+            - department
+          description: 'in future version should be configurable with cms - see issue #1121'
+
+    # entityShowcase
+    entityShowcaseTypeActivity:
+      type: object
+      properties:
+        id:
+          type: string
+        additional:
+          type: string
+        media:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/entityShowcaseMedia'
+        showCaseType:
+          type: string
+          enum:
+            - activity
+        subtext:
+          type: array
+          items:
+            type: string
+        title:
+          type: string
+        type:
+          type: string
+
+    entityShowcaseTypeCollection:
+      type: object
+      properties:
+        id:
+          type: string
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/entityShowcaseMedia'
+        showCaseType:
+          type: string
+          enum:
+            - collection
+        title:
+          type: string
+        subtext:
+          type: array
+          items:
+            type: string
+        total:
+          type: number
+
+    entityShowcaseMedia:
+      type: array
+      items:
+        type: object
+        minLength: 1
+        maxLength: 4
+      example:
+        - 455w: string
+        - 654w: string
+
+    #
+    # Collection
+    #
+    collection:
+      type: object
+      properties:
+        id:
+          type: string
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/searchItem'
+        title:
+          type: string
+        subtext:
+          type: string
+        secondaryDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/commonText'
+        owner:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              source:
+                type: string
+
+    #
+    # Media
+    #
+    media:
+      type: array
+      items:
+        type: object
+        description: 'Same as for portfolio.'
+
+    #
+    # Search
+    #
+    searchItem:
+      type: object
+      properties:
+        id:
+          type: string
+        alterntiveText:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              value:
+                type: string
+        mediaUrl:
+          type: string
+        source:
+          type: string
+          format: uri
+        sourceInstitution:
+          $ref: '#/components/schemas/commonSourceInstitution'
+        score:
+          type: number
+        title:
+          type: string
+        type:
+          type: string
+
+    searchCollection:
+      type: object
+      properties:
+        collection:
+          type: string
+        total:
+          description: 'total number of all activities in that collection'
+          type: number
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/searchItem'
+
+    search:
+      type: array
+      items:
+        $ref: '#/components/schemas/searchCollection'
+
+    #
+    # Filter
+    #
+    filter:
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/filterType'
+          - $ref: '#/components/schemas/filterTypeOptions'
+
+    filterType:
+      type: object
+      required:
+        - label
+        - type
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          enum:
+            - text
+            - date
+            - daterange
+
+    filterTypeOptions:
+      type: object
+      required:
+        - label
+        - type
+        - options
+      properties:
+        label:
+          type: string
+        type:
+          type: string
+          enum:
+            - chips
+        options:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              label:
+                type: string
+
+    #
+    # Common
+    #
+
+    # List
+    commonList:
+      type: object
+      properties:
+        label:
+          type: string
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/commonList'
+              - $ref: '#/components/schemas/commonListItem'
+      example:
+        label: string
+        data:
+          - attributes:
+              - string
+            value: string
+            source: string
+          - label: string
+            data:
+              - attributes:
+                  - string
+                value: string
+                source: string
+
+    commonListItem:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            type: string
+        value:
+          type: string
+        source:
+          type: string
+
+    ## Location
+    commonLocation:
+      type: object
+      properties:
+        latLong:
+          type: array
+          items:
+            type: string
+        address:
+          type: array
+          items:
+            type: string
+
+    ## TextList
+    commonText:
+      type: object
+      properties:
+        label:
+          type: string
+        data:
+          type: string
+          anyOf:
+            - $ref: '#/components/schemas/commonTextString'
+            - $ref: '#/components/schemas/commonTextArray'
+            - $ref: '#/components/schemas/commonTextObject'
+
+    commonTextString:
+      type: string
+
+    commonTextArray:
+      type: array
+      items:
+        type: string
+
+    commonTextObject:
+      type: object
+      required:
+        - label
+        - value
+      properties:
+        label:
+          type: string
+        value:
+          type: string
+        url:
+          type: string
+          format: uri
+        source:
+          type: string
+
+    ## SourceInstitution
+    commonSourceInstitution:
+      type: object
+      properties:
+        label:
+          type: string
+        url:
+          type: string
+          format: uri
+        icon:
+          type: string
+          format: uri
