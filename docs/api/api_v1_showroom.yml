@@ -13,7 +13,7 @@ paths:
           schema:
             type: string
             minLength: 3
-        - name: filterName
+        - name: filter_name
           description: 'Do we need that for backend.'
           in: query
           schema:
@@ -44,7 +44,7 @@ paths:
     get:
       description: 'Returns all possible results.'
       parameters:
-        - name: filterValues
+        - name: filter_values
           in: query
           content:
             application/json:
@@ -88,7 +88,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: filterValues
+        - name: filter_values
           in: query
           content:
             application/json:
