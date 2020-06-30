@@ -28,7 +28,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/autocomplete'
+                $ref: '#/components/schemas/Autocomplete'
 
   /filter:
     get:
@@ -39,7 +39,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/filter'
+                $ref: '#/components/schemas/Filter'
   /search:
     get:
       description: 'Returns all possible results.'
@@ -52,8 +52,8 @@ paths:
                 type: array
                 items:
                   oneOf:
-                    - $ref: '#/components/schemas/filterType'
-                    - $ref: '#/components/schemas/filterTypeOptions'
+                    - $ref: '#/components/schemas/FilterType'
+                    - $ref: '#/components/schemas/FilterTypeOptions'
         - name: collection
           description: 'To be discussed with BE. what exactly does the backend need for search results;'
           in: query
@@ -76,7 +76,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/search'
+                $ref: '#/components/schemas/Search'
 
   /search/:id:
     get:
@@ -96,8 +96,8 @@ paths:
                 type: array
                 items:
                   oneOf:
-                    - $ref: '#/components/schemas/filterType'
-                    - $ref: '#/components/schemas/filterTypeOptions'
+                    - $ref: '#/components/schemas/FilterType'
+                    - $ref: '#/components/schemas/FilterTypeOptions'
         - name: collection
           description: 'What exactly does the backend need for search results;'
           in: query
@@ -120,7 +120,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/search'
+                $ref: '#/components/schemas/Search'
 
   /activity/:id:
     get:
@@ -137,7 +137,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/activity'
+                $ref: '#/components/schemas/Activity'
 
   /activity/:id/media:
     get:
@@ -154,7 +154,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/media'
+                $ref: '#/components/schemas/Media'
 
   /entity/:id:
     get:
@@ -171,7 +171,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/entity'
+                $ref: '#/components/schemas/Entity'
 
   /entity/:id/activities:
     get:
@@ -188,7 +188,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/commonList'
+                $ref: '#/components/schemas/CommonList'
 
   /collection/:id:
     get:
@@ -205,14 +205,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/collection'
+                $ref: '#/components/schemas/Collection'
 
 components:
   schemas:
     #
     # Autocomplete
     #
-    autocompleteItem:
+    AutocompleteItem:
       type: object
       properties:
         id:
@@ -226,23 +226,23 @@ components:
         source:
           type: string
 
-    autocomplete:
+    Autocomplete:
       type: array
       items:
-        $ref: '#/components/schemas/autocompleteItem'
+        $ref: '#/components/schemas/AutocompleteItem'
 
     #
     # Activity
     #
-    activity:
+    Activity:
       type: object
       properties:
         id:
           type: string
-        dateChanged:
+        date_changed:
           type: string
           format: date-time
-        dateCreated:
+        date_created:
           type: string
           format: date-time
         entries:
@@ -259,38 +259,38 @@ components:
                 parent:
                   type: array
                   items:
-                    $ref: '#/components/schemas/searchItem'
+                    $ref: '#/components/schemas/SearchItem'
                 children:
                   type: array
                   items:
-                    $ref: '#/components/schemas/searchItem'
+                    $ref: '#/components/schemas/SearchItem'
         list:
           type: array
           description: 'Should that be a separated route like jartApi?'
           items:
-            $ref: '#/components/schemas/commonList'
+            $ref: '#/components/schemas/CommonList'
         locations:
           type: array
           items:
-            $ref: '#/components/schemas/commonLocation'
+            $ref: '#/components/schemas/CommonLocation'
         media:
           type: object
-        primaryDetails:
+        primary_details:
           type: array
           items:
-            $ref: '#/components/schemas/commonText'
-        title:
-          type: string
-          items:
-            type: string
-        secondaryDetails:
+            $ref: '#/components/schemas/CommonText'
+        secondary_details:
           type: array
           items:
-            $ref: '#/components/schemas/commonText'
-        sourceInstitution:
-          $ref: '#/components/schemas/commonSourceInstitution'
+            $ref: '#/components/schemas/CommonText'
+        source_institution:
+          $ref: '#/components/schemas/CommonSourceInstitution'
         subtext:
           type: array
+          items:
+            type: string
+        title:
+          type: string
           items:
             type: string
         type:
@@ -299,15 +299,15 @@ components:
     #
     # Entity
     #
-    entity:
+    Entity:
       type: object
       properties:
         id:
           type: string
-        dateChanged:
+        date_changed:
           type: string
           format: date-time
-        dateCreated:
+        date_created:
           type: string
           format: date-time
         expertise:
@@ -317,30 +317,30 @@ components:
         list:
           type: array
           items:
-            $ref: '#/components/schemas/commonList'
+            $ref: '#/components/schemas/CommonList'
         locations:
           type: array
           items:
-            $ref: '#/components/schemas/commonLocation'
+            $ref: '#/components/schemas/CommonLocation'
         media:
           type: object
           description: 'Same as portfolio'
-        primaryDetails:
+        primary_details:
           type: array
           items:
-            $ref: '#/components/schemas/commonText'
-        secondaryDetails:
+            $ref: '#/components/schemas/CommonText'
+        secondary_details:
           type: array
           items:
-            $ref: '#/components/schemas/commonText'
+            $ref: '#/components/schemas/CommonText'
         showcase:
           type: array
           items:
             oneOf:
-              - $ref: '#/components/schemas/entityShowcaseTypeCollection'
-              - $ref: '#/components/schemas/entityShowcaseTypeActivity'
-        sourceInstitution:
-          $ref: '#/components/schemas/commonSourceInstitution'
+              - $ref: '#/components/schemas/EntityShowcaseTypeCollection'
+              - $ref: '#/components/schemas/EntityShowcaseTypeActivity'
+        source_institution:
+          $ref: '#/components/schemas/CommonSourceInstitution'
         subtext:
           type: array
           items:
@@ -356,7 +356,7 @@ components:
           description: 'in future version should be configurable with cms - see issue #1121'
 
     # entityShowcase
-    entityShowcaseTypeActivity:
+    EntityShowcaseTypeActivity:
       type: object
       properties:
         id:
@@ -366,8 +366,8 @@ components:
         media:
           type: object
           allOf:
-            - $ref: '#/components/schemas/entityShowcaseMedia'
-        showCaseType:
+            - $ref: '#/components/schemas/EntityShowcaseMedia'
+        showcase_type:
           type: string
           enum:
             - activity
@@ -380,7 +380,7 @@ components:
         type:
           type: string
 
-    entityShowcaseTypeCollection:
+    EntityShowcaseTypeCollection:
       type: object
       properties:
         id:
@@ -388,8 +388,8 @@ components:
         media:
           type: array
           items:
-            $ref: '#/components/schemas/entityShowcaseMedia'
-        showCaseType:
+            $ref: '#/components/schemas/EntityShowcaseMedia'
+        showcase_type:
           type: string
           enum:
             - collection
@@ -402,7 +402,7 @@ components:
         total:
           type: number
 
-    entityShowcaseMedia:
+    EntityShowcaseMedia:
       type: array
       items:
         type: object
@@ -415,7 +415,7 @@ components:
     #
     # Collection
     #
-    collection:
+    Collection:
       type: object
       properties:
         id:
@@ -423,15 +423,15 @@ components:
         activities:
           type: array
           items:
-            $ref: '#/components/schemas/searchItem'
+            $ref: '#/components/schemas/SearchItem'
         title:
           type: string
         subtext:
           type: string
-        secondaryDetails:
+        secondary_details:
           type: array
           items:
-            $ref: '#/components/schemas/commonText'
+            $ref: '#/components/schemas/CommonText'
         owner:
           type: array
           items:
@@ -445,7 +445,7 @@ components:
     #
     # Media
     #
-    media:
+    Media:
       type: array
       items:
         type: object
@@ -454,12 +454,12 @@ components:
     #
     # Search
     #
-    searchItem:
+    SearchItem:
       type: object
       properties:
         id:
           type: string
-        alterntiveText:
+        alterntive_text:
           type: array
           items:
             type: object
@@ -473,8 +473,8 @@ components:
         source:
           type: string
           format: uri
-        sourceInstitution:
-          $ref: '#/components/schemas/commonSourceInstitution'
+        source_institution:
+          $ref: '#/components/schemas/CommonSourceInstitution'
         score:
           type: number
         title:
@@ -482,7 +482,7 @@ components:
         type:
           type: string
 
-    searchCollection:
+    SearchCollection:
       type: object
       properties:
         collection:
@@ -493,24 +493,24 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/searchItem'
+            $ref: '#/components/schemas/SearchItem'
 
-    search:
+    Search:
       type: array
       items:
-        $ref: '#/components/schemas/searchCollection'
+        $ref: '#/components/schemas/SearchCollection'
 
     #
     # Filter
     #
-    filter:
+    Filter:
       type: array
       items:
         oneOf:
-          - $ref: '#/components/schemas/filterType'
-          - $ref: '#/components/schemas/filterTypeOptions'
+          - $ref: '#/components/schemas/FilterType'
+          - $ref: '#/components/schemas/FilterTypeOptions'
 
-    filterType:
+    FilterType:
       type: object
       required:
         - label
@@ -525,7 +525,7 @@ components:
             - date
             - daterange
 
-    filterTypeOptions:
+    FilterTypeOptions:
       type: object
       required:
         - label
@@ -553,7 +553,7 @@ components:
     #
 
     # List
-    commonList:
+    CommonList:
       type: object
       properties:
         label:
@@ -562,8 +562,8 @@ components:
           type: array
           items:
             oneOf:
-              - $ref: '#/components/schemas/commonList'
-              - $ref: '#/components/schemas/commonListItem'
+              - $ref: '#/components/schemas/CommonList'
+              - $ref: '#/components/schemas/CommonListItem'
       example:
         label: string
         data:
@@ -578,7 +578,7 @@ components:
                 value: string
                 source: string
 
-    commonListItem:
+    CommonListItem:
       type: object
       properties:
         attributes:
@@ -591,10 +591,10 @@ components:
           type: string
 
     ## Location
-    commonLocation:
+    CommonLocation:
       type: object
       properties:
-        latLong:
+        lat_long:
           type: array
           items:
             type: string
@@ -604,7 +604,7 @@ components:
             type: string
 
     ## TextList
-    commonText:
+    CommonText:
       type: object
       properties:
         label:
@@ -612,19 +612,19 @@ components:
         data:
           type: string
           anyOf:
-            - $ref: '#/components/schemas/commonTextString'
-            - $ref: '#/components/schemas/commonTextArray'
-            - $ref: '#/components/schemas/commonTextObject'
+            - $ref: '#/components/schemas/CommonTextString'
+            - $ref: '#/components/schemas/CommonTextArray'
+            - $ref: '#/components/schemas/CommonTextObject'
 
-    commonTextString:
+    CommonTextString:
       type: string
 
-    commonTextArray:
+    CommonTextArray:
       type: array
       items:
         type: string
 
-    commonTextObject:
+    CommonTextObject:
       type: object
       required:
         - label
@@ -641,7 +641,7 @@ components:
           type: string
 
     ## SourceInstitution
-    commonSourceInstitution:
+    CommonSourceInstitution:
       type: object
       properties:
         label:
