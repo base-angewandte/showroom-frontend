@@ -4,12 +4,13 @@ info:
   description: 'Showroom API'
   version: 1.0.0
 paths:
-  /autocomplete/{searchstr}:
+  /autocomplete:
     get:
-      description: 'Exact string search matching titles (also subtitles?)'
+      description: 'Exact string search matching titles (also subtext?)'
       parameters:
-        - name: searchstr
-          in: path
+        - name: q
+          description: 'Search query string.'
+          in: query
           schema:
             type: string
             minLength: 3
