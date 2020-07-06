@@ -95,6 +95,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Activity'
+        404:
+          description: "Activity not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /activity/{id}/media:
     get:
@@ -112,6 +118,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Media'
+        404:
+          description: "Activity/Media not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /entity/{id}:
     get:
@@ -129,6 +141,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Entity'
+        404:
+          description: "Entity not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /entity/{id}/activities:
     get:
@@ -146,6 +164,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommonList'
+        404:
+          description: "Entity/Activities not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /entity/{id}/search:
     get:
@@ -190,6 +214,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Search'
+        404:
+          description: "Entity not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /collection/{id}:
     get:
@@ -207,6 +237,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Collection'
+        404:
+          description: "Collection not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
@@ -653,3 +689,15 @@ components:
         icon:
           type: string
           format: uri
+
+    ## Error
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
