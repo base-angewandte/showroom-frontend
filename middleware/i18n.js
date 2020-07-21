@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-export default function ({
+export default function request({
   isHMR, app, store, route, params, error, redirect,
 }) {
   // If middleware is called from hot module replacement, ignore it
