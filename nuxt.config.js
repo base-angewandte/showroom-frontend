@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 require('dotenv').config({ path: './.env' });
 const resolve = require('path').resolve;
 
@@ -47,7 +46,6 @@ export default {
   css: [
     'normalize.css/normalize.css',
     '@/styles/main.scss',
-    'base-ui-components/dist/lib/base-ui-components.min.css',
   ],
   styleResources: {
     scss: [
@@ -106,6 +104,7 @@ export default {
   */
   build: {
     cache: false,
+    extractCss: false,
     /*
     ** You can extend webpack config here
     */
