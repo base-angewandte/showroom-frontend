@@ -8,6 +8,11 @@ paths:
     get:
       description: 'Exact string search matching titles (also subtext?)'
       parameters:
+        - name: collection
+          description: 'To be discussed with BE. what exactly does the backend need for search results;'
+          in: query
+          schema:
+            type: string
         - name: q
           description: 'Search query string.'
           in: query
