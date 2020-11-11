@@ -600,6 +600,8 @@ components:
       properties:
         label:
           type: string
+        hidden:
+          type: boolean
         data:
           type: array
           items:
@@ -608,17 +610,18 @@ components:
               - $ref: '#/components/schemas/CommonListItem'
       example:
         label: string
+        hidden: boolean
         data:
           - attributes:
               - string
             value: string
-            source: string
+            id: string
           - label: string
             data:
               - attributes:
                   - string
                 value: string
-                source: string
+                id: string
 
     CommonListItem:
       type: object
@@ -629,7 +632,7 @@ components:
             type: string
         value:
           type: string
-        source:
+        id:
           type: string
 
     ## Location
