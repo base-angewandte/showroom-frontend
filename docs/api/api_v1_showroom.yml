@@ -6,13 +6,8 @@ info:
 paths:
   /autocomplete:
     get:
-      description: 'Exact string search matching titles (also subtext?)'
+      description: 'Exact string search matching titles (also subtitle?)'
       parameters:
-        - name: collection
-          description: 'To be discussed with BE. what exactly does the backend need for search results;'
-          in: query
-          schema:
-            type: string
         - name: q
           description: 'Search query string.'
           in: query
@@ -20,7 +15,7 @@ paths:
             type: string
             minLength: 3
         - name: filter_name
-          description: 'Do we need that for backend.'
+          description: 'result category to return'
           in: query
           schema:
             type: string
@@ -50,21 +45,13 @@ paths:
     get:
       description: 'Returns all possible results.'
       parameters:
-        - name: filter_values
-          in: query
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  oneOf:
-                    - $ref: '#/components/schemas/FilterType'
-                    - $ref: '#/components/schemas/FilterTypeOptions'
-        - name: collection
-          description: 'To be discussed with BE. what exactly does the backend need for search results;'
+        - name: filter
+          description: 'array of objects with all filters applied'
           in: query
           schema:
-            type: string
+            type: array
+            items:
+              $ref: '#/components/schemas/CommonSearchFilter'
         - name: limit
           description: 'Number of results to return per page.'
           in: query
@@ -72,7 +59,7 @@ paths:
             type: integer
             default: 5
         - name: offset
-          description: 'The initial index from which to return the results.'
+          description: 'The initial index to return the results.'
           in: query
           schema:
             type: integer
@@ -84,7 +71,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Search'
 
-  /activity/{id}:
+  /activities/{id}:
     get:
       description: 'Returns a single activity object.'
       parameters:
@@ -107,7 +94,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /activity/{id}/media:
+  /activities/{id}/media:
     get:
       description: 'Returns an array of media objects related to an specific activity.'
       parameters:
@@ -130,7 +117,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /entity/{id}:
+  /entities/{id}:
     get:
       description: 'Returns a single entity object.'
       parameters:
@@ -153,7 +140,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /entity/{id}/activities:
+  /entities/{id}/activities:
     get:
       description: 'Returns array of activities related to an specific entity.'
       parameters:
@@ -176,31 +163,22 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /entity/{id}/search:
+  /entities/{id}/search:
     get:
       description: 'Returns all possible results of a specific entity, e.g. person.'
       parameters:
         - name: id
-          description: 'Id of entity.'
           in: path
           required: true
           schema:
             type: string
-        - name: filter_values
-          in: query
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  oneOf:
-                    - $ref: '#/components/schemas/FilterType'
-                    - $ref: '#/components/schemas/FilterTypeOptions'
-        - name: collection
-          description: 'What exactly does the backend need for search results;'
+        - name: filter
+          description: 'array of objects with all filters applied'
           in: query
           schema:
-            type: string
+            type: array
+            items:
+              $ref: '#/components/schemas/CommonSearchFilter'
         - name: limit
           description: 'Number of results to return per page.'
           in: query
@@ -226,7 +204,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /collection/{id}:
+  /collections/{id}:
     get:
       description: 'Returns a single collection object.'
       parameters:
@@ -294,7 +272,7 @@ components:
               type: array
               items:
                 type: string
-              description: 'List of ids of linked media objects.'
+              description: 'List of linked media objects.'
             linked:
               type: object
               properties:
@@ -308,7 +286,6 @@ components:
                     $ref: '#/components/schemas/SearchItem'
         list:
           type: array
-          description: 'Should that be a separated route like jartApi?'
           items:
             $ref: '#/components/schemas/CommonList'
         locations:
@@ -366,7 +343,13 @@ components:
             $ref: '#/components/schemas/CommonLocation'
         media:
           type: object
-          description: 'Same as portfolio'
+          description: 'used as cover media'
+          oneOf:
+            - $ref: '#/components/schemas/MediaAudio'
+            - $ref: '#/components/schemas/MediaImage'
+            - $ref: '#/components/schemas/MediaVideo'
+            - $ref: '#/components/schemas/MediaDocument'
+            - $ref: '#/components/schemas/MediaUndefined'
         primary_details:
           type: array
           items:
@@ -491,7 +474,143 @@ components:
       type: array
       items:
         type: object
-        description: 'Same as for portfolio.'
+        anyOf:
+          - $ref: '#/components/schemas/MediaAudio'
+          - $ref: '#/components/schemas/MediaDocument'
+          - $ref: '#/components/schemas/MediaImage'
+          - $ref: '#/components/schemas/MediaUndefined'
+          - $ref: '#/components/schemas/MediaVideo'
+
+    MediaImage:
+      type: object
+      properties:
+        id:
+          type: string
+        alternative:
+          $ref: '#/components/schemas/MediaAlternative'
+        licence:
+          $ref: '#/components/schemas/MediaLicence'
+        original:
+          type: string
+          description: 'path to file'
+        previews:
+          description: 'return all generated size/sources'
+          type: array
+          items:
+            type: object
+        type:
+          type: string
+          enum:
+            - i
+
+    MediaAudio:
+      type: object
+      properties:
+        id:
+          type: string
+        alternative:
+          $ref: '#/components/schemas/MediaAlternative'
+        licence:
+          $ref: '#/components/schemas/MediaLicence'
+        mp3:
+          type: string
+          description: 'listen.mp3'
+        original:
+          type: string
+          description: 'path to file'
+        type:
+          type: string
+          enum:
+            - a
+
+    MediaVideo:
+      type: object
+      properties:
+        id:
+          type: string
+        cover:
+          type: object
+          properties:
+            gif:
+              type: string
+            jpg:
+              type: string
+        playlist:
+          type: string
+          description: 'path to playlist.m3u8'
+        original:
+          type: string
+          description: 'path to file'
+        alternative:
+          $ref: '#/components/schemas/MediaAlternative'
+        licence:
+          $ref: '#/components/schemas/MediaLicence'
+        type:
+          type: string
+          enum:
+            - v
+
+    MediaDocument:
+      type: object
+      properties:
+        id:
+          type: string
+        cover:
+          type: object
+          properties:
+            gif:
+              type: string
+            jpg:
+              type: string
+        pdf:
+          type: string
+          description: 'path to file.pdf'
+        original:
+          type: string
+          description: 'path to file'
+        alternative:
+          $ref: '#/components/schemas/MediaAlternative'
+        licence:
+          $ref: '#/components/schemas/MediaLicence'
+        thumbnail:
+          type: string
+          description: ''
+        type:
+          type: string
+          enum:
+            - d
+
+    MediaUndefined:
+      type: object
+      properties:
+        id:
+          type: string
+        original:
+          type: string
+          description: 'path to file'
+        alternative:
+          $ref: '#/components/schemas/MediaAlternative'
+        licence:
+          $ref: '#/components/schemas/MediaLicence'
+        type:
+          type: string
+          enum:
+            - x
+
+    MediaLicence:
+      type: object
+      properties:
+        label:
+          type: string
+        source:
+          type: string
+          description: 'url to licences'
+
+    MediaAlternative:
+      type: array
+      description: "return list of strings from meta data if available: eg; ['FileSize', 'ImageSize', 'Title', 'Artist', 'Year']"
+      items:
+        type: string
 
     #
     # Search
@@ -530,7 +649,7 @@ components:
         collection:
           type: string
         total:
-          description: 'total number of all activities in that collection'
+          description: 'total number of activities in that collection'
           type: number
         data:
           type: array
@@ -697,6 +816,55 @@ components:
         icon:
           type: string
           format: uri
+
+    ## SearchFilter
+    CommonSearchFilter:
+      type: object
+      properties:
+        name:
+          type: string
+        filter_values:
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/CommonSearchFilterText'
+              - $ref: '#/components/schemas/CommonSearchFilterDate'
+              - $ref: '#/components/schemas/CommonSearchFilterDateRange'
+              - $ref: '#/components/schemas/CommonSearchFilterChips'
+        type:
+          type: string
+          enum:
+            - text
+            - date
+            - daterange
+            - chips
+
+    CommonSearchFilterText:
+      type: string
+
+    CommonSearchFilterDateRange:
+      type: object
+      properties:
+        from:
+          type: string
+          format:
+            date
+        to:
+          type: string
+          format:
+            date
+
+    CommonSearchFilterDate:
+      type: string
+      format:
+        date
+
+    CommonSearchFilterChips:
+      type: object
+      properties:
+        label:
+          type: string
+        id:
+          type: string
 
     ## Error
     Error:
