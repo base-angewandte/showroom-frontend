@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 paths:
   /autocomplete:
-    get:
+    post:
       description: 'Exact string search matching titles (also subtitle?)'
       parameters:
         - name: q
@@ -42,7 +42,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Filter'
   /search:
-    get:
+    post:
       description: 'Returns all possible results.'
       parameters:
         - name: filter
@@ -140,7 +140,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
     patch:
-      description: 'Partially update a certain entity; currently only for field secondary_details'
+      description: 'Partially update a certain entity; currently only for fields "secondary_details", "showcase"'
       parameters:
         - description: 'ID of entity to patch'
           in: path
@@ -247,7 +247,7 @@ paths:
           description: 'Unexpected error'
 
   /entities/{id}/search:
-    get:
+    post:
       description: 'Returns all possible results of a specific entity, e.g. person.'
       parameters:
         - name: id
@@ -287,9 +287,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /collections/{id}:
+  /albums/{id}:
     get:
-      description: 'Returns a single collection object.'
+      description: 'Returns a single album object.'
       parameters:
         - name: id
           in: path
@@ -298,13 +298,13 @@ paths:
             type: string
       responses:
         200:
-          description: 'Returns a single collection object.'
+          description: 'Returns a single album object.'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Collection'
+                $ref: '#/components/schemas/Album'
         404:
-          description: "Collection not found"
+          description: "Album not found"
           content:
             application/json:
               schema:
@@ -445,7 +445,7 @@ components:
           type: array
           items:
             oneOf:
-              - $ref: '#/components/schemas/EntityShowcaseTypeCollection'
+              - $ref: '#/components/schemas/EntityShowcaseTypeAlbum'
               - $ref: '#/components/schemas/EntityShowcaseTypeActivity'
         source_institution:
           $ref: '#/components/schemas/CommonSourceInstitution'
@@ -488,7 +488,7 @@ components:
         type:
           type: string
 
-    EntityShowcaseTypeCollection:
+    EntityShowcaseTypeAlbum:
       type: object
       properties:
         id:
@@ -500,7 +500,7 @@ components:
         showcase_type:
           type: string
           enum:
-            - collection
+            - album
         title:
           type: string
         subtext:
@@ -531,9 +531,9 @@ components:
             type: boolean
 
     #
-    # Collection
+    # Album
     #
-    Collection:
+    Album:
       type: object
       properties:
         id:
@@ -736,13 +736,13 @@ components:
         type:
           type: string
 
-    SearchCollection:
+    SearchAlbum:
       type: object
       properties:
-        collection:
+        album:
           type: string
         total:
-          description: 'total number of activities in that collection'
+          description: 'total number of activities in that album'
           type: number
         data:
           type: array
@@ -752,7 +752,7 @@ components:
     Search:
       type: array
       items:
-        $ref: '#/components/schemas/SearchCollection'
+        $ref: '#/components/schemas/SearchAlbum'
 
     #
     # Filter
