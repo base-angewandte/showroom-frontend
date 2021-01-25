@@ -139,6 +139,51 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    patch:
+      description: 'Partially update a certain entity; currently only for field secondary_details'
+      parameters:
+        - description: 'ID of entity to patch'
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Entity'
+        description: 'Object with key/values to be partially changed'
+        required: true
+      responses:
+        204:
+          description: 'Successfully updated'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Unauthorized'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
+        5XX:
+          description: 'Unexpected error'
 
   /entities/{id}/activities:
     get:
@@ -161,7 +206,45 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
+    patch:
+      description: 'Update order and visibility of activities'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityActivitiesEdit'
+        description: 'Request array with ordered objects'
+        required: true
+      responses:
+        204:
+          description: 'Successfully updated'
+        400:
+          description: 'Invalid input'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        5XX:
+          description: 'Unexpected error'
 
   /entities/{id}/search:
     get:
@@ -436,6 +519,16 @@ components:
       example:
         - 455w: string
         - 654w: string
+
+    EntityActivitiesEdit:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          hidden:
+            type: boolean
 
     #
     # Collection
@@ -717,6 +810,8 @@ components:
     CommonList:
       type: object
       properties:
+        id:
+          type: string
         label:
           type: string
         hidden:
