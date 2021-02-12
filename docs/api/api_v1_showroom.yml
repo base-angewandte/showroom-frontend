@@ -315,7 +315,7 @@ components:
     #
     # Autocomplete
     #
-    AutocompleteItem:
+    AutocompleteDataItem:
       type: object
       properties:
         id:
@@ -328,6 +328,17 @@ components:
             type: string
         source:
           type: string
+
+    AutocompleteItem:
+      type: object
+      properties:
+        subset:
+          type: string
+          example: 'person'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutocompleteDataItem'
 
     Autocomplete:
       type: array
@@ -375,12 +386,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CommonLocation'
-        media:
-          type: object
+        featuredMedia:
+          $ref: '#/components/schemas/CommonFeaturedImage'
         primary_details:
           type: array
           items:
             $ref: '#/components/schemas/CommonText'
+        publisher:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommonPublisher'
         secondary_details:
           type: array
           items:
@@ -424,15 +439,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CommonLocation'
-        media:
-          type: object
-          description: 'used as cover media'
-          oneOf:
-            - $ref: '#/components/schemas/MediaAudio'
-            - $ref: '#/components/schemas/MediaImage'
-            - $ref: '#/components/schemas/MediaVideo'
-            - $ref: '#/components/schemas/MediaDocument'
-            - $ref: '#/components/schemas/MediaUndefined'
+        featuredMedia:
+          $ref: '#/components/schemas/CommonFeaturedImage'
         primary_details:
           type: array
           items:
@@ -517,8 +525,8 @@ components:
         minLength: 1
         maxLength: 4
       example:
-        - 455w: string
-        - 654w: string
+        - 455w: 'path to file'
+        - 654w: 'path to file'
 
     EntityActivitiesEdit:
       type: array
@@ -550,15 +558,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CommonText'
-        owner:
+        publisher:
           type: array
           items:
-            type: object
-            properties:
-              name:
-                type: string
-              source:
-                type: string
+            $ref: '#/components/schemas/CommonPublisher'
 
     #
     # Media
@@ -585,7 +588,7 @@ components:
           $ref: '#/components/schemas/MediaLicence'
         original:
           type: string
-          description: 'path to file'
+          format: uri
         previews:
           description: 'return all generated size/sources'
           type: array
@@ -607,10 +610,10 @@ components:
           $ref: '#/components/schemas/MediaLicence'
         mp3:
           type: string
-          description: 'listen.mp3'
+          format: uri
         original:
           type: string
-          description: 'path to file'
+          format: uri
         type:
           type: string
           enum:
@@ -626,14 +629,17 @@ components:
           properties:
             gif:
               type: string
+              format: uri
             jpg:
               type: string
+              format: uri
         playlist:
           type: string
+          format: uri
           description: 'path to playlist.m3u8'
         original:
           type: string
-          description: 'path to file'
+          format: uri
         alternative:
           $ref: '#/components/schemas/MediaAlternative'
         licence:
@@ -653,14 +659,17 @@ components:
           properties:
             gif:
               type: string
+              format: uri
             jpg:
               type: string
+              format: uri
         pdf:
           type: string
+          format: uri
           description: 'path to file.pdf'
         original:
           type: string
-          description: 'path to file'
+          format: uri
         alternative:
           $ref: '#/components/schemas/MediaAlternative'
         licence:
@@ -680,7 +689,7 @@ components:
           type: string
         original:
           type: string
-          description: 'path to file'
+          format: uri
         alternative:
           $ref: '#/components/schemas/MediaAlternative'
         licence:
@@ -697,7 +706,8 @@ components:
           type: string
         source:
           type: string
-          description: 'url to licences'
+          format: uri
+          description: 'url to licence page'
 
     MediaAlternative:
       type: array
@@ -713,7 +723,7 @@ components:
       properties:
         id:
           type: string
-        alterntive_text:
+        alternative_text:
           type: array
           items:
             type: object
@@ -724,6 +734,8 @@ components:
                 type: string
         mediaUrl:
           type: string
+          format: uri
+          description: 'size: thumbnail'
         source:
           type: string
           format: uri
@@ -736,10 +748,10 @@ components:
         type:
           type: string
 
-    SearchAlbum:
+    SearchCollection:
       type: object
       properties:
-        album:
+        collection:
           type: string
         total:
           description: 'total number of activities in that album'
@@ -752,7 +764,7 @@ components:
     Search:
       type: array
       items:
-        $ref: '#/components/schemas/SearchAlbum'
+        $ref: '#/components/schemas/SearchCollection'
 
     #
     # Filter
@@ -763,6 +775,18 @@ components:
         oneOf:
           - $ref: '#/components/schemas/FilterType'
           - $ref: '#/components/schemas/FilterTypeOptions'
+      example:
+        - label: 'string'
+          type: 'text'
+        - label: 'string'
+          type: 'date'
+        - label: 'string'
+          type: 'daterange'
+        - label: 'string'
+          type: 'chips'
+          options:
+            - label: 'string'
+              id: 'string'
 
     FilterType:
       type: object
@@ -792,6 +816,11 @@ components:
           type: string
           enum:
             - chips
+        freetextAllowed:
+          type: boolean
+        autocompleteUrl:
+          type: string
+          format: uri
         options:
           type: array
           items:
@@ -861,6 +890,24 @@ components:
           type: array
           items:
             type: string
+      example:
+        lat_long:
+          - '48.208370'
+          - '16.384510'
+        address:
+          - 'Oskar Kokoschka-Platz 2'
+          - '1010 Wien'
+          - 'Austria'
+
+    ## Featured Image
+    CommonFeaturedImage:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/MediaAudio'
+        - $ref: '#/components/schemas/MediaImage'
+        - $ref: '#/components/schemas/MediaVideo'
+        - $ref: '#/components/schemas/MediaDocument'
+        - $ref: '#/components/schemas/MediaUndefined'
 
     ## TextList
     CommonText:
@@ -874,9 +921,31 @@ components:
             - $ref: '#/components/schemas/CommonTextString'
             - $ref: '#/components/schemas/CommonTextArray'
             - $ref: '#/components/schemas/CommonTextObject'
+      example:
+        - label: string
+          data: string
+        - label: string
+          data:
+            - string
+            - string
+        - label: string
+          data:
+            - label: string
+              value: string
+            - label: string
+              value: string
+              url: https://www.domain.com
+              source: string
+            - label: string
+              value: string
+              url: mailto:name@domain.com
+              source: string
 
     CommonTextString:
       type: string
+      example:
+        label: string
+        data: string
 
     CommonTextArray:
       type: array
@@ -901,16 +970,20 @@ components:
 
     ## SourceInstitution
     CommonSourceInstitution:
+      description: 'relevant if more '
       type: object
       properties:
         label:
           type: string
+          description: 'name of institution'
         url:
           type: string
           format: uri
+          description: 'url to institution / institutions showroom page'
         icon:
           type: string
           format: uri
+          description: 'path to media file'
 
     ## SearchFilter
     CommonSearchFilter:
@@ -932,6 +1005,18 @@ components:
             - date
             - daterange
             - chips
+
+    CommonPublisher:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            example: 'Firstname Lastname'
+          source:
+            type: string
+            description: 'showroom id'
 
     CommonSearchFilterText:
       type: string
