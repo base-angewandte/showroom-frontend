@@ -3,10 +3,15 @@ info:
   title: 'Showroom API'
   description: 'Showroom API'
   version: 1.0.0
+servers:
+  - url: ''
 paths:
-  /autocomplete:
+  /api/v1/autocomplete:
     post:
-      description: 'Exact string search matching titles (also subtitle?)'
+      description: 'Exact string search matching titles.'
+      operationId: api_v1_autocomplete_read
+      tags:
+        - api
       parameters:
         - name: q
           description: 'Search query string.'
@@ -31,9 +36,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Autocomplete'
 
-  /filter:
+  /api/v1/filter:
     get:
       description: 'Returns all possible filters for the search.'
+      operationId: api_v1_filter_list
+      tags:
+        - api
       responses:
         200:
           description: 'Returns all possible filters for the search.'
@@ -41,12 +49,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Filter'
-  /search:
+  /api/v1/search:
     post:
       description: 'Returns all possible results.'
+      operationId: api_v1_search_read
+      tags:
+        - api
       parameters:
         - name: filter
-          description: 'array of objects with all filters applied'
+          description: 'Array of objects with all filters applied'
           in: query
           schema:
             type: array
@@ -71,9 +82,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Search'
 
-  /activities/{id}:
+  /api/v1/activities/{id}:
     get:
       description: 'Returns a single activity object.'
+      operationId: api_v1_activities_read
+      tags:
+        - api
       parameters:
         - name: id
           in: path
@@ -94,9 +108,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /activities/{id}/media:
+  /api/v1/activities/{id}/media:
     get:
       description: 'Returns an array of media objects related to an specific activity.'
+      operationId: api_v1_activities_media_read
+      tags:
+        - api
       parameters:
         - name: id
           in: path
@@ -117,9 +134,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /entities/{id}:
+  /api/v1/entities/{id}:
     get:
       description: 'Returns a single entity object.'
+      operationId: api_v1_entities_read
+      tags:
+        - api
       parameters:
         - name: id
           in: path
@@ -141,6 +161,9 @@ paths:
                 $ref: "#/components/schemas/Error"
     patch:
       description: 'Partially update a certain entity; currently only for fields "secondary_details", "showcase"'
+      operationId: api_v1_entities_partial_update
+      tags:
+        - api
       parameters:
         - description: 'ID of entity to patch'
           in: path
@@ -185,9 +208,12 @@ paths:
         5XX:
           description: 'Unexpected error'
 
-  /entities/{id}/activities:
+  /api/v1/entities/{id}/activities:
     get:
       description: 'Returns array of activities related to an specific entity.'
+      operationId: api_v1_entities_activities_read
+      tags:
+        - api
       parameters:
         - name: id
           in: path
@@ -209,6 +235,9 @@ paths:
                 $ref: '#/components/schemas/Error'
     patch:
       description: 'Update order and visibility of activities'
+      operationId: api_v1_entities_activities_partial_update
+      tags:
+        - api
       parameters:
         - name: id
           in: path
@@ -246,9 +275,12 @@ paths:
         5XX:
           description: 'Unexpected error'
 
-  /entities/{id}/search:
+  /api/v1/entities/{id}/search:
     post:
       description: 'Returns all possible results of a specific entity, e.g. person.'
+      operationId: api_v1_entities_search
+      tags:
+        - api
       parameters:
         - name: id
           in: path
@@ -269,7 +301,7 @@ paths:
             type: integer
             default: 5
         - name: offset
-          description: 'The initial index from which to return the results.'
+          description: 'The initial index to return the results.'
           in: query
           schema:
             type: integer
@@ -287,9 +319,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /albums/{id}:
+  /api/v1/albums/{id}:
     get:
       description: 'Returns a single album object.'
+      operationId: api_v1_albums_read
+      tags:
+        - api
       parameters:
         - name: id
           in: path
@@ -469,7 +504,7 @@ components:
             - person
             - institution
             - department
-          description: 'in future version should be configurable with cms - see issue #1121'
+          description: 'Future version should be configurable with cms - see issue #1121'
 
     # entityShowcase
     EntityShowcaseTypeActivity:
@@ -590,7 +625,7 @@ components:
           type: string
           format: uri
         previews:
-          description: 'return all generated size/sources'
+          description: 'Return all generated size/sources.'
           type: array
           items:
             type: object
@@ -754,7 +789,7 @@ components:
         collection:
           type: string
         total:
-          description: 'total number of activities in that album'
+          description: 'Total number of activities in that album.'
           type: number
         data:
           type: array
