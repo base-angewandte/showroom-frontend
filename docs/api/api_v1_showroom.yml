@@ -6,7 +6,7 @@ info:
 servers:
   - url: ''
 paths:
-  /api/v1/autocomplete:
+  /autocomplete:
     post:
       description: 'Exact string search matching titles.'
       operationId: api_v1_autocomplete_read
@@ -36,7 +36,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Autocomplete'
 
-  /api/v1/filter:
+  /filter:
     get:
       description: 'Returns all possible filters for the search.'
       operationId: api_v1_filter_list
@@ -49,7 +49,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Filter'
-  /api/v1/search:
+  /search:
     post:
       description: 'Returns all possible results.'
       operationId: api_v1_search_read
@@ -82,7 +82,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Search'
 
-  /api/v1/activities/{id}:
+  /activities/{id}:
     get:
       description: 'Returns a single activity object.'
       operationId: api_v1_activities_read
@@ -108,7 +108,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /api/v1/activities/{id}/media:
+  /activities/{id}/media:
     get:
       description: 'Returns an array of media objects related to an specific activity.'
       operationId: api_v1_activities_media_read
@@ -134,7 +134,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /api/v1/entities/{id}:
+  /entities/{id}:
     get:
       description: 'Returns a single entity object.'
       operationId: api_v1_entities_read
@@ -208,7 +208,7 @@ paths:
         5XX:
           description: 'Unexpected error'
 
-  /api/v1/entities/{id}/activities:
+  /entities/{id}/activities:
     get:
       description: 'Returns array of activities related to an specific entity.'
       operationId: api_v1_entities_activities_read
@@ -275,7 +275,7 @@ paths:
         5XX:
           description: 'Unexpected error'
 
-  /api/v1/entities/{id}/search:
+  /entities/{id}/search:
     post:
       description: 'Returns all possible results of a specific entity, e.g. person.'
       operationId: api_v1_entities_search
@@ -319,7 +319,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /api/v1/albums/{id}:
+  /albums/{id}:
     get:
       description: 'Returns a single album object.'
       operationId: api_v1_albums_read
