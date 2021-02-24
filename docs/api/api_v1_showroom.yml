@@ -91,6 +91,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/Search'
 
+  /activities:
+    post:
+      description: 'Create one or more activities. If an activity already exists, it will be updated with the new values.'
+      operationId: api_v1_activities_create
+      tags:
+        - repo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Activity'
+
+      responses:
+        200:
+          description: 'All items successfully created/updated.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created:
+                    type: integer
+                    description: 'Number of newly created activities.'
+                  updated:
+                    type: integer
+                    description: 'Number of updated activities.'
+        400:
+          description: 'Bad request.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: 'Unauthorized access.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: "Activity not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /activities/{id}:
     get:
       description: 'Returns a single activity object.'
