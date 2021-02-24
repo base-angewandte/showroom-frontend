@@ -5,13 +5,22 @@ info:
   version: 1.0.0
 servers:
   - url: ''
+
+tags:
+  - name: public
+    description: Methods that can be used by the frontend without authentication.
+  - name: auth
+    description: Methods that can only be used by authenticated users
+  - name: repo
+    description: Methods that are reserved for backend repositories to keep showroom content synchronized
+
 paths:
   /autocomplete:
     post:
       description: 'Exact string search matching titles.'
       operationId: api_v1_autocomplete_read
       tags:
-        - api
+        - public
       parameters:
         - name: q
           description: 'Search query string.'
@@ -41,7 +50,7 @@ paths:
       description: 'Returns all possible filters for the search.'
       operationId: api_v1_filter_list
       tags:
-        - api
+        - public
       responses:
         200:
           description: 'Returns all possible filters for the search.'
@@ -54,7 +63,7 @@ paths:
       description: 'Returns all possible results.'
       operationId: api_v1_search_read
       tags:
-        - api
+        - public
       parameters:
         - name: filter
           description: 'Array of objects with all filters applied'
@@ -87,7 +96,7 @@ paths:
       description: 'Returns a single activity object.'
       operationId: api_v1_activities_read
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -113,7 +122,7 @@ paths:
       description: 'Returns an array of media objects related to an specific activity.'
       operationId: api_v1_activities_media_read
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -139,7 +148,7 @@ paths:
       description: 'Returns a single entity object.'
       operationId: api_v1_entities_read
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -163,7 +172,7 @@ paths:
       description: 'Partially update a certain entity; currently only for fields "secondary_details", "showcase"'
       operationId: api_v1_entities_partial_update
       tags:
-        - api
+        - auth
       parameters:
         - description: 'ID of entity to patch'
           in: path
@@ -213,7 +222,7 @@ paths:
       description: 'Returns array of activities related to an specific entity.'
       operationId: api_v1_entities_activities_read
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -237,7 +246,7 @@ paths:
       description: 'Update order and visibility of activities'
       operationId: api_v1_entities_activities_partial_update
       tags:
-        - api
+        - auth
       parameters:
         - name: id
           in: path
@@ -280,7 +289,7 @@ paths:
       description: 'Returns all possible results of a specific entity, e.g. person.'
       operationId: api_v1_entities_search
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -324,7 +333,7 @@ paths:
       description: 'Returns a single album object.'
       operationId: api_v1_albums_read
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
