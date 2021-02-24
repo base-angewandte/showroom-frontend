@@ -443,8 +443,6 @@ components:
             type: string
         title:
           type: string
-          items:
-            type: string
         type:
           type: string
 
@@ -978,9 +976,6 @@ components:
 
     CommonTextString:
       type: string
-      example:
-        label: string
-        data: string
 
     CommonTextArray:
       type: array
