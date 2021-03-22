@@ -1,0 +1,1609 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Showroom API",
+    "description": "Showroom API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:9902"
+    }
+  ],
+  "paths": {
+    "/api/v1/autocomplete": {
+      "post": {
+        "description": "Exact string search matching titles",
+        "operationId": "api_v1_autocomplete_read",
+        "tags": [
+          "api"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "description": "Search query string.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 3
+            }
+          },
+          {
+            "name": "filter_name",
+            "description": "result category to return",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array of search results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Autocomplete"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/filter": {
+      "get": {
+        "description": "Returns all possible filters for the search.",
+        "operationId": "api_v1_filter_list",
+        "tags": [
+          "api"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all possible filters for the search.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Filter"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search": {
+      "post": {
+        "description": "Returns all possible results.",
+        "operationId": "api_v1_search_read",
+        "tags": [
+          "api"
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "description": "array of objects with all filters applied",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CommonSearchFilter"
+              }
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Number of results to return per page.",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 5
+            }
+          },
+          {
+            "name": "offset",
+            "description": "The initial index to return the results.",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array of search results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Search"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activities/{id}": {
+      "get": {
+        "description": "Returns a single activity object.",
+        "operationId": "api_v1_activities_read",
+        "tags": [
+          "api"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a single activity object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Activity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Activity not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activities/{id}/media": {
+      "get": {
+        "description": "Returns an array of media objects related to an specific activity.",
+        "operationId": "api_v1_activities_media_read",
+        "tags": [
+          "api"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array of media objects related to an specific activity.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Media"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Activity/Media not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/entities/{id}": {
+      "get": {
+        "description": "Returns a single entity object.",
+        "operationId": "api_v1_entities_read",
+        "tags": [
+          "api"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a single entity object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Entity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Partially update a certain entity; currently only for fields \"secondary_details\", \"showcase\"",
+        "operationId": "api_v1_entities_partial_update",
+        "tags": [
+          "api"
+        ],
+        "parameters": [
+          {
+            "description": "ID of entity to patch",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entity"
+              }
+            }
+          },
+          "description": "Object with key/values to be partially changed",
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully updated"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Invalid input"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not found"
+          },
+          "5XX": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/api/v1/entities/{id}/activities": {
+      "get": {
+        "description": "Returns array of activities related to an specific entity.",
+        "operationId": "api_v1_entities_activities_read",
+        "tags": [
+          "api"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns array of activities related to an specific entity.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonList"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity/Activities not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update order and visibility of activities",
+        "operationId": "api_v1_entities_activities_partial_update",
+        "tags": [
+          "api"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntityActivitiesEdit"
+              }
+            }
+          },
+          "description": "Request array with ordered objects",
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully updated"
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/api/v1/entities/{id}/search": {
+      "post": {
+        "description": "Returns all possible results of a specific entity, e.g. person.",
+        "operationId": "api_v1_entities_search",
+        "tags": [
+          "api"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter",
+            "description": "array of objects with all filters applied",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CommonSearchFilter"
+              }
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Number of results to return per page.",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 5
+            }
+          },
+          {
+            "name": "offset",
+            "description": "The initial index from which to return the results.",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array of search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Search"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/albums/{id}": {
+      "get": {
+        "description": "Returns a single album object.",
+        "operationId": "api_v1_albums_read",
+        "tags": [
+          "api"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a single album object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Album"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Album not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AutocompleteDataItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      },
+      "AutocompleteItem": {
+        "type": "object",
+        "properties": {
+          "subset": {
+            "type": "string",
+            "example": "person"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AutocompleteDataItem"
+            }
+          }
+        }
+      },
+      "Autocomplete": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AutocompleteItem"
+        }
+      },
+      "Activity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "date_changed": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "entries": {
+            "type": "object",
+            "properties": {
+              "media": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of linked media objects."
+              },
+              "linked": {
+                "type": "object",
+                "properties": {
+                  "parent": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/SearchItem"
+                    }
+                  },
+                  "children": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/SearchItem"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonList"
+            }
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonLocation"
+            }
+          },
+          "featuredMedia": {
+            "$ref": "#/components/schemas/CommonFeaturedImage"
+          },
+          "primary_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonText"
+            }
+          },
+          "publisher": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonPublisher"
+            }
+          },
+          "secondary_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonText"
+            }
+          },
+          "source_institution": {
+            "$ref": "#/components/schemas/CommonSourceInstitution"
+          },
+          "subtext": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "string",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "Entity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "date_changed": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expertise": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonList"
+            }
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonLocation"
+            }
+          },
+          "featuredMedia": {
+            "$ref": "#/components/schemas/CommonFeaturedImage"
+          },
+          "primary_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonText"
+            }
+          },
+          "secondary_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonText"
+            }
+          },
+          "showcase": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/EntityShowcaseTypeAlbum"
+                },
+                {
+                  "$ref": "#/components/schemas/EntityShowcaseTypeActivity"
+                }
+              ]
+            }
+          },
+          "source_institution": {
+            "$ref": "#/components/schemas/CommonSourceInstitution"
+          },
+          "subtext": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "person",
+              "institution",
+              "department"
+            ],
+            "description": "in future version should be configurable with cms - see issue #1121"
+          }
+        }
+      },
+      "EntityShowcaseTypeActivity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "additional": {
+            "type": "string"
+          },
+          "media": {
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EntityShowcaseMedia"
+              }
+            ]
+          },
+          "showcase_type": {
+            "type": "string",
+            "enum": [
+              "activity"
+            ]
+          },
+          "subtext": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "EntityShowcaseTypeAlbum": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "media": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityShowcaseMedia"
+            }
+          },
+          "showcase_type": {
+            "type": "string",
+            "enum": [
+              "album"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "number"
+          }
+        }
+      },
+      "EntityShowcaseMedia": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "minLength": 1,
+          "maxLength": 4
+        },
+        "example": [
+          {
+            "455w": "path to file"
+          },
+          {
+            "654w": "path to file"
+          }
+        ]
+      },
+      "EntityActivitiesEdit": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "hidden": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "Album": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "activities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchItem"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "secondary_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonText"
+            }
+          },
+          "publisher": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommonPublisher"
+            }
+          }
+        }
+      },
+      "Media": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/MediaAudio"
+            },
+            {
+              "$ref": "#/components/schemas/MediaDocument"
+            },
+            {
+              "$ref": "#/components/schemas/MediaImage"
+            },
+            {
+              "$ref": "#/components/schemas/MediaUndefined"
+            },
+            {
+              "$ref": "#/components/schemas/MediaVideo"
+            }
+          ]
+        }
+      },
+      "MediaImage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "alternative": {
+            "$ref": "#/components/schemas/MediaAlternative"
+          },
+          "licence": {
+            "$ref": "#/components/schemas/MediaLicence"
+          },
+          "original": {
+            "type": "string",
+            "format": "uri"
+          },
+          "previews": {
+            "description": "return all generated size/sources",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "i"
+            ]
+          }
+        }
+      },
+      "MediaAudio": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "alternative": {
+            "$ref": "#/components/schemas/MediaAlternative"
+          },
+          "licence": {
+            "$ref": "#/components/schemas/MediaLicence"
+          },
+          "mp3": {
+            "type": "string",
+            "format": "uri"
+          },
+          "original": {
+            "type": "string",
+            "format": "uri"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "a"
+            ]
+          }
+        }
+      },
+      "MediaVideo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "object",
+            "properties": {
+              "gif": {
+                "type": "string",
+                "format": "uri"
+              },
+              "jpg": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "playlist": {
+            "type": "string",
+            "format": "uri",
+            "description": "path to playlist.m3u8"
+          },
+          "original": {
+            "type": "string",
+            "format": "uri"
+          },
+          "alternative": {
+            "$ref": "#/components/schemas/MediaAlternative"
+          },
+          "licence": {
+            "$ref": "#/components/schemas/MediaLicence"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "v"
+            ]
+          }
+        }
+      },
+      "MediaDocument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "object",
+            "properties": {
+              "gif": {
+                "type": "string",
+                "format": "uri"
+              },
+              "jpg": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "pdf": {
+            "type": "string",
+            "format": "uri",
+            "description": "path to file.pdf"
+          },
+          "original": {
+            "type": "string",
+            "format": "uri"
+          },
+          "alternative": {
+            "$ref": "#/components/schemas/MediaAlternative"
+          },
+          "licence": {
+            "$ref": "#/components/schemas/MediaLicence"
+          },
+          "thumbnail": {
+            "type": "string",
+            "description": ""
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "d"
+            ]
+          }
+        }
+      },
+      "MediaUndefined": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "original": {
+            "type": "string",
+            "format": "uri"
+          },
+          "alternative": {
+            "$ref": "#/components/schemas/MediaAlternative"
+          },
+          "licence": {
+            "$ref": "#/components/schemas/MediaLicence"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "x"
+            ]
+          }
+        }
+      },
+      "MediaLicence": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "format": "uri",
+            "description": "url to licence page"
+          }
+        }
+      },
+      "MediaAlternative": {
+        "type": "array",
+        "description": "return list of strings from meta data if available: eg; ['FileSize', 'ImageSize', 'Title', 'Artist', 'Year']",
+        "items": {
+          "type": "string"
+        }
+      },
+      "SearchItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "alternative_text": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "mediaUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "size: thumbnail"
+          },
+          "source": {
+            "type": "string",
+            "format": "uri"
+          },
+          "source_institution": {
+            "$ref": "#/components/schemas/CommonSourceInstitution"
+          },
+          "score": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "SearchCollection": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "string"
+          },
+          "total": {
+            "description": "total number of activities in that album",
+            "type": "number"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchItem"
+            }
+          }
+        }
+      },
+      "Search": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SearchCollection"
+        }
+      },
+      "Filter": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/FilterType"
+            },
+            {
+              "$ref": "#/components/schemas/FilterTypeOptions"
+            }
+          ]
+        },
+        "example": [
+          {
+            "label": "string",
+            "type": "text"
+          },
+          {
+            "label": "string",
+            "type": "date"
+          },
+          {
+            "label": "string",
+            "type": "daterange"
+          },
+          {
+            "label": "string",
+            "type": "chips",
+            "options": [
+              {
+                "label": "string",
+                "id": "string"
+              }
+            ]
+          }
+        ]
+      },
+      "FilterType": {
+        "type": "object",
+        "required": [
+          "label",
+          "type"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "date",
+              "daterange"
+            ]
+          }
+        }
+      },
+      "FilterTypeOptions": {
+        "type": "object",
+        "required": [
+          "label",
+          "type",
+          "options"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "chips"
+            ]
+          },
+          "freetextAllowed": {
+            "type": "boolean"
+          },
+          "autocompleteUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CommonList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CommonList"
+                },
+                {
+                  "$ref": "#/components/schemas/CommonListItem"
+                }
+              ]
+            }
+          }
+        },
+        "example": {
+          "label": "string",
+          "hidden": "boolean",
+          "data": [
+            {
+              "attributes": [
+                "string"
+              ],
+              "value": "string",
+              "id": "string"
+            },
+            {
+              "label": "string",
+              "data": [
+                {
+                  "attributes": [
+                    "string"
+                  ],
+                  "value": "string",
+                  "id": "string"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "CommonListItem": {
+        "type": "object",
+        "properties": {
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "value": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "CommonLocation": {
+        "type": "object",
+        "properties": {
+          "lat_long": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "address": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "example": {
+          "lat_long": [
+            "48.208370",
+            "16.384510"
+          ],
+          "address": [
+            "Oskar Kokoschka-Platz 2",
+            "1010 Wien",
+            "Austria"
+          ]
+        }
+      },
+      "CommonFeaturedImage": {
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/MediaAudio"
+          },
+          {
+            "$ref": "#/components/schemas/MediaImage"
+          },
+          {
+            "$ref": "#/components/schemas/MediaVideo"
+          },
+          {
+            "$ref": "#/components/schemas/MediaDocument"
+          },
+          {
+            "$ref": "#/components/schemas/MediaUndefined"
+          }
+        ]
+      },
+      "CommonText": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CommonTextString"
+              },
+              {
+                "$ref": "#/components/schemas/CommonTextArray"
+              },
+              {
+                "$ref": "#/components/schemas/CommonTextObject"
+              }
+            ]
+          }
+        },
+        "example": [
+          {
+            "label": "string",
+            "data": "string"
+          },
+          {
+            "label": "string",
+            "data": [
+              "string",
+              "string"
+            ]
+          },
+          {
+            "label": "string",
+            "data": [
+              {
+                "label": "string",
+                "value": "string"
+              },
+              {
+                "label": "string",
+                "value": "string",
+                "url": "https://www.domain.com",
+                "source": "string"
+              },
+              {
+                "label": "string",
+                "value": "string",
+                "url": "mailto:name@domain.com",
+                "source": "string"
+              }
+            ]
+          }
+        ]
+      },
+      "CommonTextString": {
+        "type": "string",
+        "example": {
+          "label": "string",
+          "data": "string"
+        }
+      },
+      "CommonTextArray": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "CommonTextObject": {
+        "type": "object",
+        "required": [
+          "label",
+          "value"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      },
+      "CommonSourceInstitution": {
+        "description": "relevant if more ",
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "name of institution"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "url to institution / institutions showroom page"
+          },
+          "icon": {
+            "type": "string",
+            "format": "uri",
+            "description": "path to media file"
+          }
+        }
+      },
+      "CommonSearchFilter": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "filter_values": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CommonSearchFilterText"
+                },
+                {
+                  "$ref": "#/components/schemas/CommonSearchFilterDate"
+                },
+                {
+                  "$ref": "#/components/schemas/CommonSearchFilterDateRange"
+                },
+                {
+                  "$ref": "#/components/schemas/CommonSearchFilterChips"
+                }
+              ]
+            }
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "date",
+              "daterange",
+              "chips"
+            ]
+          }
+        }
+      },
+      "CommonPublisher": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Firstname Lastname"
+            },
+            "source": {
+              "type": "string",
+              "description": "showroom id"
+            }
+          }
+        }
+      },
+      "CommonSearchFilterText": {
+        "type": "string"
+      },
+      "CommonSearchFilterDateRange": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date"
+          },
+          "to": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "CommonSearchFilterDate": {
+        "type": "string",
+        "format": "date"
+      },
+      "CommonSearchFilterChips": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -56,6 +56,7 @@ export default {
   env: {
     appBaseUrl: process.env.APP_BASE_URL,
     appPrefix: process.env.APP_PREFIX,
+    appApiSpecUrl: process.env.APP_API_SPEC_URL,
     headerJson: process.env.HEADER,
     headerUrls: {
       login: process.env.HEADER_URLS_LOGIN,
@@ -70,8 +71,9 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/i18n.js',
+    '~/plugins/api.js',
     '~/plugins/axios.js',
+    '~/plugins/i18n.js',
     {
       src: '~/plugins/localstorage.js',
       mode: 'client',
@@ -103,6 +105,7 @@ export default {
   ** Build configuration
   */
   build: {
+    // analyze: true,
     cache: false,
     extractCss: false,
     /*
