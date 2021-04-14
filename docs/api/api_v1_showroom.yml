@@ -423,9 +423,12 @@ components:
     AutocompleteItem:
       type: object
       properties:
-        subset:
+        source:
           type: string
           example: 'person'
+        label:
+          type: string
+          example: 'Person'
         data:
           type: array
           items:
@@ -971,19 +974,19 @@ components:
     CommonLocation:
       type: object
       properties:
-        lat_long:
+        coordinates:
           type: array
           items:
             type: string
-        address:
+        data:
           type: array
           items:
             type: string
       example:
-        lat_long:
-          - '48.208370'
+        coordinates:
           - '16.384510'
-        address:
+          - '48.208370'
+        data:
           - 'Oskar Kokoschka-Platz 2'
           - '1010 Wien'
           - 'Austria'
