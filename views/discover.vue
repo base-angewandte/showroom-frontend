@@ -5,7 +5,7 @@
     </h1>
     <div>
       <h2>{{ title }}</h2>
-      <p>{{ description }}</p>
+      <p>{{ subtext.join(',  ') }}</p>
     </div>
   </div>
 </template>
@@ -19,13 +19,13 @@ export default {
 
     return {
       title: data.title,
-      description: data.description,
+      subtext: data.subtext,
     };
   },
   data() {
     return {
       title: '',
-      description: '',
+      subtext: [],
     };
   },
   async mounted() {

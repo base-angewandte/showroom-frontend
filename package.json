@@ -9,6 +9,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
+    "mockup": "nodemon mockup",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
   },
@@ -17,7 +18,7 @@
     "base-ui-components": "^1.0.9",
     "node-fetch": "^2.6.1",
     "normalize.css": "^8.0.1",
-    "nuxt": "^2.13.3",
+    "nuxt": "2.15.3",
     "swagger-client": "^3.13.1",
     "vue": "^2.6.12",
     "vue-i18n": "^8.18.2",
@@ -38,8 +39,15 @@
     "eslint-plugin-nuxt": "^1.0.0",
     "express": "^4.17.1",
     "node-sass": "^4.14.1",
-    "sass-loader": "^8.0.2",
+    "sass-loader": "^10.1.1",
+    "nodemon": "^2.0.7",
+    "openapi-backend": "^3.9.1",
     "vue-server-renderer": "^2.6.12",
     "vue-template-compiler": "^2.6.12"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "mockup"
+    ]
   }
 }

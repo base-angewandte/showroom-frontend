@@ -1,0 +1,189 @@
+[
+  {
+    "label": "Exhibitions",
+    "hidden": "false",
+    "data": [
+      {
+        "attributes": [
+          "(Autor*in), Frankfurt (Deutschland)",
+          "2018"
+        ],
+        "value": "Erinnerung an John Healy.",
+        "id": "1"
+      },
+      {
+        "attributes": [
+          "(Autor*in)",
+          "Österreich",
+          "2018"
+        ],
+        "value": "Freiheit im Denken, überall. Erinnerung an Louisa Matilda Fagan.",
+        "id": "2"
+      },
+      {
+        "attributes": [
+          "(Autor*in)",
+          "Berlin (Deutschland)",
+          "2017"
+        ],
+        "value": "Nachdenken über Spiele – Zur Funktion der Spieleforschung an der Universität.",
+        "id": "3"
+      },
+      {
+        "attributes": [
+          "(Autor*in)",
+          "Wien (Österreich)",
+          "2004"
+        ],
+        "value": "„Arnold Schönbergs Schachzüge. Dodekaphonie und Spielekonstruktionen“.",
+        "id": "4"
+      }
+    ]
+  },
+  {
+    "label": "Research projects",
+    "hidden": "false",
+    "data": [
+      {
+        "value": "qui nesciunt",
+        "attributes": [
+          "molestiae commodi ipsum",
+          "eos dolorem in"
+        ],
+        "id": "10"
+      },
+      {
+        "value": "animi voluptates",
+        "attributes": [
+          "ut eum et",
+          "quis odit est"
+        ],
+        "id": "11"
+      },
+      {
+        "value": "officiis quisquam",
+        "attributes": [
+          "qui et sit",
+          "occaecati facere temporibus"
+        ],
+        "id": "12"
+      }
+    ]
+  },
+  {
+    "label": "Documents/Publications",
+    "hidden": "false",
+    "data": [
+      {
+        "label": "Articles in anthology",
+        "data": [
+          {
+            "value": "qui nesciunt",
+            "attributes": [
+              "molestiae commodi ipsum",
+              "eos dolorem in"
+            ],
+            "id": "10"
+          },
+          {
+            "value": "animi voluptates",
+            "attributes": [
+              "ut eum et",
+              "quis odit est"
+            ],
+            "id": "11"
+          },
+          {
+            "value": "officiis quisquam",
+            "attributes": [
+              "qui et sit",
+              "occaecati facere temporibus"
+            ],
+            "id": "12"
+          }
+        ]
+      },
+      {
+        "label": "Monographs",
+        "data": [
+          {
+            "value": "qui nesciunt",
+            "attributes": [
+              "molestiae commodi ipsum",
+              "eos dolorem in"
+            ],
+            "id": "10"
+          },
+          {
+            "value": "animi voluptates",
+            "attributes": [
+              "ut eum et",
+              "quis odit est"
+            ],
+            "id": "11"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Awards and grants",
+    "hidden": "false",
+    "data": [
+      {
+        "value": "qui nesciunt",
+        "attributes": [
+          "molestiae commodi ipsum",
+          "eos dolorem in"
+        ],
+        "id": "10"
+      },
+      {
+        "value": "animi voluptates",
+        "attributes": [
+          "ut eum et",
+          "quis odit est"
+        ],
+        "id": "11"
+      },
+      {
+        "value": "officiis quisquam",
+        "attributes": [
+          "qui et sit",
+          "occaecati facere temporibus"
+        ],
+        "id": "12"
+      }
+    ]
+  },
+  {
+    "label": "Teaching",
+    "hidden": "false",
+    "data": [
+      {
+        "value": "qui nesciunt",
+        "attributes": [
+          "molestiae commodi ipsum",
+          "eos dolorem in"
+        ],
+        "id": "10"
+      },
+      {
+        "value": "animi voluptates",
+        "attributes": [
+          "ut eum et",
+          "quis odit est"
+        ],
+        "id": "11"
+      },
+      {
+        "value": "officiis quisquam",
+        "attributes": [
+          "qui et sit",
+          "occaecati facere temporibus"
+        ],
+        "id": "12"
+      }
+    ]
+  }
+]

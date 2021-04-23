@@ -7,13 +7,13 @@
   },
   "servers": [
     {
-      "url": "http://localhost:9902"
+      "url": "http://localhost:9001"
     }
   ],
   "paths": {
     "/api/v1/autocomplete": {
       "post": {
-        "description": "Exact string search matching titles",
+        "description": "Exact string search matching titles.",
         "operationId": "api_v1_autocomplete_read",
         "tags": [
           "api"
@@ -89,7 +89,7 @@
         "parameters": [
           {
             "name": "filter",
-            "description": "array of objects with all filters applied",
+            "description": "Array of objects with all filters applied",
             "in": "query",
             "schema": {
               "type": "array",
@@ -475,7 +475,7 @@
           },
           {
             "name": "offset",
-            "description": "The initial index from which to return the results.",
+            "description": "The initial index to return the results.",
             "in": "query",
             "schema": {
               "type": "integer"
@@ -766,7 +766,7 @@
               "institution",
               "department"
             ],
-            "description": "in future version should be configurable with cms - see issue #1121"
+            "description": "Future version should be configurable with cms - see issue #1121"
           }
         }
       },
@@ -941,7 +941,7 @@
             "format": "uri"
           },
           "previews": {
-            "description": "return all generated size/sources",
+            "description": "Return all generated size/sources.",
             "type": "array",
             "items": {
               "type": "object"
@@ -1165,7 +1165,7 @@
             "type": "string"
           },
           "total": {
-            "description": "total number of activities in that album",
+            "description": "Total number of activities in that album.",
             "type": "number"
           },
           "data": {

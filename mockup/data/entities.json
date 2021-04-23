@@ -1,0 +1,119 @@
+{
+  "id": "1",
+  "date_changed": "2021-01-01T13:00:00.000Z",
+  "date_created": "2021-01-01T12:00:00.000Z",
+  "expertise": [
+    "Teaching",
+    "Research"
+  ],
+  "list": [],
+  "locations": [
+    {
+      "coordinates": [
+        "16.384510",
+        "48.208370"
+      ],
+      "data": [
+        "Oskar Kokoschka-Platz 2",
+        "1010 Wien",
+        "Austria"
+      ]
+    }
+  ],
+  "featuredMedia": {
+    "id": "123",
+    "alternative": [
+      "Robin Smith, 2021"
+    ],
+    "licence": {
+      "label": "Copyright",
+      "source": "http://base.uni-ak.ac.at/portfolio/licenses/copyright"
+    },
+    "original": "https://placeimg.com/1920/1200/arch",
+    "previews": [
+      {
+        "640w": "https://placeimg.com/640/400/arch"
+      },
+      {
+        "768w": "https://placeimg.com/768/600/arch"
+      },
+      {
+        "1024w": "https://placeimg.com/1024/800/arch"
+      },
+      {
+        "1366w": "https://placeimg.com/1366/866/arch"
+      },
+      {
+        "1600w": "https://placeimg.com/1600/1000/arch"
+      },
+      {
+        "1920w": "https://placeimg.com/1920/1200/arch"
+      }
+    ],
+    "thumbnail": "https://placeimg.com/400/300/arch",
+    "type": "i"
+  },
+  "primary_details": [
+    [
+      {
+        "label": "Contact",
+        "data": [
+          {
+            "label": "E-Mail",
+            "value": "mailto:robin.smith@uni-ak.ac.at",
+            "url": "mailto:robin.smith@uni-ak.ac.at"
+          },
+          {
+            "label": "Tel",
+            "value": "+43 (0)1 71133"
+          },
+          {
+            "label": "Website",
+            "value": "www.dieangewandte.at",
+            "url": "www.dieangewandte.at"
+          }
+        ]
+      }
+    ]
+  ],
+  "secondary_details": [
+    [
+      {
+        "label": "Details",
+        "data": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet."
+      }
+    ]
+  ],
+  "showcase": [
+    {
+      "id": "string",
+      "media": [
+        [
+          {
+            "455w": "https://placeimg.com/460/341/arch"
+          },
+          {
+            "654w": "https://placeimg.com/640/480/arch"
+          }
+        ]
+      ],
+      "showcase_type": "album",
+      "title": "string",
+      "subtext": [
+        "string"
+      ],
+      "total": 0
+    }
+  ],
+  "source_institution": {
+    "label": "University of Applied Arts Vienna",
+    "url": "https://www.dieangewandte.at/",
+    "icon": "https://base.uni-ak.ac.at/bs/img/angewandte.svg"
+  },
+  "subtext": [
+    "History of Art Department",
+    "University of Applied Arts Vienna"
+  ],
+  "title": "Univ. Prof. Dr. Robin Smith",
+  "type": "person"
+}
