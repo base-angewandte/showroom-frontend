@@ -13,7 +13,7 @@ Vue.use(Router);
 export function createRouter() {
   return new Router({
     mode: 'history',
-    base: process.env.appPrefix,
+    base: `${process.env.appPrefix}/`,
     routes: [
       {
         path: '/',

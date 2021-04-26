@@ -32,7 +32,7 @@ export default {
     ],
   },
   router: {
-    base: process.env.APP_PREFIX || '/',
+    base: `${process.env.APP_PREFIX}/`,
     middleware: ['i18n'],
   },
   /*
