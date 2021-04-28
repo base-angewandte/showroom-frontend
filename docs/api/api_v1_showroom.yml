@@ -104,9 +104,8 @@ paths:
               type: array
               items:
                 $ref: '#/components/schemas/Activity'
-
       responses:
-        200:
+        201:
           description: 'All items successfully created/updated.'
           content:
             application/json:
@@ -125,14 +124,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        401:
-          description: 'Unauthorized access.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
         403:
-          description: "Activity not found"
+          description: 'Forbidden'
           content:
             application/json:
               schema:
@@ -163,6 +156,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    delete:
+      description: 'Delete the activity'
+      operationId: api_v1_activities_delete
+      tags:
+        - repo
+      responses:
+        204:
+          description: 'Successfully deleted'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
 
   /activities/{id}/media:
     get:
@@ -185,6 +204,46 @@ paths:
                 $ref: '#/components/schemas/Media'
         404:
           description: "Activity/Media not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /entities:
+    post:
+      description: 'Create one or more entities. If an entity already exists, it will be updated with the new values.'
+      operationId: api_v1_entities_create
+      tags:
+        - repo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Entity'
+      responses:
+        201:
+          description: 'All entities successfully created/updated.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created:
+                    type: integer
+                    description: 'Number of newly created entities.'
+                  updated:
+                    type: integer
+                    description: 'Number of updated entities.'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        403:
+          description: 'Forbidden'
           content:
             application/json:
               schema:
@@ -263,6 +322,33 @@ paths:
           description: 'Not found'
         5XX:
           description: 'Unexpected error'
+    delete:
+      description: 'Delete the entity'
+      operationId: api_v1_entities_delete
+      tags:
+        - repo
+      responses:
+        204:
+          description: 'Successfully deleted'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
+
 
   /entities/{id}/activities:
     get:
@@ -375,6 +461,37 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /albums:
+    post:
+      operationId: api_v1_albums_create
+      description: 'Create an album belonging to the authenticated user'
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+      responses:
+        '201':
+          description: 'Album was created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /albums/{id}:
     get:
       description: 'Returns a single album object.'
@@ -400,6 +517,127 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    patch:
+      description: 'Update the album'
+      operationId: api_v1_albums_partial_update
+      tags:
+        - auth
+      responses:
+        204:
+          description: 'Successfully updated'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
+    delete:
+      description: 'Delete the album'
+      operationId: api_v1_albums_delete
+      tags:
+        - auth
+      responses:
+        204:
+          description: 'Successfully deleted'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
+
+  /media:
+    post:
+      description: 'Create one or more media. If one already exists, it will be updated with the new values.'
+      operationId: api_v1_media_create
+      tags:
+        - repo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Media'
+      responses:
+        201:
+          description: 'All media successfully created/updated.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created:
+                    type: integer
+                    description: 'Number of newly created media.'
+                  updated:
+                    type: integer
+                    description: 'Number of updated media.'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        403:
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /media/{id}:
+    delete:
+      description: 'Delete the media entry'
+      operationId: api_v1_media_delete
+      tags:
+        - repo
+      responses:
+        204:
+          description: 'Successfully deleted'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
+
 
 components:
   schemas:
