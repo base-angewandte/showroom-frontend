@@ -1371,10 +1371,7 @@ components:
     Error:
       type: object
       required:
-        - code
-        - message
+        - detail
       properties:
-        code:
-          type: integer
-        message:
+        detail:
           type: string
