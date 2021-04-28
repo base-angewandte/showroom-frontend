@@ -45,7 +45,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Autocomplete'
 
-  /filter:
+  /filters:
     get:
       description: 'Returns all possible filters for the search.'
       operationId: api_v1_filter_list
