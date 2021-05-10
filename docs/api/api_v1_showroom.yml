@@ -715,17 +715,11 @@ components:
         featuredMedia:
           $ref: '#/components/schemas/CommonFeaturedImage'
         primary_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonText'
+          $ref: '#/components/schemas/CommonText'
         publisher:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonPublisher'
+          $ref: '#/components/schemas/CommonPublisher'
         secondary_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonText'
+          $ref: '#/components/schemas/CommonText'
         source_institution:
           $ref: '#/components/schemas/CommonSourceInstitution'
         subtext:
@@ -766,13 +760,9 @@ components:
         featuredMedia:
           $ref: '#/components/schemas/CommonFeaturedImage'
         primary_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonText'
+          $ref: '#/components/schemas/CommonText'
         secondary_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonText'
+          $ref: '#/components/schemas/CommonText'
         showcase:
           type: array
           items:
@@ -879,13 +869,9 @@ components:
         subtext:
           type: string
         secondary_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonText'
+          $ref: '#/components/schemas/CommonText'
         publisher:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonPublisher'
+          $ref: '#/components/schemas/CommonPublisher'
 
     #
     # Media
@@ -1235,16 +1221,18 @@ components:
 
     ## TextList
     CommonText:
-      type: object
-      properties:
-        label:
-          type: string
-        data:
-          type: string
-          anyOf:
-            - $ref: '#/components/schemas/CommonTextString'
-            - $ref: '#/components/schemas/CommonTextArray'
-            - $ref: '#/components/schemas/CommonTextObject'
+      type: array
+      items:
+        type: object
+        properties:
+          label:
+            type: string
+          data:
+            type: string
+            anyOf:
+              - $ref: '#/components/schemas/CommonTextString'
+              - $ref: '#/components/schemas/CommonTextArray'
+              - $ref: '#/components/schemas/CommonTextObject'
       example:
         - label: string
           data: string
