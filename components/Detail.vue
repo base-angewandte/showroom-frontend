@@ -105,6 +105,39 @@
         :items="data.showcase"
         :swiper-options="swiperOptions" />
     </div>
+
+    <!-- lists -->
+    <div
+      v-if="data.list.length"
+      class="base-sr-row">
+      <BaseEditControl
+        :controls="userCanEdit"
+        :edit="editList"
+        :subtitle="'(' + data.list.filter(item => !item.hidden).length + ')'"
+        :title="type !== 'person' ? $t('lists') : $t('activityLists')"
+        class="base-sr--ml-small"
+        @activated="activateList"
+        @canceled="cancelList"
+        @saved="saveList" />
+
+      <BaseExpandList
+        ref="baseExpandList"
+        :edit="userCanEdit && editList"
+        :data="editList ? data.list : data.list.filter(item => !item.hidden)"
+        :show-more-text="$t('show_all')"
+        :show-less-text="$t('show_less')"
+        @saved="saveListEdit">
+        <template
+          v-slot:content="props">
+          <a
+            :href="props.data.href ? props.data.href : '#'"
+            :title="props.data.value">{{ props.data.value }}</a>
+          <template v-if="props.data.attributes">
+            - {{ props.data.attributes.join(', ') }}
+          </template>
+        </template>
+      </BaseExpandList>
+    </div>
   </div>
 </template>
 
@@ -115,6 +148,7 @@ import {
   BaseCarousel,
   BaseEditControl,
   BaseExpandBox,
+  BaseExpandList,
   BaseImage,
   BaseTextList,
 } from 'base-ui-components';
@@ -123,6 +157,7 @@ import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
 import 'base-ui-components/dist/components/BaseCarousel/BaseCarousel.css';
 import 'base-ui-components/dist/components/BaseEditControl/BaseEditControl.css';
 import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
+import 'base-ui-components/dist/components/BaseExpandList/BaseExpandList.css';
 import 'base-ui-components/dist/components/BaseImage/BaseImage.css';
 import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
 
@@ -130,6 +165,7 @@ Vue.use(BaseButton);
 Vue.use(BaseCarousel);
 Vue.use(BaseEditControl);
 Vue.use(BaseExpandBox);
+Vue.use(BaseExpandList);
 Vue.use(BaseImage);
 Vue.use(BaseTextList);
 export default {
@@ -163,6 +199,7 @@ export default {
   },
   data() {
     return {
+      editList: false,
       editShowcase: false,
       swiperOptions: {
         slidesPerView: 2,
@@ -191,6 +228,21 @@ export default {
     featuredImageSrc(size) {
       const { previews } = this.data.featuredMedia;
       return previews ? Object.values(previews.find((i) => Object.keys(i)[0] === size))[0] : null;
+    },
+    /* EDIT LIST */
+    activateList() {
+      this.editList = true;
+    },
+    cancelList() {
+      this.editList = false;
+      this.$refs.baseExpandList.reset();
+    },
+    saveList() {
+      this.editList = false;
+      this.$refs.baseExpandList.save();
+    },
+    saveListEdit(val) {
+      console.log('save list', val);
     },
     /* EDIT SHOWCASE */
     activateShowcase() {

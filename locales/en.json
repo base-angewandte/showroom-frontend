@@ -1,5 +1,10 @@
 {
+  "activityLists": "Activity list",
+  "activityShowcase": "Activity-Showcase",
+  "editButtonText": "Edit",
+  "lists": "Lists",
   "print": "Print",
   "show_more": "Show more",
   "show_less": "Show less",
+  "show_all": "Show all"
 }
