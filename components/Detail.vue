@@ -76,9 +76,14 @@
       </BaseExpandBox>
 
       <!-- featured media -->
+      <!-- TODO: add different media formats -->
       <div
+        v-if="data.featuredMedia"
         class="base-sr-row base-sr-head__media">
-        featured_media
+        <BaseImage
+          :alt="data.featuredMedia.alternative.join(', ')"
+          :lazyload="true"
+          :src="featuredImageSrc('640w')" />
       </div>
     </div>
   </div>
@@ -89,15 +94,18 @@ import Vue from 'vue';
 import {
   BaseButton,
   BaseExpandBox,
+  BaseImage,
   BaseTextList,
 } from 'base-ui-components';
 
 import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
 import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
+import 'base-ui-components/dist/components/BaseImage/BaseImage.css';
 import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
 
 Vue.use(BaseButton);
 Vue.use(BaseExpandBox);
+Vue.use(BaseImage);
 Vue.use(BaseTextList);
 export default {
   name: 'Detail',
@@ -128,6 +136,10 @@ export default {
       default: false,
     },
   },
+    featuredImageSrc(size) {
+      const { previews } = this.data.featuredMedia;
+      return previews ? Object.values(previews.find((i) => Object.keys(i)[0] === size))[0] : null;
+    },
 };
 </script>
 
