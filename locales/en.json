@@ -1,10 +1,16 @@
 {
   "activityLists": "Activity list",
   "activityShowcase": "Activity-Showcase",
+  "address": "Address",
+  "addresses": "Addresses",
   "editButtonText": "Edit",
   "lists": "Lists",
+  "location": "Location",
+  "locations": "Locations",
   "print": "Print",
   "show_more": "Show more",
+  "show_more_map": "Show Map and Address",
   "show_less": "Show less",
+  "show_less_map": "Collapse Map and Address",
   "show_all": "Show all"
 }

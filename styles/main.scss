@@ -12,6 +12,11 @@
   --switch-checked-color: #4d4d4d;
   --switch-svg-checked-color: #ffffff;
   --graytext-color: #808080;
+
+  --map-cluster-bg: rgba(103, 58, 183, .4);
+  --map-cluster-bg-inner: rgba(103, 58, 183, .85);
+  --map-cluster-bg-hover: rgba(176, 133, 245, .4);
+  --map-cluster-bg-inner-hover: rgba(176, 133, 245, .85);
 }
 
 html {

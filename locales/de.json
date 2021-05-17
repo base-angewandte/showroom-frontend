@@ -1,10 +1,16 @@
 {
   "activityLists": "Aktivitätenlisten",
   "activityShowcase": "Aktivitäten-Showcase",
+  "address": "Adresse",
+  "addresses": "Adressen",
   "editButtonText": "editieren",
   "lists": "Listen",
+  "location": "Ort",
+  "locations": "Orte",
   "print": "Drucken",
   "show_more": "Mehr anzeigen",
+  "show_more_map": "Karte und Adresse anzeigen",
   "show_less": "Weniger anzeigen",
+  "show_less_map": "Karte und Adresse verstecken",
   "show_all": "Alle anzeigen"
 }

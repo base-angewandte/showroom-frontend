@@ -138,6 +138,28 @@
         </template>
       </BaseExpandList>
     </div>
+
+    <!-- locations -->
+    <div
+      v-if="data.locations"
+      class="base-sr-row">
+      <h2 class="base-sr--ml-small">
+        {{ data.locations.length > 1 ? $t('locations') : $t('location') }}
+      </h2>
+
+      <base-expand-box
+        :show-more-text="$t('show_more_map')"
+        :show-less-text="$t('show_less_map')">
+        <base-map-locations
+          attribution-position="topright"
+          :attribution="mapAttribution"
+          :copyright="mapCopyright"
+          :label="data.locations.length > 1 ? $t('addresses') : $t('address')"
+          :locations="data.locations"
+          :options="mapOptions"
+          :url="mapUrl" />
+      </base-expand-box>
+    </div>
   </div>
 </template>
 
@@ -150,6 +172,7 @@ import {
   BaseExpandBox,
   BaseExpandList,
   BaseImage,
+  BaseMapLocations,
   BaseTextList,
 } from 'base-ui-components';
 
@@ -159,6 +182,7 @@ import 'base-ui-components/dist/components/BaseEditControl/BaseEditControl.css';
 import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
 import 'base-ui-components/dist/components/BaseExpandList/BaseExpandList.css';
 import 'base-ui-components/dist/components/BaseImage/BaseImage.css';
+import 'base-ui-components/dist/components/BaseMapLocations/BaseMapLocations.css';
 import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
 
 Vue.use(BaseButton);
@@ -167,6 +191,7 @@ Vue.use(BaseEditControl);
 Vue.use(BaseExpandBox);
 Vue.use(BaseExpandList);
 Vue.use(BaseImage);
+Vue.use(BaseMapLocations);
 Vue.use(BaseTextList);
 export default {
   name: 'Detail',
@@ -201,6 +226,16 @@ export default {
     return {
       editList: false,
       editShowcase: false,
+      // TODO: define map related parameters in .env
+      mapAttribution: 'Source: <a href="http://basemap.at">basemap.at</a>',
+      mapCopyright: '<a href=http://creativecommons.org/licenses/by-sa/3.0/>CC BY-SA 3.0</a>',
+      mapUrl: 'https://{s}.wien.gv.at/basemap/{type}/{style}/{tileMatrixSet}/{z}/{y}/{x}.png',
+      mapOptions: {
+        style: 'normal',
+        subdomains: ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
+        tileMatrixSet: 'google3857',
+        type: 'geolandbasemap',
+      },
       swiperOptions: {
         slidesPerView: 2,
         slidesPerGroup: 2,
