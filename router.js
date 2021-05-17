@@ -3,9 +3,9 @@ import Vue from 'vue';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Router from 'vue-router';
 
-import Discover from '~/views/discover';
-import ObjectView from '~/views/ObjectView';
-import PersonView from '~/views/PersonView';
+import Discover from '~/views/Discover';
+import ActivityView from '~/views/ActivityView';
+import EntityView from '~/views/EntityView';
 
 Vue.use(Router);
 
@@ -29,24 +29,24 @@ export function createRouter() {
           {
             path: ':id(\\w+\\.\\w+\\d*)',
             name: 'PersonLang',
-            component: PersonView,
+            component: EntityView,
           },
           {
             path: ':id/:slug?',
             name: 'ObjectLang',
-            component: ObjectView,
+            component: ActivityView,
           },
         ],
       },
       {
         path: '/:id(\\w+\\.\\w+\\d*)',
         name: 'Person',
-        component: PersonView,
+        component: EntityView,
       },
       {
         path: '/:id/:slug?',
         name: 'Object',
-        component: ObjectView,
+        component: ActivityView,
       },
     ],
   });
