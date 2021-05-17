@@ -160,6 +160,18 @@
           :url="mapUrl" />
       </base-expand-box>
     </div>
+
+    <!-- owner, dates -->
+    <div
+      v-if="data.publisher"
+      class="base-sr-row base-sr-last-modified">
+      <p>
+        {{ $t('publisher') }}: {{ data.publisher[0].name }} |
+        Showroom Instance: {{ data.source_institution.label }} |
+        {{ $t('publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
+        {{ $t('editedDate') }}: {{ createHumanReadableDate(data.date_changed) }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -259,7 +271,16 @@ export default {
       },
     };
   },
+  computed: {
+    lang() {
+      return this.$store.state.appData.locale;
+    },
+  },
   methods: {
+    createHumanReadableDate(val) {
+      const date = new Date(val);
+      return `${date.toLocaleDateString(this.lang)}, ${date.toLocaleTimeString(this.lang)}`;
+    },
     featuredImageSrc(size) {
       const { previews } = this.data.featuredMedia;
       return previews ? Object.values(previews.find((i) => Object.keys(i)[0] === size))[0] : null;
