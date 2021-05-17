@@ -62,10 +62,18 @@
       </BaseExpandBox>
 
       <!-- secondary details -->
-      <div
+      <BaseExpandBox
+        :show-more-text="$i18n.t('show_more')"
+        :show-less-text="$i18n.t('show_less')"
+        padding="large"
         class="base-sr-row base-sr-head__secondary">
-        secondary_details
-      </div>
+        <BaseTextList
+          render-label-as="h2"
+          :label-margin-bottom="true"
+          :data="data.secondary_details"
+          :cols2="true"
+          :cols2-breakpoint="1400" />
+      </BaseExpandBox>
 
       <!-- featured media -->
       <div
