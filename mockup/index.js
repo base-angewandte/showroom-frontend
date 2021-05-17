@@ -3,6 +3,7 @@ const express = require('express');
 const OpenAPIBackend = require('openapi-backend').default;
 
 const apiSpec = require('./swagger.json');
+const apiV1ActivitiesRead = require('./data/activities.json');
 const apiV1EntitiesRead = require('./data/entities.json');
 const apiV1EntitiesActivitiesRead = require('./data/entities.activities.json');
 
@@ -26,6 +27,9 @@ app.use(express.json());
 const api = new OpenAPIBackend({
   definition: apiSpecAdditionalRoutes,
   handlers: {
+    api_v1_activities_read: async (c, req, res) => res.status(200).json(
+      apiV1ActivitiesRead,
+    ),
     api_v1_entities_read: async (c, req, res) => res.status(200).json(
       apiV1EntitiesRead,
     ),

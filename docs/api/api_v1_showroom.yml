@@ -5,13 +5,22 @@ info:
   version: 1.0.0
 servers:
   - url: ''
+
+tags:
+  - name: public
+    description: Methods that can be used by the frontend without authentication.
+  - name: auth
+    description: Methods that can only be used by authenticated users
+  - name: repo
+    description: Methods that are reserved for backend repositories to keep showroom content synchronized
+
 paths:
-  /api/v1/autocomplete:
+  /autocomplete:
     post:
       description: 'Exact string search matching titles.'
       operationId: api_v1_autocomplete_read
       tags:
-        - api
+        - public
       parameters:
         - name: q
           description: 'Search query string.'
@@ -36,12 +45,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Autocomplete'
 
-  /api/v1/filter:
+  /filters:
     get:
       description: 'Returns all possible filters for the search.'
       operationId: api_v1_filter_list
       tags:
-        - api
+        - public
       responses:
         200:
           description: 'Returns all possible filters for the search.'
@@ -49,12 +58,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Filter'
-  /api/v1/search:
+  /search:
     post:
       description: 'Returns all possible results.'
       operationId: api_v1_search_read
       tags:
-        - api
+        - public
       parameters:
         - name: filter
           description: 'Array of objects with all filters applied'
@@ -82,12 +91,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/Search'
 
-  /api/v1/activities/{id}:
+  /activities:
+    post:
+      description: 'Create one or more activities. If an activity already exists, it will be updated with the new values.'
+      operationId: api_v1_activities_create
+      tags:
+        - repo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Activity'
+      responses:
+        201:
+          description: 'All items successfully created/updated.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created:
+                    type: integer
+                    description: 'Number of newly created activities.'
+                  updated:
+                    type: integer
+                    description: 'Number of updated activities.'
+        400:
+          description: 'Bad request.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /activities/{id}:
     get:
       description: 'Returns a single activity object.'
       operationId: api_v1_activities_read
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -107,13 +156,39 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    delete:
+      description: 'Delete the activity'
+      operationId: api_v1_activities_delete
+      tags:
+        - repo
+      responses:
+        204:
+          description: 'Successfully deleted'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
 
-  /api/v1/activities/{id}/media:
+  /activities/{id}/media:
     get:
       description: 'Returns an array of media objects related to an specific activity.'
       operationId: api_v1_activities_media_read
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -134,12 +209,52 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /api/v1/entities/{id}:
+  /entities:
+    post:
+      description: 'Create one or more entities. If an entity already exists, it will be updated with the new values.'
+      operationId: api_v1_entities_create
+      tags:
+        - repo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Entity'
+      responses:
+        201:
+          description: 'All entities successfully created/updated.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created:
+                    type: integer
+                    description: 'Number of newly created entities.'
+                  updated:
+                    type: integer
+                    description: 'Number of updated entities.'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        403:
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /entities/{id}:
     get:
       description: 'Returns a single entity object.'
       operationId: api_v1_entities_read
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -163,7 +278,7 @@ paths:
       description: 'Partially update a certain entity; currently only for fields "secondary_details", "showcase"'
       operationId: api_v1_entities_partial_update
       tags:
-        - api
+        - auth
       parameters:
         - description: 'ID of entity to patch'
           in: path
@@ -187,12 +302,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: 'Invalid input'
-        401:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: 'Unauthorized'
         403:
           content:
             application/json:
@@ -207,13 +316,40 @@ paths:
           description: 'Not found'
         5XX:
           description: 'Unexpected error'
+    delete:
+      description: 'Delete the entity'
+      operationId: api_v1_entities_delete
+      tags:
+        - repo
+      responses:
+        204:
+          description: 'Successfully deleted'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
 
-  /api/v1/entities/{id}/activities:
+
+  /entities/{id}/activities:
     get:
       description: 'Returns array of activities related to an specific entity.'
       operationId: api_v1_entities_activities_read
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -237,7 +373,7 @@ paths:
       description: 'Update order and visibility of activities'
       operationId: api_v1_entities_activities_partial_update
       tags:
-        - api
+        - auth
       parameters:
         - name: id
           in: path
@@ -260,8 +396,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        401:
-          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
           content:
             application/json:
               schema:
@@ -275,12 +411,12 @@ paths:
         5XX:
           description: 'Unexpected error'
 
-  /api/v1/entities/{id}/search:
+  /entities/{id}/search:
     post:
       description: 'Returns all possible results of a specific entity, e.g. person.'
       operationId: api_v1_entities_search
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -319,12 +455,43 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /api/v1/albums/{id}:
+  /albums:
+    post:
+      operationId: api_v1_albums_create
+      description: 'Create an album belonging to the authenticated user'
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+      responses:
+        '201':
+          description: 'Album was created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /albums/{id}:
     get:
       description: 'Returns a single album object.'
       operationId: api_v1_albums_read
       tags:
-        - api
+        - public
       parameters:
         - name: id
           in: path
@@ -344,6 +511,127 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    patch:
+      description: 'Update the album'
+      operationId: api_v1_albums_partial_update
+      tags:
+        - auth
+      responses:
+        204:
+          description: 'Successfully updated'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
+    delete:
+      description: 'Delete the album'
+      operationId: api_v1_albums_delete
+      tags:
+        - auth
+      responses:
+        204:
+          description: 'Successfully deleted'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
+
+  /media:
+    post:
+      description: 'Create one or more media. If one already exists, it will be updated with the new values.'
+      operationId: api_v1_media_create
+      tags:
+        - repo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Media'
+      responses:
+        201:
+          description: 'All media successfully created/updated.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created:
+                    type: integer
+                    description: 'Number of newly created media.'
+                  updated:
+                    type: integer
+                    description: 'Number of updated media.'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        403:
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /media/{id}:
+    delete:
+      description: 'Delete the media entry'
+      operationId: api_v1_media_delete
+      tags:
+        - repo
+      responses:
+        204:
+          description: 'Successfully deleted'
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid input'
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Forbidden'
+        404:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Not found'
+
 
 components:
   schemas:
@@ -367,9 +655,12 @@ components:
     AutocompleteItem:
       type: object
       properties:
-        subset:
+        source:
           type: string
           example: 'person'
+        label:
+          type: string
+          example: 'Person'
         data:
           type: array
           items:
@@ -424,17 +715,11 @@ components:
         featuredMedia:
           $ref: '#/components/schemas/CommonFeaturedImage'
         primary_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonText'
+          $ref: '#/components/schemas/CommonText'
         publisher:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonPublisher'
+          $ref: '#/components/schemas/CommonPublisher'
         secondary_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonText'
+          $ref: '#/components/schemas/CommonText'
         source_institution:
           $ref: '#/components/schemas/CommonSourceInstitution'
         subtext:
@@ -443,8 +728,6 @@ components:
             type: string
         title:
           type: string
-          items:
-            type: string
         type:
           type: string
 
@@ -477,13 +760,9 @@ components:
         featuredMedia:
           $ref: '#/components/schemas/CommonFeaturedImage'
         primary_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonText'
+          $ref: '#/components/schemas/CommonText'
         secondary_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonText'
+          $ref: '#/components/schemas/CommonText'
         showcase:
           type: array
           items:
@@ -590,13 +869,9 @@ components:
         subtext:
           type: string
         secondary_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonText'
+          $ref: '#/components/schemas/CommonText'
         publisher:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommonPublisher'
+          $ref: '#/components/schemas/CommonPublisher'
 
     #
     # Media
@@ -917,19 +1192,19 @@ components:
     CommonLocation:
       type: object
       properties:
-        lat_long:
+        coordinates:
           type: array
           items:
             type: string
-        address:
+        data:
           type: array
           items:
             type: string
       example:
-        lat_long:
-          - '48.208370'
+        coordinates:
           - '16.384510'
-        address:
+          - '48.208370'
+        data:
           - 'Oskar Kokoschka-Platz 2'
           - '1010 Wien'
           - 'Austria'
@@ -946,16 +1221,18 @@ components:
 
     ## TextList
     CommonText:
-      type: object
-      properties:
-        label:
-          type: string
-        data:
-          type: string
-          anyOf:
-            - $ref: '#/components/schemas/CommonTextString'
-            - $ref: '#/components/schemas/CommonTextArray'
-            - $ref: '#/components/schemas/CommonTextObject'
+      type: array
+      items:
+        type: object
+        properties:
+          label:
+            type: string
+          data:
+            type: string
+            anyOf:
+              - $ref: '#/components/schemas/CommonTextString'
+              - $ref: '#/components/schemas/CommonTextArray'
+              - $ref: '#/components/schemas/CommonTextObject'
       example:
         - label: string
           data: string
@@ -978,9 +1255,6 @@ components:
 
     CommonTextString:
       type: string
-      example:
-        label: string
-        data: string
 
     CommonTextArray:
       type: array
@@ -988,20 +1262,22 @@ components:
         type: string
 
     CommonTextObject:
-      type: object
-      required:
-        - label
-        - value
-      properties:
-        label:
-          type: string
-        value:
-          type: string
-        url:
-          type: string
-          format: uri
-        source:
-          type: string
+      type: array
+      items:
+        type: object
+        required:
+          - label
+          - value
+        properties:
+          label:
+            type: string
+          value:
+            type: string
+          url:
+            type: string
+            format: uri
+          source:
+            type: string
 
     ## SourceInstitution
     CommonSourceInstitution:
@@ -1085,10 +1361,7 @@ components:
     Error:
       type: object
       required:
-        - code
-        - message
+        - detail
       properties:
-        code:
-          type: integer
-        message:
+        detail:
           type: string

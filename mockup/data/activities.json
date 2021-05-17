@@ -1,0 +1,439 @@
+{
+  "id": "123",
+  "date_changed": "2021-01-01T13:00:00.000Z",
+  "date_created": "2021-01-01T12:00:00.000Z",
+  "entries": {
+    "media": [
+      {
+        "id": "1",
+        "alternative": [
+          "alternative text"
+        ],
+        "licence": {
+          "label": "Copyright",
+          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+        },
+        "original": "https://placeimg.com/1920/1200/arch",
+        "previews": [
+          {
+            "640w": "https://placeimg.com/640/400/arch"
+          },
+          {
+            "768w": "https://placeimg.com/768/600/arch"
+          },
+          {
+            "1024w": "https://placeimg.com/1024/800/arch"
+          },
+          {
+            "1366w": "https://placeimg.com/1366/866/arch"
+          },
+          {
+            "1600w": "https://placeimg.com/1600/1000/arch"
+          },
+          {
+            "1920w": "https://placeimg.com/1920/1200/arch"
+          }
+        ],
+        "thumbnail": "https://placeimg.com/400/300/arch",
+        "type": "i"
+      },
+      {
+        "id": "2",
+        "alternative": [
+          "alternative text"
+        ],
+        "licence": {
+          "label": "Copyright",
+          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+        },
+        "original": "https://placeimg.com/1920/1200/tech",
+        "previews": [
+          {
+            "640w": "https://placeimg.com/640/400/tech"
+          },
+          {
+            "768w": "https://placeimg.com/768/600/tech"
+          },
+          {
+            "1024w": "https://placeimg.com/1024/800/tech"
+          },
+          {
+            "1366w": "https://placeimg.com/1366/866/tech"
+          },
+          {
+            "1600w": "https://placeimg.com/1600/1000/tech"
+          },
+          {
+            "1920w": "https://placeimg.com/1920/1200/tech"
+          }
+        ],
+        "thumbnail": "https://placeimg.com/400/300/tech",
+        "type": "i"
+      },
+      {
+        "id": "3",
+        "alternative": [
+          "alternative text"
+        ],
+        "licence": {
+          "label": "Copyright",
+          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+        },
+        "original": "https://placeimg.com/1920/1200/nature",
+        "previews": [
+          {
+            "640w": "https://placeimg.com/640/400/nature"
+          },
+          {
+            "768w": "https://placeimg.com/768/600/nature"
+          },
+          {
+            "1024w": "https://placeimg.com/1024/800/nature"
+          },
+          {
+            "1366w": "https://placeimg.com/1366/866/nature"
+          },
+          {
+            "1600w": "https://placeimg.com/1600/1000/nature"
+          },
+          {
+            "1920w": "https://placeimg.com/1920/1200/nature"
+          }
+        ],
+        "thumbnail": "https://placeimg.com/400/300/arch",
+        "type": "i"
+      },
+      {
+        "id": "4",
+        "alternative": [
+          "alternative text"
+        ],
+        "licence": {
+          "label": "Copyright",
+          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+        },
+        "original": "https://placeimg.com/1920/1200/people",
+        "previews": [
+          {
+            "640w": "https://placeimg.com/640/400/people"
+          },
+          {
+            "768w": "https://placeimg.com/768/600/people"
+          },
+          {
+            "1024w": "https://placeimg.com/1024/800/people"
+          },
+          {
+            "1366w": "https://placeimg.com/1366/866/people"
+          },
+          {
+            "1600w": "https://placeimg.com/1600/1000/people"
+          },
+          {
+            "1920w": "https://placeimg.com/1920/1200/people"
+          }
+        ],
+        "thumbnail": "https://placeimg.com/400/300/people",
+        "type": "i"
+      },
+      {
+        "id": "5",
+        "alternative": [
+          "alternative text"
+        ],
+        "licence": {
+          "label": "Copyright",
+          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+        },
+        "original": "https://placeimg.com/1920/1200/animals",
+        "previews": [
+          {
+            "640w": "https://placeimg.com/640/400/animals"
+          },
+          {
+            "768w": "https://placeimg.com/768/600/animals"
+          },
+          {
+            "1024w": "https://placeimg.com/1024/800/animals"
+          },
+          {
+            "1366w": "https://placeimg.com/1366/866/animals"
+          },
+          {
+            "1600w": "https://placeimg.com/1600/1000/animals"
+          },
+          {
+            "1920w": "https://placeimg.com/1920/1200/animals"
+          }
+        ],
+        "thumbnail": "https://placeimg.com/400/300/animals",
+        "type": "i"
+      },
+      {
+        "id": "6",
+        "alternative": [
+          "alternative text"
+        ],
+        "licence": {
+          "label": "Copyright",
+          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+        },
+        "original": "https://placeimg.com/1920/1200/arch",
+        "previews": [
+          {
+            "640w": "https://placeimg.com/640/400/arch"
+          },
+          {
+            "768w": "https://placeimg.com/768/600/arch"
+          },
+          {
+            "1024w": "https://placeimg.com/1024/800/arch"
+          },
+          {
+            "1366w": "https://placeimg.com/1366/866/arch"
+          },
+          {
+            "1600w": "https://placeimg.com/1600/1000/arch"
+          },
+          {
+            "1920w": "https://placeimg.com/1920/1200/arch"
+          }
+        ],
+        "thumbnail": "https://placeimg.com/400/300/arch",
+        "type": "i"
+      },
+      {
+        "id": "7",
+        "alternative": [
+          "alternative text"
+        ],
+        "licence": {
+          "label": "Copyright",
+          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+        },
+        "original": "https://placeimg.com/1920/1200/arch",
+        "previews": [
+          {
+            "640w": "https://placeimg.com/640/400/arch"
+          },
+          {
+            "768w": "https://placeimg.com/768/600/arch"
+          },
+          {
+            "1024w": "https://placeimg.com/1024/800/arch"
+          },
+          {
+            "1366w": "https://placeimg.com/1366/866/arch"
+          },
+          {
+            "1600w": "https://placeimg.com/1600/1000/arch"
+          },
+          {
+            "1920w": "https://placeimg.com/1920/1200/arch"
+          }
+        ],
+        "thumbnail": "https://placeimg.com/400/300/arch",
+        "type": "i"
+      },
+      {
+        "id": "8",
+        "alternative": [
+          "alternative text"
+        ],
+        "licence": {
+          "label": "Copyright",
+          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+        },
+        "original": "https://placeimg.com/1920/1200/arch",
+        "previews": [
+          {
+            "640w": "https://placeimg.com/640/400/arch"
+          },
+          {
+            "768w": "https://placeimg.com/768/600/arch"
+          },
+          {
+            "1024w": "https://placeimg.com/1024/800/arch"
+          },
+          {
+            "1366w": "https://placeimg.com/1366/866/arch"
+          },
+          {
+            "1600w": "https://placeimg.com/1600/1000/arch"
+          },
+          {
+            "1920w": "https://placeimg.com/1920/1200/arch"
+          }
+        ],
+        "thumbnail": "https://placeimg.com/400/300/arch",
+        "type": "i"
+      }
+    ],
+    "linked": {
+      "parent": [
+        {
+          "id": "string",
+          "alternative_text": [
+            {
+              "label": "string",
+              "value": "string"
+            }
+          ],
+          "mediaUrl": "https://example.com/path",
+          "source": "https://example.com/path",
+          "source_institution": {
+            "label": "string",
+            "url": "https://example.com/path",
+            "icon": "https://example.com/path"
+          },
+          "score": 0,
+          "title": "string",
+          "type": "string"
+        }
+      ],
+      "children": [
+        {
+          "id": "string",
+          "alternative_text": [
+            {
+              "label": "string",
+              "value": "string"
+            }
+          ],
+          "mediaUrl": "https://example.com/path",
+          "source": "https://example.com/path",
+          "source_institution": {
+            "label": "string",
+            "url": "https://example.com/path",
+            "icon": "https://example.com/path"
+          },
+          "score": 0,
+          "title": "string",
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "list": [
+    {
+      "label": "Beteiligungen",
+      "data": [
+        {
+          "attributes": [
+            "(Fotografie)",
+            "Berlin (Deutschland)"
+          ],
+          "value": "Torsten Schmitt",
+          "id": "#"
+        }
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "coordinates": [
+        16.382782,
+        48.208309
+      ],
+      "data": [
+        "University of Applied Arts",
+        "Oskar Kokoschka-Platz 2",
+        "1010 Wien",
+        "Austria"
+      ]
+    },
+    {
+      "coordinates": [
+        16.384965,
+        48.208248
+      ],
+      "data": [
+        "University of Applied Arts",
+        "Vordere Zollamtsstraße 7",
+        "1030 Vienna",
+        "Austria"
+      ]
+    },
+    {
+      "coordinates": [
+        16.384965,
+        48.208248
+      ],
+      "data": [
+        "base Angewandte",
+        "Vordere Zollamtsstraße 7",
+        "1030 Vienna",
+        "Austria"
+      ]
+    }
+  ],
+  "featuredMedia": {
+    "id": "123",
+    "alternative": [
+      "Robin Smith, 2021"
+    ],
+    "licence": {
+      "label": "Copyright",
+      "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+    },
+    "original": "https://placeimg.com/1920/1200/arch",
+    "previews": [
+      {
+        "640w": "https://placeimg.com/640/400/arch"
+      },
+      {
+        "768w": "https://placeimg.com/768/600/arch"
+      },
+      {
+        "1024w": "https://placeimg.com/1024/800/arch"
+      },
+      {
+        "1366w": "https://placeimg.com/1366/866/arch"
+      },
+      {
+        "1600w": "https://placeimg.com/1600/1000/arch"
+      },
+      {
+        "1920w": "https://placeimg.com/1920/1200/arch"
+      }
+    ],
+    "thumbnail": "https://placeimg.com/400/300/arch",
+    "type": "i"
+  },
+  "primary_details": [
+    {
+      "label": "Künstler*innen",
+      "data": "Achiampong, Larry, Argauer, Jakob, Florian Bettel, David Blandy, Dina Boswank, Justine A. Chambers, Deller, Jeremy, Timo Herbst, Honeit, Kerstin, Kaldrack, Irina, Silas Mücke, Nebe, Marcus, Tobias Schulze, Konrad Strutz, Baha Talis, Tur, Nasan, Laurie Young"
+    },
+    {
+      "label": "Kurator*innen",
+      "data": "Florian Bettel, Dina Boswank, Herbst, Timo, Konrad Strutz, Laurie Young"
+    },
+    {
+      "label": "Datum, Eröffnung und Ort",
+      "data": "8. Dezember 2018–16. Dezember 2018, Berlin, Deutschland, Kunstquartier Bethanien"
+    }
+  ],
+  "publisher": [
+    {
+      "name": "Florian Bettel",
+      "source": "#"
+    }
+  ],
+  "secondary_details": [
+    {
+      "label": "Details",
+      "data": "Die Ausstellung „Throwing Gestures“ befragt Geste als körperliche Bewegung, die ihre Bedeutung in der politischen Zuschreibung sowie durch ihre mediale (Un)Sichtbarkeit erlangt. „Throwing Gestures“ untersucht mediale Repräsentationen (politischer) Gesten, ihre Übersetzungen, Verschiebungen und (De-) Kontextualisierung, Versprachlichung sowie Videoerkennung und filmische Formen. Die Kunstwerke analysieren dabei Machtstrukturen, seien sie sichtbar, unsichtbar oder manifest in materiellen Formen, wie Architektur und Technik. Die in der Ausstellung gezeigten Arbeiten sind in den vergangenen beiden Jahren im Rahmen des interdisziplinären Forschungsprojekts „The Entanglement between Gesture, Media and Politics“ entstanden. Künstler/innen, Performer/innen, Medien- und Kulturwissenschaftler/ innen haben in intensiven zeitlich wie räumlich begrenzten Arbeitssituationen, Fragestellungen, Methoden und Recherche ausgetauscht, eigene Zugänge kritisch hinterfragt sowie disziplinübergreifende Interessen mit Kolleg/innen ausfindig gemacht. Ergänzt werden die so entstandenen Arbeiten durch Werke geladener Künstler/innen, die sowohl wichtige Referenzen im Forschungsprozess darstellen als auch für die Auseinandersetzung mit Geste signifikante Aspekte aufgreifen. Die Zusammenstellung der Arbeiten zeigt klar: Die mediale Präsenz von Protestgesten ist in einen komplexen Kampf um Aufmerksamkeit eingewoben, in der „Ökonomie der Aufmerksamkeit“ sind Protestgesten auf einer sozio-ökonomischen Folie zu analysieren. So lässt sich – etwas polemisch – vermuten, dass das „Policing the Crisis“ (Stuart Hall et al.) der Ära Margaret Thatcher in das Zeitalter seiner kommerziellen Verwertung eingetreten ist. Zusammen mit der Ausstellung bildet das gleichnamige internationale Symposium den Abschluss des interdisziplinären Forschungsprojektes. Drei Panels nähern sich dem Thema aus unterschiedlichen Perspektiven. „Im/Perceptible Gesture“ diskutiert, wie Bewegung zu Geste wird und wie Technik an diesem Prozess beteiligt ist. Das Panel „Gesture and the Political“ untersucht politische Gesten, Auftreten und Verbreitung in Protestbewegungen und ihre Ästhetisierung in Populärkultur und Kunst. „Staging the Entanglement between Arts and Humanities“ reflektiert die Arbeitsprozesse zwischen künstlerischen und wissenschaftlichen Akteuren in interdisziplinären Projekten und diskutiert unterschiedliche Arten der Präsentation ihrer Ergebnisse. An der Ausstellung beteiligte Künstler/innen: Larry Archiampong & David Blandy, Jakob Argauer, Florian Bettel, Dina Boswank, Justine A. Chambers, Jeremy Deller, Timo Herbst, Kerstin Honeit, Irina Kaldrack, Silas Mücke, Marcus Nebe, Tobias Schulze, Konrad Strutz, Bahaa Talis, Nasan Tur, Laurie Young. Kuratiert von Florian Bettel, Dina Boswank, Timo Herbst, Konrad Strutz und Laurie Young. Beim Symposium sprechen Marie-Luise Angerer (Potsdam), Florian Bettel (Wien), Andreas Broeckmann (Lüneburg), Timo Herbst (Leipzig), Irina Kaldrack (Braunschweig), Martina Leeker (Berlin), Zoe Lefkofridi (Salzburg), Oliver Marchart (Wien), Stefanie Kiwi Menrath (Hildesheim), Stefan Rieger (Bochum), Konrad Strutz (Wien), Laurie Young (Berlin). \n\nDetaillierte Informationen unter gesture-media-politics.de Das Projekt „The Entanglement between Gesture, Media and Politics“ wird durchgeführt an der Hochschule für Bildende Künste Braunschweig und ist gefördert durch die Volkswagen-Stiftung im Rahmen des Programms Arts & Science in Motion. Unterstützt von der Universität für angewandte Kunst sierungsmethoden gesammelt, erfasst, erschlossen und aufbewahrt, um sie so für die zukünftige Forschung zugänglich zu halten. Ein Großteil der Archivalien wird im Einarbeitungsprozess digitalisiert, um sie als Anschauungsmaterial auch online verfügbar zu machen. \n\nDie Präsenzbibliothek der basis wien verfügt über einen stetig wachsenden Bestand von Ausstellungskatalogen, Monographien und theoretischen Werken zur zeitgenössischen Kunst sowie eine Auswahl an österreichischen und internationalen Kunstzeitschriften. Die Publikationen werden laufend in die basis wien Datenbank eingearbeitet, sodass auch eine Online-Recherche möglich ist. \n\nBetreut werden das Archiv und die Bibliothek von langjährigen Mitarbeiterinnen, die ihr Fachwissen auch für Beratungen und Auftragsrecherchen zur Verfügung stellen. Im Falle einer Präsentation oder Publikation auf der Grundlage von Recherchen in der basis wien werden die Besucher_innen gebeten, die basis wien als Quelle zu nennen."
+    }
+  ],
+  "source_institution": {
+    "label": "University of Applied Arts Vienna",
+    "url": "https://www.dieangewandte.at/",
+    "icon": "https://base.uni-ak.ac.at/bs/img/angewandte.svg"
+  },
+  "subtext": [
+    "Protest, Economy and the Imperceptible"
+  ],
+  "title": "Throwing Gestures",
+  "type": "Gruppenausstellung"
+}

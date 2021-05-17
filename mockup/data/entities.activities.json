@@ -1,7 +1,7 @@
 [
   {
     "label": "Exhibitions",
-    "hidden": "false",
+    "hidden": false,
     "data": [
       {
         "attributes": [
@@ -42,7 +42,7 @@
   },
   {
     "label": "Research projects",
-    "hidden": "false",
+    "hidden": false,
     "data": [
       {
         "value": "qui nesciunt",
@@ -72,7 +72,7 @@
   },
   {
     "label": "Documents/Publications",
-    "hidden": "false",
+    "hidden": false,
     "data": [
       {
         "label": "Articles in anthology",
@@ -128,7 +128,7 @@
   },
   {
     "label": "Awards and grants",
-    "hidden": "false",
+    "hidden": false,
     "data": [
       {
         "value": "qui nesciunt",
@@ -158,7 +158,7 @@
   },
   {
     "label": "Teaching",
-    "hidden": "false",
+    "hidden": false,
     "data": [
       {
         "value": "qui nesciunt",

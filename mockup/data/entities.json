@@ -7,19 +7,6 @@
     "Research"
   ],
   "list": [],
-  "locations": [
-    {
-      "coordinates": [
-        "16.384510",
-        "48.208370"
-      ],
-      "data": [
-        "Oskar Kokoschka-Platz 2",
-        "1010 Wien",
-        "Austria"
-      ]
-    }
-  ],
   "featuredMedia": {
     "id": "123",
     "alternative": [
@@ -27,7 +14,7 @@
     ],
     "licence": {
       "label": "Copyright",
-      "source": "http://base.uni-ak.ac.at/portfolio/licenses/copyright"
+      "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
     },
     "original": "https://placeimg.com/1920/1200/arch",
     "previews": [
@@ -54,55 +41,91 @@
     "type": "i"
   },
   "primary_details": [
-    [
-      {
-        "label": "Contact",
-        "data": [
-          {
-            "label": "E-Mail",
-            "value": "mailto:robin.smith@uni-ak.ac.at",
-            "url": "mailto:robin.smith@uni-ak.ac.at"
-          },
-          {
-            "label": "Tel",
-            "value": "+43 (0)1 71133"
-          },
-          {
-            "label": "Website",
-            "value": "www.dieangewandte.at",
-            "url": "www.dieangewandte.at"
-          }
-        ]
-      }
-    ]
+    {
+      "label": "Contact",
+      "data": [
+        {
+          "label": "E-Mail",
+          "value": "robin.smith@uni-ak.ac.at",
+          "url": "mailto:robin.smith@uni-ak.ac.at"
+        },
+        {
+          "label": "Tel",
+          "value": "+43 (0)1 71133"
+        },
+        {
+          "label": "Website",
+          "value": "www.dieangewandte.at",
+          "url": "https://www.dieangewandte.at"
+        }
+      ]
+    }
   ],
   "secondary_details": [
-    [
-      {
-        "label": "Details",
-        "data": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet."
-      }
-    ]
+    {
+      "label": "Details",
+      "data": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\nDuis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet."
+    }
   ],
   "showcase": [
     {
-      "id": "string",
-      "media": [
-        [
-          {
-            "455w": "https://placeimg.com/460/341/arch"
-          },
-          {
-            "654w": "https://placeimg.com/640/480/arch"
-          }
-        ]
+      "uid": "1",
+      "additional": "07.05.2021",
+      "description": "Exhibition",
+      "imageUrl": "https://placeimg.com/460/341/arch",
+      "href": "/a7658eee.robinsmith/a2d8lx4i",
+      "previews": [
+        {
+          "640w": "https://placeimg.com/640/480/animal"
+        },
+        {
+          "768w": "https://placeimg.com/768/576/animal"
+        }
       ],
-      "showcase_type": "album",
-      "title": "string",
+      "showcase_type": "activity",
       "subtext": [
-        "string"
+        "Subtitle"
       ],
-      "total": 0
+      "title": "Title"
+    },
+    {
+      "uid": "2",
+      "additional": "07.05.2021 - 14.05.2021",
+      "description": "Exhibition",
+      "href": "/a7658eee.robinsmith/a2d8lx4i",
+      "imageUrl": "https://placeimg.com/460/341/arch",
+      "previews": [
+        {
+          "640w": "https://placeimg.com/640/480/tech"
+        },
+        {
+          "768w": "https://placeimg.com/768/576/tech"
+        }
+      ],
+      "showcase_type": "activity",
+      "subtext": [
+        "Subtitle"
+      ],
+      "title": "Title"
+    },
+    {
+      "id": "3",
+      "additional": "09.05.2021 - 09.05.2021",
+      "description": "Exhibition",
+      "href": "/a7658eee.robinsmith/a2d8lx4i",
+      "previews": [
+        {
+          "640w": "https://placeimg.com/640/480/arch"
+        },
+        {
+          "768w": "https://placeimg.com/768/576/arch"
+        }
+      ],
+      "showcase_type": "activity",
+      "subtext": [
+        "Subtitle"
+      ],
+      "title": "Title"
     }
   ],
   "source_institution": {
