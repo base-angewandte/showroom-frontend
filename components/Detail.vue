@@ -86,6 +86,25 @@
           :src="featuredImageSrc('640w')" />
       </div>
     </div>
+
+    <!-- activity showcase -->
+    <div
+      v-if="type === 'person'"
+      class="base-sr-row">
+      <BaseEditControl
+        :controls="userCanEdit"
+        :edit="editShowcase"
+        :title="$t('activityShowcase')"
+        class="base-sr--ml-small"
+        @activated="activateShowcase"
+        @canceled="cancelShowcase"
+        @saved="saveShowcase" />
+
+      <BaseCarousel
+        v-if="data.showcase"
+        :items="data.showcase"
+        :swiper-options="swiperOptions" />
+    </div>
   </div>
 </template>
 
@@ -93,17 +112,23 @@
 import Vue from 'vue';
 import {
   BaseButton,
+  BaseCarousel,
+  BaseEditControl,
   BaseExpandBox,
   BaseImage,
   BaseTextList,
 } from 'base-ui-components';
 
 import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
+import 'base-ui-components/dist/components/BaseCarousel/BaseCarousel.css';
+import 'base-ui-components/dist/components/BaseEditControl/BaseEditControl.css';
 import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
 import 'base-ui-components/dist/components/BaseImage/BaseImage.css';
 import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
 
 Vue.use(BaseButton);
+Vue.use(BaseCarousel);
+Vue.use(BaseEditControl);
 Vue.use(BaseExpandBox);
 Vue.use(BaseImage);
 Vue.use(BaseTextList);
@@ -136,10 +161,48 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      editShowcase: false,
+      swiperOptions: {
+        slidesPerView: 2,
+        slidesPerGroup: 2,
+        spaceBetween: 15,
+        loop: this.data.showcase && this.data.showcase.length > 3,
+        speed: 750,
+        simulateTouch: false,
+        keyboard: {
+          enabled: true,
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        breakpoints: {
+          1024: {
+            slidesPerView: this.data.showcase && this.data.showcase.length < 3 ? 2 : 3,
+            slidesPerGroup: this.data.showcase && this.data.showcase.length < 3 ? 2 : 3,
+          },
+        },
+      },
+    };
+  },
+  methods: {
     featuredImageSrc(size) {
       const { previews } = this.data.featuredMedia;
       return previews ? Object.values(previews.find((i) => Object.keys(i)[0] === size))[0] : null;
     },
+    /* EDIT SHOWCASE */
+    activateShowcase() {
+      this.editShowcase = true;
+    },
+    cancelShowcase() {
+      this.editShowcase = false;
+    },
+    saveShowcase() {
+      this.editShowcase = false;
+    },
+  },
 };
 </script>
 
