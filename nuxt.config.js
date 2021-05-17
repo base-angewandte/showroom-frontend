@@ -44,6 +44,7 @@ export default {
   */
   css: [
     'normalize.css/normalize.css',
+    'base-ui-components/dist/base-ui-components-common.css',
     '@/styles/main.scss',
   ],
   styleResources: {

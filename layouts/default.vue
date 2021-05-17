@@ -58,23 +58,21 @@ export default {
 </script>
 
 <style lang="scss">
-  .wrapper{
+  .wrapper {
     display: block;
     margin: 0 auto;
     max-width: $page-max-width;
     min-width: $page-min-width;
-    padding: $spacing;
+    padding: $spacing-small;
     position: relative;
     min-height: 100vh;
 
+    @media screen and (min-width: $breakpoint-small) {
+      padding: $spacing;
+    }
+
     .main-container {
       padding-top: $header-height;
-    }
-  }
-
-  @media screen and (max-width: $mobile) {
-    .wrapper {
-      padding: $spacing-small;
     }
   }
 </style>

@@ -1,5 +1,6 @@
 :root {
   --app-color: #673ab7;
+  --app-color-secondary: #b085f5;
   --font-color: rgb(0, 0, 0);
   --font-color-second: rgb(107, 107, 107);
   --button-header-color: rgb(240, 240, 240);
@@ -25,16 +26,11 @@ html {
   box-sizing: border-box;
 
   &:root {
-    font-size: $font-root-regular;
+    font-size: $font-root-mobile;
   }
 
   button {
     font-family: $font;
-  }
-
-  *, *:before, *:after {
-    box-sizing: border-box;
-    margin: 0;
   }
 
   .base-input-label {
@@ -66,10 +62,48 @@ html {
   }
 }
 
-@media screen and (max-width: $mobile) {
+@media screen and (min-width: $breakpoint-small) {
   html {
     &:root {
-      font-size: $font-root-mobile;
+      font-size: $font-root-regular;
     }
+  }
+}
+
+/* common */
+.container {
+  margin-top: $spacing;
+}
+
+/* utility classes */
+.base-sr--ml-small {
+  margin-left: $spacing;
+}
+
+.base-sr--mt-small {
+  margin-top: $spacing;
+}
+
+.base-sr--p-large {
+  padding: $spacing-large;
+}
+
+.base-sr-last-modified {
+  margin-top: -$spacing;
+  color: $font-color-second;
+  font-size: $font-size-small;
+  line-height: $line-height;
+}
+
+.base-sr-h1 {
+  margin-bottom: 0;
+}
+
+.base-sr-row {
+  width: 100%;
+  margin-bottom: $spacing;
+
+  @media screen and (min-width: $breakpoint-small) {
+    margin-bottom: $spacing-large;
   }
 }
