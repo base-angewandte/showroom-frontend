@@ -1262,20 +1262,22 @@ components:
         type: string
 
     CommonTextObject:
-      type: object
-      required:
-        - label
-        - value
-      properties:
-        label:
-          type: string
-        value:
-          type: string
-        url:
-          type: string
-          format: uri
-        source:
-          type: string
+      type: array
+      items:
+        type: object
+        required:
+          - label
+          - value
+        properties:
+          label:
+            type: string
+          value:
+            type: string
+          url:
+            type: string
+            format: uri
+          source:
+            type: string
 
     ## SourceInstitution
     CommonSourceInstitution:
