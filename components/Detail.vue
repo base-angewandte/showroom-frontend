@@ -161,6 +161,48 @@
       </base-expand-box>
     </div>
 
+    <!-- media files -->
+    <BaseResultBoxSection
+      v-if="data.entries && data.entries.media"
+      :entry-list="data.entries.media"
+      :show-options="false"
+      :show-header="true"
+      :max-show-more-rows="1"
+      :use-expand-mode="true"
+      :max-rows="2"
+      :use-pagination="false"
+      class="base-sr-row">
+      <template #header>
+        <h2 class="base-sr--ml-small">
+          {{ $t('associatedMediaFiles') }}
+        </h2>
+      </template>
+
+      <template
+        v-slot:resultBox="props">
+        <!-- Todo: temporarily, adapt after layout decision in ui-group -->
+        <BaseImageBox
+          :key="props.item.id"
+          :title="props.item.alternative.join(', ')"
+          :image-url="mediaImageUrl(props.item)"
+          :show-title="true"
+          :lazyload="true"
+          class="base-sr-result-box"
+          @clicked="previewMedia(props.item.id)" />
+      </template>
+    </BaseResultBoxSection>
+
+    <!-- media preview -->
+    <template
+      v-if="type === 'object' && data.entries.media">
+      <BaseMediaCarousel
+        :show-preview="showPreview"
+        :initial-slide="initialPreviewSlide"
+        :items="mediaPreviewData"
+        :autoplay-media="true"
+        @hide="showPreview = false" />
+    </template>
+
     <!-- owner, dates -->
     <div
       v-if="data.publisher"
@@ -184,7 +226,10 @@ import {
   BaseExpandBox,
   BaseExpandList,
   BaseImage,
+  BaseImageBox,
   BaseMapLocations,
+  BaseMediaCarousel,
+  BaseResultBoxSection,
   BaseTextList,
 } from 'base-ui-components';
 
@@ -194,8 +239,11 @@ import 'base-ui-components/dist/components/BaseEditControl/BaseEditControl.css';
 import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
 import 'base-ui-components/dist/components/BaseExpandList/BaseExpandList.css';
 import 'base-ui-components/dist/components/BaseImage/BaseImage.css';
+import 'base-ui-components/dist/components/BaseImageBox/BaseImageBox.css';
 import 'base-ui-components/dist/components/BaseMapLocations/BaseMapLocations.css';
+import 'base-ui-components/dist/components/BaseMediaCarousel/BaseMediaCarousel.css';
 import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
+import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSection.css';
 
 Vue.use(BaseButton);
 Vue.use(BaseCarousel);
@@ -203,8 +251,12 @@ Vue.use(BaseEditControl);
 Vue.use(BaseExpandBox);
 Vue.use(BaseExpandList);
 Vue.use(BaseImage);
+Vue.use(BaseImageBox);
 Vue.use(BaseMapLocations);
+Vue.use(BaseMediaCarousel);
 Vue.use(BaseTextList);
+Vue.use(BaseResultBoxSection);
+
 export default {
   name: 'Detail',
   props: {
@@ -269,14 +321,94 @@ export default {
           },
         },
       },
+      // mediaPreview
+      showPreview: false,
+      initialPreviewSlide: null,
     };
   },
   computed: {
     lang() {
       return this.$store.state.appData.locale;
     },
+    /**
+     * modify data for media preview
+     *
+     * @returns {object} - modified object for baseMediaCarousel
+     */
+    mediaPreviewData() {
+      return this.data.entries.media.map((item) => {
+        let obj;
+
+        // audio
+        if (item.type === 'a') {
+          obj = {
+            mediaUrl: item.mp3,
+          };
+        }
+
+        // image
+        if (item.type === 'i') {
+          obj = {
+            mediaUrl: this.original,
+            previews: item.previews,
+          };
+        }
+
+        // video
+        if (item.type === 'v') {
+          obj = {
+            mediaPosterUrl: item.poster,
+            mediaUrl: item.playlist,
+          };
+        }
+
+        // document or undefined
+        if (item.type === 'd' || item.type === 'x') {
+          obj = {
+            mediaUrl: item.original,
+          };
+        }
+
+        return {
+          id: item.id,
+          title: item.alternative.join(', '),
+          ...obj,
+        };
+      });
+    },
   },
   methods: {
+    /**
+     * get image url depending on media type
+     *
+     * @param {Object} item - media object
+     * @returns {string|null}
+     */
+    mediaImageUrl(item) {
+      /**
+       * Todo: size of images should be closer to usage in different viewports.
+       * this could be covered by image-resize-service on demand
+       * and usage of srcset in BaseImageBox
+       */
+      // image
+      if (item.type === 'i') {
+        // first value of previews array object
+        const obj = item.previews[0];
+        return obj[Object.keys(obj)[0]];
+      }
+
+      // video
+      if (item.type === 'v') {
+        return item.cover.jpg;
+      }
+
+      // document
+      if (item.type === 'd') {
+        return item.thumbnail;
+      }
+
+      return null;
+    },
     createHumanReadableDate(val) {
       const date = new Date(val);
       return `${date.toLocaleDateString(this.lang)}, ${date.toLocaleTimeString(this.lang)}`;
@@ -284,6 +416,17 @@ export default {
     featuredImageSrc(size) {
       const { previews } = this.data.featuredMedia;
       return previews ? Object.values(previews.find((i) => Object.keys(i)[0] === size))[0] : null;
+    },
+    /* MEDIA PREVIEW */
+    /**
+     * enable media preview
+     *
+     * @param {String} id - id of media object
+     */
+    previewMedia(id) {
+      // find array id depending on item.id
+      this.initialPreviewSlide = this.mediaPreviewData.findIndex((item) => item.id === id);
+      this.showPreview = true;
     },
     /* EDIT LIST */
     activateList() {

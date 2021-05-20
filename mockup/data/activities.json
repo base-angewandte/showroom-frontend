@@ -5,135 +5,166 @@
   "entries": {
     "media": [
       {
-        "id": "1",
+        "id": "aaa",
         "alternative": [
-          "alternative text"
+          "Video"
+        ],
+        "cover": {
+          "gif": "https://placeimg.com/400/300/arch.jpg",
+          "jpg": "https://placeimg.com/400/300/arch.jpg"
+        },
+        "licence": {
+          "label": "Copyright",
+          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+        },
+        "original": "https://placeimg.com/1920/1200/arch.jpg",
+        "playlist": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+        "poster": "https://placeimg.com/1600/900/arch.jpg",
+        "type": "v"
+      },
+      {
+        "id": "bbb",
+        "alternative": [
+          "Audio"
         ],
         "licence": {
           "label": "Copyright",
           "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
         },
-        "original": "https://placeimg.com/1920/1200/arch",
+        "mp3": "http://www.hochmuth.com/mp3/Haydn_Cello_Concerto_D-1.mp3",
+        "original": "http://www.hochmuth.com/mp3/Haydn_Cello_Concerto_D-1.mp3",
+        "type": "a"
+      },
+      {
+        "id": "1111",
+        "alternative": [
+          "alternative text 1"
+        ],
+        "licence": {
+          "label": "Copyright",
+          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
+        },
+        "original": "https://placeimg.com/1920/1200/arch.jpg",
         "previews": [
           {
-            "640w": "https://placeimg.com/640/400/arch"
+            "640w": "https://placeimg.com/640/400/arch.jpg"
           },
           {
-            "768w": "https://placeimg.com/768/600/arch"
+            "768w": "https://placeimg.com/768/600/arch.jpg"
           },
           {
-            "1024w": "https://placeimg.com/1024/800/arch"
+            "1024w": "https://placeimg.com/1024/800/arch.jpg"
           },
           {
-            "1366w": "https://placeimg.com/1366/866/arch"
+            "1366w": "https://placeimg.com/1366/866/arch.jpg"
           },
           {
-            "1600w": "https://placeimg.com/1600/1000/arch"
+            "1600w": "https://placeimg.com/1600/1000/arch.jpg"
           },
           {
-            "1920w": "https://placeimg.com/1920/1200/arch"
+            "1920w": "https://placeimg.com/1920/1200/arch.jpg"
           }
         ],
-        "thumbnail": "https://placeimg.com/400/300/arch",
+        "thumbnail": "https://placeimg.com/400/300/arch.jpg",
         "type": "i"
       },
       {
         "id": "2",
         "alternative": [
-          "alternative text"
+          "alternative text 2"
         ],
         "licence": {
           "label": "Copyright",
           "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
         },
-        "original": "https://placeimg.com/1920/1200/tech",
+        "original": "https://placeimg.com/1200/1920/tech.jpg",
         "previews": [
           {
-            "640w": "https://placeimg.com/640/400/tech"
+            "640w": "https://placeimg.com/400/640/tech.jpg"
           },
           {
-            "768w": "https://placeimg.com/768/600/tech"
+            "768w": "https://placeimg.com/600/768/tech.jpg"
           },
           {
-            "1024w": "https://placeimg.com/1024/800/tech"
+            "1024w": "https://placeimg.com/800/1024/tech.jpg"
           },
           {
-            "1366w": "https://placeimg.com/1366/866/tech"
+            "1366w": "https://placeimg.com/866/1366/tech.jpg"
           },
           {
-            "1600w": "https://placeimg.com/1600/1000/tech"
+            "1600w": "https://placeimg.com/1000/1600/tech.jpg"
           },
           {
-            "1920w": "https://placeimg.com/1920/1200/tech"
+            "1920w": "https://placeimg.com/1200/1920/tech.jpg"
           }
         ],
-        "thumbnail": "https://placeimg.com/400/300/tech",
+        "thumbnail": "https://placeimg.com/400/300/tech.jpg",
         "type": "i"
       },
       {
         "id": "3",
         "alternative": [
-          "alternative text"
+          "alternative text 3"
         ],
         "licence": {
           "label": "Copyright",
           "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
         },
-        "original": "https://placeimg.com/1920/1200/nature",
+        "original": "https://placeimg.com/1920/1200/nature.jpg",
         "previews": [
           {
-            "640w": "https://placeimg.com/640/400/nature"
+            "640w": "https://placeimg.com/640/400/nature.jpg"
           },
           {
-            "768w": "https://placeimg.com/768/600/nature"
+            "768w": "https://placeimg.com/768/600/nature.jpg"
           },
           {
-            "1024w": "https://placeimg.com/1024/800/nature"
+            "1024w": "https://placeimg.com/1024/800/nature.jpg"
           },
           {
-            "1366w": "https://placeimg.com/1366/866/nature"
+            "1366w": "https://placeimg.com/1366/866/nature.jpg"
           },
           {
-            "1600w": "https://placeimg.com/1600/1000/nature"
+            "1600w": "https://placeimg.com/1600/1000/nature.jpg"
           },
           {
-            "1920w": "https://placeimg.com/1920/1200/nature"
+            "1920w": "https://placeimg.com/1920/1200/nature.jpg"
           }
         ],
-        "thumbnail": "https://placeimg.com/400/300/arch",
+        "thumbnail": "https://placeimg.com/400/300/arch.jpg",
         "type": "i"
       },
       {
         "id": "4",
         "alternative": [
-          "alternative text"
+          "alternative text 4"
         ],
         "licence": {
           "label": "Copyright",
           "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
         },
-        "original": "https://placeimg.com/1920/1200/people",
+        "original": "https://placeimg.com/1920/1200/people.jpg",
         "previews": [
           {
-            "640w": "https://placeimg.com/640/400/people"
+            "640w": "https://placeimg.com/640/400/people.jpg"
           },
           {
-            "768w": "https://placeimg.com/768/600/people"
+            "768w": "https://placeimg.com/768/600/people.jpg"
           },
           {
-            "1024w": "https://placeimg.com/1024/800/people"
+            "1024w": "https://placeimg.com/1024/800/people.jpg"
           },
           {
-            "1366w": "https://placeimg.com/1366/866/people"
+            "1366w": "https://placeimg.com/1366/866/people.jpg"
           },
           {
-            "1600w": "https://placeimg.com/1600/1000/people"
+            "1600w": "https://placeimg.com/1600/1000/people.jpg"
           },
           {
-            "1920w": "https://placeimg.com/1920/1200/people"
+            "1920w": "https://placeimg.com/1920/1200/people.jpg"
           }
         ],
-        "thumbnail": "https://placeimg.com/400/300/people",
+        "thumbnail": "https://placeimg.com/400/300/people.jpg",
         "type": "i"
       },
       {
@@ -145,28 +176,28 @@
           "label": "Copyright",
           "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
         },
-        "original": "https://placeimg.com/1920/1200/animals",
+        "original": "https://placeimg.com/1920/1200/animals.jpg",
         "previews": [
           {
-            "640w": "https://placeimg.com/640/400/animals"
+            "640w": "https://placeimg.com/640/400/animals.jpg"
           },
           {
-            "768w": "https://placeimg.com/768/600/animals"
+            "768w": "https://placeimg.com/768/600/animals.jpg"
           },
           {
-            "1024w": "https://placeimg.com/1024/800/animals"
+            "1024w": "https://placeimg.com/1024/800/animals.jpg"
           },
           {
-            "1366w": "https://placeimg.com/1366/866/animals"
+            "1366w": "https://placeimg.com/1366/866/animals.jpg"
           },
           {
-            "1600w": "https://placeimg.com/1600/1000/animals"
+            "1600w": "https://placeimg.com/1600/1000/animals.jpg"
           },
           {
-            "1920w": "https://placeimg.com/1920/1200/animals"
+            "1920w": "https://placeimg.com/1920/1200/animals.jpg"
           }
         ],
-        "thumbnail": "https://placeimg.com/400/300/animals",
+        "thumbnail": "https://placeimg.com/400/300/animals.jpg",
         "type": "i"
       },
       {
@@ -178,94 +209,28 @@
           "label": "Copyright",
           "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
         },
-        "original": "https://placeimg.com/1920/1200/arch",
+        "original": "https://placeimg.com/1920/1200/arch.jpg",
         "previews": [
           {
-            "640w": "https://placeimg.com/640/400/arch"
+            "640w": "https://placeimg.com/640/400/arch.jpg"
           },
           {
-            "768w": "https://placeimg.com/768/600/arch"
+            "768w": "https://placeimg.com/768/600/arch.jpg"
           },
           {
-            "1024w": "https://placeimg.com/1024/800/arch"
+            "1024w": "https://placeimg.com/1024/800/arch.jpg"
           },
           {
-            "1366w": "https://placeimg.com/1366/866/arch"
+            "1366w": "https://placeimg.com/1366/866/arch.jpg"
           },
           {
-            "1600w": "https://placeimg.com/1600/1000/arch"
+            "1600w": "https://placeimg.com/1600/1000/arch.jpg"
           },
           {
-            "1920w": "https://placeimg.com/1920/1200/arch"
+            "1920w": "https://placeimg.com/1920/1200/arch.jpg"
           }
         ],
-        "thumbnail": "https://placeimg.com/400/300/arch",
-        "type": "i"
-      },
-      {
-        "id": "7",
-        "alternative": [
-          "alternative text"
-        ],
-        "licence": {
-          "label": "Copyright",
-          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
-        },
-        "original": "https://placeimg.com/1920/1200/arch",
-        "previews": [
-          {
-            "640w": "https://placeimg.com/640/400/arch"
-          },
-          {
-            "768w": "https://placeimg.com/768/600/arch"
-          },
-          {
-            "1024w": "https://placeimg.com/1024/800/arch"
-          },
-          {
-            "1366w": "https://placeimg.com/1366/866/arch"
-          },
-          {
-            "1600w": "https://placeimg.com/1600/1000/arch"
-          },
-          {
-            "1920w": "https://placeimg.com/1920/1200/arch"
-          }
-        ],
-        "thumbnail": "https://placeimg.com/400/300/arch",
-        "type": "i"
-      },
-      {
-        "id": "8",
-        "alternative": [
-          "alternative text"
-        ],
-        "licence": {
-          "label": "Copyright",
-          "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
-        },
-        "original": "https://placeimg.com/1920/1200/arch",
-        "previews": [
-          {
-            "640w": "https://placeimg.com/640/400/arch"
-          },
-          {
-            "768w": "https://placeimg.com/768/600/arch"
-          },
-          {
-            "1024w": "https://placeimg.com/1024/800/arch"
-          },
-          {
-            "1366w": "https://placeimg.com/1366/866/arch"
-          },
-          {
-            "1600w": "https://placeimg.com/1600/1000/arch"
-          },
-          {
-            "1920w": "https://placeimg.com/1920/1200/arch"
-          }
-        ],
-        "thumbnail": "https://placeimg.com/400/300/arch",
+        "thumbnail": "https://placeimg.com/400/300/arch.jpg",
         "type": "i"
       }
     ],
@@ -376,28 +341,28 @@
       "label": "Copyright",
       "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
     },
-    "original": "https://placeimg.com/1920/1200/arch",
+    "original": "https://placeimg.com/1920/1200/arch.jpg",
     "previews": [
       {
-        "640w": "https://placeimg.com/640/400/arch"
+        "640w": "https://placeimg.com/640/400/arch.jpg"
       },
       {
-        "768w": "https://placeimg.com/768/600/arch"
+        "768w": "https://placeimg.com/768/600/arch.jpg"
       },
       {
-        "1024w": "https://placeimg.com/1024/800/arch"
+        "1024w": "https://placeimg.com/1024/800/arch.jpg"
       },
       {
-        "1366w": "https://placeimg.com/1366/866/arch"
+        "1366w": "https://placeimg.com/1366/866/arch.jpg"
       },
       {
-        "1600w": "https://placeimg.com/1600/1000/arch"
+        "1600w": "https://placeimg.com/1600/1000/arch.jpg"
       },
       {
-        "1920w": "https://placeimg.com/1920/1200/arch"
+        "1920w": "https://placeimg.com/1920/1200/arch.jpg"
       }
     ],
-    "thumbnail": "https://placeimg.com/400/300/arch",
+    "thumbnail": "https://placeimg.com/400/300/arch.jpg",
     "type": "i"
   },
   "primary_details": [

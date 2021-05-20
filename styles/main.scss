@@ -112,3 +112,9 @@ html {
     margin-bottom: $spacing-large;
   }
 }
+
+.base-sr-result-box {
+  &:hover {
+    cursor: pointer;
+  }
+}
