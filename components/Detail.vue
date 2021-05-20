@@ -88,23 +88,11 @@
     </div>
 
     <!-- activity showcase -->
-    <div
-      v-if="type === 'person'"
-      class="base-sr-row">
-      <BaseEditControl
-        :controls="userCanEdit"
-        :edit="editShowcase"
-        :title="$t('activityShowcase')"
-        class="base-sr--ml-small"
-        @activated="activateShowcase"
-        @canceled="cancelShowcase"
-        @saved="saveShowcase" />
-
-      <BaseCarousel
-        v-if="data.showcase"
-        :items="data.showcase"
-        :swiper-options="swiperOptions" />
-    </div>
+    <Showcase
+      v-if="type === 'person' && data.showcase"
+      :data="data.showcase"
+      :user-can-edit="userCanEdit"
+      class="base-sr-row" />
 
     <!-- lists -->
     <div
@@ -219,6 +207,7 @@
 
 <script>
 import Vue from 'vue';
+
 import {
   BaseButton,
   BaseCarousel,
@@ -232,6 +221,8 @@ import {
   BaseResultBoxSection,
   BaseTextList,
 } from 'base-ui-components';
+
+import Showcase from '~/components/Showcase';
 
 import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
 import 'base-ui-components/dist/components/BaseCarousel/BaseCarousel.css';
@@ -259,6 +250,9 @@ Vue.use(BaseResultBoxSection);
 
 export default {
   name: 'Detail',
+  components: {
+    Showcase,
+  },
   props: {
     /**
      * specify object to render detail
@@ -299,27 +293,6 @@ export default {
         subdomains: ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
         tileMatrixSet: 'google3857',
         type: 'geolandbasemap',
-      },
-      swiperOptions: {
-        slidesPerView: 2,
-        slidesPerGroup: 2,
-        spaceBetween: 15,
-        loop: this.data.showcase && this.data.showcase.length > 3,
-        speed: 750,
-        simulateTouch: false,
-        keyboard: {
-          enabled: true,
-        },
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        breakpoints: {
-          1024: {
-            slidesPerView: this.data.showcase && this.data.showcase.length < 3 ? 2 : 3,
-            slidesPerGroup: this.data.showcase && this.data.showcase.length < 3 ? 2 : 3,
-          },
-        },
       },
       // mediaPreview
       showPreview: false,
@@ -442,16 +415,6 @@ export default {
     },
     saveListEdit(val) {
       console.log('save list', val);
-    },
-    /* EDIT SHOWCASE */
-    activateShowcase() {
-      this.editShowcase = true;
-    },
-    cancelShowcase() {
-      this.editShowcase = false;
-    },
-    saveShowcase() {
-      this.editShowcase = false;
     },
   },
 };
