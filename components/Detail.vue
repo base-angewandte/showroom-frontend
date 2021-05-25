@@ -6,7 +6,8 @@
         :show-more-text="$t('show_more')"
         :show-less-text="$t('show_less')"
         padding="large"
-        class="base-sr-row base-sr-head__primary">
+        class="base-sr-row base-sr-head__primary"
+        @box-height="setFeaturedMediaHeight">
         <!-- title -->
         <h1 class="base-sr-h1">
           {{ data.title }}
@@ -79,11 +80,14 @@
       <!-- TODO: add different media formats -->
       <div
         v-if="data.featuredMedia"
-        class="base-sr-row base-sr-head__media">
+        :style="featuredMediaHeight"
+        class="base-sr-row base-sr-head__media base-sr-featured-media">
         <BaseImage
+          ref="featuredMedia"
           :alt="data.featuredMedia.alternative.join(', ')"
-          :lazyload="true"
-          :src="featuredImageSrc('640w')" />
+          :lazyload="isMobile()"
+          :src="getFirstPreviewsImage(data.featuredMedia.previews)"
+          class="base-sr-featured-media__image" />
       </div>
     </div>
 
@@ -294,6 +298,8 @@ export default {
         tileMatrixSet: 'google3857',
         type: 'geolandbasemap',
       },
+      // featuredMedia
+      featuredMediaHeight: null,
       // mediaPreview
       showPreview: false,
       initialPreviewSlide: null,
@@ -365,9 +371,7 @@ export default {
        */
       // image
       if (item.type === 'i') {
-        // first value of previews array object
-        const obj = item.previews[0];
-        return obj[Object.keys(obj)[0]];
+        return this.getFirstPreviewsImage(item.previews);
       }
 
       // video
@@ -386,9 +390,35 @@ export default {
       const date = new Date(val);
       return `${date.toLocaleDateString(this.lang)}, ${date.toLocaleTimeString(this.lang)}`;
     },
-    featuredImageSrc(size) {
-      const { previews } = this.data.featuredMedia;
-      return previews ? Object.values(previews.find((i) => Object.keys(i)[0] === size))[0] : null;
+    /**
+     * get first image url value of previews array object
+     *
+     * @param {Array} previews - array with preview objects
+     * @returns {String} - image url
+     */
+    getFirstPreviewsImage(previews) {
+      const obj = previews[0];
+      return obj[Object.keys(obj)[0]];
+    },
+    /**
+     * set height of featuredMedia after primary_box emitted value
+     *
+     * @param {String} value
+     */
+    setFeaturedMediaHeight(value) {
+      this.featuredMediaHeight = !this.isMobile() ? { height: `${value}px` } : null;
+    },
+    /**
+     * check if viewport <= 640
+     *
+     * @returns {Boolean}
+     */
+    isMobile() {
+      if (!process.client) {
+        return false;
+      }
+
+      return window.innerWidth <= 640;
     },
     /* MEDIA PREVIEW */
     /**
@@ -430,6 +460,7 @@ export default {
       flex-direction: column;
 
       @media screen and (min-width: $breakpoint-small) {
+        min-height: 445px;
         width: calc(66.66% - #{$spacing});
         margin-right: $spacing;
       }
@@ -461,6 +492,22 @@ export default {
       margin-right: $spacing-small;
       background-color: $background-color;
       text-transform: capitalize;
+    }
+  }
+
+  /* featured media */
+  .base-sr-featured-media {
+    overflow: hidden;
+    max-height: 350px;
+
+    @media screen and (min-width: $breakpoint-small) {
+      max-height: inherit;
+    }
+
+    &__image {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
     }
   }
 </style>
