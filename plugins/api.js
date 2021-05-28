@@ -3,7 +3,7 @@ import { Response } from 'node-fetch';
 import SwaggerClient from 'swagger-client';
 
 export default async (context, inject) => {
-  const ApiSpecUrl = process.env.appApiSpecUrl;
+  const ApiSpecUrl = process.env.apiSpecUrl;
   let ApiSpec;
 
   try {
@@ -13,7 +13,7 @@ export default async (context, inject) => {
     if (process.env.NODE_ENV !== 'production') {
       throw new Error(`Open Api Specification could not be fetched from ${ApiSpecUrl}`);
     }
-    context.redirect(`${process.env.appBaseUrl}/500`);
+    context.redirect(`${process.env.backendBaseUrl}/500`);
   }
 
   const APIClient = {

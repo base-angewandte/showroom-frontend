@@ -149,6 +149,7 @@
           :label="data.locations.length > 1 ? $t('addresses') : $t('address')"
           :locations="data.locations"
           :options="mapOptions"
+          :tile-layer-service="mapTileLayerService"
           :url="mapUrl" />
       </base-expand-box>
     </div>
@@ -288,16 +289,12 @@ export default {
     return {
       editList: false,
       editShowcase: false,
-      // TODO: define map related parameters in .env
-      mapAttribution: 'Source: <a href="http://basemap.at">basemap.at</a>',
-      mapCopyright: '<a href=http://creativecommons.org/licenses/by-sa/3.0/>CC BY-SA 3.0</a>',
-      mapUrl: 'https://{s}.wien.gv.at/basemap/{type}/{style}/{tileMatrixSet}/{z}/{y}/{x}.png',
-      mapOptions: {
-        style: 'normal',
-        subdomains: ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-        tileMatrixSet: 'google3857',
-        type: 'geolandbasemap',
-      },
+      // leaflet map
+      mapAttribution: process.env.leaflet.attribution,
+      mapCopyright: process.env.leaflet.copyright,
+      mapTileLayerService: process.env.leaflet.tileLayerService,
+      mapUrl: process.env.leaflet.url,
+      mapOptions: process.env.leaflet.options,
       // featuredMedia
       featuredMediaHeight: null,
       // mediaPreview

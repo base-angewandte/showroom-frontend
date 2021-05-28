@@ -11,7 +11,7 @@
     </main>
     <component
       :is="`${headerName}-footer`"
-      :base-url="linkUrl"
+      :base-url="baseUrl"
       :lang="lang"
       :logged-in="authenticated"
       :urls.prop="urls" />
@@ -24,8 +24,8 @@ export default {
     lang() {
       return this.$store.state.appData.locale;
     },
-    linkUrl() {
-      return process.env.appBaseUrl;
+    baseUrl() {
+      return process.env.backendBaseUrl;
     },
     profile() {
       return this.$store.state.appData.user;
@@ -34,14 +34,20 @@ export default {
       return this.$store.state.appData.authenticated;
     },
     urls() {
+      const backendUrl = `${process.env.backendBaseUrl}${process.env.backendPrefix}`;
+
       return {
         de: `${process.env.appPrefix}/de${this.$route.path}`,
         en: `${process.env.appPrefix}/en${this.$route.path}`,
-        ...process.env.headerUrls,
+        login: `${backendUrl}/accounts/login/`,
+        logout: `${backendUrl}/accounts/logout/?next=/`,
+        terms: process.env.headerUrlsTerms,
+        siteNotice: process.env.headerUrlsNotice,
+        showroom: `${process.env.appPrefix}/`,
       };
     },
     headerName() {
-      return process.env.headerJson.match(/\/([a-z-]+)-header\.[a-z0-9]+\.js$/)[1];
+      return process.env.header.match(/\/([a-z-]+)-header\.[a-z0-9]+\.js$/)[1];
     },
   },
   mounted() {

@@ -1,18 +1,19 @@
 /* eslint-disable */
 require('dotenv').config({ path: './.env' });
 const resolve = require('path').resolve;
+const settings = require('./config/settings.js').default;
 
 export default {
   /*
   ** Headers of the page
   */
   head: {
-    title: 'Showroom | base Angewandte',
+    title: process.env.APP_TITLE,
     meta: [
       { charset: 'utf-8' },
       { lang: 'en' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Recherche | base Angewandte' },
+      { hid: 'description', name: 'description', content: 'Showroom | base Angewandte' },
       { name: 'apple-mobile-web-app-title', content: 'base' },
       { name: 'application-name', content: 'base' },
       { name: 'theme-color', content: '#ffffff' },
@@ -28,7 +29,7 @@ export default {
       { rel: 'mask-icon', sizes: '180x180', href: '/safari-pinned-tab.svg' },
     ],
     script: [
-      { src: `${process.env.BASE_HEADER_REPO}/${process.env.HEADER}`, body: true },
+      { src: `${process.env.HEADER}`, body: true },
     ],
   },
   router: {
@@ -54,17 +55,16 @@ export default {
     ]
   },
   env: {
-    appBaseUrl: process.env.APP_BASE_URL,
     appPrefix: process.env.APP_PREFIX,
-    appApiSpecUrl: process.env.APP_API_SPEC_URL,
-    headerJson: process.env.HEADER,
-    headerUrls: {
-      login: process.env.HEADER_URLS_LOGIN,
-      logout: process.env.HEADER_URLS_LOGOUT,
-      terms: process.env.HEADER_URLS_TERMS,
-      siteNotice: process.env.HEADER_URLS_NOTICE,
-    },
-    locales: JSON.parse(process.env.LOCALES),
+    backendBaseUrl: process.env.BACKEND_BASE_URL,
+    backendPrefix: process.env.BACKEND_PREFIX,
+    apiSpecUrl: process.env.API_SPEC_URL,
+    headerJson: process.env.HEADER_JSON,
+    header: process.env.HEADER,
+    headerUrlsTerms: process.env.HEADER_URLS_TERMS,
+    headerUrlsNotice: process.env.HEADER_URLS_NOTICE,
+    leaflet: settings.LEAFLET,
+    locales: process.env.LOCALES,
     defaultLocale: process.env.DEFAULT_LOCALE,
   },
   /*
