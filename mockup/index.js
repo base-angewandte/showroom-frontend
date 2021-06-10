@@ -6,6 +6,9 @@ const apiSpec = require('./swagger.json');
 const apiV1ActivitiesRead = require('./data/activities.json');
 const apiV1EntitiesRead = require('./data/entities.json');
 const apiV1EntitiesActivitiesRead = require('./data/entities.activities.json');
+const apiV1Filters = require('./data/filters.json');
+const apiV1SearchResultsRead = require('./data/discover.search.json');
+const apiV1AutocompleteResultsRead = require('./data/discover.autocomplete.json');
 
 const port = 9001;
 
@@ -27,6 +30,31 @@ app.use(express.json());
 const api = new OpenAPIBackend({
   definition: apiSpecAdditionalRoutes,
   handlers: {
+    api_v1_filter_list: async (c, req, res) => res.status(200).json(
+      apiV1Filters,
+    ),
+    api_v1_search_read: async (c, req, res) => res.status(200).json(
+      apiV1SearchResultsRead,
+    ),
+    api_v1_autocomplete_read: async (c, req, res) => {
+      const searchString = req.query.q;
+      const filterName = req.query.filter_name;
+      let matchingData = [];
+      let subsetData = apiV1AutocompleteResultsRead;
+      if (filterName) {
+        subsetData = apiV1AutocompleteResultsRead.filter(({ subset }) => subset === filterName);
+      }
+      if (searchString) {
+        matchingData = subsetData.map(({ subset, data }) => ({
+          subset,
+          data: data.filter((entry) => entry.title.toLowerCase()
+            .includes(searchString.toLowerCase())),
+        }));
+      }
+      return res.status(200).json(
+        matchingData,
+      );
+    },
     api_v1_activities_read: async (c, req, res) => res.status(200).json(
       apiV1ActivitiesRead,
     ),

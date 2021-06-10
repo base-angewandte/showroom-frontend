@@ -17,5 +17,12 @@
   "show_more_map": "Karte und Adresse anzeigen",
   "show_less": "Weniger anzeigen",
   "show_less_map": "Karte und Adresse verstecken",
-  "show_all": "Alle anzeigen"
+  "show_all": "Alle anzeigen",
+  "discover": {
+    "title": "Search and Discover Showroom"
+  },
+  "search": {
+    "showMore": "weitere Objekte",
+    "collapse": "weniger anzeigen"
+  }
 }
