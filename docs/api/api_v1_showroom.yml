@@ -113,11 +113,45 @@ paths:
                 type: object
                 properties:
                   created:
-                    type: integer
-                    description: 'Number of newly created activities.'
+                    type: array
+                    description: 'List of newly created activities. Empty if none.'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: "The original id of the repository entry."
+                        showroom_id:
+                          type: integer
+                          description: "The new showroom id of this activity."
                   updated:
-                    type: integer
-                    description: 'Number of updated activities.'
+                    type: array
+                    description: 'List of updated activities. Empty if none.'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: "The original id of the repository entry."
+                        showroom_id:
+                          type: integer
+                          description: "Showroom id of the updated activity."
+                  errors:
+                    type: array
+                    description: "List of errors when creating/updating certain activities. Empty if none."
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: "The original id of the repository entry."
+                        detail:
+                          type: string
+                          description: "Description of the error when trying to create/update this activity."
+                required:
+                  - created
+                  - updated
+                  - errors
         400:
           description: 'Bad request.'
           content:
