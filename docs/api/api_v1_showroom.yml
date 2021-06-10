@@ -429,11 +429,11 @@ paths:
           required: true
           description: >
             Defines which user-editable field from the entity model should be requested.
-            This currently can be either "secondary-details" or "showcase"
+            This currently can be either "secondary_details" or "showcase"
           schema:
             type: string
             enum:
-              - "secondary-details"
+              - "secondary_details"
               - "showcase"
       responses:
         200:
@@ -470,11 +470,11 @@ paths:
           required: true
           description: >
             Defines which user-editable field from the entity model should be updated.
-            This currently can be either "secondary-details" or "showcase"
+            This currently can be either "secondary_details" or "showcase"
           schema:
             type: string
             enum:
-              - "secondary-details"
+              - "secondary_details"
               - "showcase"
       requestBody:
         content:
