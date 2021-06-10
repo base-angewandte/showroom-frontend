@@ -931,9 +931,7 @@ components:
           enum:
             - activity
         subtext:
-          type: array
-          items:
-            type: string
+          type: string
         title:
           type: string
         type:
@@ -955,9 +953,7 @@ components:
         title:
           type: string
         subtext:
-          type: array
-          items:
-            type: string
+          type: string
         total:
           type: number
 
@@ -1064,6 +1060,8 @@ components:
           $ref: '#/components/schemas/MediaAlternative'
         licence:
           $ref: '#/components/schemas/MediaLicence'
+        duration:
+          type: string
         mp3:
           type: string
           format: uri
