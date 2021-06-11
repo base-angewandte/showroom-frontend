@@ -1,18 +1,44 @@
 {
   "activityLists": "Activity list",
-  "activityShowcase": "Activity-Showcase",
+  "activityShowcase": "Showcase",
   "address": "Address",
   "addresses": "Addresses",
   "associatedMediaFiles": "Associated media files",
   "editButtonText": "Edit",
   "editedDate": "Edit Date",
   "expertise": "Expertise",
+  "frontend": "Showroom",
   "lists": "Lists",
   "location": "Location",
   "locations": "Locations",
   "print": "Print",
   "publisher": "Owner",
   "publishedDate": "Publication Date",
+  "results": {
+    "expand": {
+      "expand": "more objects",
+      "collapse": "collapse"
+    },
+    "message": {
+      "text": "Drag or Select",
+      "subtext": "Drag'n Drop to reorder or select the relevant items and choose an action"
+    },
+    "optionsButtonText": {
+      "show": "edit",
+      "hide": "cancel"
+    },
+    "selectOptionsText": {
+      "selectAll": "select all",
+      "selectNone": "select none",
+      "entriesSelected": {
+        "string": "entries selected",
+        "count": 0,
+        "variables": {
+          "type": "entry"
+        }
+      }
+    }
+  },
   "show_more": "Show more",
   "show_more_map": "Show Map and Address",
   "show_less": "Show less",

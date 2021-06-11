@@ -1,18 +1,44 @@
 {
   "activityLists": "Aktivitätenlisten",
-  "activityShowcase": "Aktivitäten-Showcase",
+  "activityShowcase": "Showcase",
   "address": "Adresse",
   "addresses": "Adressen",
   "associatedMediaFiles": "Mediendateien",
   "editButtonText": "editieren",
   "editedDate": "Geändert am",
   "expertise": "Expertise",
+  "frontend": "Showroom",
   "lists": "Listen",
   "location": "Ort",
   "locations": "Orte",
   "publisher": "Besitzer",
   "publishedDate": "Veröffentlicht am",
   "print": "Drucken",
+  "results": {
+    "expand": {
+      "expand": "weitere Einträge",
+      "collapse": "weniger Einträge"
+    },
+    "message": {
+      "text": "Verschieben oder Auswählen",
+      "subtext": "Sortiere die Einträge per Drag & Drop oder wähle die Einträge und eine Aktion aus"
+    },
+    "optionsButtonText": {
+      "show": "editieren",
+      "hide": "abbrechen"
+    },
+    "selectOptionsText": {
+      "selectAll": "Alle auswählen",
+      "selectNone": "Keine auswählen",
+      "entriesSelected": {
+        "string": "ausgewählte Einträge",
+        "count": 0,
+        "variables": {
+          "type": "Datei"
+        }
+      }
+    }
+  },
   "show_more": "Mehr anzeigen",
   "show_more_map": "Karte und Adresse anzeigen",
   "show_less": "Weniger anzeigen",

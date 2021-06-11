@@ -69,10 +69,10 @@
   ],
   "showcase": [
     {
-      "uid": "1",
+      "id": "1",
       "additional": "07.05.2021",
       "description": "Exhibition",
-      "imageUrl": "https://placeimg.com/460/341/arch",
+      "imageUrl": "https://placeimg.com/460/341/animal",
       "href": "/a7658eee.robinsmith/a2d8lx4i",
       "previews": [
         {
@@ -83,17 +83,15 @@
         }
       ],
       "showcase_type": "activity",
-      "subtext": [
-        "Subtitle"
-      ],
-      "title": "Title"
+      "subtext": "Subtitle 1",
+      "title": "Title 1"
     },
     {
-      "uid": "2",
+      "id": "2",
       "additional": "07.05.2021 - 14.05.2021",
       "description": "Exhibition",
       "href": "/a7658eee.robinsmith/a2d8lx4i",
-      "imageUrl": "https://placeimg.com/460/341/arch",
+      "imageUrl": "https://placeimg.com/460/341/tech",
       "previews": [
         {
           "640w": "https://placeimg.com/640/480/tech"
@@ -103,16 +101,15 @@
         }
       ],
       "showcase_type": "activity",
-      "subtext": [
-        "Subtitle"
-      ],
-      "title": "Title"
+      "subtext": "Subtitle 2",
+      "title": "Title 2"
     },
     {
       "id": "3",
       "additional": "09.05.2021 - 09.05.2021",
       "description": "Exhibition",
       "href": "/a7658eee.robinsmith/a2d8lx4i",
+      "imageUrl": "https://placeimg.com/460/341/arch",
       "previews": [
         {
           "640w": "https://placeimg.com/640/480/arch"
@@ -122,10 +119,8 @@
         }
       ],
       "showcase_type": "activity",
-      "subtext": [
-        "Subtitle"
-      ],
-      "title": "Title"
+      "subtext": "Subtitle 3",
+      "title": "Title 3"
     }
   ],
   "source_institution": {

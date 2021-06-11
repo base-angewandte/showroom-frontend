@@ -158,11 +158,16 @@
     <BaseResultBoxSection
       v-if="data.entries && data.entries.media"
       :entry-list="data.entries.media"
+      :expand-text="$t('results.expand')"
+      :max-rows="2"
+      :max-show-more-rows="1"
+      :message-text="$t('results.message.text')"
+      :message-subtext="$t('results.message.subtext')"
+      :options-button-text="$t('results.optionsButtonText')"
+      :select-options-text="$t('results.selectOptionsText')"
       :show-options="false"
       :show-header="true"
-      :max-show-more-rows="1"
       :use-expand-mode="true"
-      :max-rows="2"
       :use-pagination="false"
       class="base-sr-row">
       <template #header>
@@ -173,15 +178,23 @@
 
       <template
         v-slot:resultBox="props">
-        <!-- Todo: temporarily, adapt after layout decision in ui-group -->
         <BaseImageBox
           :key="props.item.id"
           :title="props.item.alternative.join(', ')"
           :image-url="mediaImageUrl(props.item)"
-          :show-title="true"
+          :icon="imageBoxIcon(props.item.type)"
+          :show-title="false"
+          :show-title-on-hover="!['i', 'v'].includes(props.item.type)"
+          :play-icon="['a', 'v'].includes(props.item.type)"
           :lazyload="true"
           class="base-sr-result-box"
-          @clicked="previewMedia(props.item.id)" />
+          @clicked="previewMedia(props.item.id)">
+          <template
+            v-if="props.item.duration"
+            slot="footer">
+            <span>{{ props.item.duration }}</span>
+          </template>
+        </BaseImageBox>
       </template>
     </BaseResultBoxSection>
 

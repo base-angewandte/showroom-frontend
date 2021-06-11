@@ -13,6 +13,7 @@
           "gif": "https://placeimg.com/400/300/arch.jpg",
           "jpg": "https://placeimg.com/400/300/arch.jpg"
         },
+        "duration": "4:22",
         "licence": {
           "label": "Copyright",
           "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
@@ -27,6 +28,7 @@
         "alternative": [
           "Audio"
         ],
+        "duration": "1:27",
         "licence": {
           "label": "Copyright",
           "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
