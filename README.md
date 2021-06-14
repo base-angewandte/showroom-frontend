@@ -38,6 +38,15 @@ nano config/settings.json
 
 For configuration details and possible options see the [config section](#configuration-of-the-showroom-app).
 
+## Production Setup
+
+git and docker are required on the system.
+
+``` bash
+# build and start the Showroom App
+make start
+```
+
 ## Configuration of the Showroom App
 
 The configuration of your project can be done with environment variables specified in a `.env` file.
