@@ -4,11 +4,13 @@ const OpenAPIBackend = require('openapi-backend').default;
 
 const apiSpec = require('./swagger.json');
 const apiV1ActivitiesRead = require('./data/activities.json');
-const apiV1EntitiesRead = require('./data/entities.json');
+const apiV1AutocompleteResultsRead = require('./data/discover.autocomplete.json');
 const apiV1EntitiesActivitiesRead = require('./data/entities.activities.json');
+const apiV1EntitiesRead = require('./data/entities.json');
+const apiV1EntitiesSearch = require('./data/entities.id.search.json');
+const apiV1EntitiesActivitiesEditReadSD = require('./data/entities.secondaryDetails.json');
 const apiV1Filters = require('./data/filters.json');
 const apiV1SearchResultsRead = require('./data/discover.search.json');
-const apiV1AutocompleteResultsRead = require('./data/discover.autocomplete.json');
 
 const port = 9001;
 
@@ -33,10 +35,10 @@ const api = new OpenAPIBackend({
     api_v1_filter_list: async (c, req, res) => res.status(200).json(
       apiV1Filters,
     ),
-    api_v1_search_read: async (c, req, res) => res.status(200).json(
+    api_v1_search_create: async (c, req, res) => res.status(200).json(
       apiV1SearchResultsRead,
     ),
-    api_v1_autocomplete_read: async (c, req, res) => {
+    api_v1_autocomplete_create: async (c, req, res) => {
       const searchString = req.query.q;
       const filterName = req.query.filter_name;
       let matchingData = [];
@@ -55,15 +57,28 @@ const api = new OpenAPIBackend({
         matchingData,
       );
     },
-    api_v1_activities_read: async (c, req, res) => res.status(200).json(
+    api_v1_activities_retrieve: async (c, req, res) => res.status(200).json(
       apiV1ActivitiesRead,
     ),
-    api_v1_entities_read: async (c, req, res) => res.status(200).json(
+    api_v1_entities_search_create: async (c, req, res) => res.status(200).json(
+      apiV1EntitiesSearch,
+    ),
+    api_v1_entities_retrieve: async (c, req, res) => res.status(200).json(
       apiV1EntitiesRead,
     ),
-    api_v1_entities_activities_read: async (c, req, res) => res.status(200).json(
+    api_v1_entities_list_retrieve: async (c, req, res) => res.status(200).json(
       apiV1EntitiesActivitiesRead,
     ),
+    api_v1_entities_edit_retrieve: async (c, req, res) => {
+      if (req.query.field === 'secondary_details') {
+        res.status(200).json(apiV1EntitiesActivitiesEditReadSD);
+      }
+
+      if (req.query.field === 'showcase') {
+        res.status(200).json({ message: 'tbd.' });
+      }
+    },
+    api_v1_entities_edit_update: async (c, req, res) => res.status(200).json(),
     swagger: async (c, req, res) => {
       // remove schema 'CommonList', due problems with converting circular structures to JSON
       // - not needed for further frontend processing

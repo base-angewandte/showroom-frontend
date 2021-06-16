@@ -15,7 +15,7 @@ export default {
     Detail,
   },
   async asyncData(context) {
-    const data = await context.$api.public.api_v1_activities_read({
+    const data = await context.$api.public.api_v1_activities_retrieve({
       id: context.route.params.slug,
     }).then((response) => JSON.parse(response.data));
 

@@ -45,7 +45,7 @@ export default {
     const filterList = JSON.parse(data);
     // get initial search results
     // TODO: this should move to the search component
-    const response = await $api.public.api_v1_search_read();
+    const response = await $api.public.api_v1_search_create();
     const searchResults = JSON.parse(response.data);
     return { filterList, searchResults };
   },

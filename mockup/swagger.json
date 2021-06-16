@@ -7,7 +7,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:9001"
+      "url": "http://localhost:9001",
+      "description": "Local Mockup Server"
     }
   ],
   "tags": [
@@ -28,7 +29,7 @@
     "/autocomplete": {
       "post": {
         "description": "Exact string search matching titles.",
-        "operationId": "api_v1_autocomplete_read",
+        "operationId": "api_v1_autocomplete_create",
         "tags": [
           "public"
         ],
@@ -96,7 +97,7 @@
     "/search": {
       "post": {
         "description": "Returns all possible results.",
-        "operationId": "api_v1_search_read",
+        "operationId": "api_v1_search_create",
         "tags": [
           "public"
         ],
@@ -172,14 +173,62 @@
                   "type": "object",
                   "properties": {
                     "created": {
-                      "type": "integer",
-                      "description": "Number of newly created activities."
+                      "type": "array",
+                      "description": "List of newly created activities. Empty if none.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "The original id of the repository entry."
+                          },
+                          "showroom_id": {
+                            "type": "integer",
+                            "description": "The new showroom id of this activity."
+                          }
+                        }
+                      }
                     },
                     "updated": {
-                      "type": "integer",
-                      "description": "Number of updated activities."
+                      "type": "array",
+                      "description": "List of updated activities. Empty if none.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "The original id of the repository entry."
+                          },
+                          "showroom_id": {
+                            "type": "integer",
+                            "description": "Showroom id of the updated activity."
+                          }
+                        }
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "description": "List of errors when creating/updating certain activities. Empty if none.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "The original id of the repository entry."
+                          },
+                          "detail": {
+                            "type": "string",
+                            "description": "Description of the error when trying to create/update this activity."
+                          }
+                        }
+                      }
                     }
-                  }
+                  },
+                  "required": [
+                    "created",
+                    "updated",
+                    "errors"
+                  ]
                 }
               }
             }
@@ -210,7 +259,7 @@
     "/activities/{id}": {
       "get": {
         "description": "Returns a single activity object.",
-        "operationId": "api_v1_activities_read",
+        "operationId": "api_v1_activities_retrieve",
         "tags": [
           "public"
         ],
@@ -249,7 +298,7 @@
       },
       "delete": {
         "description": "Delete the activity",
-        "operationId": "api_v1_activities_delete",
+        "operationId": "api_v1_activities_destroy",
         "tags": [
           "repo"
         ],
@@ -293,7 +342,7 @@
     "/activities/{id}/media": {
       "get": {
         "description": "Returns an array of media objects related to an specific activity.",
-        "operationId": "api_v1_activities_media_read",
+        "operationId": "api_v1_activities_media_list",
         "tags": [
           "public"
         ],
@@ -397,7 +446,7 @@
     "/entities/{id}": {
       "get": {
         "description": "Returns a single entity object.",
-        "operationId": "api_v1_entities_read",
+        "operationId": "api_v1_entities_retrieve",
         "tags": [
           "public"
         ],
@@ -503,7 +552,7 @@
       },
       "delete": {
         "description": "Delete the entity",
-        "operationId": "api_v1_entities_delete",
+        "operationId": "api_v1_entities_destroy",
         "tags": [
           "repo"
         ],
@@ -544,10 +593,10 @@
         }
       }
     },
-    "/entities/{id}/activities": {
+    "/entities/{id}/list": {
       "get": {
-        "description": "Returns array of activities related to an specific entity.",
-        "operationId": "api_v1_entities_activities_read",
+        "description": "Returns array of activities related to a specific entity.",
+        "operationId": "api_v1_entities_list_retrieve",
         "tags": [
           "public"
         ],
@@ -586,7 +635,7 @@
       },
       "patch": {
         "description": "Update order and visibility of activities",
-        "operationId": "api_v1_entities_activities_partial_update",
+        "operationId": "api_v1_entities_list_partial_update",
         "tags": [
           "auth"
         ],
@@ -651,10 +700,150 @@
         }
       }
     },
+    "/entities/{id}/edit": {
+      "get": {
+        "description": "Returns user-editable information from a specific field of an entity, in all available languages.",
+        "operationId": "api_v1_entities_edit_retrieve",
+        "tags": [
+          "auth"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "required": true,
+            "description": "Defines which user-editable field from the entity model should be requested. This currently can be either \"secondary_details\" or \"showcase\"\n",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "secondary_details",
+                "showcase"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of the items in the user-editable field that was requested",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityEdit"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity/Activities not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "(Fully) Update user-editable information of an entity",
+        "operationId": "api_v1_entities_edit_update",
+        "tags": [
+          "auth"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "required": true,
+            "description": "Defines which user-editable field from the entity model should be updated. This currently can be either \"secondary_details\" or \"showcase\"\n",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "secondary_details",
+                "showcase"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntityEdit"
+              }
+            }
+          },
+          "description": "Request array with ordered objects",
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully updated"
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/entities/{id}/search": {
       "post": {
         "description": "Returns all possible results of a specific entity, e.g. person.",
-        "operationId": "api_v1_entities_search",
+        "operationId": "api_v1_entities_search_create",
         "tags": [
           "public"
         ],
@@ -773,7 +962,7 @@
     "/albums/{id}": {
       "get": {
         "description": "Returns a single album object.",
-        "operationId": "api_v1_albums_read",
+        "operationId": "api_v1_albums_retrieve",
         "tags": [
           "public"
         ],
@@ -854,7 +1043,7 @@
       },
       "delete": {
         "description": "Delete the album",
-        "operationId": "api_v1_albums_delete",
+        "operationId": "api_v1_albums_destroy",
         "tags": [
           "auth"
         ],
@@ -961,7 +1150,7 @@
     "/media/{id}": {
       "delete": {
         "description": "Delete the media entry",
-        "operationId": "api_v1_media_delete",
+        "operationId": "api_v1_media_destroy",
         "tags": [
           "repo"
         ],
@@ -1109,13 +1298,13 @@
             "$ref": "#/components/schemas/CommonFeaturedImage"
           },
           "primary_details": {
-            "$ref": "#/components/schemas/CommonText"
+            "$ref": "#/components/schemas/CommonTextList"
           },
           "publisher": {
             "$ref": "#/components/schemas/CommonPublisher"
           },
           "secondary_details": {
-            "$ref": "#/components/schemas/CommonText"
+            "$ref": "#/components/schemas/CommonTextList"
           },
           "source_institution": {
             "$ref": "#/components/schemas/CommonSourceInstitution"
@@ -1170,10 +1359,10 @@
             "$ref": "#/components/schemas/CommonFeaturedImage"
           },
           "primary_details": {
-            "$ref": "#/components/schemas/CommonText"
+            "$ref": "#/components/schemas/CommonTextList"
           },
           "secondary_details": {
-            "$ref": "#/components/schemas/CommonText"
+            "$ref": "#/components/schemas/CommonTextList"
           },
           "showcase": {
             "type": "array",
@@ -1235,10 +1424,7 @@
             ]
           },
           "subtext": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string"
           },
           "title": {
             "type": "string"
@@ -1270,10 +1456,7 @@
             "type": "string"
           },
           "subtext": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string"
           },
           "total": {
             "type": "number"
@@ -1295,6 +1478,25 @@
             "654w": "path to file"
           }
         ]
+      },
+      "EntityEdit": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "title": "CommonTextTranslation",
+          "properties": {
+            "en": {
+              "$ref": "#/components/schemas/CommonTextList"
+            },
+            "de": {
+              "$ref": "#/components/schemas/CommonTextList"
+            },
+            "xx": {
+              "$ref": "#/components/schemas/CommonTextList"
+            }
+          }
+        },
+        "description": "Contains all translations of the contents of a user-editable field (like secondary_details or showcase). Every item of this list is an object containing all available ISO 2 letter codes as properties, holding the list of CommonText objects to be translated as values.\n"
       },
       "EntityActivitiesEdit": {
         "type": "array",
@@ -1329,7 +1531,7 @@
             "type": "string"
           },
           "secondary_details": {
-            "$ref": "#/components/schemas/CommonText"
+            "$ref": "#/components/schemas/CommonTextList"
           },
           "publisher": {
             "$ref": "#/components/schemas/CommonPublisher"
@@ -1401,6 +1603,9 @@
           },
           "licence": {
             "$ref": "#/components/schemas/MediaLicence"
+          },
+          "duration": {
+            "type": "string"
           },
           "mp3": {
             "type": "string",
@@ -1831,30 +2036,12 @@
           }
         ]
       },
-      "CommonText": {
+      "CommonTextList": {
         "type": "array",
         "items": {
-          "type": "object",
-          "properties": {
-            "label": {
-              "type": "string"
-            },
-            "data": {
-              "type": "string",
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/CommonTextString"
-                },
-                {
-                  "$ref": "#/components/schemas/CommonTextArray"
-                },
-                {
-                  "$ref": "#/components/schemas/CommonTextObject"
-                }
-              ]
-            }
-          }
+          "$ref": "#/components/schemas/CommonText"
         },
+        "description": "An array of text objects that will be rendered by the [BaseTextList](https://base-angewandte.github.io/base-ui-components/#basetextlist) component.\n",
         "example": [
           {
             "label": "string",
@@ -1890,6 +2077,58 @@
           }
         ]
       },
+      "CommonText": {
+        "type": "object",
+        "title": "CommonText",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CommonTextString"
+              },
+              {
+                "$ref": "#/components/schemas/CommonTextArray"
+              },
+              {
+                "$ref": "#/components/schemas/CommonTextObject"
+              }
+            ]
+          },
+          "language": {
+            "type": "object",
+            "description": "This property will only be set, if the requested language could not be found",
+            "properties": {
+              "iso": {
+                "type": "string",
+                "description": "The ISO 2 letter code for the language this content was returned in"
+              },
+              "label": {
+                "type": "object",
+                "properties": {
+                  "en": {
+                    "type": "string"
+                  },
+                  "de": {
+                    "type": "string"
+                  },
+                  "xx": {
+                    "type": "string"
+                  }
+                },
+                "description": "Contains all available translations of the label that should be used if the language of the content is to be rendered.\n"
+              }
+            }
+          }
+        },
+        "required": [
+          "label",
+          "data"
+        ]
+      },
       "CommonTextString": {
         "type": "string"
       },
@@ -1909,17 +2148,21 @@
           ],
           "properties": {
             "label": {
-              "type": "string"
+              "type": "string",
+              "description": "A label to prefix the value, including a colon. In the format \"label: value\". If empty, only the value should be put on the line by itself, like \"value\".\n"
             },
             "value": {
-              "type": "string"
+              "type": "string",
+              "description": "The value to be displayed"
             },
             "url": {
               "type": "string",
-              "format": "uri"
+              "format": "uri",
+              "description": "A clickable link for this value"
             },
             "source": {
-              "type": "string"
+              "type": "string",
+              "description": "An internal identifier, e.g. of an entity or activity"
             }
           }
         }

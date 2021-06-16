@@ -103,7 +103,7 @@ export default {
     async fetchAutocomplete({ searchString, filter, index }) {
       console.log(filter);
       this.autocompleteRequestOngoing = index;
-      const response = await this.$api.public.api_v1_autocomplete_read({
+      const response = await this.$api.public.api_v1_autocomplete_create({
         q: searchString,
         filter_name: filter.label === 'Fulltext' ? null : filter.label,
       });

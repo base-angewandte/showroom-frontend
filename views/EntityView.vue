@@ -15,11 +15,11 @@ export default {
     Detail,
   },
   async asyncData(context) {
-    const data = await context.$api.public.api_v1_entities_read({
+    const data = await context.$api.public.api_v1_entities_retrieve({
       id: context.route.params.id,
     }).then((response) => JSON.parse(response.data));
 
-    data.list = await context.$api.public.api_v1_entities_activities_read({
+    data.list = await context.$api.public.api_v1_entities_list_retrieve({
       id: context.route.params.id,
     }).then((response) => JSON.parse(response.data));
 
