@@ -1203,11 +1203,12 @@ components:
         type:
           type: string
 
-    SearchCollection:
+    SearchResults:
       type: object
       properties:
-        collection:
+        label:
           type: string
+          description: 'A string describing the result set (e.g. "Most recent Activities")'
         total:
           description: 'Total number of activities in that album.'
           type: number
@@ -1219,7 +1220,7 @@ components:
     Search:
       type: array
       items:
-        $ref: '#/components/schemas/SearchCollection'
+        $ref: '#/components/schemas/SearchResults'
 
     #
     # Filter
