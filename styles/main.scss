@@ -113,6 +113,16 @@ html {
   }
 }
 
+.base-sr-text-button {
+  color: var(--app-color);
+  cursor: pointer;
+  transition: color 250ms ease-in-out;
+
+  &:hover {
+    color: var(--app-color-secondary);
+  }
+}
+
 .base-sr-result-box {
   &:hover {
     cursor: pointer;

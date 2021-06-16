@@ -21,7 +21,8 @@ $input-field-line-height: 27rem/19;
 $fade-out-width: 30px;
 
 /* colors */
-$app-color: #FF9800 !default;
+$app-color: #673ab7 !default;
+$app-color-secondary: #b085f5;
 $font-color: rgb(0, 0, 0);
 $font-color-second: rgb(111, 111, 111);
 $font-color-third: rgb(160, 160, 160);
@@ -66,3 +67,10 @@ $icon-min: 8px;
 /* break-points */
 $breakpoint-small: 640px;
 $breakpoint-medium: 1024px;
+
+/* z-indexes */
+$zindex: (
+  notification: 1100,
+  // just in here for reference
+  header: 1040,
+);

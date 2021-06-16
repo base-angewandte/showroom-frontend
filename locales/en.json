@@ -3,21 +3,33 @@
   "activityShowcase": "Showcase",
   "address": "Address",
   "addresses": "Addresses",
+  "add_activity": "add activity",
+  "add_activities": "Add activities",
   "associatedMediaFiles": "Associated media files",
+  "details": "Details",
+  "de": "German",
+  "en": "English",
   "editButtonText": "Edit",
+  "editNow": "Edit now",
+  "editTextReminder": "Individual text can be entered here.",
   "editedDate": "Edit Date",
   "expertise": "Expertise",
   "frontend": "Showroom",
   "lists": "Lists",
   "location": "Location",
   "locations": "Locations",
+  "notify": {
+    "saveFail": "Saving to database failed",
+    "saveSuccess": "Entry saved",
+    "saveSuccessSubtext": "The entry was successfully saved to the database."
+  },
   "print": "Print",
   "publisher": "Owner",
   "publishedDate": "Publication Date",
   "results": {
     "expand": {
-      "expand": "more objects",
-      "collapse": "collapse"
+      "expand": "more Objects",
+      "collapse": "show less"
     },
     "message": {
       "text": "Drag or Select",
@@ -39,6 +51,8 @@
       }
     }
   },
+  "search": "Search",
+  "selectEntries": "Select entries",
   "show_more": "Show more",
   "show_more_map": "Show Map and Address",
   "show_less": "Show less",

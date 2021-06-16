@@ -3,21 +3,33 @@
   "activityShowcase": "Showcase",
   "address": "Adresse",
   "addresses": "Adressen",
+  "add_activity": "Aktivität hinzufügen",
+  "add_activities": "Aktivitäten hinzufügen",
   "associatedMediaFiles": "Mediendateien",
+  "details": "Details",
+  "de": "Deutsch",
+  "en": "Englisch",
   "editButtonText": "editieren",
+  "editNow": "Jetzt bearbeiten",
+  "editTextReminder": "Hier kann individueller Text eingetragen werden.",
   "editedDate": "Geändert am",
   "expertise": "Expertise",
   "frontend": "Showroom",
   "lists": "Listen",
   "location": "Ort",
   "locations": "Orte",
+  "notify": {
+    "saveFail": "Speichern fehlgeschlagen",
+    "saveSuccess": "Eintrag gespeichert",
+    "saveSuccessSubtext": "Der Eintrag konnte erfolgreich gespeichert werden."
+  },
   "publisher": "Besitzer",
   "publishedDate": "Veröffentlicht am",
   "print": "Drucken",
   "results": {
     "expand": {
-      "expand": "weitere Einträge",
-      "collapse": "weniger Einträge"
+      "expand": "weitere Objekte",
+      "collapse": "weniger anzeigen"
     },
     "message": {
       "text": "Verschieben oder Auswählen",
@@ -39,6 +51,8 @@
       }
     }
   },
+  "search": "Suche",
+  "selectEntries": "Einträge auswählen",
   "show_more": "Mehr anzeigen",
   "show_more_map": "Karte und Adresse anzeigen",
   "show_less": "Weniger anzeigen",

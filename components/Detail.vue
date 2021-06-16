@@ -63,18 +63,11 @@
       </BaseExpandBox>
 
       <!-- secondary details -->
-      <BaseExpandBox
-        :show-more-text="$i18n.t('show_more')"
-        :show-less-text="$i18n.t('show_less')"
-        padding="large"
-        class="base-sr-row base-sr-head__secondary">
-        <BaseTextList
-          render-label-as="h2"
-          :label-margin-bottom="true"
-          :data="data.secondary_details"
-          :cols2="true"
-          :cols2-breakpoint="1400" />
-      </BaseExpandBox>
+      <SecondaryDetails
+        v-if="data.secondary_details.length"
+        :data="data.secondary_details"
+        :user-can-edit="userCanEdit"
+        class="base-sr-row base-sr-head__secondary" />
 
       <!-- featured media -->
       <!-- TODO: add different media formats -->
@@ -241,6 +234,7 @@ import {
 } from 'base-ui-components';
 
 import Showcase from '~/components/Showcase';
+import SecondaryDetails from '~/components/Edit/SecondaryDetails';
 
 import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
 import 'base-ui-components/dist/components/BaseCarousel/BaseCarousel.css';
@@ -269,6 +263,7 @@ Vue.use(BaseResultBoxSection);
 export default {
   name: 'Detail',
   components: {
+    SecondaryDetails,
     Showcase,
   },
   props: {

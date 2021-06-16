@@ -6,7 +6,8 @@
       :active="'portfolio'"
       :profile.prop="profile"
       :urls.prop="urls" />
-    <main class="main-container">
+    <BaseNotification />
+    <main class="main">
       <nuxt />
     </main>
     <component
@@ -19,7 +20,16 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import Notifications from 'vue-notification/dist/ssr';
+
+Vue.use(Notifications);
+
 export default {
+  name: 'Default',
+  components: {
+    BaseNotification: () => import('~/components/BaseNotification'),
+  },
   computed: {
     lang() {
       return this.$store.state.appData.locale;
@@ -77,8 +87,8 @@ export default {
       padding: $spacing;
     }
 
-    .main-container {
-      padding-top: $header-height;
+    .main {
+      padding-top: $spacing-small;
     }
   }
 </style>
