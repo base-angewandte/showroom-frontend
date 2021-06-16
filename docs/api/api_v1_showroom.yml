@@ -4,7 +4,8 @@ info:
   description: 'Showroom API'
   version: 1.0.0
 servers:
-  - url: ''
+  - url: http://127.0.0.1:8500
+    description: Local Dev Server (if set up according to Showroom backend docs)
 
 tags:
   - name: public
@@ -18,7 +19,7 @@ paths:
   /autocomplete:
     post:
       description: 'Exact string search matching titles.'
-      operationId: api_v1_autocomplete_read
+      operationId: api_v1_autocomplete_create
       tags:
         - public
       parameters:
@@ -61,7 +62,7 @@ paths:
   /search:
     post:
       description: 'Returns all possible results.'
-      operationId: api_v1_search_read
+      operationId: api_v1_search_create
       tags:
         - public
       parameters:
@@ -168,7 +169,7 @@ paths:
   /activities/{id}:
     get:
       description: 'Returns a single activity object.'
-      operationId: api_v1_activities_read
+      operationId: api_v1_activities_retrieve
       tags:
         - public
       parameters:
@@ -192,7 +193,7 @@ paths:
                 $ref: "#/components/schemas/Error"
     delete:
       description: 'Delete the activity'
-      operationId: api_v1_activities_delete
+      operationId: api_v1_activities_destroy
       tags:
         - repo
       responses:
@@ -220,7 +221,7 @@ paths:
   /activities/{id}/media:
     get:
       description: 'Returns an array of media objects related to an specific activity.'
-      operationId: api_v1_activities_media_read
+      operationId: api_v1_activities_media_list
       tags:
         - public
       parameters:
@@ -286,7 +287,7 @@ paths:
   /entities/{id}:
     get:
       description: 'Returns a single entity object.'
-      operationId: api_v1_entities_read
+      operationId: api_v1_entities_retrieve
       tags:
         - public
       parameters:
@@ -352,7 +353,7 @@ paths:
           description: 'Unexpected error'
     delete:
       description: 'Delete the entity'
-      operationId: api_v1_entities_delete
+      operationId: api_v1_entities_destroy
       tags:
         - repo
       responses:
@@ -378,10 +379,10 @@ paths:
           description: 'Not found'
 
 
-  /entities/{id}/activities:
+  /entities/{id}/list:
     get:
-      description: 'Returns array of activities related to an specific entity.'
-      operationId: api_v1_entities_activities_read
+      description: 'Returns array of activities related to a specific entity.'
+      operationId: api_v1_entities_list_retrieve
       tags:
         - public
       parameters:
@@ -405,7 +406,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     patch:
       description: 'Update order and visibility of activities'
-      operationId: api_v1_entities_activities_partial_update
+      operationId: api_v1_entities_list_partial_update
       tags:
         - auth
       parameters:
@@ -449,7 +450,7 @@ paths:
   /entities/{id}/edit:
     get:
       description: 'Returns user-editable information from a specific field of an entity, in all available languages.'
-      operationId: api_v1_entities_activities_edit_read
+      operationId: api_v1_entities_edit_retrieve
       tags:
         - auth
       parameters:
@@ -488,9 +489,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    post:
+    put:
       description: '(Fully) Update user-editable information of an entity'
-      operationId: api_v1_entities_activities_edit_write
+      operationId: api_v1_entities_edit_update
       tags:
         - auth
       parameters:
@@ -543,7 +544,7 @@ paths:
   /entities/{id}/search:
     post:
       description: 'Returns all possible results of a specific entity, e.g. person.'
-      operationId: api_v1_entities_search
+      operationId: api_v1_entities_search_create
       tags:
         - public
       parameters:
@@ -618,7 +619,7 @@ paths:
   /albums/{id}:
     get:
       description: 'Returns a single album object.'
-      operationId: api_v1_albums_read
+      operationId: api_v1_albums_retrieve
       tags:
         - public
       parameters:
@@ -668,7 +669,7 @@ paths:
           description: 'Not found'
     delete:
       description: 'Delete the album'
-      operationId: api_v1_albums_delete
+      operationId: api_v1_albums_destroy
       tags:
         - auth
       responses:
@@ -736,7 +737,7 @@ paths:
   /media/{id}:
     delete:
       description: 'Delete the media entry'
-      operationId: api_v1_media_delete
+      operationId: api_v1_media_destroy
       tags:
         - repo
       responses:
