@@ -60,9 +60,5 @@
   "show_all": "Show all",
   "discover": {
     "title": "Search and Discover Showroom"
-  },
-  "search": {
-    "showMore": "more Objects",
-    "collapse": "show less"
   }
 }
