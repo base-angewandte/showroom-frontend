@@ -16,7 +16,7 @@ tags:
     description: Methods that are reserved for backend repositories to keep showroom content synchronized
 
 paths:
-  /autocomplete:
+  /autocomplete/:
     post:
       description: 'Exact string search matching titles.'
       operationId: api_v1_autocomplete_create
@@ -46,7 +46,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Autocomplete'
 
-  /filters:
+  /filters/:
     get:
       description: 'Returns all possible filters for the search.'
       operationId: api_v1_filter_list
@@ -59,7 +59,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Filter'
-  /search:
+  /search/:
     post:
       description: 'Returns all possible results.'
       operationId: api_v1_search_create
@@ -92,7 +92,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Search'
 
-  /activities:
+  /activities/:
     post:
       description: 'Create one or more activities. If an activity already exists, it will be updated with the new values.'
       operationId: api_v1_activities_create
@@ -166,7 +166,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /activities/{id}:
+  /activities/{id}/:
     get:
       description: 'Returns a single activity object.'
       operationId: api_v1_activities_retrieve
@@ -218,7 +218,7 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: 'Not found'
 
-  /activities/{id}/media:
+  /activities/{id}/media/:
     get:
       description: 'Returns an array of media objects related to an specific activity.'
       operationId: api_v1_activities_media_list
@@ -244,7 +244,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /entities:
+  /entities/:
     post:
       description: 'Create one or more entities. If an entity already exists, it will be updated with the new values.'
       operationId: api_v1_entities_create
@@ -284,7 +284,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /entities/{id}:
+  /entities/{id}/:
     get:
       description: 'Returns a single entity object.'
       operationId: api_v1_entities_retrieve
@@ -379,7 +379,7 @@ paths:
           description: 'Not found'
 
 
-  /entities/{id}/list:
+  /entities/{id}/list/:
     get:
       description: 'Returns array of activities related to a specific entity.'
       operationId: api_v1_entities_list_retrieve
@@ -447,7 +447,7 @@ paths:
           description: 'Unexpected error'
 
 
-  /entities/{id}/edit:
+  /entities/{id}/edit/:
     get:
       description: 'Returns user-editable information from a specific field of an entity, in all available languages.'
       operationId: api_v1_entities_edit_retrieve
@@ -541,7 +541,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
 
-  /entities/{id}/search:
+  /entities/{id}/search/:
     post:
       description: 'Returns all possible results of a specific entity, e.g. person.'
       operationId: api_v1_entities_search_create
@@ -585,7 +585,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /albums:
+  /albums/:
     post:
       operationId: api_v1_albums_create
       description: 'Create an album belonging to the authenticated user'
@@ -616,7 +616,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /albums/{id}:
+  /albums/{id}/:
     get:
       description: 'Returns a single album object.'
       operationId: api_v1_albums_retrieve
@@ -694,7 +694,7 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: 'Not found'
 
-  /media:
+  /media/:
     post:
       description: 'Create one or more media. If one already exists, it will be updated with the new values.'
       operationId: api_v1_media_create
@@ -734,7 +734,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /media/{id}:
+  /media/{id}/:
     delete:
       description: 'Delete the media entry'
       operationId: api_v1_media_destroy
@@ -1203,11 +1203,12 @@ components:
         type:
           type: string
 
-    SearchCollection:
+    SearchResults:
       type: object
       properties:
-        collection:
+        label:
           type: string
+          description: 'A string describing the result set (e.g. "Most recent Activities")'
         total:
           description: 'Total number of activities in that album.'
           type: number
@@ -1219,7 +1220,7 @@ components:
     Search:
       type: array
       items:
-        $ref: '#/components/schemas/SearchCollection'
+        $ref: '#/components/schemas/SearchResults'
 
     #
     # Filter
