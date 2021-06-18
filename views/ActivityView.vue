@@ -15,9 +15,13 @@ export default {
     Detail,
   },
   async asyncData(context) {
+    // retrieve activity
     const data = await context.$api.public.api_v1_activities_retrieve({
       id: context.route.params.slug,
-    }).then((response) => JSON.parse(response.data));
+    }).then((response) => JSON.parse(response.data))
+      .catch((error) => {
+        context.error({ statusCode: error.response.status });
+      });
 
     return { data };
   },
@@ -25,6 +29,11 @@ export default {
     return {
       data: {},
       userCanEdit: false,
+    };
+  },
+  head() {
+    return {
+      title: `${this.data.title} | ${process.env.appTitle}`,
     };
   },
 };

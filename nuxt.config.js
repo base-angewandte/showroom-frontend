@@ -13,7 +13,7 @@ export default {
       { charset: 'utf-8' },
       { lang: 'en' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Showroom | base Angewandte' },
+      { hid: 'description', name: 'description', content: process.env.APP_TITLE },
       { name: 'apple-mobile-web-app-title', content: 'base' },
       { name: 'application-name', content: 'base' },
       { name: 'theme-color', content: '#ffffff' },
@@ -56,6 +56,7 @@ export default {
   },
   env: {
     appPrefix: process.env.APP_PREFIX,
+    appTitle: process.env.APP_TITLE,
     backendBaseUrl: process.env.BACKEND_BASE_URL,
     backendPrefix: process.env.BACKEND_PREFIX,
     apiSpecUrl: process.env.API_SPEC_URL,

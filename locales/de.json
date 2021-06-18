@@ -13,6 +13,13 @@
   "editNow": "Jetzt bearbeiten",
   "editTextReminder": "Hier kann individueller Text eingetragen werden.",
   "editedDate": "Geändert am",
+  "errors": {
+    "homepage": "Startseite",
+    "404": {
+      "title": "Error 404",
+      "description": "Die angeforderte URL wurde auf diesem Server nicht gefunden."
+    }
+  },
   "expertise": "Expertise",
   "frontend": "Showroom",
   "lists": "Listen",

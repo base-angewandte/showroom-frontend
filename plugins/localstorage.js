@@ -10,7 +10,7 @@ export default ({
     // check if route contains locale
     const localeMatch = route.fullPath.match(/^\/([a-z]{2})/);
     const currentLocale = localeMatch ? localeMatch[1] : '';
-    const availableLocales = store.state.appData.locales;
+    const availableLocales = JSON.parse(store.state.appData.locales);
     // if yes, set the new language and redirect to route without locale
     if (availableLocales.includes(currentLocale)) {
       const path = route && route.fullPath ? route.fullPath.slice(3) : '/';
