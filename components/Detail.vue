@@ -233,7 +233,7 @@ import {
   BaseTextList,
 } from 'base-ui-components';
 
-import Showcase from '~/components/Showcase';
+import Showcase from '~/components/Edit/Showcase';
 import SecondaryDetails from '~/components/Edit/SecondaryDetails';
 
 import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
