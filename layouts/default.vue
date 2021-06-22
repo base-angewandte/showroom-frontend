@@ -88,7 +88,7 @@ export default {
     }
 
     .main {
-      padding-top: $spacing-small;
+      padding-top: $spacing;
     }
   }
 </style>

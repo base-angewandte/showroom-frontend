@@ -2,8 +2,8 @@
   <div>
     <!-- edit controls -->
     <BaseEditControl
-      v-if="!edit"
-      :controls="userCanEdit && !edit"
+      v-if="userCanEdit && !edit"
+      :controls="true"
       :edit="edit"
       :title="title"
       class="base-sr--ml-small"

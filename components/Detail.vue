@@ -3,6 +3,7 @@
     <div
       class="base-sr-head">
       <BaseExpandBox
+        :auto-height="true"
         :show-more-text="$t('show_more')"
         :show-less-text="$t('show_less')"
         padding="large"
@@ -45,6 +46,7 @@
 
         <!-- primary details -->
         <BaseTextList
+          v-if="data.primary_details.length"
           render-label-as="h2"
           :data="data.primary_details"
           class="base-sr-head__text-list" />
@@ -64,7 +66,6 @@
 
       <!-- secondary details -->
       <SecondaryDetails
-        v-if="data.secondary_details.length"
         :data="data.secondary_details"
         :user-can-edit="userCanEdit"
         class="base-sr-head__secondary" />
@@ -84,19 +85,13 @@
       </div>
     </div>
 
-    <!-- activity showcase -->
-    <Showcase
-      v-if="type === 'person' && data.showcase"
-      :data="data.showcase"
-      :user-can-edit="userCanEdit"
-      class="base-sr-row" />
-
     <!-- lists -->
     <div
       v-if="data.list.length"
       class="base-sr-row">
       <BaseEditControl
-        :controls="userCanEdit"
+        v-if="userCanEdit"
+        :controls="true"
         :edit="editList"
         :subtitle="'(' + data.list.filter(item => !item.hidden).length + ')'"
         :title="type !== 'person' ? $t('lists') : $t('activityLists')"
@@ -124,9 +119,17 @@
       </BaseExpandList>
     </div>
 
+    <!-- activity showcase -->
+    <Showcase
+      v-if="type === 'person' && data.showcase"
+      :data="data.showcase"
+      :title="$t('activityShowcase')"
+      :user-can-edit="userCanEdit"
+      class="base-sr-row" />
+
     <!-- locations -->
     <div
-      v-if="data.locations"
+      v-if="data.locations && data.locations.length"
       class="base-sr-row">
       <h2 class="base-sr--ml-small">
         {{ data.locations.length > 1 ? $t('locations') : $t('location') }}
@@ -149,9 +152,11 @@
 
     <!-- media files -->
     <BaseResultBoxSection
-      v-if="data.entries && data.entries.media"
+      v-if="data.entries && data.entries.media && data.entries.media.length"
       :entry-list="data.entries.media"
       :expand-text="$t('results.expand')"
+      :is-loading="isLoading"
+      :jump-to-top="true"
       :max-rows="2"
       :max-show-more-rows="1"
       :message-text="$t('results.message.text')"
@@ -159,9 +164,8 @@
       :options-button-text="$t('results.optionsButtonText')"
       :select-options-text="$t('results.selectOptionsText')"
       :show-options="false"
-      :show-header="true"
       :use-expand-mode="true"
-      :use-pagination="false"
+      :use-pagination="true"
       class="base-sr-row">
       <template #header>
         <h2 class="base-sr--ml-small">
@@ -207,7 +211,10 @@
       v-if="data.publisher"
       class="base-sr-row base-sr-last-modified">
       <p>
-        {{ $t('publisher') }}: {{ data.publisher[0].name }} |
+        <template
+          v-if="data.publisher.length">
+          {{ $t('publisher') }}: {{ data.publisher[0].name }} |
+        </template>
         Showroom Instance: {{ data.source_institution.label }} |
         {{ $t('publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
         {{ $t('editedDate') }}: {{ createHumanReadableDate(data.date_changed) }}
@@ -273,6 +280,13 @@ export default {
     data: {
       type: Object,
       default: () => {},
+    },
+    /**
+     * flag to set if loader should be shown
+     */
+    isLoading: {
+      type: Boolean,
+      default: false,
     },
     /**
      * set type of detail<br>
@@ -435,6 +449,16 @@ export default {
       // find array id depending on item.id
       this.initialPreviewSlide = this.mediaPreviewData.findIndex((item) => item.id === id);
       this.showPreview = true;
+    },
+    imageBoxIcon(type) {
+      let icon = '';
+      if (type === 'a') {
+        icon = 'audio-object';
+      }
+      if (type === 'd' || type === 'x') {
+        icon = 'file-object';
+      }
+      return icon;
     },
     /* EDIT LIST */
     activateList() {

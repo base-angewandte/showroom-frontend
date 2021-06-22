@@ -2,8 +2,7 @@
   <Detail
     type="person"
     :data="data"
-    :user-can-edit="userCanEdit"
-    class="base-sr--mt-small" />
+    :user-can-edit="userCanEdit" />
 </template>
 
 <script>
