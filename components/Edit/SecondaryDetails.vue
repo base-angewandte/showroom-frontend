@@ -1,6 +1,7 @@
 <template>
   <div
-    class="base-sr-secondary">
+    :class="['base-sr-secondary',
+             { 'base-sr-row': userCanEdit || edit || data.length }]">
     <BaseEditControl
       v-if="userCanEdit"
       :controls="true"
@@ -13,21 +14,21 @@
 
     <!-- show data if not empty and not in edit mode -->
     <BaseExpandBox
-      v-if="data[0].data.length && !edit"
+      v-if="data[0] && data[0].data.length && !edit"
+      :auto-height="true"
       :show-more-text="$i18n.t('show_more')"
       :show-less-text="$i18n.t('show_less')"
       padding="large">
       <BaseTextList
         render-label-as="h2"
-        :label-margin-bottom="true"
+        :label-margin-bottom="data.length === 1"
         :data="data"
-        :cols2="true"
-        :cols2-breakpoint="1400" />
+        :cols2="true" />
     </BaseExpandBox>
 
     <!-- userCanEdit -->
     <BaseBox
-      v-if="(userCanEdit && edit) || (userCanEdit && !data[0].data.length)"
+      v-if="(userCanEdit && edit) || (userCanEdit && !data.length)"
       box-ratio="0"
       :box-size="{}"
       :box-hover="false"
@@ -54,7 +55,7 @@
         v-model="textInput"
         :tabs="tabs"
         :active-tab="activeTab"
-        :label="data[0].label"
+        :label="data[0] && data[0].label ? data[0].label: $t('details')"
         :placeholder="$t('editTextReminder')" />
     </BaseBox>
   </div>

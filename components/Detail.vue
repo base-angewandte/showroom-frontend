@@ -67,7 +67,7 @@
         v-if="data.secondary_details.length"
         :data="data.secondary_details"
         :user-can-edit="userCanEdit"
-        class="base-sr-row base-sr-head__secondary" />
+        class="base-sr-head__secondary" />
 
       <!-- featured media -->
       <!-- TODO: add different media formats -->
