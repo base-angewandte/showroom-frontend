@@ -19,6 +19,10 @@ import Showcase from '~/components/Edit/Showcase';
 import Search from '~/components/Search';
 
 export default {
+  components: {
+    Showcase,
+    Search,
+  },
   async asyncData({ $api }) {
     // get filters
     // TODO: this should move to the search component (or even store!)
