@@ -3,7 +3,7 @@
     <component
       :is="`${headerName}-header`"
       :lang="lang"
-      :active="'portfolio'"
+      :active="'showroom'"
       :profile.prop="profile"
       :urls.prop="urls" />
     <BaseNotification />
@@ -35,7 +35,7 @@ export default {
       return this.$store.state.appData.locale;
     },
     baseUrl() {
-      return process.env.backendBaseUrl;
+      return `${process.env.backendBaseUrl}/`;
     },
     profile() {
       return this.$store.state.appData.user;
@@ -45,7 +45,6 @@ export default {
     },
     urls() {
       const backendUrl = `${process.env.backendBaseUrl}${process.env.backendPrefix}`;
-
       return {
         de: `${process.env.appPrefix}/de${this.$route.path}`,
         en: `${process.env.appPrefix}/en${this.$route.path}`,
