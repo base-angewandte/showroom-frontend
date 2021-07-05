@@ -32,7 +32,7 @@ export function createRouter() {
             component: EntityView,
           },
           {
-            path: ':slug?',
+            path: ':id/:slug?',
             name: 'ObjectLang',
             component: ActivityView,
           },
@@ -44,7 +44,7 @@ export function createRouter() {
         component: EntityView,
       },
       {
-        path: '/:slug?',
+        path: '/:id/:slug?',
         name: 'Object',
         component: ActivityView,
       },

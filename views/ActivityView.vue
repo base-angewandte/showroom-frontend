@@ -13,13 +13,13 @@ export default {
   components: {
     Detail,
   },
-  async asyncData(context) {
+  async asyncData({ $api, route, error }) {
     // retrieve activity
-    const data = await context.$api.public.api_v1_activities_retrieve({
-      id: context.route.params.slug,
+    const data = await $api.public.api_v1_activities_retrieve({
+      id: route.params.id,
     }).then((response) => JSON.parse(response.data))
-      .catch((error) => {
-        context.error({ statusCode: error.response.status });
+      .catch((err) => {
+        error({ statusCode: err.response.status });
       });
 
     return { data };
