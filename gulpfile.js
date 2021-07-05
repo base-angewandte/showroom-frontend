@@ -34,8 +34,8 @@ gulp.task('set-default-settings', async () => {
 // eslint-disable-next-line consistent-return
 gulp.task('set-header', async () => {
   try {
-    const res = await axios.get(`${process.env.headerJson}`);
-    const baseUrl = process.env.headerJson.match(/(^https?:\/\/[a-z-.]+)/)[0];
+    const res = await axios.get(`${process.env.HEADER_JSON}`);
+    const baseUrl = process.env.HEADER_JSON.match(/(^https?:\/\/[a-z-.]+)/)[0];
     return gulp.src([envFile], { base: './' })
       .pipe(replace(/(\s+HEADER=).*/, (match, p1) => {
         return `${p1}${baseUrl}/${res.data.latest}`;
