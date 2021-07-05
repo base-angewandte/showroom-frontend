@@ -41,13 +41,13 @@ export default {
       carousel: [
         {
           uid: '1',
-          title: 'Title',
-          subtext: 'Subtitle',
-          description: 'Ausstellung 1',
+          title: 'Whatever Works Best For You',
+          subtext: 'On the subject of labor',
+          description: 'Exhibition',
           additional: '07.05.2020 - 21.05.2020',
           // eslint-disable-next-line global-require
           imageUrl: 'https://placeimg.com/460/341/arch',
-          href: 'http://base.uni-ak.ac.at',
+          href: '/aösädkölfsaädöflkasdäöflkasö',
           previews: [
             {
               '460w': 'https://placeimg.com/460/341/animal',
@@ -62,9 +62,9 @@ export default {
         },
         {
           uid: '2',
-          title: 'Title',
-          subtext: 'Subtitle',
-          description: 'Ausstellung 2',
+          title: 'Throwing Gestures',
+          subtext: 'Make The Unknown Visible',
+          description: 'Performance',
           additional: '07.05.2020 - 21.05.2020',
           imageUrl: 'https://placeimg.com/640/480/tech',
           href: 'http://base.uni-ak.ac.at',
@@ -82,10 +82,10 @@ export default {
         },
         {
           uid: '3',
-          title: 'Title',
-          subtext: 'Subtitle',
-          description: 'Ausstellung 3',
-          // additional: '07.05.2020 - 21.05.2020',
+          title: 'Move From Left to Right and Back and Then Turn Around',
+          subtext: 'Moving Frames and Other Variables',
+          description: 'Video Installation',
+          additional: 'Florian Bettel, Max Arheimer',
           imageUrl: 'https://placeimg.com/640/480/nature',
           href: 'http://base.uni-ak.ac.at',
           previews: [

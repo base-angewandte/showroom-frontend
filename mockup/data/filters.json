@@ -20,11 +20,11 @@
     "type": "text"
   },
   {
-    "label": "location",
+    "label": "Location",
     "type": "text"
   },
   {
-    "label": "keywords",
+    "label": "Keywords",
     "type": "chips",
     "options": [
       {
@@ -37,15 +37,15 @@
       }]
   },
   {
-    "label": "date range",
+    "label": "Date Range",
     "type": "daterange"
   },
   {
-    "label": "date",
+    "label": "Date",
     "type": "date"
   },
   {
-    "label": "type",
+    "label": "Type",
     "type": "chips",
     "options": [
       {
@@ -94,20 +94,12 @@
         "id": "Current_Art_Works"
       },
       {
-        "label": "Person",
+        "label": "Persons",
         "id": "Person"
       },
       {
-        "label": "Institution",
-        "id": "Institution"
-      },
-      {
-        "label": "Album",
-        "id": "Album"
-      },
-      {
-        "label": "Location",
-        "id": "Location"
+        "label": "Activities",
+        "id": "Activities"
       },
       {
         "label": "Newest Events",
