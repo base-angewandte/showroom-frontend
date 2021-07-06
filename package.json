@@ -5,8 +5,8 @@
   "author": "base",
   "private": true,
   "scripts": {
-    "serve": "gulp && nuxt",
-    "dev": "gulp && npm-run-all --parallel serve mockup",
+    "dev": "gulp && nuxt",
+    "dev:mock": "npm-run-all --parallel serve mockup",
     "build": "gulp && nuxt build",
     "start": "nuxt start",
     "generate": "gulp && nuxt generate",
