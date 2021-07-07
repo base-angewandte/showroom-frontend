@@ -843,7 +843,7 @@ components:
           items:
             $ref: '#/components/schemas/CommonLocation'
         featuredMedia:
-          $ref: '#/components/schemas/CommonFeaturedImage'
+          $ref: '#/components/schemas/CommonFeaturedMedia'
         primary_details:
           $ref: '#/components/schemas/CommonTextList'
         publisher:
@@ -888,7 +888,7 @@ components:
           items:
             $ref: '#/components/schemas/CommonLocation'
         featuredMedia:
-          $ref: '#/components/schemas/CommonFeaturedImage'
+          $ref: '#/components/schemas/CommonFeaturedMedia'
         primary_details:
           $ref: '#/components/schemas/CommonTextList'
         secondary_details:
@@ -1356,7 +1356,7 @@ components:
           - 'Austria'
 
     ## Featured Image
-    CommonFeaturedImage:
+    CommonFeaturedMedia:
       type: object
       oneOf:
         - $ref: '#/components/schemas/MediaAudio'
