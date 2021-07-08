@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "gulp && nuxt",
-    "dev:mock": "npm-run-all --parallel serve mockup",
+    "dev:mock": "npm-run-all --parallel dev mockup",
     "build": "gulp && nuxt build",
     "start": "nuxt start",
     "generate": "gulp && nuxt generate",
