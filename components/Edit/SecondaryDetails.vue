@@ -188,6 +188,9 @@ export default {
         requestBody[0][locale][0].data = this.textInput[this.$t('en')];
       });
 
+      // TODO: this seems like a weird mixture of ES5 .then() and ES6 async/await Promise syntax?
+      // is the .then() really necessary?
+      // also: error handling / user info necessary?
       await this.$api.auth.api_v1_entities_edit_update(
         {
           id: this.$route.params.id,

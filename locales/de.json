@@ -67,5 +67,27 @@
   "show_all": "Alle anzeigen",
   "discover": {
     "title": "Search and Discover Showroom"
+  },
+  "searchView": {
+    "placeholders": {
+      "main":  "Showroom durchsuchen und entdecken",
+      "filterRow": "Weitere Optionen zum Filter hinzufügen"
+    },
+    "advancedSearchText": {
+      "title": "Erweiterte Suche",
+      "subtext": "Wählen Sie einen Filter",
+      "availableOptions": "Verfügbare Optionen",
+      "addFilter": "Filter hinzufügen",
+      "removeFilter": "Filter entfernen",
+      "selectFilterLabel": "Filter auswählen",
+      "searchLabel": "Nach Einträgen suchen"
+    },
+    "dropDownInfoTexts": {
+      "autocompleteNoOptions": "Keine passenden Einträge gefunden",
+      "autocompleteOngoing": "Einträge werden gesucht...",
+      "autocompleteInitial": "Bitte fangen Sie an zu tippen oder wählen Sie einen Filter",
+      "chipsNoOptions": "Keine weiteren Optionen verfügbar",
+      "chipsOngoing": "Optionen werden geladen..."
+    }
   }
 }

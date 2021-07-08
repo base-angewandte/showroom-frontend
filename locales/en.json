@@ -35,8 +35,8 @@
   "publishedDate": "Publication Date",
   "results": {
     "expand": {
-      "expand": "more Objects",
-      "collapse": "show less"
+      "expand": "More Objects",
+      "collapse": "Show Less"
     },
     "message": {
       "text": "Drag or Select",
@@ -67,5 +67,27 @@
   "show_all": "Show all",
   "discover": {
     "title": "Search and Discover Showroom"
+  },
+  "searchView": {
+    "placeholders": {
+      "main":  "Search and Discover Showroom",
+      "filterRow": "Add Values to Your Filter"
+    },
+    "advancedSearchText": {
+      "title": "Advanced Search",
+      "subtext": "Select a filter",
+      "availableOptions": "Available options",
+      "addFilter": "Add filter",
+      "removeFilter": "Remove filter",
+      "selectFilterLabel": "Select filter",
+      "searchLabel": "Search for Entries"
+    },
+    "dropDownInfoTexts": {
+      "autocompleteNoOptions": "No matching options found",
+      "autocompleteOngoing": "Autocomplete is being fetched...",
+      "autocompleteInitial": "Please start typing or select a filter to see options",
+      "chipsNoOptions": "No more options available",
+      "chipsOngoing": "Options are being loaded..."
+    }
   }
 }

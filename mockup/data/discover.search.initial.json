@@ -1,6 +1,6 @@
 [
   {
-    "collection": "Most Recent Activities",
+    "collection": "Current Art Works",
     "total": 13,
     "data": [
       {
@@ -13,7 +13,7 @@
         "uid": "1",
         "subtext": "Alexander Grande",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/460/341/grayscale",
+        "imageUrl": "https://picsum.photos/seed/test/460/341",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -36,7 +36,7 @@
         "description": "Sound Recording",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/animal",
+        "imageUrl": "https://picsum.photos/seed/aaa/460/341",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -59,7 +59,7 @@
         "description": "Master Thesis",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/arch",
+        "imageUrl": "https://picsum.photos/seed/bbb/460/341",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -82,7 +82,7 @@
         "description": "Exhibition",
         "additional": "07.05.2020 - 21.05.2020",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
-        "imageUrl": "https://placeimg.com/640/480/tech",
+        "imageUrl": "https://picsum.photos/seed/ccc/460/341",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -100,12 +100,12 @@
         "id": "pCSLggvdsi8asfdsrrrasrrdfb3zRTLM4dJR",
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
-        "title": "Title 5",
-        "subtitle": "A test",
-        "description": "Performance",
+        "title": "Piece for Strings",
+        "subtext": "Minoria",
+        "description": "Composition",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/people",
+        "imageUrl": "https://picsum.photos/seed/ddd/460/341",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -123,12 +123,12 @@
         "id": "pCSLggvdsi8asfdsrrrrdsrdfb3zRTLM4dJR",
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
-        "title": "Title 6",
-        "subtitle": "A test",
-        "description": "Performance",
+        "title": "Sounding Clouds",
+        "subtext": "19.01.2020",
+        "description": "Concert",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/nature",
+        "imageUrl": "https://picsum.photos/seed/eee/460/341",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -147,11 +147,11 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "Title 6",
-        "subtitle": "A test",
-        "description": "Performance",
+        "subtext": "A test",
+        "description": "Film Score",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/tech",
+        "imageUrl": "https://picsum.photos/seed/fff/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -169,11 +169,11 @@
         "id": "pCSLggvdsi8asfdsdfb3zRTLM4dJR",
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
-        "title": "Title 7",
-        "subtitle": "A test",
-        "description": "Performance",
+        "title": "Bach Sonata III Reloaded",
+        "subtext": "Emanuel Singer",
+        "description": "Chamber Music",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
-        "imageUrl": "https://placeimg.com/460/341/grayscale",
+        "imageUrl": "https://picsum.photos/seed/egggee/460/341",
         "additional": "07.05.2020 - 21.05.2020",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
@@ -193,11 +193,11 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "An extra extra long title",
-        "subtitle": "A test",
-        "description": "Performance",
+        "subtext": "Modernism explained",
+        "description": "Electronic Music",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/people",
+        "imageUrl": "https://picsum.photos/seed/eehhhe/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -215,12 +215,12 @@
         "id": "pCSLggvdsddddi8b3zRTLM4dJR",
         "type": "album",
         "date_created": "2020-04-27T11:01:37.246606Z",
-        "title": "Title 8",
-        "subtitle": "A test",
-        "description": "Performance",
+        "title": "On the subject of being lonely",
+        "subtext": "A. B. Lanzfrau",
+        "description": "Opera",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/nature",
+        "imageUrl": "https://picsum.photos/seed/jjj/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -238,12 +238,12 @@
         "id": "pCSLggvdsi8b3zRTLM4dJR",
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
-        "title": "Title 9",
-        "subtitle": "A test",
-        "description": "Performance",
+        "title": "Minor Inconvenience",
+        "subtext": "12.02. - 13.02.2000",
+        "description": "Artist Conference",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/arch",
+        "imageUrl": "https://picsum.photos/seed/kkk/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -262,10 +262,10 @@
         "type": "album",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "Unknown",
-        "subtitle": "Lets find it out and look deeper",
+        "subtext": "Lets find it out and look deeper",
         "description": "Novel",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/animal",
+        "imageUrl": "https://picsum.photos/seed/lll/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -284,17 +284,19 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "TBD",
-        "subtitle": "Misterious",
+        "subtext": "Misterious",
+        "description": "Audio",
         "text": [
-          "Random text 1",
-          "Random text 2",
-          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          "Artist: Edit Piaf",
+          "Title: Voila",
+          "Year: 1951",
+          "Size: 23Mb"
         ]
       }
     ]
   },
   {
-    "collection": "Featured Art Works",
+    "collection": "Newest Events",
     "total": 11,
     "data": [
       {
@@ -306,7 +308,7 @@
         "description": "Painting",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/460/341/nature",
+        "imageUrl": "https://picsum.photos/seed/uuu/460/341",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -329,7 +331,7 @@
         "description": "Group Exhibition",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/tech",
+        "imageUrl": "https://picsum.photos/seed/rrr/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -348,11 +350,11 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "Mystery solved",
-        "subtitle": "A test",
+        "subtext": "A test",
         "description": "Performance",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/people",
+        "imageUrl": "https://picsum.photos/seed/zzz/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -371,11 +373,11 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "Wanna test that?",
-        "subtitle": "A test",
+        "subtext": "A test",
         "description": "Performance",
         "additional": "07.05.2020 - 21.05.2020",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
-        "imageUrl": "https://placeimg.com/640/480/greyscale",
+        "imageUrl": "https://picsum.photos/seed/wwww/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -394,11 +396,11 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "Title 5",
-        "subtitle": "A test",
+        "subtext": "A test",
         "description": "Performance",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/people",
+        "imageUrl": "https://picsum.photos/seed/qewr/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -417,11 +419,11 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "Title 6",
-        "subtitle": "A test",
+        "subtext": "A test",
         "description": "Performance",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/nature",
+        "imageUrl": "https://picsum.photos/seed/zuiz/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -440,11 +442,11 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "Title 6",
-        "subtitle": "A test",
+        "subtext": "A test",
         "description": "Performance",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/tech",
+        "imageUrl": "https://picsum.photos/seed/8768/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -463,10 +465,10 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "Title 7",
-        "subtitle": "A test",
+        "subtext": "A test",
         "description": "Performance",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
-        "imageUrl": "https://placeimg.com/460/341/grayscale",
+        "imageUrl": "https://picsum.photos/seed/ghrtze5/460/341",
         "additional": "07.05.2020 - 21.05.2020",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
@@ -486,11 +488,11 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "An extra extra long title",
-        "subtitle": "A test",
+        "subtext": "A test",
         "description": "Performance",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/people",
+        "imageUrl": "https://picsum.photos/seed/64rzrt/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -508,12 +510,12 @@
         "id": "pCSLggvdsddddi8b3zRTLM4dJR",
         "type": "album",
         "date_created": "2020-04-27T11:01:37.246606Z",
-        "title": "Title 8",
-        "subtitle": "A test",
+        "title": "Mary Chain and Jesus",
+        "subtext": "Wanting everything",
         "description": "Performance",
         "source": "http://base.uni-ak.ac.at/portfolio/taxonomy/album",
         "additional": "07.05.2020 - 21.05.2020",
-        "imageUrl": "https://placeimg.com/640/480/nature",
+        "imageUrl": "https://picsum.photos/seed/5tfgdffff/640/480",
         "href": "http://base.uni-ak.ac.at",
         "previews": [
           {
@@ -532,11 +534,13 @@
         "type": "activity",
         "date_created": "2020-04-27T11:01:37.246606Z",
         "title": "TBD",
-        "subtitle": "Misterious",
+        "subtext": "Misterious",
+        "description": "Audio",
         "text": [
-          "Random text 1",
-          "Random text 2",
-          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          "Artist: Edit Piaf",
+          "Title: Voila",
+          "Year: 1951",
+          "Size: 23Mb"
         ]
       }
     ]

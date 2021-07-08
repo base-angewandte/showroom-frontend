@@ -10,7 +10,7 @@ const apiV1EntitiesRead = require('./data/entities.json');
 const apiV1EntitiesSearch = require('./data/entities.id.search.json');
 const apiV1EntitiesActivitiesEditReadSD = require('./data/entities.secondaryDetails.json');
 const apiV1Filters = require('./data/filters.json');
-const apiV1SearchResultsRead = require('./data/discover.search.json');
+const apiV1SearchInitialRead = require('./data/discover.search.initial.json');
 
 const port = 9001;
 
@@ -36,7 +36,7 @@ const api = new OpenAPIBackend({
       apiV1Filters,
     ),
     api_v1_search_create: async (c, req, res) => res.status(200).json(
-      apiV1SearchResultsRead,
+      apiV1SearchInitialRead,
     ),
     api_v1_autocomplete_create: async (c, req, res) => {
       const searchString = req.query.q;
