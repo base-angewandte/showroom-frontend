@@ -22,7 +22,8 @@ export default async (context, inject) => {
       SwaggerClient({
         spec: ApiSpec,
         userFetch: async (url, req) => {
-          const axiosRequest = { ...req, data: req.body, withCredentials: true };
+          const data = req.body ? JSON.parse(req.body) : {};
+          const axiosRequest = { ...req, data, withCredentials: true };
           const axiosResponse = await context.$axios(axiosRequest);
 
           return new Response(JSON.stringify(axiosResponse.data), {
