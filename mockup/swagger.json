@@ -26,7 +26,7 @@
     }
   ],
   "paths": {
-    "/autocomplete": {
+    "/autocomplete/": {
       "post": {
         "description": "Exact string search matching titles.",
         "operationId": "api_v1_autocomplete_create",
@@ -73,7 +73,7 @@
         }
       }
     },
-    "/filters": {
+    "/filters/": {
       "get": {
         "description": "Returns all possible filters for the search.",
         "operationId": "api_v1_filter_list",
@@ -94,7 +94,7 @@
         }
       }
     },
-    "/search": {
+    "/search/": {
       "post": {
         "description": "Returns all possible results.",
         "operationId": "api_v1_search_create",
@@ -145,7 +145,7 @@
         }
       }
     },
-    "/activities": {
+    "/activities/": {
       "post": {
         "description": "Create one or more activities. If an activity already exists, it will be updated with the new values.",
         "operationId": "api_v1_activities_create",
@@ -256,7 +256,7 @@
         }
       }
     },
-    "/activities/{id}": {
+    "/activities/{id}/": {
       "get": {
         "description": "Returns a single activity object.",
         "operationId": "api_v1_activities_retrieve",
@@ -339,7 +339,7 @@
         }
       }
     },
-    "/activities/{id}/media": {
+    "/activities/{id}/media/": {
       "get": {
         "description": "Returns an array of media objects related to an specific activity.",
         "operationId": "api_v1_activities_media_list",
@@ -380,7 +380,7 @@
         }
       }
     },
-    "/entities": {
+    "/entities/": {
       "post": {
         "description": "Create one or more entities. If an entity already exists, it will be updated with the new values.",
         "operationId": "api_v1_entities_create",
@@ -443,7 +443,7 @@
         }
       }
     },
-    "/entities/{id}": {
+    "/entities/{id}/": {
       "get": {
         "description": "Returns a single entity object.",
         "operationId": "api_v1_entities_retrieve",
@@ -593,7 +593,7 @@
         }
       }
     },
-    "/entities/{id}/list": {
+    "/entities/{id}/list/": {
       "get": {
         "description": "Returns array of activities related to a specific entity.",
         "operationId": "api_v1_entities_list_retrieve",
@@ -700,7 +700,7 @@
         }
       }
     },
-    "/entities/{id}/edit": {
+    "/entities/{id}/edit/": {
       "get": {
         "description": "Returns user-editable information from a specific field of an entity, in all available languages.",
         "operationId": "api_v1_entities_edit_retrieve",
@@ -840,7 +840,7 @@
         }
       }
     },
-    "/entities/{id}/search": {
+    "/entities/{id}/search/": {
       "post": {
         "description": "Returns all possible results of a specific entity, e.g. person.",
         "operationId": "api_v1_entities_search_create",
@@ -909,7 +909,7 @@
         }
       }
     },
-    "/albums": {
+    "/albums/": {
       "post": {
         "operationId": "api_v1_albums_create",
         "description": "Create an album belonging to the authenticated user",
@@ -959,7 +959,7 @@
         }
       }
     },
-    "/albums/{id}": {
+    "/albums/{id}/": {
       "get": {
         "description": "Returns a single album object.",
         "operationId": "api_v1_albums_retrieve",
@@ -1084,7 +1084,7 @@
         }
       }
     },
-    "/media": {
+    "/media/": {
       "post": {
         "description": "Create one or more media. If one already exists, it will be updated with the new values.",
         "operationId": "api_v1_media_create",
@@ -1147,7 +1147,7 @@
         }
       }
     },
-    "/media/{id}": {
+    "/media/{id}/": {
       "delete": {
         "description": "Delete the media entry",
         "operationId": "api_v1_media_destroy",
@@ -1798,11 +1798,12 @@
           }
         }
       },
-      "SearchCollection": {
+      "SearchResults": {
         "type": "object",
         "properties": {
-          "collection": {
-            "type": "string"
+          "label": {
+            "type": "string",
+            "description": "A string describing the result set (e.g. \"Most recent Activities\")"
           },
           "total": {
             "description": "Total number of activities in that album.",
@@ -1819,7 +1820,7 @@
       "Search": {
         "type": "array",
         "items": {
-          "$ref": "#/components/schemas/SearchCollection"
+          "$ref": "#/components/schemas/SearchResults"
         }
       },
       "Filter": {
