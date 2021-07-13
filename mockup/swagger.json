@@ -1294,8 +1294,8 @@
               "$ref": "#/components/schemas/CommonLocation"
             }
           },
-          "featuredMedia": {
-            "$ref": "#/components/schemas/CommonFeaturedImage"
+          "featured_media": {
+            "$ref": "#/components/schemas/CommonFeaturedMedia"
           },
           "primary_details": {
             "$ref": "#/components/schemas/CommonTextList"
@@ -1355,8 +1355,8 @@
               "$ref": "#/components/schemas/CommonLocation"
             }
           },
-          "featuredMedia": {
-            "$ref": "#/components/schemas/CommonFeaturedImage"
+          "featured_media": {
+            "$ref": "#/components/schemas/CommonFeaturedMedia"
           },
           "primary_details": {
             "$ref": "#/components/schemas/CommonTextList"
@@ -1775,14 +1775,10 @@
               }
             }
           },
-          "mediaUrl": {
+          "media_url": {
             "type": "string",
             "format": "uri",
             "description": "size: thumbnail"
-          },
-          "source": {
-            "type": "string",
-            "format": "uri"
           },
           "source_institution": {
             "$ref": "#/components/schemas/CommonSourceInstitution"
@@ -1897,10 +1893,10 @@
               "chips"
             ]
           },
-          "freetextAllowed": {
+          "freetext_allowed": {
             "type": "boolean"
           },
-          "autocompleteUrl": {
+          "autocomplete_url": {
             "type": "string",
             "format": "uri"
           },
@@ -2017,7 +2013,7 @@
           ]
         }
       },
-      "CommonFeaturedImage": {
+      "CommonFeaturedMedia": {
         "type": "object",
         "oneOf": [
           {

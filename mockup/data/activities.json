@@ -246,7 +246,7 @@
               "value": "string"
             }
           ],
-          "mediaUrl": "https://example.com/path",
+          "media_url": "https://example.com/path",
           "source": "https://example.com/path",
           "source_institution": {
             "label": "string",
@@ -267,7 +267,7 @@
               "value": "string"
             }
           ],
-          "mediaUrl": "https://example.com/path",
+          "media_url": "https://example.com/path",
           "source": "https://example.com/path",
           "source_institution": {
             "label": "string",
@@ -334,7 +334,7 @@
       ]
     }
   ],
-  "featuredMedia": {
+  "featured_media": {
     "id": "123",
     "alternative": [
       "Robin Smith, 2021"
