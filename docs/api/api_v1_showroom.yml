@@ -1191,9 +1191,6 @@ components:
           type: string
           format: uri
           description: 'size: thumbnail'
-        source:
-          type: string
-          format: uri
         source_institution:
           $ref: '#/components/schemas/CommonSourceInstitution'
         score:
