@@ -842,8 +842,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CommonLocation'
-        featuredMedia:
-          $ref: '#/components/schemas/CommonFeaturedImage'
+        featured_media:
+          $ref: '#/components/schemas/CommonFeaturedMedia'
         primary_details:
           $ref: '#/components/schemas/CommonTextList'
         publisher:
@@ -887,8 +887,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CommonLocation'
-        featuredMedia:
-          $ref: '#/components/schemas/CommonFeaturedImage'
+        featured_media:
+          $ref: '#/components/schemas/CommonFeaturedMedia'
         primary_details:
           $ref: '#/components/schemas/CommonTextList'
         secondary_details:
@@ -1187,13 +1187,10 @@ components:
                 type: string
               value:
                 type: string
-        mediaUrl:
+        media_url:
           type: string
           format: uri
           description: 'size: thumbnail'
-        source:
-          type: string
-          format: uri
         source_institution:
           $ref: '#/components/schemas/CommonSourceInstitution'
         score:
@@ -1272,9 +1269,9 @@ components:
           type: string
           enum:
             - chips
-        freetextAllowed:
+        freetext_allowed:
           type: boolean
-        autocompleteUrl:
+        autocomplete_url:
           type: string
           format: uri
         options:
@@ -1356,7 +1353,7 @@ components:
           - 'Austria'
 
     ## Featured Image
-    CommonFeaturedImage:
+    CommonFeaturedMedia:
       type: object
       oneOf:
         - $ref: '#/components/schemas/MediaAudio'
