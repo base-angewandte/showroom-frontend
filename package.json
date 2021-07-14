@@ -21,7 +21,7 @@
     "normalize.css": "^8.0.1",
     "nuxt": "^2.15.4",
     "swagger-client": "^3.13.1",
-    "vue": "^2.6.12",
+    "vue": "^2.6.13",
     "vue-i18n": "^8.18.2",
     "vue-notification": "^1.3.20",
     "vue-package-test-x": "0.0.2-beta.6"
@@ -49,8 +49,8 @@
     "npm-run-all": "^4.1.5",
     "openapi-backend": "^3.9.1",
     "sass-loader": "^10.1.1",
-    "vue-server-renderer": "^2.6.12",
-    "vue-template-compiler": "^2.6.12"
+    "vue-server-renderer": "^2.6.13",
+    "vue-template-compiler": "^2.6.13"
   },
   "nodemonConfig": {
     "watch": [
