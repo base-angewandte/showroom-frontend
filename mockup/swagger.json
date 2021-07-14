@@ -76,7 +76,7 @@
     "/filters/": {
       "get": {
         "description": "Returns all possible filters for the search.",
-        "operationId": "api_v1_filter_list",
+        "operationId": "api_v1_filters_list",
         "tags": [
           "public"
         ],

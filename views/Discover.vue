@@ -26,7 +26,7 @@ export default {
   async asyncData({ $api }) {
     // get filters
     // TODO: this should move to the search component (or even store!)
-    const { data } = await $api.public.api_v1_filter_list();
+    const { data } = await $api.public.api_v1_filters_list();
     const filterList = JSON.parse(data);
     // get initial search results
     // TODO: this should move to the search component

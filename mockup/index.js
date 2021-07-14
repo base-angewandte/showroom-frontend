@@ -41,7 +41,7 @@ app.use(express.json());
 const api = new OpenAPIBackend({
   definition: apiSpecModified,
   handlers: {
-    api_v1_filter_list: async (c, req, res) => res.status(200).json(
+    api_v1_filters_list: async (c, req, res) => res.status(200).json(
       apiV1Filters,
     ),
     api_v1_search_create: async (c, req, res) => res.status(200).json(
