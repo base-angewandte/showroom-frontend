@@ -4,12 +4,15 @@
       {{ $t('discover.title') }}
     </h1>
 
-    <Showcase
-      :data="carousel" />
+    <client-only>
+      <Showcase
+        :data="carousel" />
+    </client-only>
 
     <Search
       :result-list.sync="searchResults"
       :filter-list="filterList"
+      :expanded-section="expandedSection"
       class="discover-search" />
   </div>
 </template>
@@ -38,6 +41,7 @@ export default {
     return {
       searchResults: [],
       filterList: [],
+      expandedSection: null,
       carousel: [
         {
           uid: '1',
@@ -47,7 +51,7 @@ export default {
           additional: '07.05.2020 - 21.05.2020',
           // eslint-disable-next-line global-require
           imageUrl: 'https://placeimg.com/460/341/arch',
-          href: '/aösädkölfsaädöflkasdäöflkasö',
+          href: 'www.angewandte.at',
           previews: [
             {
               '460w': 'https://placeimg.com/460/341/animal',
@@ -162,6 +166,11 @@ export default {
         },
       ],
     };
+  },
+  created() {
+    console.log(this.$route);
+    const { page, collection } = this.$route.query;
+    this.expandedSection = { page: Number(page), collection };
   },
   methods: {
   },

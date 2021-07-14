@@ -21,6 +21,7 @@
           :key="index"
           v-model="section.data"
           :show-options="false"
+          :header-text="section.collection"
           :box-breakpoints="[
             [0, 2],
             [450, 3],
@@ -28,15 +29,17 @@
             [950, 5],
             [1150, 6],
           ]"
+          :expanded="expandedSection && expandedSection.collection === section.collection"
+          :current-page-number="expandedSection && expandedSection.collection === section.collection
+            ? expandedSection.page : 1"
           :expand-text="$t('results.expand')"
           :total="section.total"
           :max-show-more-rows="1"
-          :jump-to-top="true"
           :use-pagination="true"
           :use-expand-mode="true"
           :max-rows="2"
-          class="showroom-search__results"
-          @entry-clicked="goToEntry">
+          :use-pagination-link-element="'nuxt-link'"
+          class="showroom-search__results">
           <template #header>
             <h4 class="showroom-search__results-header">
               {{ section.collection }}
@@ -44,6 +47,16 @@
                 {{ `(${section.total})` }}
               </span>
             </h4>
+          </template>
+          <template #resultBox="{ item }">
+            <BaseImageBox
+              :key="item.id"
+              :title="item.title"
+              :subtext="item.subtext"
+              :description="item.description"
+              :image-url="item.imageUrl"
+              :link-to="item.id"
+              render-element-as="nuxt-link" />
           </template>
         </BaseResultBoxSection>
       </template>
@@ -79,6 +92,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    /**
+     * if a section and page is specified in the route use this prop
+     * to set it expanded and on the page specified<br>
+     * object props: collection, page
+     */
+    expandedSection: {
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
@@ -110,13 +132,19 @@ export default {
       this.autocompleteResults = JSON.parse(response.data);
       this.autocompleteRequestOngoing = -1;
     },
-    async search() {
-      // TODO: search
+    async search(filters) {
+      this.searchOngoingInt = true;
+      const response = await this.$api.public.api_v1_search_create(1, {
+        requestBody: {
+          filter: [{
+            name: 'Persons',
+            type: 'text',
+            filter_values: [],
+          }],
+        },
+      });
+      console.log(response);
       this.searchOngoingInt = false;
-    },
-    goToEntry({ entryId }) {
-      // TODO: is this the way to do it (image box should be router link)
-      this.$router.push(entryId);
     },
   },
 };
