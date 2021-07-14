@@ -14,9 +14,18 @@ const apiV1SearchInitialRead = require('./data/discover.search.initial.json');
 
 const port = 9001;
 
+// Api modifications
+const apiSpecModified = apiSpec;
+
+// openapi-backend could not resolve paths with a trailing slash
+// remove trailing slashes from paths
+Object.entries(apiSpecModified.paths).forEach(([key, value]) => {
+  apiSpecModified.paths[key.replace(/\/$/, '')] = value;
+  delete apiSpecModified.paths[key];
+});
+
 // add additional routes
-const apiSpecAdditionalRoutes = apiSpec;
-apiSpecAdditionalRoutes.paths['/swagger.json'] = {
+apiSpecModified.paths['/swagger.json'] = {
   get: {
     operationId: 'swagger',
     responses: {},
@@ -30,9 +39,9 @@ app.use(express.json());
 
 // define api
 const api = new OpenAPIBackend({
-  definition: apiSpecAdditionalRoutes,
+  definition: apiSpecModified,
   handlers: {
-    api_v1_filter_list: async (c, req, res) => res.status(200).json(
+    api_v1_filters_list: async (c, req, res) => res.status(200).json(
       apiV1Filters,
     ),
     api_v1_search_create: async (c, req, res) => res.status(200).json(

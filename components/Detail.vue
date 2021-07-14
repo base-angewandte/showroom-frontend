@@ -73,14 +73,14 @@
       <!-- featured media -->
       <!-- TODO: add different media formats -->
       <div
-        v-if="data.featuredMedia"
+        v-if="data.featured_media"
         :style="featuredMediaHeight"
         class="base-sr-row base-sr-head__media base-sr-featured-media">
         <BaseImage
           ref="featuredMedia"
-          :alt="data.featuredMedia.alternative.join(', ')"
+          :alt="data.featured_media.alternative.join(', ')"
           :lazyload="isMobile()"
-          :src="getFirstPreviewsImage(data.featuredMedia.previews)"
+          :src="getFirstPreviewsImage(data.featured_media.previews)"
           class="base-sr-featured-media__image" />
       </div>
     </div>
@@ -340,14 +340,14 @@ export default {
         // audio
         if (item.type === 'a') {
           obj = {
-            mediaUrl: item.mp3,
+            media_url: item.mp3,
           };
         }
 
         // image
         if (item.type === 'i') {
           obj = {
-            mediaUrl: this.original,
+            media_url: this.original,
             previews: item.previews,
           };
         }
@@ -356,14 +356,14 @@ export default {
         if (item.type === 'v') {
           obj = {
             mediaPosterUrl: item.poster,
-            mediaUrl: item.playlist,
+            media_url: item.playlist,
           };
         }
 
         // document or undefined
         if (item.type === 'd' || item.type === 'x') {
           obj = {
-            mediaUrl: item.original,
+            media_url: item.original,
           };
         }
 
