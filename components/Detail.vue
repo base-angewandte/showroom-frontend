@@ -190,6 +190,70 @@
         @hide="showPreview = false" />
     </template>
 
+    <!-- linked / parent -->
+    <BaseResultBoxSection
+      v-if="data.entries && data.entries.linked && data.entries.linked.from"
+      v-model="data.entries.linked.from"
+      header-text="some title"
+      :show-options="false"
+      :expand-text="$t('results.expand')"
+      :total="data.entries.linked.from.length"
+      :max-show-more-rows="1"
+      :use-pagination="true"
+      :use-expand-mode="true"
+      :max-rows="2"
+      :use-pagination-link-element="'nuxt-link'"
+      class="base-sr-row">
+      <template #header>
+        <h2 class="base-sr--ml-small">
+          {{ $t('linked_from') }}
+        </h2>
+      </template>
+      <template #resultBox="{ item }">
+        <BaseImageBox
+          :key="item.id"
+          :title="item.title"
+          :subtext="item.subtext"
+          :description="item.description"
+          :image-url="item.imageUrl"
+          :lazyload="true"
+          :link-to="item.id"
+          render-element-as="nuxt-link" />
+      </template>
+    </BaseResultBoxSection>
+
+    <!-- linked / children -->
+    <BaseResultBoxSection
+      v-if="data.entries && data.entries.linked && data.entries.linked.to"
+      v-model="data.entries.linked.to"
+      header-text="some title"
+      :show-options="false"
+      :expand-text="$t('results.expand')"
+      :total="data.entries.linked.to.length"
+      :max-show-more-rows="1"
+      :use-pagination="true"
+      :use-expand-mode="true"
+      :max-rows="2"
+      :use-pagination-link-element="'nuxt-link'"
+      class="base-sr-row">
+      <template #header>
+        <h2 class="base-sr--ml-small">
+          {{ $t('linked_to') }}
+        </h2>
+      </template>
+      <template #resultBox="{ item }">
+        <BaseImageBox
+          :key="item.id"
+          :title="item.title"
+          :subtext="item.subtext"
+          :description="item.description"
+          :image-url="item.imageUrl"
+          :lazyload="true"
+          :link-to="item.id"
+          render-element-as="nuxt-link" />
+      </template>
+    </BaseResultBoxSection>
+
     <!-- owner, dates -->
     <div
       v-if="data.publisher"
@@ -352,7 +416,7 @@ export default {
 
         return {
           id: item.id,
-          title: item.alternative.join(', '),
+          title: item.alternative ? item.alternative.join(', ') : '',
           ...obj,
         };
       });

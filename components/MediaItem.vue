@@ -1,7 +1,7 @@
 <template>
   <BaseImageBox
     v-if="data"
-    :title="data.alternative.join(', ')"
+    :title="data.alternative ? data.alternative.join(', ') : ''"
     :image-url="mediaImageUrl(data)"
     :icon="imageBoxIcon(data.type)"
     :show-title="false"
@@ -13,7 +13,7 @@
     <template
       v-if="data.duration"
       slot="footer">
-      <span>{{ data.duration }}</span>
+      <span>{{ data.duration.val }}</span>
     </template>
   </BaseImageBox>
 </template>

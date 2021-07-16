@@ -22,6 +22,8 @@
   },
   "expertise": "Expertise",
   "frontend": "Showroom",
+  "linked_from": "Parent Activity",
+  "linked_to": "Related Activities",
   "lists": "Lists",
   "location": "Location",
   "locations": "Locations",

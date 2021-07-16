@@ -1266,13 +1266,13 @@
               "linked": {
                 "type": "object",
                 "properties": {
-                  "parent": {
+                  "from": {
                     "type": "array",
                     "items": {
                       "$ref": "#/components/schemas/SearchItem"
                     }
                   },
-                  "children": {
+                  "to": {
                     "type": "array",
                     "items": {
                       "$ref": "#/components/schemas/SearchItem"

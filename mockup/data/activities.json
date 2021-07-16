@@ -13,7 +13,11 @@
           "gif": "https://placeimg.com/400/300/arch.jpg",
           "jpg": "https://placeimg.com/400/300/arch.jpg"
         },
-        "duration": "4:22",
+        "duration": {
+          "num": 33.53384375,
+          "val": "0:04:22",
+          "desc": "Duration"
+        },
         "licence": {
           "label": "Copyright",
           "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
@@ -28,7 +32,11 @@
         "alternative": [
           "Audio"
         ],
-        "duration": "1:27",
+        "duration": {
+          "num": 33.53384375,
+          "val": "0:01:27",
+          "desc": "Duration"
+        },
         "licence": {
           "label": "Copyright",
           "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
@@ -237,46 +245,32 @@
       }
     ],
     "linked": {
-      "parent": [
+      "from": [
         {
-          "id": "string",
-          "alternative_text": [
-            {
-              "label": "string",
-              "value": "string"
-            }
-          ],
-          "media_url": "https://example.com/path",
-          "source": "https://example.com/path",
-          "source_institution": {
-            "label": "string",
-            "url": "https://example.com/path",
-            "icon": "https://example.com/path"
-          },
-          "score": 0,
-          "title": "string",
-          "type": "string"
+          "id": "pCSLggvdsi8asfdsrruuurrrdfb3dddzRTLM4dJR",
+          "type": "activity",
+          "title": "101 Beginnings",
+          "description": "Performance",
+          "subtext": "Alexander Grande",
+          "imageUrl": "https://picsum.photos/seed/test/460/341"
         }
       ],
-      "children": [
+      "to": [
         {
-          "id": "string",
-          "alternative_text": [
-            {
-              "label": "string",
-              "value": "string"
-            }
-          ],
-          "media_url": "https://example.com/path",
-          "source": "https://example.com/path",
-          "source_institution": {
-            "label": "string",
-            "url": "https://example.com/path",
-            "icon": "https://example.com/path"
-          },
-          "score": 0,
-          "title": "string",
-          "type": "string"
+          "id": "pCSLggvdsi8asfdsrruuurrrdffsgdb3zRTLM4dJR",
+          "type": "activity",
+          "title": "Have you been there?",
+          "subtext": "12.02. - 13.02.2021",
+          "description": "Group Exhibition",
+          "imageUrl": "https://picsum.photos/seed/rrr/640/480"
+        },
+        {
+          "id": "pCSLgasdsdfgfgvdsi8asfdsrrrrrdfb3zRTLM4dJR",
+          "type": "activity",
+          "title": "Mystery solved",
+          "subtext": "A test",
+          "description": "Performance",
+          "imageUrl": "https://picsum.photos/seed/zzz/640/480"
         }
       ]
     }
@@ -335,37 +329,27 @@
     }
   ],
   "featured_media": {
-    "id": "123",
+    "id": "aaa",
     "alternative": [
-      "Robin Smith, 2021"
+      "Video"
     ],
+    "cover": {
+      "gif": "https://placeimg.com/400/300/arch.jpg",
+      "jpg": "https://placeimg.com/400/300/arch.jpg"
+    },
+    "duration": {
+      "num": 33.53384375,
+      "val": "0:04:22",
+      "desc": "Duration"
+    },
     "licence": {
       "label": "Copyright",
       "source": "https://base.uni-ak.ac.at/portfolio/licenses/copyright"
     },
     "original": "https://placeimg.com/1920/1200/arch.jpg",
-    "previews": [
-      {
-        "640w": "https://placeimg.com/640/400/arch.jpg"
-      },
-      {
-        "768w": "https://placeimg.com/768/600/arch.jpg"
-      },
-      {
-        "1024w": "https://placeimg.com/1024/800/arch.jpg"
-      },
-      {
-        "1366w": "https://placeimg.com/1366/866/arch.jpg"
-      },
-      {
-        "1600w": "https://placeimg.com/1600/1000/arch.jpg"
-      },
-      {
-        "1920w": "https://placeimg.com/1920/1200/arch.jpg"
-      }
-    ],
-    "thumbnail": "https://placeimg.com/400/300/arch.jpg",
-    "type": "i"
+    "playlist": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    "poster": "https://placeimg.com/1600/900/arch.jpg",
+    "type": "v"
   },
   "primary_details": [
     {
