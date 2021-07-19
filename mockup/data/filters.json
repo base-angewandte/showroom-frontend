@@ -1,31 +1,29 @@
 [
   {
-    "label": "Current Art Works",
+    "label": "Activities",
+    "id": "activites",
     "type": "text"
   },
   {
     "label": "Persons",
+    "id": "persons",
     "type": "text"
   },
   {
-    "label": "Institutions",
+    "label": "Departments",
+    "id": "departments",
     "type": "text"
   },
   {
-    "label": "Albums",
-    "type": "text"
-  },
-  {
-    "label": "Newest Events",
-    "type": "text"
-  },
-  {
-    "label": "Location",
+    "label": "Locations",
+    "id": "locations",
     "type": "text"
   },
   {
     "label": "Keywords",
+    "id": "keywords",
     "type": "chips",
+    "freetext_allowed": true,
     "options": [
       {
         "label": "AAAAAA",
@@ -38,14 +36,17 @@
   },
   {
     "label": "Date Range",
+    "id": "date_range",
     "type": "daterange"
   },
   {
     "label": "Date",
+    "id": "date",
     "type": "date"
   },
   {
-    "label": "Type",
+    "label": "Activity Type",
+    "id": "type",
     "type": "chips",
     "options": [
       {
@@ -86,24 +87,8 @@
       }]
   },
   {
-    "label": "Subset",
-    "type": "chips",
-    "options": [
-      {
-        "label": "Current Art Works",
-        "id": "Current_Art_Works"
-      },
-      {
-        "label": "Persons",
-        "id": "Person"
-      },
-      {
-        "label": "Activities",
-        "id": "Activities"
-      },
-      {
-        "label": "Newest Events",
-        "id": "Newest_Events"
-      }]
+    "label": "Albums",
+    "id": "albums",
+    "type": "text"
   }
 ]

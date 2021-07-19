@@ -29,7 +29,7 @@ paths:
           schema:
             type: string
             minLength: 3
-        - name: filter_name
+        - name: filter_id
           description: 'result category to return'
           in: query
           schema:
@@ -59,6 +59,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Filter'
+  /categories/:
+    get:
+      description: 'Returns all possible categories for the search results.'
+      operationId: api_v1_categories_list
+      tags:
+        - public
+      responses:
+        '200':
+          description: 'Returns all possible categories for the search results.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
   /search/:
     post:
       description: 'Returns all possible results.'
@@ -73,6 +88,14 @@ paths:
             type: array
             items:
               $ref: '#/components/schemas/CommonSearchFilter'
+        - name: category
+          description: 'result category to be displayed. Only ''persons'' and ''activities'' for now but might later include ''departments'', ''albums'', ''subscribed_items''. If filter is empty - return label ''Current Activities'' otherwise just ''Activities''.'
+          in: query
+          schema:
+            type: string
+            enum:
+              - activities
+              - persons
         - name: limit
           description: 'Number of results to return per page.'
           in: query
@@ -90,8 +113,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Search'
-
+                $ref: '#/components/schemas/SearchResults'
   /activities/:
     post:
       description: 'Create one or more activities. If an activity already exists, it will be updated with the new values.'
@@ -196,6 +218,12 @@ paths:
       operationId: api_v1_activities_destroy
       tags:
         - repo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         204:
           description: 'Successfully deleted'
@@ -356,6 +384,12 @@ paths:
       operationId: api_v1_entities_destroy
       tags:
         - repo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         204:
           description: 'Successfully deleted'
@@ -560,6 +594,14 @@ paths:
             type: array
             items:
               $ref: '#/components/schemas/CommonSearchFilter'
+        - name: category
+          description: 'result category to be displayed. Only ''persons'' and ''activities'' for now but might later include ''departments'', ''albums'', ''subscribed_items''. If filter is empty - return label ''Current Activities'' otherwise just ''Activities''.'
+          in: query
+          schema:
+            type: string
+            enum:
+              - activities
+              - persons
         - name: limit
           description: 'Number of results to return per page.'
           in: query
@@ -577,7 +619,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Search'
+                $ref: '#/components/schemas/SearchResults'
         404:
           description: "Entity not found"
           content:
@@ -646,6 +688,12 @@ paths:
       operationId: api_v1_albums_partial_update
       tags:
         - auth
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         204:
           description: 'Successfully updated'
@@ -672,6 +720,12 @@ paths:
       operationId: api_v1_albums_destroy
       tags:
         - auth
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         204:
           description: 'Successfully deleted'
@@ -740,6 +794,12 @@ paths:
       operationId: api_v1_media_destroy
       tags:
         - repo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         204:
           description: 'Successfully deleted'
@@ -1213,15 +1273,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SearchItem'
-
-    Search:
-      type: array
-      items:
-        $ref: '#/components/schemas/SearchResults'
-
-    #
-    # Filter
-    #
     Filter:
       type: array
       items:
@@ -1246,8 +1297,11 @@ components:
       required:
         - label
         - type
+        - id
       properties:
         label:
+          type: string
+        id:
           type: string
         type:
           type: string
@@ -1260,10 +1314,13 @@ components:
       type: object
       required:
         - label
+        - id
         - type
         - options
       properties:
         label:
+          type: string
+        id:
           type: string
         type:
           type: string
@@ -1271,9 +1328,7 @@ components:
             - chips
         freetext_allowed:
           type: boolean
-        autocomplete_url:
-          type: string
-          format: uri
+          default: false
         options:
           type: array
           items:
@@ -1283,6 +1338,19 @@ components:
                 type: string
               label:
                 type: string
+    Category:
+      type: object
+      required:
+        - label
+        - id
+      properties:
+        label:
+          type: string
+        id:
+          type: string
+          enum:
+            - persons
+            - activities
 
     #
     # Common
@@ -1480,7 +1548,7 @@ components:
     CommonSearchFilter:
       type: object
       properties:
-        name:
+        id:
           type: string
         filter_values:
           items:

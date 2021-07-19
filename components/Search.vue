@@ -133,6 +133,7 @@ export default {
       this.autocompleteRequestOngoing = -1;
     },
     async search(filters) {
+      console.log(filters);
       this.searchOngoingInt = true;
       const response = await this.$api.public.api_v1_search_create(1, {
         requestBody: {

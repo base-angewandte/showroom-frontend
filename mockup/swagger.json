@@ -44,7 +44,7 @@
             }
           },
           {
-            "name": "filter_name",
+            "name": "filter_id",
             "description": "result category to return",
             "in": "query",
             "schema": {
@@ -94,9 +94,33 @@
         }
       }
     },
+    "/categories/": {
+      "get": {
+        "description": "Returns all possible categories for the search results.",
+        "operationId": "api_v1_categories_list",
+        "tags": [
+          "public"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all possible categories for the search results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/search/": {
       "post": {
-        "description": "Returns all possible results.",
+        "description": "Returns all possible results. If category 'activities' return the most current activities without filter.",
         "operationId": "api_v1_search_create",
         "tags": [
           "public"
@@ -111,6 +135,18 @@
               "items": {
                 "$ref": "#/components/schemas/CommonSearchFilter"
               }
+            }
+          },
+          {
+            "name": "category",
+            "description": "result category to be displayed. Only 'persons' and 'activities' for now but might later include 'departments', 'albums', 'subscribed_items'. If filter is empty - return label 'Current Activities' otherwise just 'Activities'.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "activities",
+                "persons"
+              ]
             }
           },
           {
@@ -137,7 +173,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Search"
+                  "$ref": "#/components/schemas/SearchResults"
                 }
               }
             }
@@ -301,6 +337,16 @@
         "operationId": "api_v1_activities_destroy",
         "tags": [
           "repo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "204": {
@@ -555,6 +601,16 @@
         "operationId": "api_v1_entities_destroy",
         "tags": [
           "repo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "204": {
@@ -868,6 +924,18 @@
             }
           },
           {
+            "name": "category",
+            "description": "result category to be displayed. Only 'persons' and 'activities' for now but might later include 'departments', 'albums', 'subscribed_items'. If filter is empty - return label 'Current Activities' otherwise just 'Activities'.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "activities",
+                "persons"
+              ]
+            }
+          },
+          {
             "name": "limit",
             "description": "Number of results to return per page.",
             "in": "query",
@@ -891,7 +959,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Search"
+                  "$ref": "#/components/schemas/SearchResults"
                 }
               }
             }
@@ -1005,6 +1073,16 @@
         "tags": [
           "auth"
         ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "204": {
             "description": "Successfully updated"
@@ -1046,6 +1124,16 @@
         "operationId": "api_v1_albums_destroy",
         "tags": [
           "auth"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "204": {
@@ -1153,6 +1241,16 @@
         "operationId": "api_v1_media_destroy",
         "tags": [
           "repo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "204": {
@@ -1799,7 +1897,7 @@
         "properties": {
           "label": {
             "type": "string",
-            "description": "A string describing the result set (e.g. \"Most recent Activities\")"
+            "description": "A string describing the result set (e.g. \"Current Activities\")"
           },
           "total": {
             "description": "Total number of activities in that album.",
@@ -1811,12 +1909,6 @@
               "$ref": "#/components/schemas/SearchItem"
             }
           }
-        }
-      },
-      "Search": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SearchResults"
         }
       },
       "Filter": {
@@ -1860,10 +1952,14 @@
         "type": "object",
         "required": [
           "label",
-          "type"
+          "type",
+          "id"
         ],
         "properties": {
           "label": {
+            "type": "string"
+          },
+          "id": {
             "type": "string"
           },
           "type": {
@@ -1880,11 +1976,15 @@
         "type": "object",
         "required": [
           "label",
+          "id",
           "type",
           "options"
         ],
         "properties": {
           "label": {
+            "type": "string"
+          },
+          "id": {
             "type": "string"
           },
           "type": {
@@ -1894,11 +1994,8 @@
             ]
           },
           "freetext_allowed": {
-            "type": "boolean"
-          },
-          "autocomplete_url": {
-            "type": "string",
-            "format": "uri"
+            "type": "boolean",
+            "default": false
           },
           "options": {
             "type": "array",
@@ -1913,6 +2010,25 @@
                 }
               }
             }
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "required": [
+          "label",
+          "id"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "enum": [
+              "persons",
+              "activities"
+            ]
           }
         }
       },
@@ -2187,7 +2303,7 @@
       "CommonSearchFilter": {
         "type": "object",
         "properties": {
-          "name": {
+          "id": {
             "type": "string"
           },
           "filter_values": {
