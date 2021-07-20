@@ -26,6 +26,37 @@
     }
   ],
   "paths": {
+    "/user/": {
+      "get": {
+        "description": "if user is logged in get user data",
+        "operationId": "api_v1_user_retrieve",
+        "tags": [
+          "auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array of search results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/autocomplete/": {
       "post": {
         "description": "Exact string search matching titles.",
@@ -127,7 +158,7 @@
         ],
         "parameters": [
           {
-            "name": "filter",
+            "name": "filters",
             "description": "Array of objects with all filters applied",
             "in": "query",
             "schema": {
@@ -913,7 +944,7 @@
             }
           },
           {
-            "name": "filter",
+            "name": "filters",
             "description": "array of objects with all filters applied",
             "in": "query",
             "schema": {
@@ -1328,6 +1359,34 @@
             "items": {
               "$ref": "#/components/schemas/AutocompleteDataItem"
             }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "the LDAP(?) id"
+          },
+          "name": {
+            "type": "string",
+            "description": "the user's full name"
+          },
+          "email": {
+            "type": "string",
+            "description": "the user's email"
+          },
+          "entity_id": {
+            "type": "string",
+            "description": "The users Showroom ID"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "the permissions needed by base header"
           }
         }
       },
