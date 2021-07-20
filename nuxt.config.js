@@ -34,7 +34,6 @@ export default {
   },
   router: {
     base: `${process.env.APP_PREFIX}/`,
-    middleware: ['i18n'],
   },
   /*
   ** Customize the progress-bar color
@@ -95,6 +94,7 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/style-resources',
+    'cookie-universal-nuxt',
   ],
   /*
   ** Axios module configuration

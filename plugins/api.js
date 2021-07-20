@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Response } from 'node-fetch';
 import SwaggerClient from 'swagger-client';
 
-export default async ({ $axios, redirect }, inject) => {
+export default async ({ $axios, redirect, store }, inject) => {
   const ApiSpecUrl = process.env.apiSpecUrl;
   let ApiSpec;
 
@@ -22,6 +22,8 @@ export default async ({ $axios, redirect }, inject) => {
       SwaggerClient({
         spec: ApiSpec,
         userFetch: async (url, req) => {
+          // eslint-disable-next-line no-param-reassign
+          req.headers = { 'Accept-Language': store.state.appData.locale };
           const data = req.body ? JSON.parse(req.body) : {};
           const axiosRequest = {
             ...req,
