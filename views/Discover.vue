@@ -11,7 +11,6 @@
 
     <Search
       :result-list.sync="searchResults"
-      :filter-list="filterList"
       :expanded-section="expandedSection"
       class="discover-search" />
   </div>
@@ -27,20 +26,14 @@ export default {
     Search,
   },
   async asyncData({ $api }) {
-    // get filters
-    // TODO: this should move to the search component (or even store!)
-    const { data } = await $api.public.api_v1_filters_list();
-    const filterList = JSON.parse(data);
     // get initial search results
-    // TODO: this should move to the search component
     const response = await $api.public.api_v1_search_create();
     const searchResults = JSON.parse(response.data);
-    return { filterList, searchResults };
+    return { searchResults };
   },
   data() {
     return {
       searchResults: [],
-      filterList: [],
       expandedSection: null,
       carousel: [
         {
@@ -168,7 +161,6 @@ export default {
     };
   },
   created() {
-    console.log(this.$route);
     const { page, collection } = this.$route.query;
     this.expandedSection = { page: Number(page), collection };
   },

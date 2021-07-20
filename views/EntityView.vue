@@ -13,24 +13,38 @@ export default {
   components: {
     Detail,
   },
-  async asyncData(context) {
-    // retrieve entity
-    const data = await context.$api.public.api_v1_entities_retrieve({
-      id: context.route.params.id,
-    }).then((response) => JSON.parse(response.data))
-      .catch((error) => {
-        context.error({ statusCode: error.response.status });
-        return false;
+  async asyncData({
+    $api, route, params,
+  }) {
+    let entryData = {};
+    try {
+      // retrieve entity
+      const { data } = await $api.public.api_v1_entities_retrieve({
+        id: params.id,
       });
-
-    // retrieve entity_list
-    await context.$api.public.api_v1_entities_list_retrieve({
-      id: context.route.params.id,
-    }).then((response) => {
-      data.list = JSON.parse(response.data);
-    }).catch(() => {});
-
-    return { data };
+      entryData = JSON.parse(data);
+      // retrieve entity_list
+      const listResponse = await $api.public.api_v1_entities_list_retrieve({
+        id: route.params.id,
+      });
+      entryData.list = JSON.parse(listResponse.data) || [];
+      // retrieve initial search results
+      const searchDataResponse = await $api.public.api_v1_entities_search_create({
+        id: route.params.id,
+      }, {
+        requestBody: {
+          category: 'activity',
+        },
+      });
+      entryData.activities = [{
+        id: 'activity',
+        ...JSON.parse(searchDataResponse.data),
+      }] || [];
+    } catch (e) {
+      console.error(e);
+      // TODO: error handling;
+    }
+    return { data: entryData };
   },
   data() {
     return {

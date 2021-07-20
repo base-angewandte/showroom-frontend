@@ -46,7 +46,7 @@
 
         <!-- primary details -->
         <BaseTextList
-          v-if="data.primary_details.length"
+          v-if="data.primary_details && data.primary_details.length"
           render-label-as="h2"
           :data="data.primary_details"
           class="base-sr-head__text-list" />
@@ -84,7 +84,7 @@
 
     <!-- lists -->
     <div
-      v-if="data.list.length"
+      v-if="data.list && data.list.length"
       class="base-sr-row">
       <BaseEditControl
         v-if="userCanEdit"
@@ -228,6 +228,16 @@
       </template>
     </template>
 
+    <Search
+      v-if="type === 'person'"
+      :result-list="data.activities"
+      :available-categories="[
+        {
+          id: 'activities',
+          label: 'Activities'
+        },
+      ]" />
+
     <!-- owner, dates -->
     <div
       v-if="data.publisher"
@@ -273,6 +283,7 @@ import 'base-ui-components/dist/components/BaseMapLocations/BaseMapLocations.css
 import 'base-ui-components/dist/components/BaseMediaCarousel/BaseMediaCarousel.css';
 import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
 import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSection.css';
+import Search from '~/components/Search';
 
 Vue.use(BaseButton);
 Vue.use(BaseCarousel);
@@ -287,6 +298,7 @@ Vue.use(BaseResultBoxSection);
 export default {
   name: 'Detail',
   components: {
+    Search,
     SecondaryDetails,
     Showcase,
     MediaItem,

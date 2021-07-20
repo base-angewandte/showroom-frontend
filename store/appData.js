@@ -7,17 +7,28 @@ const state = () => ({
 });
 
 const getters = {
-
+  getUser(state) {
+    return state.user;
+  },
+  getAuthState(state) {
+    return state.authenticated;
+  },
+  getLocales(state) {
+    return state.locales;
+  },
+  getLocale(state) {
+    return state.locale;
+  },
 };
 
 const mutations = {
-  SET_LANG(state, locale) {
+  setLocale(state, locale) {
     if (state.locales.includes(locale)) {
       state.locale = locale;
     }
   },
-  SET_USER(state, user) {
-    if (user && user.uuid) {
+  setUser(state, user) {
+    if (user && user.id) {
       state.user = user;
       state.authenticated = true;
     } else {
@@ -28,23 +39,22 @@ const mutations = {
 };
 
 const actions = {
-  init({ dispatch }) {
-    dispatch('fetchUser');
+  init({ dispatch }, api) {
+    dispatch('fetchUser', api.auth.api_v1_user_retrieve);
   },
-  async fetchUser({ commit }) {
+  async fetchUser({ commit }, request) {
     try {
-      const { data } = await this.$axios.get('http://localhost:8200/api/v1/user', {
-        withCredentials: true,
-        xsrfCookieName: 'csrftoken_portfolio',
-        xsrfHeaderName: 'X-CSRFToken',
-      });
+      const { data } = await request();
       if (data) {
-        commit('SET_USER', data);
+        commit('setUser', JSON.parse(data));
       }
     } catch (e) {
+      console.error(e);
       // check if request failed because user is not authenticated and reset user
       if (e.response && e.response.status === 403) {
-        commit('SET_USER');
+        commit('setUser');
+      } else {
+        // TODO: further error handling? (at least informing user?)
       }
     }
   },

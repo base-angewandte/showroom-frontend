@@ -21,7 +21,7 @@ export default ({
     // browser default or application default
     const defaultLocale = window.localStorage.getItem('lang')
       || navigator.language.slice(0, 2) || process.env.defaultLocale;
-    store.commit('appData/SET_LANG', defaultLocale);
+    store.commit('appData/setLocale', defaultLocale);
     // eslint-disable-next-line no-param-reassign
     app.i18n.locale = defaultLocale;
   });

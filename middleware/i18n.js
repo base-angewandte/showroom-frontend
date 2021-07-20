@@ -24,7 +24,7 @@ export default function request({
     return error({ message: 'This language is not available.', statusCode: 404 });
   }
   // Finally set locale
-  store.commit('appData/SET_LANG', locale);
+  store.commit('appData/setLocale', locale);
   // eslint-disable-next-line no-param-reassign
   app.i18n.locale = locale;
   // if on client remove the leading locale path from the route

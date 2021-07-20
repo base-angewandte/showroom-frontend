@@ -3,6 +3,7 @@ const express = require('express');
 const OpenAPIBackend = require('openapi-backend').default;
 
 const apiSpec = require('./swagger.json');
+const apiV1UserRead = require('./data/user.json');
 const apiV1ActivitiesRead = require('./data/activities.json');
 const apiV1AutocompleteResultsRead = require('./data/discover.autocomplete.json');
 const apiV1EntitiesActivitiesRead = require('./data/entities.activities.json');
@@ -10,6 +11,7 @@ const apiV1EntitiesRead = require('./data/entities.json');
 const apiV1EntitiesSearch = require('./data/entities.id.search.json');
 const apiV1EntitiesActivitiesEditReadSD = require('./data/entities.secondaryDetails.json');
 const apiV1Filters = require('./data/filters.json');
+const apiV1Categories = require('./data/categories.json');
 const apiV1SearchInitialRead = require('./data/discover.search.initial.json');
 
 const port = 9001;
@@ -41,12 +43,23 @@ app.use(express.json());
 const api = new OpenAPIBackend({
   definition: apiSpecModified,
   handlers: {
+    api_v1_user_retrieve: async (c, req, res) => {
+      // TODO: mock failing of request (403)
+      res.status(200).json(
+        apiV1UserRead,
+      );
+    },
     api_v1_filters_list: async (c, req, res) => res.status(200).json(
       apiV1Filters,
     ),
-    api_v1_search_create: async (c, req, res) => res.status(200).json(
-      apiV1SearchInitialRead,
+    api_v1_categories_list: async (c, req, res) => res.status(200).json(
+      apiV1Categories,
     ),
+    api_v1_search_create: async (c, req, res) => {
+      res.status(200).json(
+        apiV1SearchInitialRead,
+      );
+    },
     api_v1_autocomplete_create: async (c, req, res) => {
       const searchString = req.query.q;
       const filterName = req.query.filter_name;
@@ -56,8 +69,9 @@ const api = new OpenAPIBackend({
         subsetData = apiV1AutocompleteResultsRead.filter(({ subset }) => subset === filterName);
       }
       if (searchString) {
-        matchingData = subsetData.map(({ subset, data }) => ({
-          subset,
+        matchingData = subsetData.map(({ source, label, data }) => ({
+          source,
+          label,
           data: data.filter((entry) => entry.title.toLowerCase()
             .includes(searchString.toLowerCase())),
         }));
@@ -69,9 +83,23 @@ const api = new OpenAPIBackend({
     api_v1_activities_retrieve: async (c, req, res) => res.status(200).json(
       apiV1ActivitiesRead,
     ),
-    api_v1_entities_search_create: async (c, req, res) => res.status(200).json(
-      apiV1EntitiesSearch,
-    ),
+    api_v1_entities_search_create: async (c, req, res) => {
+      const { category } = req.body;
+      const entityId = c.request.params.id;
+      const entityData = apiV1EntitiesSearch[entityId];
+      if (entityData) {
+        const matchingData = apiV1EntitiesSearch[entityId]
+          .filter((entry) => entry.type === category);
+        return res.status(200).json(
+          {
+            label: 'Activities',
+            total: matchingData.length,
+            data: matchingData,
+          },
+        );
+      }
+      return res.status(200);
+    },
     api_v1_entities_retrieve: async (c, req, res) => res.status(200).json(
       apiV1EntitiesRead,
     ),

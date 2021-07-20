@@ -2,18 +2,18 @@ import Vue from 'vue';
 import { Response } from 'node-fetch';
 import SwaggerClient from 'swagger-client';
 
-export default async (context, inject) => {
+export default async ({ $axios, redirect }, inject) => {
   const ApiSpecUrl = process.env.apiSpecUrl;
   let ApiSpec;
 
   try {
-    ApiSpec = await context.$axios(ApiSpecUrl)
+    ApiSpec = await $axios(ApiSpecUrl)
       .then((response) => response.data);
   } catch (error) {
     if (process.env.NODE_ENV !== 'production') {
       throw new Error(`Open Api Specification could not be fetched from ${ApiSpecUrl}`);
     }
-    context.redirect(`${process.env.backendBaseUrl}/500`);
+    redirect(`${process.env.backendBaseUrl}/500`);
   }
 
   const APIClient = {
@@ -23,8 +23,14 @@ export default async (context, inject) => {
         spec: ApiSpec,
         userFetch: async (url, req) => {
           const data = req.body ? JSON.parse(req.body) : {};
-          const axiosRequest = { ...req, data, withCredentials: true };
-          const axiosResponse = await context.$axios(axiosRequest);
+          const axiosRequest = {
+            ...req,
+            data,
+            withCredentials: true,
+            xsrfCookieName: 'csrftoken_showroom',
+            xsrfHeaderName: 'X-CSRFToken',
+          };
+          const axiosResponse = await $axios(axiosRequest);
 
           return new Response(JSON.stringify(axiosResponse.data), {
             status: axiosResponse.status,

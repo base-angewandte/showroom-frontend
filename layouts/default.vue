@@ -21,6 +21,8 @@
 
 <script>
 import Vue from 'vue';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { mapGetters } from 'vuex';
 import Notifications from 'vue-notification/dist/ssr';
 
 Vue.use(Notifications);
@@ -31,17 +33,13 @@ export default {
     BaseNotification: () => import('~/components/BaseNotification'),
   },
   computed: {
-    lang() {
-      return this.$store.state.appData.locale;
-    },
+    ...mapGetters({
+      lang: 'appData/getLocale',
+      profile: 'appData/getUser',
+      authenticated: 'appData/getAuthState',
+    }),
     baseUrl() {
       return `${process.env.backendBaseUrl}/`;
-    },
-    profile() {
-      return this.$store.state.appData.user;
-    },
-    authenticated() {
-      return this.$store.state.appData.authenticated;
     },
     urls() {
       const backendUrl = `${process.env.backendBaseUrl}${process.env.backendPrefix}`;
@@ -62,7 +60,9 @@ export default {
   mounted() {
     // this is for fetchUser currently maincan only be done here because
     // credentials are not available server side...
-    this.$store.dispatch('appData/init');
+    // TODO: check if this is true and user data should not be fetched server side
+    // (but cookies should be available??)
+    // this.$store.dispatch('appData/init');
     // set html language attribute
     // TODO: check if this influences SEO negatively in a way!
     document.getElementsByTagName('html')[0].setAttribute('lang', this.lang);

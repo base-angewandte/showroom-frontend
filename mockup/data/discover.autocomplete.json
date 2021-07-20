@@ -1,6 +1,7 @@
 [
   {
-		"subset": "Current Art Works",
+    "source": "acivity",
+		"label": "Activities",
 		"data": [
       {
 				"id": "i:AtyPMbCGvo87shMwRZikwQ",
@@ -84,7 +85,8 @@
     ]
   },
   {
-		"subset": "Newest Events",
+		"label": "Persons",
+    "source": "person",
 		"data": [
       {
 				"id": "i:qQCn2jtewXhKnLVsFaHgk6",
@@ -98,85 +100,6 @@
 				"title": "Ankauf Interactive Plant Growing, Zentrum für Medientechnologie Karlsruhe, Germany",
 				"subtext": []
 			}
-    ]
-  },
-  {
-		"subset": "Einzelperson",
-		"data": []
-  },
-  {
-		"subset": "Persons",
-		"data": [
-      {
-				"id": "p:3WU9EBchgTFjE9g5zjUciF",
-				"score": 13.0,
-				"title": "Zentrum für politische Schönheit ZPS",
-				"subtext": [],
-        "description1": {
-          "type": "placedate",
-          "value": "Berlin"
-        }
-      }
-    ]
-  },
-  {
-		"subset": "asdfasdffff",
-		"data": []
-  },
-  {
-		"subset": "asdfasdf",
-		"data": []
-  },
-  {
-		"subset": "Nachlass",
-		"data": []
-  },
-  {
-		"subset": "Werk",
-		"data": []
-  },
-  {
-		"subset": "Institutions",
-		"data": [
-      {
-				"id": "o:EyZZcmBi6NvBfap2934mah",
-				"score": 13.0,
-				"title": "Informationsfolder: Donau-Universität Krems/ Zentrum für Bildwissenschaften. Neuer Lehrgang Bildmanagement, Bildwissenschaft",
-				"subtext": []
-      }
-    ]
-  },
-  {
-		"subset": "Medienbeitrag",
-		"data": []
-  },
-  {
-		"subset": "Album",
-		"data": [
-      {
-				"id": "o:i5aAZLd7APjjhMML55Bi89",
-				"score": 13.0,
-				"title": "Museum Gugging als kommendes Zentrum für Art Brut",
-				"subtext": [
-          "Text, apa - Austria Presse Agentur"
-        ]
-      },
-      {
-				"id": "o:fobdG7rNBQ2QDvvaQhJ2mN",
-				"score": 13.0,
-				"title": "Neues Zentrum für visuelle Kultur",
-				"subtext": [
-          "Text, apa - Austria Presse Agentur"
-        ]
-      },
-      {
-				"id": "o:CXQMydrwsUKnf8uDS3KduV",
-				"score": 13.0,
-				"title": "Neues Zentrum für zeitgenössische Kunstgeschichte",
-				"subtext": [
-          "Text, Henriette Horny"
-        ]
-      }
     ]
   }
 ]

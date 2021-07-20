@@ -1,17 +1,12 @@
 [
   {
     "label": "Activities",
-    "id": "activites",
+    "id": "activities",
     "type": "text"
   },
   {
     "label": "Persons",
     "id": "persons",
-    "type": "text"
-  },
-  {
-    "label": "Departments",
-    "id": "departments",
     "type": "text"
   },
   {
