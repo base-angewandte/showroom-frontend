@@ -57,9 +57,10 @@ Following variables in the `.env` file contained in project folder can be define
 | Variable                    | Description                                                                         |
 |-----------------------------|-------------------------------------------------------------------------------------|
 | APP_TITLE                   | name of the app, used to set title tag                                              |
+| APP_BASE_URL                | url where the frontend is located                                                   |
 | APP_PREFIX                  | desired prefix of the application                                                   |
 | API_SPEC_URL                | url to the open-api-definition in json format                                       |
-| BACKEND_BASE_URL            | url where the backend is located                                                    |
+| BACKEND_BASE_URL            | url where the backend is located (e.g for login/logout)                             |
 | BACKEND_PREFIX              | prefix for the backend                                                              |
 | HEADER_JSON                 | url where the latest header version is specified                                    |
 | HEADER_URL_TERMS            | link to terms and conditions                                                        |

@@ -24,6 +24,7 @@ import Vue from 'vue';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapGetters } from 'vuex';
 import Notifications from 'vue-notification/dist/ssr';
+import { metaTags } from '~/utils/common';
 
 Vue.use(Notifications);
 
@@ -56,18 +57,17 @@ export default {
     headerName() {
       return process.env.header.match(/\/([a-z-]+)-header\.[a-z0-9]+\.js$/)[1];
     },
+    routerPath() {
+      return this.$nuxt.$route.path;
+    },
   },
-  mounted() {
-    // this is for fetchUser currently maincan only be done here because
-    // credentials are not available server side...
-    // TODO: check if this is true and user data should not be fetched server side
-    // (but cookies should be available??)
-    // this.$store.dispatch('appData/init');
-    // set html language attribute
-    // TODO: check if this influences SEO negatively in a way!
-    document.getElementsByTagName('html')[0].setAttribute('lang', this.lang);
-  },
-  methods: {
+  head() {
+    return {
+      htmlAttrs: {
+        lang: this.lang,
+      },
+      link: metaTags(this.routerPath, this.lang),
+    };
   },
 };
 </script>
