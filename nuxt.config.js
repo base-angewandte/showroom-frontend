@@ -38,7 +38,7 @@ export default {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff', height: '0px' },
+  loading: { color: 'var(--app-color)', height: '1px' },
   /*
   ** Global CSS
   */
@@ -120,6 +120,31 @@ export default {
       };
       // for preventing linter checking npm linked base-ui-components
       if (isDev) config.resolve.symlinks = false;
+    },
+  },
+  pageTransition: {
+    name: 'page',
+    mode: 'out-in',
+    beforeLeave() {
+      // add class to body with min-height window-height + header padding
+      // to enable smooth scroll in next step
+      const main = document.querySelector('body');
+      main.classList.add('page-transition');
+    },
+    beforeEnter() {
+      // scroll window to top
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
+      }, 0);
+    },
+    afterEnter() {
+      // reset min-height until next pageTransition
+      const main = document.querySelector('body');
+      main.classList.remove('page-transition');
     },
   },
 };

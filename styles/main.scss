@@ -75,6 +75,21 @@ html {
   }
 }
 
+/* page transition */
+.page-enter-active, .page-leave-active {
+  transition: opacity $page-transition-duration ease-in-out;
+}
+.page-enter, .page-leave-to {
+  opacity: 0;
+}
+
+// class triggered on body-tg by pageTransition definition in nuxt.config.js
+// needed due navigation can be sticky and page/navigation should scroll down smoothly
+.page-transition {
+  // window.height + navigation-margin-top or higher
+  min-height: calc(100vh + #{$spacing-large});
+}
+
 /* utility classes */
 .base-sr--ml-small {
   margin-left: $spacing;
