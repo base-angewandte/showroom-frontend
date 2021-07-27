@@ -1,15 +1,22 @@
 // TODO: this is just example content - check if this can be filled with
-// something more useful - e.g. request cancellations!
 
-export default function request({ $axios, redirect }) {
+export default function request({ $axios }) {
   $axios.onRequest((config) => {
     console.log(`Making request to ${config.url}`);
   });
 
-  $axios.onError((error) => {
-    const code = parseInt(error.response && error.response.status, 10);
+  // eslint-disable-next-line consistent-return
+  $axios.onError((e) => {
+    const code = parseInt(e.response && e.response.status, 10);
     if (code === 400) {
-      redirect('/400');
+      // Todo: redirect to error page or inform the user in notifications?
+      console.log(e);
+    }
+
+    if ($axios.isCancel(e)) {
+      console.warn(e.message);
+      // prevent the error from propagating
+      return Promise.resolve(false);
     }
   });
 }

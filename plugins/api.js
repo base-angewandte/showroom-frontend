@@ -2,6 +2,8 @@ import Vue from 'vue';
 import { Response } from 'node-fetch';
 import SwaggerClient from 'swagger-client';
 
+const cancelRequest = [];
+
 export default async ({ $axios, redirect, store }, inject) => {
   const ApiSpecUrl = process.env.apiSpecUrl;
   let ApiSpec;
@@ -16,12 +18,22 @@ export default async ({ $axios, redirect, store }, inject) => {
     redirect(`${process.env.backendBaseUrl}/500`);
   }
 
+  const { CancelToken } = $axios;
+
   const APIClient = {
     // eslint-disable-next-line no-shadow
     install(Vue) {
       SwaggerClient({
         spec: ApiSpec,
         userFetch: async (url, req) => {
+          const cancelId = url.match(/[^?]*/i)[0];
+          const source = CancelToken.source();
+
+          // cancel previous request if still pending
+          if (cancelRequest[cancelId]) {
+            cancelRequest[cancelId].cancel('new request started');
+          }
+
           // eslint-disable-next-line no-param-reassign
           req.headers = { 'Accept-Language': store.state.appData.locale };
           const data = req.body ? JSON.parse(req.body) : {};
@@ -31,7 +43,12 @@ export default async ({ $axios, redirect, store }, inject) => {
             withCredentials: true,
             xsrfCookieName: 'csrftoken_showroom',
             xsrfHeaderName: 'X-CSRFToken',
+            cancelToken: source.token,
           };
+
+          // save current request source
+          cancelRequest[cancelId] = source;
+
           const axiosResponse = await $axios(axiosRequest);
 
           return new Response(JSON.stringify(axiosResponse.data), {

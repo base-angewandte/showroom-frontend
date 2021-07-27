@@ -251,7 +251,13 @@ export default {
           q: searchString,
           filter_name: filter.label === 'Fulltext' ? null : filter.label,
         });
-        this.autocompleteResults = JSON.parse(response.data);
+
+        // check if response.data is typeof string before processing value.
+        // response.data could also be a blob due to request cancellation.
+        // TODO: check if there is better solution to handle requestCancellation
+        if (typeof response.data === 'string') {
+          this.autocompleteResults = JSON.parse(response.data);
+        }
       } catch (e) {
         console.error(e);
         // TODO: error handling
