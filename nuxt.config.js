@@ -125,26 +125,8 @@ export default {
   pageTransition: {
     name: 'page',
     mode: 'out-in',
-    beforeLeave() {
-      // add class to body with min-height window-height + header padding
-      // to enable smooth scroll in next step
-      const main = document.querySelector('body');
-      main.classList.add('page-transition');
-    },
-    beforeEnter() {
-      // scroll window to top
-      setTimeout(() => {
-        window.scrollTo({
-          top: 0,
-          left: 0,
-          behavior: 'smooth',
-        });
-      }, 0);
-    },
-    afterEnter() {
-      // reset min-height until next pageTransition
-      const main = document.querySelector('body');
-      main.classList.remove('page-transition');
+    afterLeave() {
+      window.scrollTo(0, 0);
     },
   },
 };
