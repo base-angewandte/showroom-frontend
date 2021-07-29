@@ -37,7 +37,7 @@ const actions = {
     app.i18n.locale = locale;
 
     // check if path indicates a language switch
-    const localeMatch = route.fullPath.match(/^\/([a-z]{2})/);
+    const localeMatch = route.fullPath.match(/^\/([a-z]{2})\//);
     const pathLocale = localeMatch ? localeMatch[1] : null;
     if (pathLocale) {
       // set cookie with locale and redirect to path without lang attribute
