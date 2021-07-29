@@ -14,32 +14,31 @@ export default {
     Detail,
   },
   async asyncData({
-    $api, route, params,
+    $api, params,
   }) {
     let entryData = {};
     try {
-      // retrieve entity
-      const { data } = await $api.public.api_v1_entities_retrieve({
-        id: params.id,
-      });
-      entryData = JSON.parse(data);
-      // retrieve entity_list
-      const listResponse = await $api.public.api_v1_entities_list_retrieve({
-        id: route.params.id,
-      });
-      entryData.list = JSON.parse(listResponse.data) || [];
-      // retrieve initial search results
-      const searchDataResponse = await $api.public.api_v1_entities_search_create({
-        id: route.params.id,
-      }, {
-        requestBody: {
+      const results = [];
+      ['entities_retrieve', 'entities_list_retrieve', 'entities_search_create'].forEach((operation) => {
+        const requestBody = operation === 'entities_search_create' ? {
           category: 'activity',
-        },
+        } : {};
+        results.push($api.public[`api_v1_${operation}`]({
+          id: params.id,
+        }, {
+          requestBody,
+        }));
       });
-      entryData.activities = [{
-        id: 'activity',
-        ...JSON.parse(searchDataResponse.data),
-      }] || [];
+      const [entityDataResponse, entityListsResponse, searchResultsResponse] = await Promise
+        .all(results);
+      entryData = {
+        ...JSON.parse(entityDataResponse.data),
+        list: JSON.parse(entityListsResponse.data),
+        activities: [{
+          id: 'activity',
+          ...JSON.parse(searchResultsResponse.data),
+        }],
+      };
     } catch (e) {
       console.error(e);
       // TODO: error handling;
