@@ -11,7 +11,6 @@
 
     <Search
       :result-list.sync="searchResults"
-      :expanded-section="expandedSection"
       class="discover-search" />
   </div>
 </template>
@@ -25,16 +24,22 @@ export default {
     Showcase,
     Search,
   },
-  async asyncData({ $api }) {
+  async asyncData({ $api, route }) {
+    const { page } = route.query;
+    const entryNumber = 6 * 5;
     // get initial search results
-    const response = await $api.public.api_v1_search_create();
+    const response = await $api.public.api_v1_search_create({}, {
+      requestBody: {
+        offset: (page - 1) * entryNumber,
+        limit: entryNumber,
+      },
+    });
     const searchResults = JSON.parse(response.data);
     return { searchResults };
   },
   data() {
     return {
       searchResults: [],
-      expandedSection: null,
       carousel: [
         {
           uid: '1',
@@ -160,9 +165,10 @@ export default {
       ],
     };
   },
-  created() {
-    const { page, collection } = this.$route.query;
-    this.expandedSection = { page: Number(page), collection };
+  watch: {
+    $route(val) {
+      this.expandedSection = { page: Number(val.query.page), category: val.query.category };
+    },
   },
   methods: {
   },

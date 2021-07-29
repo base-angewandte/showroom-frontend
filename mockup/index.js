@@ -13,6 +13,7 @@ const apiV1EntitiesActivitiesEditReadSD = require('./data/entities.secondaryDeta
 const apiV1Filters = require('./data/filters.json');
 const apiV1Categories = require('./data/categories.json');
 const apiV1SearchInitialRead = require('./data/discover.search.initial.json');
+const apiV1SearchResultsRead = require('./data/discover.search.results.json');
 
 const port = 9001;
 
@@ -56,17 +57,63 @@ const api = new OpenAPIBackend({
       apiV1Categories,
     ),
     api_v1_search_create: async (c, req, res) => {
+      const { offset, limit, filters } = req.body;
+      let matching = [];
+      if (!(filters && filters.length)) {
+        matching = apiV1SearchInitialRead.map((category) => ({
+          ...category,
+          data: category.data.slice(offset, offset + limit),
+        }));
+      } else {
+        let tempResult = [];
+        filters.forEach((filter) => {
+          let filterMatches = [];
+          // special case filter activity type
+          if (filter.id === 'type') {
+            filterMatches = apiV1SearchResultsRead.filter((result) => filter.values
+              .map((val) => val.label).includes(result.description));
+          }
+          // free text search fulltext or for certain types of entries
+          // this should not be like this in live just to simplify data fetching
+          // live: even if one of these filters is used fetch related persons etc.
+          if ((filter.values && !filter.id)
+            || ['activities', 'persons', 'albums'].includes(filter.id)) {
+            // TODO: consider match id to just get specific autocomplete selected result
+            filterMatches = apiV1SearchResultsRead
+              .filter((result) => (!filter.id || result.type === filter.id)
+                && filter.values.map((val) => val.title)
+                  .some((stringVal) => result.title.toLowerCase()
+                    .includes(stringVal.toLowerCase())));
+          }
+          // Controlled Vocabulary Filters with array values
+          if (['keywords', 'skills'].includes(filter.id)) {
+            const filterValueIds = filter.values.map((val) => val.id);
+            filterMatches = apiV1SearchResultsRead
+              .filter((result) => result[filter.id] && result[filter.id].map((entry) => entry.id)
+                .some((entryId) => filterValueIds.includes(entryId)));
+          }
+          // concat the results for every filter to have more results but make unique
+          tempResult = [...new Set(tempResult.concat(filterMatches))];
+        });
+
+        matching = [{
+          label: 'Search Results',
+          total: tempResult.length,
+          data: tempResult,
+        }];
+      }
+
       res.status(200).json(
-        apiV1SearchInitialRead,
+        matching,
       );
     },
     api_v1_autocomplete_create: async (c, req, res) => {
       const searchString = req.query.q;
-      const filterName = req.query.filter_name;
+      const filterId = req.query.filter_id;
       let matchingData = [];
       let subsetData = apiV1AutocompleteResultsRead;
-      if (filterName) {
-        subsetData = apiV1AutocompleteResultsRead.filter(({ subset }) => subset === filterName);
+      if (filterId) {
+        subsetData = apiV1AutocompleteResultsRead.filter(({ source }) => source === filterId);
       }
       if (searchString) {
         matchingData = subsetData.map(({ source, label, data }) => ({

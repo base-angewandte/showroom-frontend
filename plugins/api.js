@@ -12,6 +12,7 @@ export default async ({ $axios, redirect, store }, inject) => {
     ApiSpec = await $axios(ApiSpecUrl)
       .then((response) => response.data);
   } catch (error) {
+    console.error(error);
     if (process.env.NODE_ENV !== 'production') {
       throw new Error(`Open Api Specification could not be fetched from ${ApiSpecUrl}`);
     }

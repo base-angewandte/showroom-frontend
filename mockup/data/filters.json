@@ -18,15 +18,97 @@
     "label": "Keywords",
     "id": "keywords",
     "type": "chips",
-    "freetext_allowed": true,
+    "freetext_allowed": false,
     "options": [
       {
-        "label": "AAAAAA",
-        "id": "AAAAAA"
+        "label": "Beginnings",
+        "id": "beginnings"
       },
       {
-        "label": "BBBBBB",
-        "id": "BBBBBB"
+        "label": "Endings",
+        "id": "endings"
+      },
+      {
+        "label": "Exchange",
+        "id": "exchange"
+      },
+      {
+        "label": "Painting",
+        "id": "painting"
+      },
+      {
+        "label": "Mathematics",
+        "id": "mathematics"
+      },
+      {
+        "label": "Biology",
+        "id": "biology"
+      },
+      {
+        "label": "Chemistry",
+        "id": "chemistry"
+      },
+      {
+        "label": "Pottery",
+        "id": "pottery"
+      },
+      {
+        "label": "Movies",
+        "id": "movies"
+      },
+      {
+        "label": "Cinema",
+        "id": "cinema"
+      },
+      {
+        "label": "Retrospective",
+        "id": "retrospective"
+      },
+      {
+        "label": "Screening",
+        "id": "screening"
+      },
+      {
+        "label": "Mission",
+        "id": "mission"
+      }]
+  },
+  {
+    "label": "Result Categories",
+    "id": "categories",
+    "type": "chips",
+    "freetext_allowed": false,
+    "options": [
+      {
+        "label": "Latest Activities",
+        "id": "AAAAAAx"
+      },
+      {
+        "label": "Activities",
+        "id": "BBBBBBxy"
+      },
+      {
+        "label": "Persons",
+        "id": "BBBBBBx"
+      }]
+  },
+  {
+    "label": "Skills and Expertise",
+    "id": "skills",
+    "type": "chips",
+    "freetext_allowed": false,
+    "options": [
+      {
+        "label": "Natural Science",
+        "id": "AAAAAAx"
+      },
+      {
+        "label": "Body Painting",
+        "id": "BBBBBBxy"
+      },
+      {
+        "label": "Spraying",
+        "id": "BBBBBBx"
       }]
   },
   {
@@ -57,24 +139,36 @@
         "id": "Performance"
       },
       {
-        "label": "Exhibitionaaaa",
+        "label": "Exhibition",
         "id": "Exhibitionaaaa"
       },
       {
-        "label": "Exhibitionssss",
+        "label": "Novel",
+        "id": "novel"
+      },
+      {
+        "label": "Sound Recording",
+        "id": "sound_recording"
+      },
+      {
+        "label": "Album",
         "id": "Exhibitionssss"
       },
       {
-        "label": "Exhibitiondddd",
+        "label": "Conference",
         "id": "Exhibitiondddd"
       },
       {
-        "label": "Exhibitionasdfasdf",
+        "label": "Concert",
         "id": "Exhibitionasdfasdf"
       },
       {
-        "label": "Exhibitionlooooooooooooooooooooooong",
+        "label": "Software",
         "id": "Exhibitiong"
+      },
+      {
+        "label": "Master Thesis",
+        "id": "master_thesis"
       },
       {
         "label": "Architecture",
