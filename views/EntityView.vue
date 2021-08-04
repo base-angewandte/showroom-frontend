@@ -14,30 +14,40 @@ export default {
     Detail,
   },
   async asyncData({
-    $api, params,
+    $api, params, query,
   }) {
     let entryData = {};
     try {
+      // get relevant query params
+      const { page, filters } = query;
+      // parse the filters from query params
+      const parsedFilters = filters ? JSON.parse(filters) : [];
+      // assume 6 result boxes per row to start with
+      const entryNumber = 6 * 5;
       const results = [];
+      // create requests for all the relevant data
       ['entities_retrieve', 'entities_list_retrieve', 'entities_search_create'].forEach((operation) => {
+        // add a request body only for search request
         const requestBody = operation === 'entities_search_create' ? {
-          category: 'activity',
+          filters: parsedFilters,
+          offset: (page - 1) * entryNumber,
+          limit: entryNumber,
         } : {};
+        // push the request promises into an array
         results.push($api.public[`api_v1_${operation}`]({
           id: params.id,
         }, {
           requestBody,
         }));
       });
+      // wait for the requests to return
       const [entityDataResponse, entityListsResponse, searchResultsResponse] = await Promise
         .all(results);
+      // assemble all the data to be used in Detail.vue
       entryData = {
         ...JSON.parse(entityDataResponse.data),
         list: JSON.parse(entityListsResponse.data),
-        activities: [{
-          id: 'activity',
-          ...JSON.parse(searchResultsResponse.data),
-        }],
+        activities: [].concat(JSON.parse(searchResultsResponse.data)),
       };
     } catch (e) {
       console.error(e);

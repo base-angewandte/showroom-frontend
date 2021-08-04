@@ -58,6 +58,11 @@
           "type": "Datei"
         }
       }
+    },
+    "headerText": {
+      "latestActivities": "Aktuelle Aktivitäten",
+      "results": "Suchergebnisse",
+      "entityResults": "{entity}'s Aktivitäten"
     }
   },
   "search": "Suche",
@@ -71,6 +76,7 @@
     "title": "Search and Discover Showroom"
   },
   "searchView": {
+    "fulltext": "Volltext",
     "placeholders": {
       "main":  "Showroom durchsuchen und entdecken",
       "filterRow": "Weitere Optionen zum Filter hinzufügen"

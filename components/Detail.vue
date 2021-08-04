@@ -232,13 +232,8 @@
 
     <Search
       v-if="type === 'person'"
-      :result-list="data.activities"
-      :available-categories="[
-        {
-          id: 'activities',
-          label: 'Activities'
-        },
-      ]" />
+      :header-text="$t('results.headerText.entityResults', { entity: data.title })"
+      :result-list="data.activities" />
 
     <!-- owner, dates -->
     <div

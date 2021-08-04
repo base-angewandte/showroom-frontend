@@ -58,6 +58,11 @@
           "type": "entry"
         }
       }
+    },
+    "headerText": {
+      "latestActivities": "Aktuelle Aktivitäten",
+      "results": "Suchergebnisse",
+      "entityResults": "{entity}'s Aktivitäten"
     }
   },
   "search": "Search",
@@ -71,6 +76,7 @@
     "title": "Search and Discover Showroom"
   },
   "searchView": {
+    "fulltext": "Fulltext",
     "placeholders": {
       "main":  "Search and Discover Showroom",
       "filterRow": "Add Values to Your Filter"
