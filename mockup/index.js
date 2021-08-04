@@ -131,21 +131,17 @@ const api = new OpenAPIBackend({
       apiV1ActivitiesRead,
     ),
     api_v1_entities_search_create: async (c, req, res) => {
-      const { category } = req.body;
       const entityId = c.request.params.id;
       const entityData = apiV1EntitiesSearch[entityId];
-      if (entityData) {
-        const matchingData = apiV1EntitiesSearch[entityId]
-          .filter((entry) => entry.type === category);
+      if (entityData && entityData.length) {
         return res.status(200).json(
           {
-            label: 'Activities',
-            total: matchingData.length,
-            data: matchingData,
+            total: entityData.length,
+            data: entityData,
           },
         );
       }
-      return res.status(200);
+      return res.status(200).json([]);
     },
     api_v1_entities_retrieve: async (c, req, res) => res.status(200).json(
       apiV1EntitiesRead,
