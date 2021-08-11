@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: 'Showroom API'
-  description: 'Showroom API'
+  title: Showroom API
+  description: Showroom API
   version: 1.0.0
 servers:
   - url: http://127.0.0.1:8500
@@ -14,23 +14,41 @@ tags:
     description: Methods that can only be used by authenticated users
   - name: repo
     description: Methods that are reserved for backend repositories to keep showroom content synchronized
-
 paths:
+  /user/:
+    get:
+      description: if user is logged in get user data
+      operationId: api_v1_user_retrieve
+      tags:
+        - auth
+      responses:
+        '200':
+          description: Returns an array of search results.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /autocomplete/:
     post:
-      description: 'Exact string search matching titles.'
+      description: Exact string search matching titles.
       operationId: api_v1_autocomplete_create
       tags:
         - public
       parameters:
         - name: q
-          description: 'Search query string.'
+          description: Search query string.
           in: query
           schema:
             type: string
             minLength: 3
         - name: filter_id
-          description: 'result category to return'
+          description: filter category to return
           in: query
           schema:
             type: string
@@ -39,81 +57,57 @@ paths:
           schema:
             type: integer
       responses:
-        200:
-          description: 'Returns an array of search results.'
+        '200':
+          description: Returns an array of search results.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Autocomplete'
-
   /filters/:
     get:
-      description: 'Returns all possible filters for the search.'
+      description: Returns all possible filters for the search.
       operationId: api_v1_filters_list
       tags:
         - public
       responses:
-        200:
-          description: 'Returns all possible filters for the search.'
+        '200':
+          description: Returns all possible filters for the search.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Filter'
-  /categories/:
-    get:
-      description: 'Returns all possible categories for the search results.'
-      operationId: api_v1_categories_list
-      tags:
-        - public
-      responses:
-        '200':
-          description: 'Returns all possible categories for the search results.'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Category'
   /search/:
     post:
-      description: 'Returns all possible results.'
+      description: Returns all possible results.
       operationId: api_v1_search_create
       tags:
         - public
       parameters:
-        - name: filter
-          description: 'Array of objects with all filters applied'
+        - name: filters
+          description: Array of objects with all filters applied
           in: query
           schema:
             type: array
             items:
               $ref: '#/components/schemas/CommonSearchFilter'
-        - name: category
-          description: 'result category to be displayed. Only ''persons'' and ''activities'' for now but might later include ''departments'', ''albums'', ''subscribed_items''. If filter is empty - return label ''Current Activities'' otherwise just ''Activities''.'
-          in: query
-          schema:
-            type: string
-            enum:
-              - activities
-              - persons
         - name: limit
-          description: 'Number of results to return per page.'
+          description: Number of results to return per page.
           in: query
           schema:
             type: integer
             default: 5
         - name: offset
-          description: 'The initial index to return the results.'
+          description: The initial index to return the results.
           in: query
           schema:
             type: integer
       responses:
-        200:
-          description: 'Returns an array of search results.'
+        '200':
+          description: Returns an array of search results.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SearchResults'
+                $ref: '#/components/schemas/Search'
   /activities/:
     post:
       description: 'Create one or more activities. If an activity already exists, it will be updated with the new values.'
@@ -128,8 +122,8 @@ paths:
               items:
                 $ref: '#/components/schemas/Activity'
       responses:
-        201:
-          description: 'All items successfully created/updated.'
+        '201':
+          description: All items successfully created/updated.
           content:
             application/json:
               schema:
@@ -137,60 +131,59 @@ paths:
                 properties:
                   created:
                     type: array
-                    description: 'List of newly created activities. Empty if none.'
+                    description: List of newly created activities. Empty if none.
                     items:
                       type: object
                       properties:
                         id:
                           type: integer
-                          description: "The original id of the repository entry."
+                          description: The original id of the repository entry.
                         showroom_id:
                           type: integer
-                          description: "The new showroom id of this activity."
+                          description: The new showroom id of this activity.
                   updated:
                     type: array
-                    description: 'List of updated activities. Empty if none.'
+                    description: List of updated activities. Empty if none.
                     items:
                       type: object
                       properties:
                         id:
                           type: integer
-                          description: "The original id of the repository entry."
+                          description: The original id of the repository entry.
                         showroom_id:
                           type: integer
-                          description: "Showroom id of the updated activity."
+                          description: Showroom id of the updated activity.
                   errors:
                     type: array
-                    description: "List of errors when creating/updating certain activities. Empty if none."
+                    description: List of errors when creating/updating certain activities. Empty if none.
                     items:
                       type: object
                       properties:
                         id:
                           type: integer
-                          description: "The original id of the repository entry."
+                          description: The original id of the repository entry.
                         detail:
                           type: string
-                          description: "Description of the error when trying to create/update this activity."
+                          description: Description of the error when trying to create/update this activity.
                 required:
                   - created
                   - updated
                   - errors
-        400:
-          description: 'Bad request.'
+        '400':
+          description: Bad request.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        403:
-          description: 'Forbidden'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
-  /activities/{id}/:
+  '/activities/{id}/':
     get:
-      description: 'Returns a single activity object.'
+      description: Returns a single activity object.
       operationId: api_v1_activities_retrieve
       tags:
         - public
@@ -201,20 +194,20 @@ paths:
           schema:
             type: string
       responses:
-        200:
-          description: 'Returns a single activity object.'
+        '200':
+          description: Returns a single activity object.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Activity'
-        404:
-          description: "Activity not found"
+        '404':
+          description: Activity not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     delete:
-      description: 'Delete the activity'
+      description: Delete the activity
       operationId: api_v1_activities_destroy
       tags:
         - repo
@@ -225,30 +218,29 @@ paths:
           schema:
             type: string
       responses:
-        204:
-          description: 'Successfully deleted'
-        400:
+        '204':
+          description: Successfully deleted
+        '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Invalid input'
-        403:
+          description: Invalid input
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Forbidden'
-        404:
+          description: Forbidden
+        '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Not found'
-
-  /activities/{id}/media/:
+          description: Not found
+  '/activities/{id}/media/':
     get:
-      description: 'Returns an array of media objects related to an specific activity.'
+      description: Returns an array of media objects related to an specific activity.
       operationId: api_v1_activities_media_list
       tags:
         - public
@@ -259,19 +251,18 @@ paths:
           schema:
             type: string
       responses:
-        200:
-          description: 'Returns an array of media objects related to an specific activity.'
+        '200':
+          description: Returns an array of media objects related to an specific activity.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Media'
-        404:
-          description: "Activity/Media not found"
+        '404':
+          description: Activity/Media not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-
+                $ref: '#/components/schemas/Error'
   /entities/:
     post:
       description: 'Create one or more entities. If an entity already exists, it will be updated with the new values.'
@@ -286,8 +277,8 @@ paths:
               items:
                 $ref: '#/components/schemas/Entity'
       responses:
-        201:
-          description: 'All entities successfully created/updated.'
+        '201':
+          description: All entities successfully created/updated.
           content:
             application/json:
               schema:
@@ -295,26 +286,25 @@ paths:
                 properties:
                   created:
                     type: integer
-                    description: 'Number of newly created entities.'
+                    description: Number of newly created entities.
                   updated:
                     type: integer
-                    description: 'Number of updated entities.'
-        400:
-          description: 'Bad Request'
+                    description: Number of updated entities.
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-        403:
-          description: 'Forbidden'
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-
-  /entities/{id}/:
+                $ref: '#/components/schemas/Error'
+  '/entities/{id}/':
     get:
-      description: 'Returns a single entity object.'
+      description: Returns a single entity object.
       operationId: api_v1_entities_retrieve
       tags:
         - public
@@ -325,25 +315,25 @@ paths:
           schema:
             type: string
       responses:
-        200:
-          description: 'Returns a single entity object.'
+        '200':
+          description: Returns a single entity object.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Entity'
-        404:
-          description: "Entity not found"
+        '404':
+          description: Entity not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     patch:
       description: 'Partially update a certain entity; currently only for fields "secondary_details", "showcase"'
       operationId: api_v1_entities_partial_update
       tags:
         - auth
       parameters:
-        - description: 'ID of entity to patch'
+        - description: ID of entity to patch
           in: path
           name: id
           required: true
@@ -354,33 +344,33 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Entity'
-        description: 'Object with key/values to be partially changed'
+        description: Object with key/values to be partially changed
         required: true
       responses:
-        204:
-          description: 'Successfully updated'
-        400:
+        '204':
+          description: Successfully updated
+        '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Invalid input'
-        403:
+          description: Invalid input
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Forbidden'
-        404:
+          description: Forbidden
+        '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Not found'
+          description: Not found
         5XX:
-          description: 'Unexpected error'
+          description: Unexpected error
     delete:
-      description: 'Delete the entity'
+      description: Delete the entity
       operationId: api_v1_entities_destroy
       tags:
         - repo
@@ -391,31 +381,29 @@ paths:
           schema:
             type: string
       responses:
-        204:
-          description: 'Successfully deleted'
-        400:
+        '204':
+          description: Successfully deleted
+        '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Invalid input'
-        403:
+          description: Invalid input
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Forbidden'
-        404:
+          description: Forbidden
+        '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Not found'
-
-
-  /entities/{id}/list/:
+          description: Not found
+  '/entities/{id}/list/':
     get:
-      description: 'Returns array of activities related to a specific entity.'
+      description: Returns array of activities related to a specific entity.
       operationId: api_v1_entities_list_retrieve
       tags:
         - public
@@ -426,20 +414,20 @@ paths:
           schema:
             type: string
       responses:
-        200:
-          description: 'Returns array of activities related to an specific entity.'
+        '200':
+          description: Returns array of activities related to an specific entity.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommonList'
-        404:
-          description: "Entity/Activities not found"
+        '404':
+          description: Entity/Activities not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
     patch:
-      description: 'Update order and visibility of activities'
+      description: Update order and visibility of activities
       operationId: api_v1_entities_list_partial_update
       tags:
         - auth
@@ -454,34 +442,32 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/EntityActivitiesEdit'
-        description: 'Request array with ordered objects'
+        description: Request array with ordered objects
         required: true
       responses:
-        204:
-          description: 'Successfully updated'
-        400:
-          description: 'Invalid input'
+        '204':
+          description: Successfully updated
+        '400':
+          description: Invalid input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        403:
-          description: 'Forbidden'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        404:
-          description: 'Not found'
+        '404':
+          description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         5XX:
-          description: 'Unexpected error'
-
-
-  /entities/{id}/edit/:
+          description: Unexpected error
+  '/entities/{id}/edit/':
     get:
       description: 'Returns user-editable information from a specific field of an entity, in all available languages.'
       operationId: api_v1_entities_edit_retrieve
@@ -496,35 +482,34 @@ paths:
         - name: field
           in: query
           required: true
-          description: >
-            Defines which user-editable field from the entity model should be requested.
-            This currently can be either "secondary_details" or "showcase"
+          description: |
+            Defines which user-editable field from the entity model should be requested. This currently can be either "secondary_details" or "showcase"
           schema:
             type: string
             enum:
-              - "secondary_details"
-              - "showcase"
+              - secondary_details
+              - showcase
       responses:
-        200:
-          description: 'Array of the items in the user-editable field that was requested'
+        '200':
+          description: Array of the items in the user-editable field that was requested
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/EntityEdit'
-        403:
-          description: 'Forbidden'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        404:
-          description: "Entity/Activities not found"
+        '404':
+          description: Entity/Activities not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
-      description: '(Fully) Update user-editable information of an entity'
+      description: (Fully) Update user-editable information of an entity
       operationId: api_v1_entities_edit_update
       tags:
         - auth
@@ -537,45 +522,42 @@ paths:
         - name: field
           in: query
           required: true
-          description: >
-            Defines which user-editable field from the entity model should be updated.
-            This currently can be either "secondary_details" or "showcase"
+          description: |
+            Defines which user-editable field from the entity model should be updated. This currently can be either "secondary_details" or "showcase"
           schema:
             type: string
             enum:
-              - "secondary_details"
-              - "showcase"
+              - secondary_details
+              - showcase
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/EntityEdit'
-        description: 'Request array with ordered objects'
+        description: Request array with ordered objects
         required: true
       responses:
-        204:
-          description: 'Successfully updated'
-        400:
-          description: 'Invalid input'
+        '204':
+          description: Successfully updated
+        '400':
+          description: Invalid input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        403:
-          description: 'Forbidden'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        404:
-          description: 'Not found'
+        '404':
+          description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
-
-  /entities/{id}/search/:
+  '/entities/{id}/search/':
     post:
       description: 'Returns all possible results of a specific entity, e.g. person.'
       operationId: api_v1_entities_search_create
@@ -587,52 +569,43 @@ paths:
           required: true
           schema:
             type: string
-        - name: filter
-          description: 'array of objects with all filters applied'
+        - name: filters
+          description: array of objects with all filters applied
           in: query
           schema:
             type: array
             items:
               $ref: '#/components/schemas/CommonSearchFilter'
-        - name: category
-          description: 'result category to be displayed. Only ''persons'' and ''activities'' for now but might later include ''departments'', ''albums'', ''subscribed_items''. If filter is empty - return label ''Current Activities'' otherwise just ''Activities''.'
-          in: query
-          schema:
-            type: string
-            enum:
-              - activities
-              - persons
         - name: limit
-          description: 'Number of results to return per page.'
+          description: Number of results to return per page.
           in: query
           schema:
             type: integer
             default: 5
         - name: offset
-          description: 'The initial index to return the results.'
+          description: The initial index to return the results.
           in: query
           schema:
             type: integer
       responses:
-        200:
-          description: 'Returns an array of search results'
+        '200':
+          description: Returns an array of search results
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SearchResults'
-        404:
-          description: "Entity not found"
+                $ref: '#/components/schemas/Search'
+        '404':
+          description: Entity not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-
+                $ref: '#/components/schemas/Error'
   /albums/:
     post:
       operationId: api_v1_albums_create
-      description: 'Create an album belonging to the authenticated user'
+      description: Create an album belonging to the authenticated user
       tags:
-      - auth
+        - auth
       requestBody:
         content:
           application/json:
@@ -640,7 +613,7 @@ paths:
               $ref: '#/components/schemas/Album'
       responses:
         '201':
-          description: 'Album was created'
+          description: Album was created
           content:
             application/json:
               schema:
@@ -657,10 +630,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
-  /albums/{id}/:
+  '/albums/{id}/':
     get:
-      description: 'Returns a single album object.'
+      description: Returns a single album object.
       operationId: api_v1_albums_retrieve
       tags:
         - public
@@ -671,20 +643,20 @@ paths:
           schema:
             type: string
       responses:
-        200:
-          description: 'Returns a single album object.'
+        '200':
+          description: Returns a single album object.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Album'
-        404:
-          description: "Album not found"
+        '404':
+          description: Album not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     patch:
-      description: 'Update the album'
+      description: Update the album
       operationId: api_v1_albums_partial_update
       tags:
         - auth
@@ -695,28 +667,28 @@ paths:
           schema:
             type: string
       responses:
-        204:
-          description: 'Successfully updated'
-        400:
+        '204':
+          description: Successfully updated
+        '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Invalid input'
-        403:
+          description: Invalid input
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Forbidden'
-        404:
+          description: Forbidden
+        '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Not found'
+          description: Not found
     delete:
-      description: 'Delete the album'
+      description: Delete the album
       operationId: api_v1_albums_destroy
       tags:
         - auth
@@ -727,27 +699,26 @@ paths:
           schema:
             type: string
       responses:
-        204:
-          description: 'Successfully deleted'
-        400:
+        '204':
+          description: Successfully deleted
+        '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Invalid input'
-        403:
+          description: Invalid input
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Forbidden'
-        404:
+          description: Forbidden
+        '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Not found'
-
+          description: Not found
   /media/:
     post:
       description: 'Create one or more media. If one already exists, it will be updated with the new values.'
@@ -762,8 +733,8 @@ paths:
               items:
                 $ref: '#/components/schemas/Media'
       responses:
-        201:
-          description: 'All media successfully created/updated.'
+        '201':
+          description: All media successfully created/updated.
           content:
             application/json:
               schema:
@@ -771,26 +742,25 @@ paths:
                 properties:
                   created:
                     type: integer
-                    description: 'Number of newly created media.'
+                    description: Number of newly created media.
                   updated:
                     type: integer
-                    description: 'Number of updated media.'
-        400:
-          description: 'Bad Request'
+                    description: Number of updated media.
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-        403:
-          description: 'Forbidden'
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-
-  /media/{id}/:
+                $ref: '#/components/schemas/Error'
+  '/media/{id}/':
     delete:
-      description: 'Delete the media entry'
+      description: Delete the media entry
       operationId: api_v1_media_destroy
       tags:
         - repo
@@ -801,26 +771,26 @@ paths:
           schema:
             type: string
       responses:
-        204:
-          description: 'Successfully deleted'
-        400:
+        '204':
+          description: Successfully deleted
+        '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Invalid input'
-        403:
+          description: Invalid input
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Forbidden'
-        404:
+          description: Forbidden
+        '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: 'Not found'
+          description: Not found
 
 
 components:
@@ -847,14 +817,35 @@ components:
       properties:
         source:
           type: string
-          example: 'person'
+          example: person
         label:
           type: string
-          example: 'Person'
+          example: Person
         data:
           type: array
           items:
             $ref: '#/components/schemas/AutocompleteDataItem'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: the LDAP(?) id
+        name:
+          type: string
+          description: the user's full name
+        email:
+          type: string
+          description: the user's email
+        entity_id:
+          type: string
+          description: The users Showroom ID
+        permissions:
+          type: array
+          items:
+            type: string
+          description: the permissions needed by base header
 
     Autocomplete:
       type: array
@@ -882,7 +873,7 @@ components:
               type: array
               items:
                 type: string
-              description: 'List of linked media objects.'
+              description: List of linked media objects.
             linked:
               type: object
               properties:
@@ -1025,14 +1016,13 @@ components:
         minLength: 1
         maxLength: 4
       example:
-        - 455w: 'path to file'
-        - 654w: 'path to file'
-
+        - 455w: path to file
+        - 654w: path to file
     EntityEdit:
       type: array
       items:
         type: object
-        title: "CommonTextTranslation"
+        title: CommonTextTranslation
         properties:
           en:
             $ref: '#/components/schemas/CommonTextList'
@@ -1040,11 +1030,8 @@ components:
             $ref: '#/components/schemas/CommonTextList'
           xx:
             $ref: '#/components/schemas/CommonTextList'
-      description: >
-        Contains all translations of the contents of a user-editable field (like secondary_details or showcase).
-        Every item of this list is an object containing all available ISO 2 letter codes as properties, holding the
-        list of CommonText objects to be translated as values.
-
+      description: |
+        Contains all translations of the contents of a user-editable field (like secondary_details or showcase). Every item of this list is an object containing all available ISO 2 letter codes as properties, holding the list of CommonText objects to be translated as values.
     EntityActivitiesEdit:
       type: array
       items:
@@ -1103,7 +1090,7 @@ components:
           type: string
           format: uri
         previews:
-          description: 'Return all generated size/sources.'
+          description: Return all generated size/sources.
           type: array
           items:
             type: object
@@ -1151,7 +1138,7 @@ components:
         playlist:
           type: string
           format: uri
-          description: 'path to playlist.m3u8'
+          description: path to playlist.m3u8
         original:
           type: string
           format: uri
@@ -1181,7 +1168,7 @@ components:
         pdf:
           type: string
           format: uri
-          description: 'path to file.pdf'
+          description: path to file.pdf
         original:
           type: string
           format: uri
@@ -1222,11 +1209,10 @@ components:
         source:
           type: string
           format: uri
-          description: 'url to licence page'
-
+          description: url to licence page
     MediaAlternative:
       type: array
-      description: "return list of strings from meta data if available: eg; ['FileSize', 'ImageSize', 'Title', 'Artist', 'Year']"
+      description: 'return list of strings from meta data if available: eg; [''FileSize'', ''ImageSize'', ''Title'', ''Artist'', ''Year'']'
       items:
         type: string
 
@@ -1265,14 +1251,19 @@ components:
       properties:
         label:
           type: string
-          description: 'A string describing the result set (e.g. "Most recent Activities")'
+          description: A string describing the result set (e.g. "Current Activities")
         total:
-          description: 'Total number of activities in that album.'
+          description: Total number of activities in that album.
           type: number
         data:
           type: array
           items:
             $ref: '#/components/schemas/SearchItem'
+
+    Search:
+      type: array
+      items:
+        $ref: '#/components/schemas/SearchResults'
     Filter:
       type: array
       items:
@@ -1280,17 +1271,17 @@ components:
           - $ref: '#/components/schemas/FilterType'
           - $ref: '#/components/schemas/FilterTypeOptions'
       example:
-        - label: 'string'
-          type: 'text'
-        - label: 'string'
-          type: 'date'
-        - label: 'string'
-          type: 'daterange'
-        - label: 'string'
-          type: 'chips'
+        - label: string
+          type: text
+        - label: string
+          type: date
+        - label: string
+          type: daterange
+        - label: string
+          type: chips
           options:
-            - label: 'string'
-              id: 'string'
+            - label: string
+              id: string
 
     FilterType:
       type: object
@@ -1338,19 +1329,6 @@ components:
                 type: string
               label:
                 type: string
-    Category:
-      type: object
-      required:
-        - label
-        - id
-      properties:
-        label:
-          type: string
-        id:
-          type: string
-          enum:
-            - persons
-            - activities
 
     #
     # Common
@@ -1416,9 +1394,9 @@ components:
           - '16.384510'
           - '48.208370'
         data:
-          - 'Oskar Kokoschka-Platz 2'
-          - '1010 Wien'
-          - 'Austria'
+          - Oskar Kokoschka-Platz 2
+          - 1010 Wien
+          - Austria
 
     ## Featured Image
     CommonFeaturedMedia:
@@ -1435,10 +1413,8 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/CommonText'
-      description: >
-        An array of text objects that will be rendered by the
-        [BaseTextList](https://base-angewandte.github.io/base-ui-components/#basetextlist)
-        component.
+      description: |
+        An array of text objects that will be rendered by the [BaseTextList](https://base-angewandte.github.io/base-ui-components/#basetextlist) component.
       example:
         - label: string
           data: string
@@ -1452,11 +1428,11 @@ components:
               value: string
             - label: string
               value: string
-              url: https://www.domain.com
+              url: 'https://www.domain.com'
               source: string
             - label: string
               value: string
-              url: mailto:name@domain.com
+              url: 'mailto:name@domain.com'
               source: string
             - label: string
               value: string
@@ -1467,7 +1443,7 @@ components:
 
     CommonText:
       type: object
-      title: "CommonText"
+      title: CommonText
       properties:
         label:
           type: string
@@ -1479,11 +1455,11 @@ components:
             - $ref: '#/components/schemas/CommonTextObject'
         language:
           type: object
-          description: "This property will only be set, if the requested language could not be found"
+          description: 'This property will only be set, if the requested language could not be found'
           properties:
             iso:
               type: string
-              description: "The ISO 2 letter code for the language this content was returned in"
+              description: The ISO 2 letter code for the language this content was returned in
             label:
               type: object
               properties:
@@ -1493,21 +1469,17 @@ components:
                   type: string
                 xx:
                   type: string
-              description: >
-                Contains all available translations of the label that should be
-                used if the language of the content is to be rendered.
+              description: |
+                Contains all available translations of the label that should be used if the language of the content is to be rendered.
       required:
         - label
         - data
-
     CommonTextString:
       type: string
-
     CommonTextArray:
       type: array
       items:
         type: string
-
     CommonTextObject:
       type: array
       items:
@@ -1518,17 +1490,15 @@ components:
         properties:
           label:
             type: string
-            description: >
-              A label to prefix the value, including a colon. In the format
-              "label: value". If empty, only the value should be put on the
-              line by itself, like "value".
+            description: |
+              A label to prefix the value, including a colon. In the format "label: value". If empty, only the value should be put on the line by itself, like "value".
           value:
             type: string
-            description: "The value to be displayed"
+            description: The value to be displayed
           url:
             type: string
             format: uri
-            description: "A clickable link for this value"
+            description: A clickable link for this value
           source:
             type: string
             description: "An internal identifier, e.g. of an entity or activity"
@@ -1555,15 +1525,15 @@ components:
       properties:
         label:
           type: string
-          description: 'name of institution'
+          description: name of institution
         url:
           type: string
           format: uri
-          description: 'url to institution / institutions showroom page'
+          description: url to institution / institutions showroom page
         icon:
           type: string
           format: uri
-          description: 'path to media file'
+          description: path to media file
 
     ## SearchFilter
     CommonSearchFilter:
@@ -1585,7 +1555,6 @@ components:
             - date
             - daterange
             - chips
-
     CommonPublisher:
       type: array
       items:
@@ -1593,31 +1562,24 @@ components:
         properties:
           name:
             type: string
-            example: 'Firstname Lastname'
+            example: Firstname Lastname
           source:
             type: string
-            description: 'showroom id'
-
+            description: showroom id
     CommonSearchFilterText:
       type: string
-
     CommonSearchFilterDateRange:
       type: object
       properties:
         from:
           type: string
-          format:
-            date
+          format: date
         to:
           type: string
-          format:
-            date
-
+          format: date
     CommonSearchFilterDate:
       type: string
-      format:
-        date
-
+      format: date
     CommonSearchFilterChips:
       type: object
       properties:

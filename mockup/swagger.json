@@ -76,7 +76,7 @@
           },
           {
             "name": "filter_id",
-            "description": "result category to return",
+            "description": "filter category to return",
             "in": "query",
             "schema": {
               "type": "string"
@@ -125,33 +125,9 @@
         }
       }
     },
-    "/categories/": {
-      "get": {
-        "description": "Returns all possible categories for the search results.",
-        "operationId": "api_v1_categories_list",
-        "tags": [
-          "public"
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns all possible categories for the search results.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Category"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/search/": {
       "post": {
-        "description": "Returns all possible results. If category 'activities' return the most current activities without filter.",
+        "description": "Returns all possible results.",
         "operationId": "api_v1_search_create",
         "tags": [
           "public"
@@ -166,18 +142,6 @@
               "items": {
                 "$ref": "#/components/schemas/CommonSearchFilter"
               }
-            }
-          },
-          {
-            "name": "category",
-            "description": "result category to be displayed. Only 'persons' and 'activities' for now but might later include 'departments', 'albums', 'subscribed_items'. If filter is empty - return label 'Current Activities' otherwise just 'Activities'.",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "activities",
-                "persons"
-              ]
             }
           },
           {
@@ -204,7 +168,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResults"
+                  "$ref": "#/components/schemas/Search"
                 }
               }
             }
@@ -955,18 +919,6 @@
             }
           },
           {
-            "name": "category",
-            "description": "result category to be displayed. Only 'persons' and 'activities' for now but might later include 'departments', 'albums', 'subscribed_items'. If filter is empty - return label 'Current Activities' otherwise just 'Activities'.",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "activities",
-                "persons"
-              ]
-            }
-          },
-          {
             "name": "limit",
             "description": "Number of results to return per page.",
             "in": "query",
@@ -990,7 +942,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResults"
+                  "$ref": "#/components/schemas/Search"
                 }
               }
             }
@@ -1970,6 +1922,12 @@
           }
         }
       },
+      "Search": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SearchResults"
+        }
+      },
       "Filter": {
         "type": "array",
         "items": {
@@ -2069,25 +2027,6 @@
                 }
               }
             }
-          }
-        }
-      },
-      "Category": {
-        "type": "object",
-        "required": [
-          "label",
-          "id"
-        ],
-        "properties": {
-          "label": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string",
-            "enum": [
-              "persons",
-              "activities"
-            ]
           }
         }
       },
