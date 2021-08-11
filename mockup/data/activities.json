@@ -354,11 +354,35 @@
   "primary_details": [
     {
       "label": "Künstler*innen",
-      "data": "Achiampong, Larry, Argauer, Jakob, Florian Bettel, David Blandy, Dina Boswank, Justine A. Chambers, Deller, Jeremy, Timo Herbst, Honeit, Kerstin, Kaldrack, Irina, Silas Mücke, Nebe, Marcus, Tobias Schulze, Konrad Strutz, Baha Talis, Tur, Nasan, Laurie Young"
+      "data": "Florian Bettel, David Blandy, Dina Boswank, Justine A. Chambers, Marcus, Tobias Schulze, Konrad Strutz, Baha Talis, Tur, Nasan, Laurie Young"
     },
     {
       "label": "Kurator*innen",
-      "data": "Florian Bettel, Dina Boswank, Herbst, Timo, Konrad Strutz, Laurie Young"
+      "data": [
+        {
+          "value": "Florian Bettel",
+          "additional": [
+            {
+              "label": "GND",
+              "value": "1036440591",
+              "url": "https://portal.dnb.de/opac.htm?method=simpleSearch&cqlMode=true&query=nid%3D1036440591"
+            },
+            {
+              "label": "ORCID",
+              "value": "0000-0003-2731-3077",
+              "url": "https://orcid.org/0000-0003-2731-3077"
+            }
+          ]
+        },
+        {
+          "value": "Liddy Scheffknecht",
+          "source": "liddy-scheffknecht"
+        },
+        {
+          "value": "David Blandy",
+          "url": "http://davidblandy.co.uk/"
+        }
+      ]
     },
     {
       "label": "Datum, Eröffnung und Ort",
