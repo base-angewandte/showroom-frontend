@@ -2244,6 +2244,17 @@
                 "value": "string",
                 "url": "mailto:name@domain.com",
                 "source": "string"
+              },
+              {
+                "label": "string",
+                "value": "string",
+                "additional": [
+                  {
+                    "label": "string",
+                    "value": "string",
+                    "url": "https://www.domain.com"
+                  }
+                ]
               }
             ]
           }
@@ -2335,6 +2346,27 @@
             "source": {
               "type": "string",
               "description": "An internal identifier, e.g. of an entity or activity"
+            },
+            "additional": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "A label to prefix the value. e.g. GND"
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "An identifier, e.g. GND-ID"
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "A clickable link for this value"
+                  }
+                }
+              }
             }
           }
         }
