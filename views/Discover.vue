@@ -1,17 +1,26 @@
 <template>
-  <div class="container">
+  <div class="discover__container">
     <h1 class="hide">
       {{ $t('discover.title') }}
     </h1>
 
     <client-only>
-      <Showcase
-        :data="carousel" />
+      <!-- TODO: improve transition -->
+      <transition
+        name="fade">
+        <Showcase
+          v-if="isInitialView"
+          :data="carousel" />
+      </transition>
     </client-only>
 
     <Search
       :result-list.sync="searchResults"
-      class="discover-search" />
+      :applied-filters.sync="appliedFilters"
+      :header-text="$t(`results.headerText.${ appliedFilters.length
+        ? 'results' : 'latestActivities' }`)"
+      class="discover-search"
+      @search-active="isInitialView = false" />
   </div>
 </template>
 
@@ -24,22 +33,26 @@ export default {
     Showcase,
     Search,
   },
-  async asyncData({ $api, route }) {
-    const { page } = route.query;
+  async asyncData({ $api, query }) {
+    const { page, filters } = query;
+    const parsedFilters = filters ? JSON.parse(filters) : [];
     const entryNumber = 6 * 5;
     // get initial search results
     const response = await $api.public.api_v1_search_create({}, {
       requestBody: {
+        filters: parsedFilters,
         offset: (page - 1) * entryNumber,
         limit: entryNumber,
       },
     });
     const searchResults = JSON.parse(response.data);
-    return { searchResults };
+    return { searchResults, appliedFilters: parsedFilters };
   },
   data() {
     return {
+      isInitialView: true,
       searchResults: [],
+      appliedFilters: [],
       carousel: [
         {
           uid: '1',
@@ -165,6 +178,8 @@ export default {
       ],
     };
   },
+  computed: {
+  },
   watch: {
     $route(val) {
       this.expandedSection = { page: Number(val.query.page), category: val.query.category };
@@ -176,7 +191,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.discover-search {
-  margin-top: $spacing;
+.discover__container {
+  min-height: 100vh;
+  .discover-search {
+    margin-top: $spacing;
+  }
+}
+
+.fade-enter-active, .fade-move, .fade-leave-active {
+  transition: all 0.5s ease;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

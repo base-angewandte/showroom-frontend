@@ -98,10 +98,11 @@ const api = new OpenAPIBackend({
           data: tempResult.slice(offset, offset + limit),
         }];
       }
-
-      res.status(200).json(
-        matching,
-      );
+      setTimeout(() => {
+        res.status(200).json(
+          matching,
+        );
+      }, 1000);
     },
     api_v1_autocomplete_create: async (c, req, res) => {
       const searchString = req.query.q;

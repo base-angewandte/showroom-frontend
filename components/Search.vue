@@ -3,7 +3,13 @@
     <client-only>
       <BaseAdvancedSearch
         :filter-list="filterList"
-        :applied-filters="appliedFilters"
+        :applied-filters="appliedFiltersInt"
+        :default-filter="{
+          label: $t('searchView.fulltext'),
+          id: 'fulltext',
+          values: [],
+          type: 'text',
+        }"
         :autocomplete-results="autocompleteResults"
         :advanced-search-text="$t('searchView.advancedSearchText')"
         :drop-down-info-texts="$t('searchView.dropDownInfoTexts')"
@@ -11,13 +17,21 @@
         :autocomplete-property-names="{ id: 'source', label: 'label', data: 'data' }"
         :is-loading-index="autocompleteRequestOngoing"
         class="showroom-search__search"
+        @main-search-active="$emit('search-active')"
         @fetch-autocomplete="fetchAutocomplete"
-        @update:applied-filters="appliedFilters = $event"
-        @search="search" />
+        @update:applied-filters="appliedFiltersInt = $event"
+        @search="addFilter" />
     </client-only>
 
-    <template
-      v-if="!searchOngoing">
+    <div
+      :class="['showroom-search__results-area',
+               { 'showroom-search__results-area__hidden': !initialRenderDone }]">
+      <div
+        v-if="initialRenderDone && searchOngoing"
+        class="showroom-search__loader-overlay">
+        <BaseLoader
+          class="showroom-search__loader" />
+      </div>
       <template
         v-for="(section, index) in resultListInt">
         <BaseResultBoxSection
@@ -32,22 +46,23 @@
             [950, 5],
             [1150, 6],
           ]"
-          :expanded="expandedSection && expandedSection.category === section.label"
-          :current-page-number="currentPageNumber"
+          :expanded="resultListInt && resultListInt.length === 1"
+          :current-page-number.sync="currentPageNumber"
           :expand-text="$t('results.expand')"
           :total="section.total"
-          :max-show-more-rows="1"
+          :max-show-more-rows="2"
           :use-pagination="true"
           :jump-to-top="true"
           :fetch-data-externally="true"
           :use-expand-mode="resultListInt.length > 1"
           :max-rows="maxRows"
           :use-pagination-link-element="'nuxt-link'"
+          :scroll-to-offset="55 + 16"
           class="showroom-search__results"
           @items-per-row-changed="itemsPerRow = $event">
           <template #header>
             <h4 class="showroom-search__results-header">
-              {{ section.label }}
+              {{ headerText }}
               <span class="showroom-search__results-header-number">
                 {{ `(${section.total})` }}
               </span>
@@ -65,7 +80,7 @@
           </template>
         </BaseResultBoxSection>
       </template>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -83,15 +98,18 @@ import Vue from 'vue';
 import {
   BaseAdvancedSearch,
   BaseResultBoxSection,
+  BaseLoader,
 } from 'base-ui-components';
 
 import 'base-ui-components/dist/components/BaseAdvancedSearch/BaseAdvancedSearch.css';
 import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSection.css';
+import 'base-ui-components/dist/components/BaseLoader/BaseLoader.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters } from 'vuex';
 
 Vue.use(BaseAdvancedSearch);
 Vue.use(BaseResultBoxSection);
+Vue.use(BaseLoader);
 
 export default {
   name: 'Search',
@@ -109,6 +127,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    appliedFilters: {
+      type: Array,
+      default: () => [],
+    },
     /**
      * specify the operationId for /search/ requests as specified in the OpenAPI schema
      */
@@ -123,13 +145,9 @@ export default {
       type: String,
       default: 'api_v1_autocomplete_create',
     },
-    /**
-     * specify which categories should be available (currently only 'activities'
-     * for entity page!)
-     */
-    availableCategories: {
-      type: Array,
-      default: null,
+    headerText: {
+      type: String,
+      default: 'Search Results',
     },
   },
   data() {
@@ -140,12 +158,10 @@ export default {
        */
       autocompleteRequestOngoing: -1,
       /**
-       * variable to navigate display of searchResults
-       * --> if search is ongoing dont display
-       * starting of as 'true' to not immediately display search results
+       * variable to steer showing of loader
        * @type {boolean}
        */
-      searchOngoing: true,
+      searchOngoing: false,
       /**
        * variable to store autocomplete response data and pass on to
        * Search component
@@ -167,13 +183,19 @@ export default {
        * // TODO: there seem to be some inconsistencies between API spec mock data --> clarify!
        */
       resultListInt: [],
+      /**
+       * define an initial number of items per result section row
+       * (6 is the max number assuming large desktop screen)
+       * @type {number}
+       */
       itemsPerRow: 6,
       /**
-       * if a section and page is specified in the route use this prop
-       * to set it expanded and on the page specified<br>
-       * object props: collection, page
+       * variable to keep the current page number in sync and
+       * trigger search in case it changes
+       * @type {number}
        */
-      expandedSection: null,
+      currentPageNumber: 1,
+      initialRenderDone: false,
     };
   },
   computed: {
@@ -193,42 +215,21 @@ export default {
        * a list of all filters defined in the backend and available to the user
        */
       filterList: 'searchData/getFilters',
-      /**
-       * a list of all categories defined in the backend
-       */
-      categories: 'searchData/getCategories',
-      /**
-       * a function to get the currently appliedfilters for the respective
-       * entity by entityId
-       */
-      getAppliedFilters: 'searchData/getAppliedFiltersById',
     }),
     /**
      * the filters currently applied
      */
-    appliedFilters: {
+    appliedFiltersInt: {
       /**
        * get by triggering the store getter function
        * @returns {Object[]}
        */
       get() {
-        return this.getAppliedFilters(this.entityId);
+        return this.appliedFilters;
       },
-      /**
-       * set by triggering the store mutation
-       * @param val
-       */
       set(val) {
-        this.setAppliedFilters({ id: this.entityId, filters: val });
+        this.$emit('update:appliedFilters', val);
       },
-    },
-    /**
-     * only display categories specified by parent - if none were specified
-     * use all categories
-     * @returns {Object[]}
-     */
-    displayCategories() {
-      return this.availableCategories || this.categories;
     },
     maxRows() {
       // TODO: put in config? and check if different for different searches -->
@@ -238,24 +239,20 @@ export default {
     numberOfEntriesOnPage() {
       return this.maxRows * this.itemsPerRow;
     },
-    currentPageNumber: {
-      set(val) {
-        if (this.expandedSection) {
-          this.$set(this.expandedSection, 'page', Number(val));
-        } else {
-          this.expandedSection = { page: Number(val) };
-        }
-      },
-      get() {
-        return this.expandedSection ? this.expandedSection.page : 1;
-      },
-    },
   },
   watch: {
-    appliedFilters(val) {
-      if (JSON.stringify(val) !== JSON.stringify(this.getAppliedFilters(this.entityId))) {
-        this.setAppliedFilters({ id: this.entityId, filters: val });
+    appliedFiltersInt(val) {
+      if (JSON.stringify(val) !== JSON.stringify(this.appliedFilters)) {
+        this.$emit('update:applied-filters', val);
       }
+    },
+    appliedFilters: {
+      handler(val) {
+        if (JSON.stringify(val) !== JSON.stringify(this.appliedFiltersInt)) {
+          this.appliedFiltersInt = { ...val };
+        }
+      },
+      immediate: true,
     },
     resultList: {
       handler(val) {
@@ -274,44 +271,44 @@ export default {
      * watch itemsPerRow since it changes on resizing and then the number of
      * displayed items should change --> retrigger search
      */
-    itemsPerRow() {
-      this.search(this.appliedFilters);
+    itemsPerRow(val, old) {
+      // only retrigger search if page is other than 1
+      // or page is 1 and more items need to be shown than before
+      if (this.currentPageNumber !== 1 || val > old) {
+        this.search(this.appliedFiltersInt);
+      }
     },
     $route: {
       handler(val) {
         const { page } = val.query;
-        this.currentPageNumber = page || 1;
+        this.currentPageNumber = Number(page) || 1;
       },
       immediate: true,
     },
-    currentPageNumber() {
-      this.search(this.appliedFilters);
+    currentPageNumber(val) {
+      if (Number(this.$route.query.page) !== val) {
+        this.$router.push({
+          path: this.$route.fullPath,
+          query: {
+            page: val,
+          },
+        });
+      }
+      this.search(this.appliedFiltersInt);
     },
   },
-  created() {
-    // check if appliedFilters are available
-    const initialFilters = this.getAppliedFilters(this.entityId);
-    // if not create an entry in the storage object in the store
-    if (!initialFilters) {
-      this.appliedFilters = [];
-      this.setAppliedFilters({ id: this.entityId, filters: this.appliedFilters });
-    } else {
-      this.appliedFilters = initialFilters;
-    }
-  },
   mounted() {
-    this.searchOngoing = false;
+    this.$nextTick(() => {
+      this.initialRenderDone = true;
+    });
   },
   methods: {
-    ...mapMutations({
-      setAppliedFilters: 'searchData/setAppliedFilters',
-    }),
     async fetchAutocomplete({ searchString, filter, index }) {
       this.autocompleteRequestOngoing = index;
       try {
         const response = await this.$api.public[this.autocompleteRequestOperationId]({
           q: searchString,
-          filter_id: filter.label === 'Fulltext' ? null : filter.id,
+          filter_id: filter.label === this.$t('searchView.fulltext') ? null : filter.id,
         });
 
         // check if response.data is typeof string before processing value.
@@ -325,6 +322,30 @@ export default {
         // TODO: error handling
       }
       this.autocompleteRequestOngoing = -1;
+    },
+    async addFilter(filters) {
+      const filterRequestData = filters.map((filter) => ({
+        id: filter.id === 'fulltext' ? '' : filter.id,
+        label: filter.label || this.$t('searchView.fulltext'),
+        type: filter.type,
+        values: filter.values,
+      }));
+
+      // check if filters are in route already - first of all to avoid double routing but secondly
+      // also because if filters are already in route this means a request was already made
+      // in asyncData and search does not need to be triggered here anymore
+      if (!this.$route.query.filters || JSON.stringify(filterRequestData)
+        !== JSON.stringify(JSON.parse(this.$route.query.filters))) {
+        // push the filters into the route
+        await this.$router.push({
+          path: this.$route.fullPath,
+          query: {
+            page: 1,
+            filters: filterRequestData.length ? JSON.stringify(filterRequestData) : '',
+          },
+        });
+        await this.search(filters);
+      }
     },
     async search(filters) {
       this.searchOngoing = true;
@@ -357,16 +378,35 @@ export default {
     margin-bottom: $spacing-large;
   }
 
-  .showroom-search__results {
-    margin-bottom: $spacing-large;
+  .showroom-search__results-area {
+    position: relative;
+    height: 100%;
+    width: 100%;
 
-    .showroom-search__results-header {
-      padding: 0 $spacing;
+    &.showroom-search__results-area__hidden {
+      visibility: hidden;
+    }
 
-      .showroom-search__results-header-number {
-        font-size: $font-size-small;
-        color: $font-color-third;
-        font-weight: normal;
+    .showroom-search__loader-overlay {
+      position: absolute;
+      background: $loading-background;
+      z-index: map-get($zindex, loader);
+      height: calc(100% + (2 * #{$spacing}));
+      width: 100%;
+      top: -$spacing;
+    }
+
+    .showroom-search__results {
+      margin-bottom: $spacing-large;
+
+      .showroom-search__results-header {
+        padding: 0 $spacing;
+
+        .showroom-search__results-header-number {
+          font-size: $font-size-small;
+          color: $font-color-third;
+          font-weight: normal;
+        }
       }
     }
   }
