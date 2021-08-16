@@ -11,7 +11,6 @@ const apiV1EntitiesRead = require('./data/entities.json');
 const apiV1EntitiesSearch = require('./data/entities.id.search.json');
 const apiV1EntitiesActivitiesEditReadSD = require('./data/entities.secondaryDetails.json');
 const apiV1Filters = require('./data/filters.json');
-const apiV1Categories = require('./data/categories.json');
 const apiV1SearchInitialRead = require('./data/discover.search.initial.json');
 const apiV1SearchResultsRead = require('./data/discover.search.results.json');
 
@@ -52,9 +51,6 @@ const api = new OpenAPIBackend({
     },
     api_v1_filters_list: async (c, req, res) => res.status(200).json(
       apiV1Filters,
-    ),
-    api_v1_categories_list: async (c, req, res) => res.status(200).json(
-      apiV1Categories,
     ),
     api_v1_search_create: async (c, req, res) => {
       const { offset, limit, filters } = req.body;
@@ -99,7 +95,7 @@ const api = new OpenAPIBackend({
         matching = [{
           label: 'Search Results',
           total: tempResult.length,
-          data: tempResult,
+          data: tempResult.slice(offset, offset + limit),
         }];
       }
 
