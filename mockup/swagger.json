@@ -1870,36 +1870,37 @@
           "id": {
             "type": "string"
           },
+          "type": {
+            "description": "the type of result e.g. \"activity\", \"person\", \"album\", \"department\"",
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "description": "the activity type for activities or result type for e.g. persons or albums"
+          },
           "alternative_text": {
             "type": "array",
+            "description": "text to be displayed when no image is present",
             "items": {
-              "type": "object",
-              "properties": {
-                "label": {
-                  "type": "string"
-                },
-                "value": {
-                  "type": "string"
-                }
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           },
-          "media_url": {
+          "image_url": {
             "type": "string",
             "format": "uri",
             "description": "size: thumbnail"
           },
           "source_institution": {
             "$ref": "#/components/schemas/CommonSourceInstitution"
-          },
-          "score": {
-            "type": "number"
-          },
-          "title": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
           }
         }
       },

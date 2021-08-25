@@ -72,10 +72,11 @@
             <BaseImageBox
               :key="item.id"
               :title="item.title"
-              :subtext="item.subtext"
+              :subtext="item.subtitle"
               :description="item.description"
-              :image-url="item.imageUrl"
+              :image-url="item.image_url"
               :link-to="item.id"
+              :box-text="item.alternative_text"
               render-element-as="nuxt-link" />
           </template>
         </BaseResultBoxSection>
