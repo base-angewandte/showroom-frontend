@@ -1238,9 +1238,7 @@ components:
           type: array
           description: 'text to be displayed when no image is present'
           items:
-            type: array
-            items:
-              type: string
+            type: string
         image_url:
           type: string
           format: uri
