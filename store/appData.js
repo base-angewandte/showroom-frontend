@@ -49,11 +49,11 @@ const actions = {
         commit('setUser', JSON.parse(data));
       }
     } catch (e) {
-      console.error(e);
       // check if request failed because user is not authenticated and reset user
       if (e.response && e.response.status === 403) {
         commit('setUser');
       } else {
+        console.error(e);
         // TODO: further error handling? (at least informing user?)
       }
     }
