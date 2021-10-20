@@ -8,7 +8,6 @@ export default function request({ $axios }) {
   // eslint-disable-next-line consistent-return
   $axios.onError((e) => {
     const code = parseInt(e.response && e.response.status, 10);
-    console.error(e);
     if (code === 400) {
       // Todo: redirect to error page or inform the user in notifications?
       console.error(e);

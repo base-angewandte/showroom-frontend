@@ -7,7 +7,7 @@
         :default-filter="{
           label: $t('searchView.fulltext'),
           id: 'fulltext',
-          values: [],
+          filter_values: [],
           type: 'text',
         }"
         :autocomplete-results="autocompleteResults"
@@ -33,53 +33,56 @@
           class="showroom-search__loader" />
       </div>
       <template
-        v-for="(section, index) in resultListInt">
-        <BaseResultBoxSection
-          :key="index"
-          v-model="section.data"
-          :show-options="false"
-          :header-text="section.label"
-          :box-breakpoints="[
-            [0, 2],
-            [450, 3],
-            [750, 4],
-            [950, 5],
-            [1150, 6],
-          ]"
-          :expanded="resultListInt && resultListInt.length === 1"
-          :current-page-number.sync="currentPageNumber"
-          :expand-text="$t('results.expand')"
-          :total="section.total"
-          :max-show-more-rows="2"
-          :use-pagination="true"
-          :jump-to-top="true"
-          :fetch-data-externally="true"
-          :use-expand-mode="resultListInt.length > 1"
-          :max-rows="maxRows"
-          :use-pagination-link-element="'nuxt-link'"
-          :scroll-to-offset="55 + 16"
-          class="showroom-search__results"
-          @items-per-row-changed="itemsPerRow = $event">
-          <template #header>
-            <h4 class="showroom-search__results-header">
-              {{ headerText }}
-              <span class="showroom-search__results-header-number">
-                {{ `(${section.total})` }}
-              </span>
-            </h4>
-          </template>
-          <template #resultBox="{ item }">
-            <BaseImageBox
-              :key="item.id"
-              :title="item.title"
-              :subtext="item.subtitle"
-              :description="item.description"
-              :image-url="item.image_url"
-              :link-to="item.id"
-              :box-text="item.alternative_text"
-              render-element-as="nuxt-link" />
-          </template>
-        </BaseResultBoxSection>
+        v-if="resultListInt && resultListInt.length">
+        <template
+          v-for="(section, index) in resultListInt">
+          <BaseResultBoxSection
+            :key="index"
+            v-model="section.data"
+            :show-options="false"
+            :header-text="section.label"
+            :box-breakpoints="[
+              [0, 2],
+              [450, 3],
+              [750, 4],
+              [950, 5],
+              [1150, 6],
+            ]"
+            :expanded="resultListInt && resultListInt.length === 1"
+            :current-page-number.sync="currentPageNumber"
+            :expand-text="$t('results.expand')"
+            :total="section.total"
+            :max-show-more-rows="2"
+            :use-pagination="true"
+            :jump-to-top="true"
+            :fetch-data-externally="true"
+            :use-expand-mode="resultListInt.length > 1"
+            :max-rows="maxRows"
+            :use-pagination-link-element="'nuxt-link'"
+            :scroll-to-offset="55 + 16"
+            class="showroom-search__results"
+            @items-per-row-changed="itemsPerRow = $event">
+            <template #header>
+              <h4 class="showroom-search__results-header">
+                {{ headerText }}
+                <span class="showroom-search__results-header-number">
+                  {{ `(${section.total})` }}
+                </span>
+              </h4>
+            </template>
+            <template #resultBox="{ item }">
+              <BaseImageBox
+                :key="item.id"
+                :title="item.title"
+                :subtext="item.subtitle"
+                :description="item.description"
+                :image-url="item.image_url"
+                :link-to="item.id"
+                :box-text="item.alternative_text"
+                render-element-as="nuxt-link" />
+            </template>
+          </BaseResultBoxSection>
+        </template>
       </template>
     </div>
   </div>
@@ -305,31 +308,38 @@ export default {
   },
   methods: {
     async fetchAutocomplete({ searchString, filter, index }) {
-      this.autocompleteRequestOngoing = index;
-      try {
-        const response = await this.$api.public[this.autocompleteRequestOperationId]({
-          q: searchString,
-          filter_id: filter.label === this.$t('searchView.fulltext') ? null : filter.id,
-        });
+      if (searchString) {
+        this.autocompleteRequestOngoing = index;
+        try {
+          const response = await this.$api.public[this.autocompleteRequestOperationId]({}, {
+            requestBody: {
+              q: searchString,
+              filter_id: filter.label === this.$t('searchView.fulltext') ? 'default' : filter.id,
+            },
+          });
 
-        // check if response.data is typeof string before processing value.
-        // response.data could also be a blob due to request cancellation.
-        // TODO: check if there is better solution to handle requestCancellation
-        if (typeof response.data === 'string') {
-          this.autocompleteResults = JSON.parse(response.data);
+          // check if response.data is typeof string before processing value.
+          // response.data could also be a blob due to request cancellation.
+          // TODO: check if there is better solution to handle requestCancellation
+          if (typeof response.data === 'string') {
+            this.autocompleteResults = JSON.parse(response.data);
+          }
+        } catch (e) {
+          console.error(e);
+          // TODO: error handling
         }
-      } catch (e) {
-        console.error(e);
-        // TODO: error handling
+        this.autocompleteRequestOngoing = -1;
+      } else {
+        this.autocompleteResults = [];
       }
-      this.autocompleteRequestOngoing = -1;
     },
     async addFilter(filters) {
-      const filterRequestData = filters.map((filter) => ({
-        id: filter.id === 'fulltext' ? '' : filter.id,
-        label: filter.label || this.$t('searchView.fulltext'),
+      debugger;
+      let filterRequestData = filters.map((filter) => ({
+        id: filter.id,
+        label: filter.label,
         type: filter.type,
-        values: filter.values,
+        filter_values: filter.filter_values,
       }));
 
       // check if filters are in route already - first of all to avoid double routing but secondly
@@ -345,7 +355,14 @@ export default {
             filters: filterRequestData.length ? JSON.stringify(filterRequestData) : '',
           },
         });
-        await this.search(filters);
+
+        // TODO: temporary data mapping for text filter so values are only string
+        filterRequestData = filterRequestData.map((filter) => ({
+          ...filter,
+          filter_values: filter.type === 'text' ? filter.filter_values.map((value) => value.title)
+            : filter.filter_values,
+        }));
+        await this.search(filterRequestData);
       }
     },
     async search(filters) {

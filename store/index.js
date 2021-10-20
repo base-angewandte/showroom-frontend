@@ -1,11 +1,10 @@
 const actions = {
   // eslint-disable-next-line no-unused-vars,consistent-return
-  nuxtServerInit({ dispatch }, {
+  async nuxtServerInit({ dispatch, commit }, {
     $api, app, error, redirect, req, route, store,
   }) {
-    dispatch('searchData/init', $api);
+    await dispatch('searchData/init', $api);
     dispatch('appData/init', $api);
-
     /**
      * handle localisation and language switch
      */

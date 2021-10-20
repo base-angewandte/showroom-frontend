@@ -10,7 +10,7 @@
         name="fade">
         <Showcase
           v-if="isInitialView && carouselData && carouselData.length"
-          :data="carousel" />
+          :data="carouselData" />
       </transition>
     </client-only>
 
@@ -54,7 +54,129 @@ export default {
       isInitialView: true,
       searchResults: [],
       appliedFilters: [],
-      carouselData: [],
+      carouselData: [
+        {
+          uid: '1',
+          title: 'Whatever Works Best For You',
+          subtext: 'On the subject of labor',
+          description: 'Exhibition',
+          additional: '07.05.2020 - 21.05.2020',
+          // eslint-disable-next-line global-require
+          imageUrl: 'https://placeimg.com/460/341/arch',
+          href: 'www.angewandte.at',
+          previews: [
+            {
+              '460w': 'https://placeimg.com/460/341/animal',
+            },
+            {
+              '640w': 'https://placeimg.com/640/480/animal',
+            },
+            {
+              '768w': 'https://placeimg.com/768/576/animal',
+            },
+          ],
+        },
+        {
+          uid: '2',
+          title: 'Throwing Gestures',
+          subtext: 'Make The Unknown Visible',
+          description: 'Performance',
+          additional: '07.05.2020 - 21.05.2020',
+          imageUrl: 'https://placeimg.com/640/480/tech',
+          href: 'http://base.uni-ak.ac.at',
+          previews: [
+            {
+              '460w': 'https://placeimg.com/460/341/tech',
+            },
+            {
+              '640w': 'https://placeimg.com/640/480/tech',
+            },
+            {
+              '768w': 'https://placeimg.com/768/576/tech',
+            },
+          ],
+        },
+        {
+          uid: '3',
+          title: 'Move From Left to Right and Back and Then Turn Around',
+          subtext: 'Moving Frames and Other Variables',
+          description: 'Video Installation',
+          additional: 'Florian Bettel, Max Arheimer',
+          imageUrl: 'https://placeimg.com/640/480/nature',
+          href: 'http://base.uni-ak.ac.at',
+          previews: [
+            {
+              '460w': 'https://placeimg.com/460/341/nature',
+            },
+            {
+              '640w': 'https://placeimg.com/640/480/nature',
+            },
+            {
+              '768w': 'https://placeimg.com/768/576/nature',
+            },
+          ],
+        },
+        {
+          uid: '4',
+          title: 'Title',
+          subtext: 'Subtitle',
+          description: 'Ausstellung 4',
+          additional: '07.05.2020 - 21.05.2020',
+          imageUrl: 'https://placeimg.com/640/480/animal',
+          href: 'http://base.uni-ak.ac.at',
+          previews: [
+            {
+              '460w': 'https://placeimg.com/460/341/animal',
+            },
+            {
+              '640w': 'https://placeimg.com/640/480/animal',
+            },
+            {
+              '768w': 'https://placeimg.com/768/576/animal',
+            },
+          ],
+        },
+        {
+          uid: '5',
+          title: 'Title',
+          subtext: 'Subtitle',
+          description: 'Ausstellung',
+          additional: '07.05.2020 - 21.05.2020',
+          imageUrl: 'https://placeimg.com/640/480/people',
+          href: 'http://base.uni-ak.ac.at',
+          previews: [
+            {
+              '460w': 'https://placeimg.com/460/341/people',
+            },
+            {
+              '640w': 'https://placeimg.com/640/480/people',
+            },
+            {
+              '768w': 'https://placeimg.com/768/576/people',
+            },
+          ],
+        },
+        {
+          uid: '6',
+          title: 'Title',
+          subtext: 'Subtitle',
+          description: 'Ausstellung',
+          additional: '07.05.2020 - 21.05.2020',
+          imageUrl: 'https://placeimg.com/641/480/arch',
+          href: 'http://base.uni-ak.ac.at',
+          previews: [
+            {
+              '460w': 'https://placeimg.com/461/341/arch',
+            },
+            {
+              '640w': 'https://placeimg.com/641/480/arch',
+            },
+            {
+              '768w': 'https://placeimg.com/769/576/arch',
+            },
+          ],
+        },
+      ],
     };
   },
   computed: {

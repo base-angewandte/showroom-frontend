@@ -4,7 +4,7 @@ import SwaggerClient from 'swagger-client';
 
 const cancelRequest = [];
 
-export default async ({ $axios, redirect, store }, inject) => {
+export default async ({ $axios, store }, inject) => {
   const ApiSpecUrl = process.env.apiSpecUrl;
   let ApiSpec;
 
@@ -16,7 +16,7 @@ export default async ({ $axios, redirect, store }, inject) => {
     if (process.env.NODE_ENV !== 'production') {
       throw new Error(`Open Api Specification could not be fetched from ${ApiSpecUrl}`);
     }
-    redirect(`${process.env.backendBaseUrl}/500`);
+    // redirect(`${process.env.backendBaseUrl}/500`);
   }
 
   const { CancelToken } = $axios;
@@ -44,7 +44,6 @@ export default async ({ $axios, redirect, store }, inject) => {
             withCredentials: true,
             xsrfCookieName: 'csrftoken_showroom',
             xsrfHeaderName: 'X-CSRFToken',
-            cancelToken: source.token,
           };
 
           // save current request source
