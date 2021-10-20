@@ -66,24 +66,24 @@ const api = new OpenAPIBackend({
           let filterMatches = [];
           // special case filter activity type
           if (filter.id === 'type') {
-            filterMatches = apiV1SearchResultsRead.filter((result) => filter.values
+            filterMatches = apiV1SearchResultsRead.filter((result) => filter.filter_values
               .map((val) => val.label).includes(result.description));
           }
           // free text search fulltext or for certain types of entries
           // this should not be like this in live just to simplify data fetching
           // live: even if one of these filters is used fetch related persons etc.
-          if ((filter.values && !filter.id)
+          if ((filter.filter_values && !filter.id)
             || ['activities', 'persons', 'albums'].includes(filter.id)) {
             // TODO: consider match id to just get specific autocomplete selected result
             filterMatches = apiV1SearchResultsRead
               .filter((result) => (!filter.id || result.type === filter.id)
-                && filter.values.map((val) => val.title)
+                && filter.filter_values.map((val) => val.title)
                   .some((stringVal) => result.title.toLowerCase()
                     .includes(stringVal.toLowerCase())));
           }
-          // Controlled Vocabulary Filters with array values
+          // Controlled Vocabulary Filters with array filter_values
           if (['keywords', 'skills'].includes(filter.id)) {
-            const filterValueIds = filter.values.map((val) => val.id);
+            const filterValueIds = filter.filter_values.map((val) => val.id);
             filterMatches = apiV1SearchResultsRead
               .filter((result) => result[filter.id] && result[filter.id].map((entry) => entry.id)
                 .some((entryId) => filterValueIds.includes(entryId)));
