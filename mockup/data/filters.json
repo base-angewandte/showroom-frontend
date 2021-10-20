@@ -10,6 +10,12 @@
     "type": "text"
   },
   {
+    "label": "Albums",
+    "id": "albums",
+    "type": "text",
+    "hidden": true
+  },
+  {
     "label": "Locations",
     "id": "locations",
     "type": "text"
@@ -71,25 +77,6 @@
       {
         "label": "Mission",
         "id": "mission"
-      }]
-  },
-  {
-    "label": "Result Categories",
-    "id": "categories",
-    "type": "chips",
-    "freetext_allowed": false,
-    "options": [
-      {
-        "label": "Latest Activities",
-        "id": "AAAAAAx"
-      },
-      {
-        "label": "Activities",
-        "id": "BBBBBBxy"
-      },
-      {
-        "label": "Persons",
-        "id": "BBBBBBx"
       }]
   },
   {
@@ -174,10 +161,5 @@
         "label": "Architecture",
         "id": "Architecture"
       }]
-  },
-  {
-    "label": "Albums",
-    "id": "albums",
-    "type": "text"
   }
 ]

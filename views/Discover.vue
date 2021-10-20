@@ -40,7 +40,12 @@ export default {
     // get initial search results
     const response = await $api.public.api_v1_search_create({}, {
       requestBody: {
-        filters: parsedFilters,
+        // TODO: temporary fix for text filters just being strings
+        filters: parsedFilters.map((filter) => ({
+          ...filter,
+          filter_values: filter.type === 'text' ? filter.filter_values
+            .map((value) => value.title) : filter.filter_values,
+        })),
         offset: (page ? (Number(page) - 1) : 0) * entryNumber,
         limit: entryNumber,
       },

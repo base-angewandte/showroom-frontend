@@ -6,7 +6,7 @@
         :applied-filters="appliedFiltersInt"
         :default-filter="{
           label: $t('searchView.fulltext'),
-          id: 'fulltext',
+          id: 'default',
           filter_values: [],
           type: 'text',
         }"
@@ -334,7 +334,6 @@ export default {
       }
     },
     async addFilter(filters) {
-      debugger;
       let filterRequestData = filters.map((filter) => ({
         id: filter.id,
         label: filter.label,

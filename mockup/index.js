@@ -5,7 +5,6 @@ const OpenAPIBackend = require('openapi-backend').default;
 const apiSpec = require('./swagger.json');
 const apiV1UserRead = require('./data/user.json');
 const apiV1ActivitiesRead = require('./data/activities.json');
-const apiV1AutocompleteResultsRead = require('./data/discover.autocomplete.json');
 const apiV1EntitiesActivitiesRead = require('./data/entities.activities.json');
 const apiV1EntitiesRead = require('./data/entities.json');
 const apiV1EntitiesSearch = require('./data/entities.id.search.json');
@@ -72,12 +71,12 @@ const api = new OpenAPIBackend({
           // free text search fulltext or for certain types of entries
           // this should not be like this in live just to simplify data fetching
           // live: even if one of these filters is used fetch related persons etc.
-          if ((filter.filter_values && !filter.id)
-            || ['activities', 'persons', 'albums'].includes(filter.id)) {
+          if (filter.filter_values && filter.filter_values.length
+            && ['fulltext', 'default', 'activities', 'persons', 'albums'].includes(filter.id)) {
             // TODO: consider match id to just get specific autocomplete selected result
             filterMatches = apiV1SearchResultsRead
-              .filter((result) => (!filter.id || result.type === filter.id)
-                && filter.filter_values.map((val) => val.title)
+              .filter((result) => (filter.id === 'default' || filter.id === 'fulltext' || result.type === filter.id)
+                && filter.filter_values
                   .some((stringVal) => result.title.toLowerCase()
                     .includes(stringVal.toLowerCase())));
           }
@@ -105,20 +104,32 @@ const api = new OpenAPIBackend({
       }, 1000);
     },
     api_v1_autocomplete_create: async (c, req, res) => {
-      const searchString = req.query.q;
-      const filterId = req.query.filter_id;
+      const searchString = c.request.body.q;
+      const filterId = c.request.body.filter_id;
       let matchingData = [];
-      let subsetData = apiV1AutocompleteResultsRead;
-      if (filterId) {
-        subsetData = apiV1AutocompleteResultsRead.filter(({ source }) => source === filterId);
+      let dataSubset = apiV1SearchResultsRead;
+      if (filterId !== 'default') {
+        dataSubset = dataSubset.filter((entry) => entry.type === filterId);
       }
       if (searchString) {
-        matchingData = subsetData.map(({ source, label, data }) => ({
-          source,
-          label,
-          data: data.filter((entry) => entry.title.toLowerCase()
-            .includes(searchString.toLowerCase())),
-        }));
+        matchingData = dataSubset.filter((entry) => {
+          return entry.title.toLowerCase()
+            .includes(searchString.toLowerCase());
+        });
+        matchingData = matchingData.reduce((prev, curr) => {
+          // get the category needed
+          const cat = prev.find((resultCat) => resultCat.source === curr.type);
+          if (cat) {
+            cat.data.push(curr);
+          } else {
+            prev.push({
+              source: curr.type,
+              label: apiV1Filters.find((filter) => filter.id === curr.type).label,
+              data: [].concat(curr),
+            });
+          }
+          return prev;
+        }, []);
       }
       return res.status(200).json(
         matchingData,
