@@ -180,4 +180,4 @@ api.init();
 app.use((req, res) => api.handleRequest(req, req, res));
 
 // start server
-app.listen(port, () => console.info(`API listening at http://localhost:${port}`));
+app.listen(port, () => console.info(`API listening at http://0.0.0.0:${port}`));

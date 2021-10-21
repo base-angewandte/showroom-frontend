@@ -21,7 +21,7 @@
     ]
   },
   {
-    "id": "pCSLggvdsi8asfdsrruuurrrdfb3dddzRTLM4dJR2",
+    "id": "florian-bettel",
     "type": "persons",
     "title": "Florian Bettel",
     "description": "Person",
@@ -47,7 +47,7 @@
     ]
   },
   {
-    "id": "pCSLggvdsi8asfdsrruuurrrdfb3dddzRTLM4dJR1",
+    "id": "alexandra-frank",
     "type": "persons",
     "title": "Alexandra Frank",
     "description": "Person",
@@ -373,7 +373,7 @@
       }]
   },
   {
-    "id": "pCSLggvdsi8asfdsrrrrrdfb3zRTLM4dJR2",
+    "id": "bernhard-saltuari",
     "type": "persons",
     "title": "Bernhard Saltuari",
     "subtitle": "",
@@ -383,6 +383,24 @@
 		],
     "image_url": "https://placeimg.com/640/480/people",
 		"source_institution": {},
+    "skills": [
+      {
+        "label": "Natural Science",
+        "id": "AAAAAAx"
+      }
+    ]
+  },
+  {
+    "id": "robin-smith",
+    "type": "persons",
+    "title": "Robin Smith",
+    "subtitle": "",
+    "description": "Person",
+    "alternative_text": [
+      "07.05.2020 - 21.05.2020"
+    ],
+    "image_url": "https://placeimg.com/640/480/people",
+    "source_institution": {},
     "skills": [
       {
         "label": "Natural Science",
