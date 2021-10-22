@@ -34,6 +34,7 @@ export default {
     return {
       title: `${this.data.title} | ${process.env.appTitle}`,
     };
+    // TODO: add additional meta-tags, at least description
   },
 };
 </script>
