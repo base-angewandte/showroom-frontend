@@ -30,10 +30,10 @@ nano .env
 
 # if you need to adapt the default values for e.g. the leaflet tile-layer service
 # create a copy of the default settings
-cp config/settings-skel.json config/settings.json
+cp config/settings-skel.js config/settings.js
 
 # and edit the settings
-nano config/settings.json
+nano config/settings.js
 ```
 
 For configuration details and possible options see the [config section](#configuration-of-the-showroom-app).
