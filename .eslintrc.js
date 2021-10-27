@@ -4,8 +4,10 @@ module.exports = {
     browser: true,
     node: true,
   },
+  parser: '@babel/eslint-parser',
   parserOptions: {
-    parser: 'babel-eslint',
+    sourceType: 'module',
+    requireConfigFile: false,
   },
   extends: [
     '@nuxtjs',
