@@ -7,8 +7,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:9001",
-      "description": "Local Mockup Server"
+      "url": "http://127.0.0.1:8500",
+      "description": "Local Dev Server (if set up according to Showroom backend docs)"
     }
   ],
   "tags": [
@@ -50,6 +50,38 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inital/{id}": {
+      "get": {
+        "description": "Initial Landing Page request, delivering \"search results\" and carousel data",
+        "operationId": "api_v1_initial_retrieve",
+        "tags": [
+          "public"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "the institution (entity) id for which the initial page data is requested",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array of search results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InitialData"
                 }
               }
             }
@@ -168,7 +200,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Search"
+                  "$ref": "#/components/schemas/SearchResults"
                 }
               }
             }
@@ -942,7 +974,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Search"
+                  "$ref": "#/components/schemas/SearchResults"
                 }
               }
             }
@@ -960,14 +992,22 @@
         }
       }
     },
-    "/entities/{id}/autocomplete": {
+    "/entities/{id}/autocomplete/": {
       "post": {
-        "description": "Exact string search matching titles.",
-        "operationId": "api_v1_autocomplete_create",
+        "description": "Exact string search matching titles and delivering back activities owned by entity or imported by entity. For now same schema as general /autocomplete/ endpoint.",
+        "operationId": "api_v1_entities_autocomplete_create",
         "tags": [
           "public"
         ],
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "q",
             "description": "Search query string.",
@@ -1336,9 +1376,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "source": {
-            "type": "string"
           }
         }
       },
@@ -1386,6 +1423,39 @@
               "type": "string"
             },
             "description": "the permissions needed by base header"
+          }
+        }
+      },
+      "InitialData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "the institution (entity) id (to be able to link to the entity page for editing?)"
+          },
+          "source_institution": {
+            "$ref": "#/components/schemas/CommonSourceInstitution"
+          },
+          "showcase": {
+            "type": "array",
+            "description": "the data needed for the start page carousel",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/EntityShowcaseTypeAlbum"
+                },
+                {
+                  "$ref": "#/components/schemas/EntityShowcaseTypeActivity"
+                }
+              ]
+            }
+          },
+          "results": {
+            "type": "array",
+            "description": "the data needed for initial display of recent events, starred items, etc. and information about the filter used in that category",
+            "items": {
+              "$ref": "#/components/schemas/SearchInitial"
+            }
           }
         }
       },
@@ -1951,12 +2021,8 @@
       "SearchResults": {
         "type": "object",
         "properties": {
-          "label": {
-            "type": "string",
-            "description": "A string describing the result set (e.g. \"Current Activities\")"
-          },
           "total": {
-            "description": "Total number of activities in that album.",
+            "description": "Total number of activities in that result set.",
             "type": "number"
           },
           "data": {
@@ -1967,10 +2033,34 @@
           }
         }
       },
-      "Search": {
+      "SearchInitial": {
         "type": "array",
+        "description": "the data delivered back for the initial display in the search results section",
         "items": {
-          "$ref": "#/components/schemas/SearchResults"
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "description": "the label to be displayed for the said category"
+            },
+            "total": {
+              "description": "Total number of activities in that result set.",
+              "type": "number"
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SearchItem"
+              }
+            },
+            "filters": {
+              "type": "array",
+              "description": "the filters applied on that section - so when i click \"show more\" these filters can be applied.",
+              "items": {
+                "$ref": "#/components/schemas/CommonSearchFilter"
+              }
+            }
+          }
         }
       },
       "Filter": {
@@ -2236,7 +2326,7 @@
                   {
                     "label": "string",
                     "value": "string",
-                    "url": "https://www.domain.com"
+                    "url": "string"
                   }
                 ]
               }
