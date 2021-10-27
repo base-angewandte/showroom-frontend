@@ -322,7 +322,8 @@ export default {
           // response.data could also be a blob due to request cancellation.
           // TODO: check if there is better solution to handle requestCancellation
           if (typeof response.data === 'string') {
-            this.autocompleteResults = JSON.parse(response.data);
+            // TODO: response should be an array always so remove concat as soon as this is the case
+            this.autocompleteResults = [].concat(JSON.parse(response.data));
           }
         } catch (e) {
           console.error(e);
