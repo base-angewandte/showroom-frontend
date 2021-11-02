@@ -50,7 +50,11 @@ export default {
         limit: entryNumber,
       },
     });
-    const searchResults = JSON.parse(response.data);
+    // TODO: replace with initial request
+    // const response = await $api.public.api_v1_initial_retrieve({
+    //   id: 'VSCgMsuE2FmAQuwbeQUtME',
+    // });
+    const searchResults = [JSON.parse(response.data)];
     // TODO: get carousel data (either separate request or together with initial search data)
     return { searchResults, appliedFilters: parsedFilters };
   },

@@ -378,7 +378,7 @@ export default {
           },
         });
         if (data) {
-          this.resultListInt = JSON.parse(data);
+          this.resultListInt = [JSON.parse(data)];
         }
       } catch (e) {
         console.error(e);
