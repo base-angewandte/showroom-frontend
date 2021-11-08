@@ -15,7 +15,7 @@
         :drop-down-info-texts="$t('searchView.dropDownInfoTexts')"
         :placeholder="$t('searchView.placeholders')"
         :autocomplete-property-names="{ id: 'source', label: 'label', data: 'data' }"
-        :is-loading-index="autocompleteRequestOngoing"
+        :is-loading-index="autocompleteLoaderIndex"
         class="showroom-search__search"
         @main-search-active="$emit('search-active')"
         @fetch-autocomplete="fetchAutocomplete"
@@ -27,7 +27,7 @@
       :class="['showroom-search__results-area',
                { 'showroom-search__results-area__hidden': !initialRenderDone }]">
       <div
-        v-if="initialRenderDone && searchOngoing"
+        v-if="initialRenderDone && searchRequestOngoing"
         class="showroom-search__loader-overlay">
         <BaseLoader
           class="showroom-search__loader" />
@@ -135,46 +135,29 @@ export default {
       type: Array,
       default: () => [],
     },
-    /**
-     * specify the operationId for /search/ requests as specified in the OpenAPI schema
-     */
-    searchRequestOperationId: {
-      type: String,
-      default: 'api_v1_search_create',
-    },
-    /**
-     * specify the operationId for /autcomplete/ requests as specified in the OpenAPI schema
-     */
-    autocompleteRequestOperationId: {
-      type: String,
-      default: 'api_v1_autocomplete_create',
-    },
     headerText: {
       type: String,
       default: 'Search Results',
     },
+    searchRequestOngoing: {
+      type: Boolean,
+      default: false,
+    },
+    autocompleteLoaderIndex: {
+      type: Number,
+      default: -1,
+    },
+    /**
+     * variable to store autocomplete response data and pass on to
+     * Search component
+     */
+    autocompleteResults: {
+      type: Array,
+      default: () => ([]),
+    },
   },
   data() {
     return {
-      /**
-       * keep track of a ongoing autocomplete request
-       * @type {number}
-       */
-      autocompleteRequestOngoing: -1,
-      /**
-       * variable to steer showing of loader
-       * @type {boolean}
-       */
-      searchOngoing: false,
-      /**
-       * variable to store autocomplete response data and pass on to
-       * Search component
-       * @type {Object[]}
-       * @property {string} source - id of the section to display
-       * @property {string} label - the label to display for the category
-       * @property {AutocompleteItem[]} data - the actual autocomplete results
-       */
-      autocompleteResults: [],
       /**
        * store data returned from a search request and pass on to
        * BaseResultBoxSection
@@ -245,10 +228,13 @@ export default {
     },
   },
   watch: {
-    appliedFiltersInt(val) {
-      if (JSON.stringify(val) !== JSON.stringify(this.appliedFilters)) {
-        this.$emit('update:applied-filters', val);
-      }
+    appliedFiltersInt: {
+      handler(val) {
+        if (JSON.stringify(val) !== JSON.stringify(this.appliedFilters)) {
+          this.$emit('update:applied-filters', val);
+        }
+      },
+      immediate: true,
     },
     appliedFilters: {
       handler(val) {
@@ -307,32 +293,8 @@ export default {
     });
   },
   methods: {
-    async fetchAutocomplete({ searchString, filter, index }) {
-      if (searchString) {
-        this.autocompleteRequestOngoing = index;
-        try {
-          const response = await this.$api.public[this.autocompleteRequestOperationId]({}, {
-            requestBody: {
-              q: searchString,
-              filter_id: filter.label === this.$t('searchView.fulltext') ? 'default' : filter.id,
-            },
-          });
-
-          // check if response.data is typeof string before processing value.
-          // response.data could also be a blob due to request cancellation.
-          // TODO: check if there is better solution to handle requestCancellation
-          if (typeof response.data === 'string') {
-            // TODO: response should be an array always so remove concat as soon as this is the case
-            this.autocompleteResults = [].concat(JSON.parse(response.data));
-          }
-        } catch (e) {
-          console.error(e);
-          // TODO: error handling
-        }
-        this.autocompleteRequestOngoing = -1;
-      } else {
-        this.autocompleteResults = [];
-      }
+    async fetchAutocomplete(requestData) {
+      this.$emit('autocomplete', requestData);
     },
     async addFilter(filters) {
       let filterRequestData = filters.map((filter) => ({
@@ -366,25 +328,11 @@ export default {
       }
     },
     async search(filters) {
-      this.searchOngoing = true;
-      try {
-        // TODO: dont need to send options to backend --> get rid of this somehow?
-        // or do this in BaseAdvancedSearch even
-        const { data } = await this.$api.public[this.searchRequestOperationId]({}, {
-          requestBody: {
-            filters,
-            offset: (this.currentPageNumber - 1) * this.numberOfEntriesOnPage,
-            limit: this.numberOfEntriesOnPage,
-          },
-        });
-        if (data) {
-          this.resultListInt = [JSON.parse(data)];
-        }
-      } catch (e) {
-        console.error(e);
-        // TODO: error handling
-      }
-      this.searchOngoing = false;
+      this.$emit('search', {
+        filters,
+        offset: (this.currentPageNumber - 1) * this.numberOfEntriesOnPage,
+        limit: this.numberOfEntriesOnPage,
+      });
     },
   },
 };

@@ -9,18 +9,23 @@
       <transition
         name="fade">
         <Showcase
-          v-if="isInitialView && carouselData && carouselData.length"
-          :data="carouselData" />
+          v-if="isInitialView && appliedCarouselData && appliedCarouselData.length"
+          :data="appliedCarouselData" />
       </transition>
     </client-only>
 
     <Search
       :result-list.sync="searchResults"
+      :autocomplete-results="autocompleteResults"
       :applied-filters.sync="appliedFilters"
       :header-text="$t(`results.headerText.${ appliedFilters.length
         ? 'results' : 'latestActivities' }`)"
+      :search-request-onging="searchOngoing"
+      :autocomplete-loader-index="autocompleteLoaderIndex"
       class="discover-search"
-      @search-active="isInitialView = false" />
+      @autocomplete="fetchAutocomplete"
+      @search-active="isInitialView = false"
+      @search="search" />
   </div>
 </template>
 
@@ -34,36 +39,47 @@ export default {
     Search,
   },
   async asyncData({ $api, query }) {
-    const { page, filters } = query;
+    const { filters, page } = query;
     const parsedFilters = filters ? JSON.parse(filters) : [];
     const entryNumber = 6 * 5;
+    let results = [];
+    let showcase = [];
     // get initial search results
-    const response = await $api.public.api_v1_search_create({}, {
-      requestBody: {
-        // TODO: temporary fix for text filters just being strings
-        filters: parsedFilters.map((filter) => ({
-          ...filter,
-          filter_values: filter.type === 'text' ? filter.filter_values
-            .map((value) => value.title) : filter.filter_values,
-        })),
-        offset: (page ? (Number(page) - 1) : 0) * entryNumber,
-        limit: entryNumber,
-      },
-    });
-    // TODO: replace with initial request
-    // const response = await $api.public.api_v1_initial_retrieve({
-    //   id: 'VSCgMsuE2FmAQuwbeQUtME',
-    // });
-    const searchResults = [JSON.parse(response.data)];
-    // TODO: get carousel data (either separate request or together with initial search data)
-    return { searchResults, appliedFilters: parsedFilters };
+    if (parsedFilters.length) {
+      const response = await $api.public.api_v1_search_create({}, {
+        requestBody: {
+          // TODO: temporary fix for text filters just being strings
+          filters: parsedFilters.map((filter) => ({
+            ...filter,
+            filter_values: filter.type === 'text' ? filter.filter_values
+              .map((value) => value.title) : filter.filter_values,
+          })),
+          offset: (page ? (Number(page) - 1) : 0) * entryNumber,
+          limit: entryNumber,
+        },
+      });
+      results = [JSON.parse(response.data)];
+    } else {
+      // TODO: add pagination and offset!
+      const response = await $api.public.api_v1_initial_retrieve({
+        id: process.env.institutionId,
+      });
+      const initialData = JSON.parse(response.data);
+      showcase = initialData.showcase;
+      results = initialData.results;
+    }
+    return { searchResults: results, appliedFilters: parsedFilters, carouselData: showcase || [] };
   },
   data() {
     return {
       isInitialView: true,
+      searchOngoing: false,
+      autocompleteLoaderIndex: -1,
       searchResults: [],
+      autocompleteResults: [],
       appliedFilters: [],
-      carouselData: [
+      // TODO: remove again once API working properly
+      defaultCarouselData: [
         {
           uid: '1',
           title: 'Whatever Works Best For You',
@@ -189,6 +205,11 @@ export default {
     };
   },
   computed: {
+    // TODO: remove again once API works properly
+    appliedCarouselData() {
+      return this.carouselData && this.carouselData.length ? this.carouselData
+        : this.defaultCarouselData;
+    },
   },
   watch: {
     $route(val) {
@@ -196,6 +217,63 @@ export default {
     },
   },
   methods: {
+    async search(requestBody) {
+      // indicate to component that search is onging
+      this.searchOngoing = true;
+      try {
+        // check if there are any filters applied
+        if (requestBody.filters && requestBody.filters.length) {
+          // if yes apply these filters
+          // TODO: dont need to send options to backend --> get rid of this somehow?
+          // or do this in BaseAdvancedSearch even
+          const { data } = await this.$api.public.api_v1_search_create({}, { requestBody });
+          if (data) {
+            // assign search results
+            this.searchResults = [JSON.parse(data)];
+          }
+        } else {
+          // if not - fetch default data to be displayed for search
+          // TODO: add pagination and offset!
+          const { data } = await this.$api.public.api_v1_initial_retrieve({
+            id: process.env.institutionId,
+          });
+          const defaultData = JSON.parse(data);
+          this.searchResults = defaultData.results;
+          this.carouselData = defaultData.showcase;
+        }
+      } catch (e) {
+        console.error(e);
+        // TODO: error handling
+      }
+      this.searchOngoing = false;
+    },
+    async fetchAutocomplete({ searchString, filter, index }) {
+      if (searchString) {
+        this.autocompleteLoaderIndex = index;
+        try {
+          const response = await this.$api.public.api_v1_autocomplete_create({}, {
+            requestBody: {
+              q: searchString,
+              filter_id: filter.label === this.$t('searchView.fulltext') ? 'default' : filter.id,
+            },
+          });
+
+          // check if response.data is typeof string before processing value.
+          // response.data could also be a blob due to request cancellation.
+          // TODO: check if there is better solution to handle requestCancellation
+          if (typeof response.data === 'string') {
+            // TODO: response should be an array always so remove concat as soon as this is the case
+            this.autocompleteResults = [].concat(JSON.parse(response.data));
+          }
+        } catch (e) {
+          console.error(e);
+          // TODO: error handling
+        }
+        this.autocompleteLoaderIndex = -1;
+      } else {
+        this.autocompleteResults = [];
+      }
+    },
   },
 };
 </script>

@@ -57,6 +57,7 @@ export default {
     appBaseUrl: process.env.APP_BASE_URL,
     appPrefix: process.env.APP_PREFIX,
     appTitle: process.env.APP_TITLE,
+    institutionId: process.env.INSTITUTION_ID,
     backendBaseUrl: process.env.BACKEND_BASE_URL,
     backendPrefix: process.env.BACKEND_PREFIX,
     apiSpecUrl: process.env.API_SPEC_URL,
