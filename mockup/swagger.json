@@ -1708,21 +1708,39 @@
       "EntityEdit": {
         "type": "array",
         "items": {
-          "type": "object",
-          "title": "CommonTextTranslation",
-          "properties": {
-            "en": {
-              "$ref": "#/components/schemas/CommonTextList"
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/EntitySecondaryDetailsEdit"
             },
-            "de": {
-              "$ref": "#/components/schemas/CommonTextList"
-            },
-            "xx": {
-              "$ref": "#/components/schemas/CommonTextList"
+            {
+              "$ref": "#/components/schemas/EntityShowcaseEdit"
             }
+          ]
+        }
+      },
+      "EntitySecondaryDetailsEdit": {
+        "type": "object",
+        "title": "CommonTextTranslation",
+        "properties": {
+          "en": {
+            "$ref": "#/components/schemas/CommonTextList"
+          },
+          "de": {
+            "$ref": "#/components/schemas/CommonTextList"
+          },
+          "xx": {
+            "$ref": "#/components/schemas/CommonTextList"
           }
         },
         "description": "Contains all translations of the contents of a user-editable field (like secondary_details or showcase). Every item of this list is an object containing all available ISO 2 letter codes as properties, holding the list of CommonText objects to be translated as values.\n"
+      },
+      "EntityShowcaseEdit": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
       },
       "EntityActivitiesEdit": {
         "type": "array",
