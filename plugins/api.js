@@ -28,11 +28,10 @@ export default async ({ $axios, store }, inject) => {
         spec: ApiSpec,
         userFetch: async (url, req) => {
           const cancelId = url.match(/[^?]*/i)[0];
-          const source = CancelToken.source();
 
           // cancel previous request if still pending
           if (cancelRequest[cancelId]) {
-            cancelRequest[cancelId].cancel('new request started');
+            cancelRequest[cancelId]('new request started');
           }
 
           // eslint-disable-next-line no-param-reassign
@@ -41,13 +40,14 @@ export default async ({ $axios, store }, inject) => {
           const axiosRequest = {
             ...req,
             data,
+            cancelToken: new CancelToken(function executor(c) {
+              // An executor function receives a cancel function as a parameter
+              cancelRequest[cancelId] = c.bind(this);
+            }),
             withCredentials: true,
             xsrfCookieName: 'csrftoken_showroom',
             xsrfHeaderName: 'X-CSRFToken',
           };
-
-          // save current request source
-          cancelRequest[cancelId] = source;
 
           const axiosResponse = await $axios(axiosRequest);
 
