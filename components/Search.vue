@@ -110,6 +110,7 @@ import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSec
 import 'base-ui-components/dist/components/BaseLoader/BaseLoader.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapGetters } from 'vuex';
+import { hasData } from '../../../base-components/src/utils/utils';
 
 Vue.use(BaseAdvancedSearch);
 Vue.use(BaseResultBoxSection);
@@ -297,12 +298,7 @@ export default {
       this.$emit('autocomplete', requestData);
     },
     async addFilter(filters) {
-      let filterRequestData = filters.map((filter) => ({
-        id: filter.id,
-        label: filter.label,
-        type: filter.type,
-        filter_values: filter.filter_values,
-      }));
+      let filterRequestData = filters.filter((filter) => hasData(filter.filter_values));
 
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
