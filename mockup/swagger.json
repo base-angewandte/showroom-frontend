@@ -73,6 +73,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "limit",
+            "description": "the number of items per result category to be returned",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
           }
         ],
         "responses": {
