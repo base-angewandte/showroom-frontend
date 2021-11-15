@@ -9,7 +9,7 @@
       <transition
         name="fade">
         <Showcase
-          v-if="isInitialView && appliedCarouselData && appliedCarouselData.length"
+          v-if="initialDataMode && appliedCarouselData && appliedCarouselData.length"
           :data="appliedCarouselData" />
       </transition>
     </client-only>
@@ -18,18 +18,20 @@
       :result-list.sync="searchResults"
       :autocomplete-results="autocompleteResults"
       :applied-filters.sync="appliedFilters"
-      :header-text="$t(`results.headerText.${ appliedFilters.length
-        ? 'results' : 'latestActivities' }`)"
+      :header-text="$t(`results.headerText.${ initialDataMode
+        ? 'latestActivities' : 'results' }`)"
       :search-request-onging="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
+      :use-collapsed-mode="initialDataMode"
       class="discover-search"
       @autocomplete="fetchAutocomplete"
-      @search-active="isInitialView = false"
       @search="search" />
   </div>
 </template>
 
 <script>
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { mapGetters } from 'vuex';
 import Showcase from '~/components/Edit/Showcase';
 import Search from '~/components/Search';
 
@@ -63,6 +65,11 @@ export default {
       // TODO: add pagination and offset!
       const response = await $api.public.api_v1_initial_retrieve({
         id: process.env.institutionId,
+      },
+      {
+        requestBody: {
+          limit: entryNumber,
+        },
       });
       const initialData = JSON.parse(response.data);
       showcase = initialData.showcase;
@@ -72,7 +79,6 @@ export default {
   },
   data() {
     return {
-      isInitialView: true,
       searchOngoing: false,
       autocompleteLoaderIndex: -1,
       searchResults: [],
@@ -210,6 +216,24 @@ export default {
       return this.carouselData && this.carouselData.length ? this.carouselData
         : this.defaultCarouselData;
     },
+    /**
+     * determine if landing page mode should be applied (for search results and
+     * carousel display)
+     * @returns {boolean}
+     */
+    initialDataMode() {
+      return !this.appliedFilters || !this.appliedFilters.length;
+    },
+    /**
+     * get the data that only need fetching once for all search components from
+     * the searchData store module
+     */
+    ...mapGetters({
+      /**
+       * a list of all filters defined in the backend and available to the user
+       */
+      filterList: 'searchData/getFilters',
+    }),
   },
   watch: {
     $route(val) {

@@ -17,7 +17,6 @@
         :autocomplete-property-names="{ id: 'source', label: 'label', data: 'data' }"
         :is-loading-index="autocompleteLoaderIndex"
         class="showroom-search__search"
-        @main-search-active="$emit('search-active')"
         @fetch-autocomplete="fetchAutocomplete"
         @update:applied-filters="appliedFiltersInt = $event"
         @search="addFilter" />
@@ -48,19 +47,20 @@
               [950, 5],
               [1150, 6],
             ]"
-            :expanded="resultListInt && resultListInt.length === 1"
+            :expanded="!useCollapsedMode"
             :current-page-number.sync="currentPageNumber"
             :expand-text="$t('results.expand')"
             :total="section.total"
-            :max-show-more-rows="2"
+            :max-show-more-rows="resultListInt.length > 1 ? 2 : 3"
             :use-pagination="true"
             :jump-to-top="true"
             :fetch-data-externally="true"
-            :use-expand-mode="resultListInt.length > 1"
+            :use-expand-mode="useCollapsedMode"
             :max-rows="maxRows"
             :use-pagination-link-element="'nuxt-link'"
             :scroll-to-offset="55 + 16"
             class="showroom-search__results"
+            @update:expanded="applySectionFilter($event, section.filters)"
             @items-per-row-changed="itemsPerRow = $event">
             <template #header>
               <h4 class="showroom-search__results-header">
@@ -155,6 +155,10 @@ export default {
     autocompleteResults: {
       type: Array,
       default: () => ([]),
+    },
+    useCollapsedMode: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -329,6 +333,23 @@ export default {
         offset: (this.currentPageNumber - 1) * this.numberOfEntriesOnPage,
         limit: this.numberOfEntriesOnPage,
       });
+    },
+    applySectionFilter(expanded, filters) {
+      if (expanded) {
+        const preppedFilters = filters.map((filter) => {
+          const fullFilter = this.filterList.find((filterDef) => filterDef.id === filter.id);
+          return ({
+            ...fullFilter,
+            filter_values: filter.filter_values && fullFilter.type === 'text'
+              ? filter.filter_values.map((value) => ({
+                title: value,
+              }))
+              : filter.filter_values,
+          });
+        });
+        this.appliedFiltersInt = preppedFilters;
+        this.addFilter(preppedFilters);
+      }
     },
   },
 };
