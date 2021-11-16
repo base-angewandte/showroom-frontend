@@ -34,6 +34,7 @@
 import { mapGetters } from 'vuex';
 import Showcase from '~/components/Edit/Showcase';
 import Search from '~/components/Search';
+import { hasData } from '../../../base-components/src/utils/utils';
 
 export default {
   components: {
@@ -222,7 +223,8 @@ export default {
      * @returns {boolean}
      */
     initialDataMode() {
-      return !this.appliedFilters || !this.appliedFilters.length;
+      return !this.appliedFilters || !this.appliedFilters.length
+        || (this.appliedFilters.length === 1 && !hasData(this.appliedFilters[0].filter_values));
     },
     /**
      * get the data that only need fetching once for all search components from
