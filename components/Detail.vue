@@ -188,6 +188,7 @@
         :initial-slide="initialPreviewSlide"
         :items="mediaPreviewData"
         :autoplay-media="true"
+        :allow-download="false"
         @hide="showPreview = false" />
     </template>
 
