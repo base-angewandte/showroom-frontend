@@ -410,5 +410,11 @@
     "Protest, Economy and the Imperceptible"
   ],
   "title": "Throwing Gestures",
-  "type": "Gruppenausstellung"
+  "type": {
+    "label": {
+      "de": "Veranstaltung",
+      "en": "Event"
+    },
+    "source": "https://base.uni-ak.ac.at/portfolio/taxonomy/event"
+  }
 }
