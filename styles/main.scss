@@ -88,8 +88,12 @@ html {
   margin-left: $spacing;
 }
 
-.base-sr--mt-small {
+.base-sr--mt {
   margin-top: $spacing;
+}
+
+.base-sr--mt-small {
+  margin-top: $spacing-small;
 }
 
 .base-sr--p-large {

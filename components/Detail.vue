@@ -20,26 +20,28 @@
           :data="[{ data: data.subtext }]" />
 
         <!-- expertise / type -->
-        <!-- TODO: extract to component -->
         <template
-          v-if="data.expertise">
-          <h2
-            v-if="type === 'person'"
-            class="base-sr--mt-small">
-            {{ $t('expertise') }}
-          </h2>
-
+          v-if="data.expertise || data.type">
           <div
             class="base-sr-chips">
-            <template
-              v-if="type === 'person'">
+            <h2
+              v-if="data.expertise"
+              class="base-sr-chips__label">
+              {{ $t('expertise') }}
+            </h2>
+
+            <template v-if="type === 'person'">
               <span
                 v-for="item in data.expertise"
                 :key="item"
                 class="base-sr-chips__item">{{ item }}</span>
             </template>
+            <!-- otherwise we assume it's an activity and display the type -->
             <template v-else>
-              <span class="base-sr-chips__item">{{ data.type }}</span>
+              <span
+                class="base-sr-chips__item base-sr-chips__item--single">
+                {{ data.type.label[$i18n.locale] }}
+              </span>
             </template>
           </div>
         </template>
@@ -495,14 +497,52 @@ export default {
   }
 
   /* chips */
+  /* TODO: currently displayed in one line if baseExpandBox is not expanded */
+  /* Expertise is very prominent for now - maybe order as last element in primary_details */
   .base-sr-chips {
-    display: flex;
+    position: relative;
+    margin-top: $line-height;
+
+    &__label {
+      margin-bottom: $spacing-small;
+    }
 
     &__item {
       padding: 0 $spacing-small;
       margin-right: $spacing-small;
       background-color: $background-color;
       text-transform: capitalize;
+      white-space: nowrap;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 50px;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) , rgba(255, 255, 255, 1));
+    }
+  }
+
+  /* chips if baseBoxExpand is expanded */
+  .base-sr-head__primary {
+    &.base-expand-box-open {
+      .base-sr-chips {
+        &::after {
+          display: none;
+        }
+
+        .base-sr-chips__label {
+          margin: 0;
+        }
+
+        .base-sr-chips__item:not(.base-sr-chips__item--single) {
+          display: inline-block;
+          margin-top: $spacing-small;
+        }
+      }
     }
   }
 
