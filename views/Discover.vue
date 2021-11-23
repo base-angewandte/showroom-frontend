@@ -52,18 +52,18 @@ export default {
       const response = await $api.public.api_v1_search_create({}, {
         requestBody: {
           // TODO: temporary fix for text filters just being strings
-          filters: parsedFilters.map((filter) => ({
-            ...filter,
-            filter_values: filter.type === 'text' ? filter.filter_values
-              .map((value) => value.title) : filter.filter_values,
-          })),
+          filters: parsedFilters.filter((filter) => hasData(filter.filter_values))
+            .map((filter) => ({
+              ...filter,
+              filter_values: filter.type === 'text' ? filter.filter_values
+                .map((value) => value.title || value) : filter.filter_values,
+            })),
           offset: (page ? (Number(page) - 1) : 0) * entryNumber,
           limit: entryNumber,
         },
       });
       results = [JSON.parse(response.data)];
     } else {
-      // TODO: add pagination and offset!
       const response = await $api.public.api_v1_initial_retrieve({
         id: process.env.institutionId,
       },
@@ -85,6 +85,7 @@ export default {
       searchResults: [],
       autocompleteResults: [],
       appliedFilters: [],
+      autocompleteTimeout: null,
       // TODO: remove again once API working properly
       defaultCarouselData: [
         {
@@ -237,11 +238,6 @@ export default {
       filterList: 'searchData/getFilters',
     }),
   },
-  watch: {
-    $route(val) {
-      this.expandedSection = { page: Number(val.query.page), category: val.query.category };
-    },
-  },
   methods: {
     async search(requestBody) {
       // indicate to component that search is onging
@@ -254,8 +250,25 @@ export default {
           // or do this in BaseAdvancedSearch even
           const { data } = await this.$api.public.api_v1_search_create({}, { requestBody });
           if (data) {
+            // TODO: this is a temporary fix to not have duplicates in the search
+            // results - REMOVE AGAIN!!
             // assign search results
-            this.searchResults = [JSON.parse(data)];
+            const parsedResults = JSON.parse(data);
+            const dedupedResults = {
+              ...parsedResults,
+              data: parsedResults.data
+                .reduce((prev, curr) => {
+                  if (!prev.map((res) => res.id).includes(curr.id)) {
+                    prev.push(curr);
+                  }
+                  return prev;
+                }, []),
+            };
+            this.searchResults = [{
+              ...dedupedResults,
+              total: parsedResults.total
+                - (parsedResults.data.length - dedupedResults.data.length),
+            }];
           }
         } else {
           // if not - fetch default data to be displayed for search
@@ -274,7 +287,8 @@ export default {
       this.searchOngoing = false;
     },
     async fetchAutocomplete({ searchString, filter, index }) {
-      if (searchString) {
+      // needed to add trim because space leads to evaluation true
+      if (searchString.trim()) {
         this.autocompleteLoaderIndex = index;
         try {
           const response = await this.$api.public.api_v1_autocomplete_create({}, {
@@ -292,6 +306,7 @@ export default {
             this.autocompleteResults = [].concat(JSON.parse(response.data));
           }
         } catch (e) {
+          this.autocompleteLoaderIndex = -1;
           console.error(e);
           // TODO: error handling
         }
