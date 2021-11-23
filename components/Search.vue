@@ -3,7 +3,7 @@
     <client-only>
       <BaseAdvancedSearch
         :filter-list="filterList"
-        :applied-filters="appliedFiltersInt"
+        :applied-filters.sync="appliedFiltersInt"
         :default-filter="{
           label: $t('searchView.fulltext'),
           id: 'default',
@@ -18,8 +18,7 @@
         :is-loading-index="autocompleteLoaderIndex"
         class="showroom-search__search"
         @fetch-autocomplete="fetchAutocomplete"
-        @update:applied-filters="appliedFiltersInt = $event"
-        @search="addFilter" />
+        @search="fetchSearchResults" />
     </client-only>
 
     <div
@@ -188,6 +187,7 @@ export default {
        */
       currentPageNumber: 1,
       initialRenderDone: false,
+      autocompleteTimeout: null,
     };
   },
   computed: {
@@ -299,31 +299,40 @@ export default {
   },
   methods: {
     async fetchAutocomplete(requestData) {
-      this.$emit('autocomplete', requestData);
+      if (this.autocompleteTimeout) {
+        clearTimeout(this.autocompleteTimeout);
+        this.autocompleteTimeout = null;
+      }
+      // add a minimal delay in autocomplete fetch request to reduce requests
+      // while typing
+      this.autocompleteTimeout = setTimeout(() => {
+        this.$emit('autocomplete', requestData);
+      }, 300);
     },
-    async addFilter(filters) {
-      let filterRequestData = filters.filter((filter) => hasData(filter.filter_values));
-
+    async fetchSearchResults(filters) {
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
       // in asyncData and search does not need to be triggered here anymore
-      if (!this.$route.query.filters || JSON.stringify(filterRequestData)
+      if (!this.$route.query.filters || JSON.stringify(filters)
         !== JSON.stringify(JSON.parse(this.$route.query.filters))) {
+        const pathFilters = filters.filter((filter) => hasData(filter.filter_values));
         // push the filters into the route
         await this.$router.push({
           path: this.$route.fullPath,
           query: {
             page: 1,
-            filters: filterRequestData.length ? JSON.stringify(filterRequestData) : '',
+            filters: pathFilters && pathFilters.length
+              ? JSON.stringify(pathFilters) : '',
           },
         });
 
         // TODO: temporary data mapping for text filter so values are only string
-        filterRequestData = filterRequestData.map((filter) => ({
-          ...filter,
-          filter_values: filter.type === 'text' ? filter.filter_values.map((value) => value.title)
-            : filter.filter_values,
-        }));
+        const filterRequestData = pathFilters
+          .map((filter) => ({
+            ...filter,
+            filter_values: filter.type === 'text' ? filter.filter_values.map((value) => value.title || value)
+              : filter.filter_values,
+          }));
         await this.search(filterRequestData);
       }
     },
@@ -348,7 +357,7 @@ export default {
           });
         });
         this.appliedFiltersInt = preppedFilters;
-        this.addFilter(preppedFilters);
+        this.fetchSearchResults(preppedFilters);
       }
     },
   },
