@@ -34,7 +34,7 @@
 import { mapGetters } from 'vuex';
 import Showcase from '~/components/Edit/Showcase';
 import Search from '~/components/Search';
-import { hasData } from '../../../base-components/src/utils/utils';
+import { hasData } from '~/utils/common';
 
 export default {
   components: {

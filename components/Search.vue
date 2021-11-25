@@ -109,7 +109,7 @@ import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSec
 import 'base-ui-components/dist/components/BaseLoader/BaseLoader.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapGetters } from 'vuex';
-import { hasData } from '../../../base-components/src/utils/utils';
+import { hasData } from '~/utils/common';
 
 Vue.use(BaseAdvancedSearch);
 Vue.use(BaseResultBoxSection);

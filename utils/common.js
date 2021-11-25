@@ -115,3 +115,25 @@ export const checkForLabel = (value) => {
   }
   return newValue;
 };
+
+/**
+ * function to determine if an variable (no matter if number, string, object or array) has data
+ * thus an empty array or an object without any values would return false
+ * @param {number|string|Object|Array} fieldValues - the variable to evaluate
+ * @returns {boolean} - result of evaluation if variable has data
+ */
+export const hasData = (fieldValues) => {
+  let hasContent = false;
+  if (fieldValues && typeof fieldValues === 'object') {
+    if (fieldValues.length >= 0) {
+      fieldValues.forEach((values) => { hasContent = hasData(values) || hasContent; });
+    } else {
+      const objectKeys = Object.keys(fieldValues);
+      objectKeys
+        .forEach((key) => { hasContent = hasData(fieldValues[key]) || hasContent; });
+    }
+  } else {
+    hasContent = fieldValues === 0 || !!fieldValues || hasContent;
+  }
+  return hasContent;
+};
