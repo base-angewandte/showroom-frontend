@@ -338,7 +338,8 @@ export default {
     },
     async search(filters) {
       this.$emit('search', {
-        filters,
+        // filter filters that dont contain any values
+        filters: filters.filter((filter) => hasData(filter.filter_values)),
         offset: (this.currentPageNumber - 1) * this.numberOfEntriesOnPage,
         limit: this.numberOfEntriesOnPage,
       });
