@@ -3,6 +3,9 @@ services:
   showroom-frontend:
     build: .
     container_name: showroom-frontend
-    volumes:
-      - .:/app
     restart: always
+    networks:
+      - showroomnet
+
+networks:
+  showroomnet:
