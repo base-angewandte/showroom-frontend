@@ -58,6 +58,13 @@ export default {
         list: JSON.parse(entityListsResponse.data),
         activities: [].concat(JSON.parse(searchResultsResponse.data)),
       };
+      // add an href element that is currently necessary for carousel data
+      if (entryData.showcase && entryData.showcase.length) {
+        entryData.showcase = entryData.showcase.map((entry) => ({
+          ...entry,
+          href: entry.id,
+        }));
+      }
     } catch (e) {
       console.error(e);
       // TODO: error handling;
