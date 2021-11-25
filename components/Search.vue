@@ -310,19 +310,19 @@ export default {
       }, 300);
     },
     async fetchSearchResults(filters) {
+      const pathFilters = filters.filter((filter) => hasData(filter.filter_values));
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
       // in asyncData and search does not need to be triggered here anymore
-      if (!this.$route.query.filters || JSON.stringify(filters)
-        !== JSON.stringify(JSON.parse(this.$route.query.filters))) {
-        const pathFilters = filters.filter((filter) => hasData(filter.filter_values));
+      if (JSON.stringify(pathFilters) !== this.$route.query.filters
+        && !(this.$route.query.filters === undefined && !pathFilters.length)) {
         // push the filters into the route
         await this.$router.push({
           path: this.$route.fullPath,
           query: {
             page: 1,
             filters: pathFilters && pathFilters.length
-              ? JSON.stringify(pathFilters) : '',
+              ? JSON.stringify(pathFilters) : undefined,
           },
         });
 

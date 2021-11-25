@@ -48,7 +48,7 @@ export default {
     let results = [];
     let showcase = [];
     // get initial search results
-    if (parsedFilters.length) {
+    if (parsedFilters && parsedFilters.length) {
       const response = await $api.public.api_v1_search_create({}, {
         requestBody: {
           // TODO: temporary fix for text filters just being strings
@@ -85,7 +85,6 @@ export default {
       searchResults: [],
       autocompleteResults: [],
       appliedFilters: [],
-      autocompleteTimeout: null,
       // TODO: remove again once API working properly
       defaultCarouselData: [
         {
@@ -288,7 +287,7 @@ export default {
     },
     async fetchAutocomplete({ searchString, filter, index }) {
       // needed to add trim because space leads to evaluation true
-      if (searchString.trim()) {
+      if (searchString && searchString.trim()) {
         this.autocompleteLoaderIndex = index;
         try {
           const response = await this.$api.public.api_v1_autocomplete_create({}, {
