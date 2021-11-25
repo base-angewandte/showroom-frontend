@@ -13,16 +13,23 @@ export default {
   components: {
     Detail,
   },
-  async asyncData({ $api, route, error }) {
-    // retrieve activity
-    const data = await $api.public.api_v1_activities_retrieve({
-      id: route.params.id,
-    }).then((response) => JSON.parse(response.data))
-      .catch((err) => {
-        error({ statusCode: err.response.status });
-      });
+  async asyncData({
+    $api,
+    route,
+  }) {
+    let entryData = {};
 
-    return { data };
+    try {
+      const response = await $api.public.api_v1_activities_retrieve({
+        id: route.params.id,
+      });
+      entryData = JSON.parse(response.data);
+    } catch (e) {
+      // TODO: error handling;
+      console.error(e);
+    }
+
+    return { data: entryData };
   },
   data() {
     return {

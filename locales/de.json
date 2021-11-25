@@ -18,6 +18,10 @@
     "404": {
       "title": "Error 404",
       "description": "Die angeforderte URL wurde auf diesem Server nicht gefunden."
+    },
+    "500": {
+      "title": "Error 500 - Interner Serverfehler",
+      "description": "Sorry, ein Fehler ist aufgetreten."
     }
   },
   "expertise": "Expertise",
