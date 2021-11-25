@@ -67,6 +67,7 @@ Following variables in the `.env` file contained in project folder can be define
 | HEADER_URL_NOTICE           | link to site legal notice                                                           |
 | LOCALES                     | available locales                                                                   |
 | DEFAULT_LOCALE              | default language, if one should be set (else the browser language will be used)     |
+| EN_TITLE_CASING             | as per default with locale set to english, all text except complete sentences will be title-cased. Set false to turn this behaviour off.     |
 
 Following `.env` variable get updated during project start up - so no need to set up!
 

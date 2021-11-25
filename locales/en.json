@@ -60,9 +60,9 @@
       }
     },
     "headerText": {
-      "latestActivities": "Aktuelle Aktivitäten",
-      "results": "Suchergebnisse",
-      "entityResults": "{entity}'s Aktivitäten"
+      "latestActivities": "Latest Activities",
+      "results": "Search results",
+      "entityResults": "{entity}'s Activities"
     }
   },
   "search": "Search",

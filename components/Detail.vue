@@ -40,7 +40,7 @@
             <template v-else>
               <span
                 class="base-sr-chips__item base-sr-chips__item--single">
-                {{ data.type.label[$i18n.locale] }}
+                {{ toTitleString(data.type.label[$i18n.locale], $i18n.locale) }}
               </span>
             </template>
           </div>
@@ -50,11 +50,11 @@
         <BaseTextList
           v-if="data.primary_details && data.primary_details.length"
           render-label-as="h2"
-          :data="data.primary_details"
+          :data="titleCaseLabels(data.primary_details)"
           class="base-sr-head__text-list" />
 
         <!-- action links: eg. print, sharing, subscribe -->
-        <template v-slot:footer>
+        <template #footer>
           <BaseButton
             :has-background-color="false"
             :text="$i18n.t('print')"
@@ -68,7 +68,7 @@
 
       <!-- secondary details -->
       <SecondaryDetails
-        :data="data.secondary_details"
+        :data="titleCaseLabels(data.secondary_details)"
         :user-can-edit="userCanEdit"
         class="base-sr-head__secondary" />
 
@@ -102,12 +102,13 @@
       <BaseExpandList
         ref="baseExpandList"
         :edit="userCanEdit && editList"
-        :data="editList ? data.list : data.list.filter(item => !item.hidden)"
+        :data="editList
+          ? titleCaseLabels(data.list)
+          : titleCaseLabels(data.list).filter(item => !item.hidden)"
         :show-more-text="$t('show_all')"
         :show-less-text="$t('show_less')"
         @saved="saveListEdit">
-        <template
-          v-slot:content="props">
+        <template #content="props">
           <a
             :href="props.data.href ? props.data.href : '#'"
             :title="props.data.value">{{ props.data.value }}</a>
@@ -173,8 +174,7 @@
         </h2>
       </template>
 
-      <template
-        v-slot:resultBox="props">
+      <template #resultBox="props">
         <MediaItem
           :key="props.item.id"
           :data="props.item"
@@ -285,6 +285,11 @@ import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
 import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSection.css';
 import Search from '~/components/Search';
 
+import {
+  toTitleString,
+  checkForLabel,
+} from '~/utils/common';
+
 Vue.use(BaseButton);
 Vue.use(BaseCarousel);
 Vue.use(BaseEditControl);
@@ -353,6 +358,7 @@ export default {
       showPreview: false,
       initialPreviewSlide: null,
       mediaPreviewData: null,
+      toTitleString,
     };
   },
   computed: {
@@ -361,6 +367,21 @@ export default {
     },
   },
   methods: {
+    /**
+     * title case labels
+     *
+     * @param {Array} data
+     * @returns {Array}
+     */
+    titleCaseLabels(data) {
+      return Object.values(
+        Object.entries(data)
+          .reduce((prev, [key, value]) => {
+            const newVal = checkForLabel(value);
+            return { ...prev, ...{ [key]: newVal } };
+          }, {}),
+      );
+    },
     /**
      * modify data for media preview
      *
