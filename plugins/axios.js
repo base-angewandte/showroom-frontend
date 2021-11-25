@@ -1,6 +1,6 @@
 // TODO: this is just example content - check if this can be filled with
 
-export default function request({ $axios }) {
+export default function request({ $axios, error }) {
   $axios.onRequest((config) => {
     console.log(`Making request to ${config.url}`);
   });
@@ -10,7 +10,11 @@ export default function request({ $axios }) {
     const code = parseInt(e.response && e.response.status, 10);
     if (code === 400) {
       // Todo: redirect to error page or inform the user in notifications?
-      console.error(e);
+      console.log(e);
+    }
+
+    if (e.response.status === 404) {
+      error({ statusCode: e.response.status });
     }
 
     if ($axios.isCancel(e)) {

@@ -16,7 +16,7 @@
 
         <!-- subtext -->
         <BaseTextList
-          v-if="data.subtext"
+          v-if="data.subtext && data.subtext.length"
           :data="[{ data: data.subtext }]" />
 
         <!-- expertise / type -->
@@ -68,6 +68,7 @@
 
       <!-- secondary details -->
       <SecondaryDetails
+        v-if="data.secondary_details && data.secondary_details.length"
         :data="titleCaseLabels(data.secondary_details)"
         :user-can-edit="userCanEdit"
         class="base-sr-head__secondary" />
@@ -121,7 +122,9 @@
 
     <!-- activity showcase -->
     <Showcase
-      v-if="type === 'person' && data.showcase"
+      v-if="type === 'person'
+        && data.showcase
+        && data.showcase.length"
       :data="data.showcase"
       :title="$t('activityShowcase')"
       :user-can-edit="userCanEdit"
