@@ -374,13 +374,16 @@ export default {
      * @returns {Array}
      */
     titleCaseLabels(data) {
-      return Object.values(
-        Object.entries(data)
-          .reduce((prev, [key, value]) => {
-            const newVal = checkForLabel(value);
-            return { ...prev, ...{ [key]: newVal } };
-          }, {}),
-      );
+      if (data) {
+        return Object.values(
+          Object.entries(data)
+            .reduce((prev, [key, value]) => {
+              const newVal = checkForLabel(value);
+              return { ...prev, ...{ [key]: newVal } };
+            }, {}),
+        );
+      }
+      return [];
     },
     /**
      * modify data for media preview
