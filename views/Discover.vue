@@ -215,6 +215,10 @@ export default {
     // TODO: remove again once API works properly
     appliedCarouselData() {
       return this.carouselData && this.carouselData.length ? this.carouselData
+        .map((entry) => ({
+          ...entry,
+          href: entry.id,
+        }))
         : this.defaultCarouselData;
     },
     /**
