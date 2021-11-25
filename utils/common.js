@@ -33,7 +33,9 @@ export const toTitleString = (string = '', language) => {
   const functionLang = language || i18n.locale || 'en';
   const sentenceIndicators = /[.!?:]$/;
   const enTitleCasing = process.env.EN_TITLE_CASING || process.env.enTitleCasing;
-  if (enTitleCasing && functionLang === 'en' && string.search(sentenceIndicators) < 0) {
+  if (enTitleCasing && functionLang === 'en'
+    && typeof string === 'string'
+    && string.search(sentenceIndicators) < 0) {
     /* this function was taken from:
     To Title Case © 2018 David Gouch | https://github.com/gouch/to-title-case
     */
