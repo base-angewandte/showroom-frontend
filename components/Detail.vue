@@ -236,7 +236,13 @@
     <Search
       v-if="type === 'person'"
       :header-text="$t('results.headerText.entityResults', { entity: data.title })"
-      :result-list="data.activities" />
+      :result-list.sync="searchResults"
+      :applied-filters.sync="appliedFilters"
+      :autocomplete-results="autocompleteResults"
+      :search-request-ongoing="searchOngoing"
+      :autocomplete-loader-index="autocompleteLoaderIndex"
+      @autocomplete="fetchAutocomplete"
+      @search="search" />
 
     <!-- owner, dates -->
     <div
@@ -359,14 +365,115 @@ export default {
       initialPreviewSlide: null,
       mediaPreviewData: null,
       toTitleString,
+      // search related variables
+      /**
+       * indicator if search is ongoing
+       * @type {boolean}
+       */
+      searchOngoing: false,
+      /**
+       * set autocomplete loader for the search row in question
+       * @type {number}
+       */
+      autocompleteLoaderIndex: -1,
+      /**
+       * get the autocomplete results to the Search component after request
+       * @type {Object[]}
+       */
+      autocompleteResults: [],
+      /**
+       * also have applied filters available here
+       * @type {Object[]}
+       */
+      appliedFilters: [],
     };
   },
   computed: {
     lang() {
       return this.$store.state.appData.locale;
     },
+    /**
+     * compute search results from data prop to be able to use
+     * .sync modifier from search component
+     */
+    searchResults: {
+      set(val) {
+        this.$set(this.data, 'activities', val);
+      },
+      get() {
+        return this.data.activities;
+      },
+    },
   },
   methods: {
+    async search(requestBody) {
+      console.log(this.$route);
+      this.searchOngoing = true;
+      try {
+        const { data } = await this.$api.public.api_v1_entities_search_create({
+          id: this.$route.params.id,
+        }, {
+          requestBody,
+        });
+        if (data) {
+          // TODO: this is a temporary fix to not have duplicates in the search
+          // results - REMOVE AGAIN!!
+          // assign search results
+          const parsedResults = JSON.parse(data);
+          const dedupedResults = {
+            ...parsedResults,
+            data: parsedResults.data
+              .reduce((prev, curr) => {
+                if (!prev.map((res) => res.id).includes(curr.id)) {
+                  prev.push(curr);
+                }
+                return prev;
+              }, []),
+          };
+          this.searchResults = [{
+            ...dedupedResults,
+            total: parsedResults.total
+              - (parsedResults.data.length - dedupedResults.data.length),
+          }];
+        } else {
+          this.searchResults = [];
+        }
+      } catch (e) {
+        // TODO: error handling
+        console.error(e);
+        this.searchResults = [];
+      }
+      this.searchOngoing = false;
+    },
+    async fetchAutocomplete({ searchString, filter, index }) {
+      // needed to add trim because space leads to evaluation true
+      if (searchString && searchString.trim()) {
+        this.autocompleteLoaderIndex = index;
+        try {
+          const response = await this.$api.public.api_v1_autocomplete_create({}, {
+            requestBody: {
+              q: searchString,
+              filter_id: filter.label === this.$t('searchView.fulltext') ? 'default' : filter.id,
+            },
+          });
+
+          // check if response.data is typeof string before processing value.
+          // response.data could also be a blob due to request cancellation.
+          // TODO: check if there is better solution to handle requestCancellation
+          if (typeof response.data === 'string') {
+            // TODO: response should be an array always so remove concat as soon as this is the case
+            this.autocompleteResults = [].concat(JSON.parse(response.data));
+          }
+        } catch (e) {
+          this.autocompleteLoaderIndex = -1;
+          console.error(e);
+          // TODO: error handling
+        }
+        this.autocompleteLoaderIndex = -1;
+      } else {
+        this.autocompleteResults = [];
+      }
+    },
     /**
      * title case labels
      *
