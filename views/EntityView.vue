@@ -21,16 +21,25 @@ export default {
       // get relevant query params
       const { page, filters } = query;
       // parse the filters from query params
-      const parsedFilters = filters ? JSON.parse(filters) : [];
+      // TODO: remove default filter (only here because route does not work
+      // currently without filters
+      const parsedFilters = filters ? JSON.parse(filters) : [{
+        id: 'default',
+        label: 'Fulltext',
+        filter_values: [
+          'a',
+        ],
+      }];
       // assume 6 result boxes per row to start with
       const entryNumber = 6 * 5;
       const results = [];
+      // TODO: use 'entities_search_create' instead of main search!!
       // create requests for all the relevant data
-      ['entities_retrieve', 'entities_list_retrieve', 'entities_search_create'].forEach((operation) => {
+      ['entities_retrieve', 'entities_list_retrieve', 'search_create'].forEach((operation) => {
         // add a request body only for search request
-        const requestBody = operation === 'entities_search_create' ? {
+        const requestBody = operation === 'search_create' ? {
           filters: parsedFilters,
-          offset: (page - 1) * entryNumber,
+          offset: (page ? (Number(page) - 1) : 0) * entryNumber,
           limit: entryNumber,
         } : {};
         // push the request promises into an array
