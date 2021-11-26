@@ -531,12 +531,16 @@ export default {
         if (item.type === 'd' || item.type === 'x') {
           obj = {
             mediaUrl: item.original,
+            title: item.original.match(/[^\\/]+$/)[0],
           };
         }
 
         return {
           id: item.id,
-          title: item.alternative ? item.alternative.join(', ') : '',
+          title: !obj.title && item.alternative
+            ? item.alternative.join(', ')
+            : '',
+          additionalInfo: [`${this.$t('license')}: ${item.license.label}`],
           ...obj,
         };
       });
