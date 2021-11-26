@@ -27,7 +27,7 @@ export function createRouter() {
             component: Discover,
           },
           {
-            path: ':id(\\w+-?\\w+-\\w*)',
+            path: ':id(\\w-]+-[\\w]+)',
             name: 'PersonLang',
             component: EntityView,
           },
@@ -39,7 +39,7 @@ export function createRouter() {
         ],
       },
       {
-        path: '/:id(\\w+-?\\w+-\\w*)',
+        path: '/:id([\\w-]+-[\\w]+)',
         name: 'Person',
         component: EntityView,
       },
