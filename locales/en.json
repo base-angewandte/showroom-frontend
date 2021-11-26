@@ -37,7 +37,7 @@
     "saveSuccessSubtext": "The entry was successfully saved to the database."
   },
   "print": "Print",
-  "publisher": "Owner",
+  "publisher": "Published by",
   "publishedDate": "Publication Date",
   "results": {
     "expand": {
