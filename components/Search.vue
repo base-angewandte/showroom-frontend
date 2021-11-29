@@ -31,7 +31,7 @@
           class="showroom-search__loader" />
       </div>
       <template
-        v-if="resultListInt && resultListInt.length">
+        v-if="resultListInt && resultListInt.length && resultListHasData">
         <template
           v-for="(section, index) in resultListInt">
           <BaseResultBoxSection
@@ -82,6 +82,16 @@
             </template>
           </BaseResultBoxSection>
         </template>
+      </template>
+      <template v-else>
+        <div class="showroom-search__no-results-area">
+          <h5 class="showroom-search__no-results__header">
+            {{ $t('search-component.no-results-heading') }}
+          </h5>
+          <p class="showroom-search__no-results__text">
+            {{ $t('search-component.no-results-text') }}
+          </p>
+        </div>
       </template>
     </div>
   </div>
@@ -230,6 +240,9 @@ export default {
     },
     numberOfEntriesOnPage() {
       return this.maxRows * this.itemsPerRow;
+    },
+    resultListHasData() {
+      return this.resultListInt.some((section) => hasData(section.data));
     },
   },
   watch: {
@@ -400,6 +413,30 @@ export default {
           color: $font-color-third;
           font-weight: normal;
         }
+      }
+    }
+
+    .showroom-search__no-results-area {
+      width: 100%;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      color: $font-color-second;
+      padding: 0 $spacing;
+
+      .showroom-search__no-results__header {
+        font-weight: normal;
+        font-size: $font-size-large;
+      }
+
+      .showroom-search__no-results__text {
+        white-space: pre-line;
+      }
+
+      .showroom-search__no-results-button {
+        margin-top: $spacing;
+        background: white;
+        align-self: flex-start;
       }
     }
   }
