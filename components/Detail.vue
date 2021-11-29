@@ -227,7 +227,7 @@
               :title="item.title"
               :subtext="item.subtext"
               :description="item.description"
-              :image-url="item.imageUrl"
+              :image-url="item.image_url"
               :lazyload="true"
               :link-to="item.id"
               render-element-as="nuxt-link" />
