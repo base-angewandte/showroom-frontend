@@ -20,7 +20,7 @@
       :applied-filters.sync="appliedFilters"
       :header-text="$t(`results.headerText.${ initialDataMode
         ? 'latestActivities' : 'results' }`)"
-      :search-request-onging="searchOngoing"
+      :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :use-collapsed-mode="initialDataMode"
       class="discover-search"
