@@ -13,3 +13,8 @@ git-update:
 	if [ "$(shell whoami)" != "base" ]; then sudo -u base git pull; else git pull; fi
 
 update: git-update start
+
+set-header:
+	docker exec showroom-frontend npx gulp set-header
+	docker exec showroom-frontend npm run build
+	make restart
