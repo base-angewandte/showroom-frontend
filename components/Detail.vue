@@ -110,9 +110,12 @@
         :show-less-text="$t('show_less')"
         @saved="saveListEdit">
         <template #content="props">
-          <a
-            :href="props.data.href ? props.data.href : '#'"
-            :title="props.data.value">{{ props.data.value }}</a>
+          <BaseLink
+            :render-link-as="'nuxt-link'"
+            :source="props.data.source"
+            :url="props.data.url"
+            :value="props.data.value"
+            class="base-sr-link--mr" />
           <template v-if="props.data.attributes">
             - {{ props.data.attributes.join(', ') }}
           </template>
@@ -273,6 +276,7 @@ import {
   BaseEditControl,
   BaseExpandBox,
   BaseExpandList,
+  BaseLink,
   BaseMapLocations,
   BaseMediaCarousel,
   BaseResultBoxSection,
@@ -288,6 +292,7 @@ import 'base-ui-components/dist/components/BaseCarousel/BaseCarousel.css';
 import 'base-ui-components/dist/components/BaseEditControl/BaseEditControl.css';
 import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
 import 'base-ui-components/dist/components/BaseExpandList/BaseExpandList.css';
+import 'base-ui-components/dist/components/BaseLink/BaseLink.css';
 import 'base-ui-components/dist/components/BaseMapLocations/BaseMapLocations.css';
 import 'base-ui-components/dist/components/BaseMediaCarousel/BaseMediaCarousel.css';
 import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
@@ -304,6 +309,7 @@ Vue.use(BaseCarousel);
 Vue.use(BaseEditControl);
 Vue.use(BaseExpandBox);
 Vue.use(BaseExpandList);
+Vue.use(BaseLink);
 Vue.use(BaseMapLocations);
 Vue.use(BaseMediaCarousel);
 Vue.use(BaseTextList);
@@ -698,5 +704,9 @@ export default {
       width: 100%;
       height: 100%;
     }
+  }
+
+  .base-sr-link--mr {
+    margin-right: 5px;
   }
 </style>
