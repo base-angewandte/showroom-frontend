@@ -252,7 +252,7 @@
           "title": "101 Beginnings",
           "description": "Performance",
           "subtext": "Alexander Grande",
-          "image_url": "https://picsum.photos/seed/test/460/341"
+          "imageUrl": "https://picsum.photos/seed/test/460/341"
         }
       ],
       "to": [
@@ -262,7 +262,7 @@
           "title": "Have you been there?",
           "subtext": "12.02. - 13.02.2021",
           "description": "Group Exhibition",
-          "image_url": "https://picsum.photos/seed/rrr/640/480"
+          "imageUrl": "https://picsum.photos/seed/rrr/640/480"
         },
         {
           "id": "pCSLgasdsdfgfgvdsi8asfdsrrrrrdfb3zRTLM4dJR",
@@ -270,7 +270,7 @@
           "title": "Mystery solved",
           "subtext": "A test",
           "description": "Performance",
-          "image_url": "https://picsum.photos/seed/zzz/640/480"
+          "imageUrl": "https://picsum.photos/seed/zzz/640/480"
         }
       ]
     }
@@ -380,7 +380,7 @@
         },
         {
           "value": "David Blandy",
-          "url": "http://davidblandy.co.uk/"
+          "url": "https://davidblandy.co.uk/"
         }
       ]
     },
