@@ -55,8 +55,9 @@ export default {
           filters: parsedFilters.filter((filter) => hasData(filter.filter_values))
             .map((filter) => ({
               ...filter,
-              filter_values: filter.type === 'text' ? filter.filter_values
-                .map((value) => value.title || value) : filter.filter_values,
+              // filter_values ALWAYS needs to be array
+              filter_values: [].concat(filter.type === 'text' ? filter.filter_values
+                .map((value) => value.title || value) : filter.filter_values),
             })),
           offset: (page ? (Number(page) - 1) : 0) * entryNumber,
           limit: entryNumber,

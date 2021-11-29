@@ -338,21 +338,21 @@ export default {
               ? JSON.stringify(pathFilters) : undefined,
           },
         });
-
-        // TODO: temporary data mapping for text filter so values are only string
-        const filterRequestData = pathFilters
-          .map((filter) => ({
-            ...filter,
-            filter_values: filter.type === 'text' ? filter.filter_values.map((value) => value.title || value)
-              : filter.filter_values,
-          }));
-        await this.search(filterRequestData);
+        await this.search(pathFilters);
       }
     },
     async search(filters) {
+      // TODO: temporary data mapping for text filter so values are only string
+      const filterRequestData = filters
+        .map((filter) => ({
+          ...filter,
+          // filter_values ALWAYS needs to be array
+          filter_values: [].concat(filter.type === 'text' ? filter.filter_values.map((value) => value.title || value)
+            : filter.filter_values),
+        }));
       this.$emit('search', {
         // filter filters that dont contain any values
-        filters: filters.filter((filter) => hasData(filter.filter_values)),
+        filters: filterRequestData.filter((filter) => hasData(filter.filter_values)),
         offset: (this.currentPageNumber - 1) * this.numberOfEntriesOnPage,
         limit: this.numberOfEntriesOnPage,
       });
