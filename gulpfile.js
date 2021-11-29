@@ -48,4 +48,4 @@ gulp.task('set-header', async () => {
   }
 });
 
-gulp.task('default', gulp.series(gulp.parallel('set-default-settings')));
+gulp.task('default', gulp.series(gulp.parallel('set-default-settings', 'set-header')));
