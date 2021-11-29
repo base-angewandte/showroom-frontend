@@ -2498,6 +2498,7 @@
             "type": "string"
           },
           "filter_values": {
+            "type": "array",
             "items": {
               "oneOf": [
                 {
