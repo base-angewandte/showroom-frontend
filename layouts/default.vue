@@ -33,6 +33,14 @@ export default {
   components: {
     BaseNotification: () => import('~/components/BaseNotification'),
   },
+  head() {
+    return {
+      htmlAttrs: {
+        lang: this.lang,
+      },
+      link: metaTags(this.routerPath, this.lang),
+    };
+  },
   computed: {
     ...mapGetters({
       lang: 'appData/getLocale',
@@ -58,16 +66,8 @@ export default {
       return process.env.header.match(/\/([a-z-]+)-header\.[a-z0-9]+\.js$/)[1];
     },
     routerPath() {
-      return this.$nuxt.$route.path;
+      return this.$route.path;
     },
-  },
-  head() {
-    return {
-      htmlAttrs: {
-        lang: this.lang,
-      },
-      link: metaTags(this.routerPath, this.lang),
-    };
   },
 };
 </script>
