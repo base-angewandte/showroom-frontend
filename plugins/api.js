@@ -49,12 +49,16 @@ export default async ({ $axios, store }, inject) => {
             xsrfHeaderName: 'X-CSRFToken',
           };
 
-          const axiosResponse = await $axios(axiosRequest);
+          try {
+            const axiosResponse = await $axios(axiosRequest);
 
-          return new Response(JSON.stringify(axiosResponse.data), {
-            status: axiosResponse.status,
-            headers: axiosResponse.headers,
-          });
+            return new Response(JSON.stringify(axiosResponse.data), {
+              status: axiosResponse.status,
+              headers: axiosResponse.headers,
+            });
+          } catch (e) {
+            return Promise.reject(e);
+          }
         },
       }).then((client) => {
         // register to vue instance

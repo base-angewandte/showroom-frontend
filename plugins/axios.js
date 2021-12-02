@@ -10,10 +10,10 @@ export default function request({ $axios, error }) {
     const code = parseInt(e.response && e.response.status, 10);
     if (code === 400) {
       // Todo: redirect to error page or inform the user in notifications?
-      console.log(e);
+      console.error(e);
     }
 
-    if (e.response.status === 404) {
+    if (e.response && e.response.status === 404) {
       error({ statusCode: e.response.status });
     }
 
