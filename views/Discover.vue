@@ -43,7 +43,11 @@ export default {
   async asyncData({ $api, query }) {
     const { filters, page } = query;
     const parsedFilters = filters ? JSON.parse(filters) : [];
-    const entryNumber = 6 * 5;
+    // assume 2 entries and 5 rows initially
+    // TODO: make configurable??
+    // this is starting with the smallest number because otherwise higher page
+    // numbers are not rendered with small screensize
+    const entryNumber = 2 * 5;
     let results = [];
     let showcase = [];
     let initialFilters = [];

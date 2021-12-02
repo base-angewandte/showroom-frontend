@@ -201,7 +201,7 @@ export default {
        * (6 is the max number assuming large desktop screen)
        * @type {number}
        */
-      itemsPerRow: 6,
+      itemsPerRow: 2,
       initialRenderDone: false,
       autocompleteTimeout: null,
       currentPageNumberInt: 1,
