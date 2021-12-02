@@ -18,11 +18,10 @@
       :result-list.sync="searchResults"
       :autocomplete-results="autocompleteResults"
       :applied-filters.sync="appliedFilters"
-      :header-text="$t(`results.headerText.${ initialDataMode
-        ? 'latestActivities' : 'results' }`)"
       :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
-      :use-collapsed-mode="initialDataMode"
+      :use-collapsed-mode="false"
+      :page-number.sync="pageNumber"
       class="discover-search"
       @autocomplete="fetchAutocomplete"
       @search="search" />
@@ -47,37 +46,66 @@ export default {
     const entryNumber = 6 * 5;
     let results = [];
     let showcase = [];
+    let initialFilters = [];
     // get initial search results
     if (parsedFilters && parsedFilters.length) {
-      const response = await $api.public.api_v1_search_create({}, {
-        requestBody: {
-          // TODO: temporary fix for text filters just being strings
-          filters: parsedFilters.filter((filter) => hasData(filter.filter_values))
-            .map((filter) => ({
-              ...filter,
-              // filter_values ALWAYS needs to be array
-              filter_values: [].concat(filter.type === 'text' ? filter.filter_values
-                .map((value) => value.title || value) : filter.filter_values),
-            })),
-          offset: (page ? (Number(page) - 1) : 0) * entryNumber,
-          limit: entryNumber,
-        },
-      });
-      results = [JSON.parse(response.data)];
+      try {
+        const response = await $api.public.api_v1_search_create({}, {
+          requestBody: {
+            // TODO: temporary fix for text filters just being strings
+            filters: parsedFilters.filter((filter) => hasData(filter.filter_values))
+              .map((filter) => ({
+                ...filter,
+                // filter_values ALWAYS needs to be array
+                filter_values: [].concat(filter.type === 'text' ? filter.filter_values
+                  .map((value) => value.title || value) : filter.filter_values),
+              })),
+            offset: (page ? (Number(page) - 1) : 0) * entryNumber,
+            limit: entryNumber,
+          },
+        });
+        results = [JSON.parse(response.data)];
+      } catch (e) {
+        console.error(e);
+      }
     } else {
-      const response = await $api.public.api_v1_initial_retrieve({
-        id: process.env.institutionId,
-      },
-      {
-        requestBody: {
-          limit: entryNumber,
+      try {
+        const response = await $api.public.api_v1_initial_retrieve({
+          id: process.env.institutionId,
         },
-      });
-      const initialData = JSON.parse(response.data);
-      showcase = initialData.showcase;
-      results = initialData.results;
+        {
+          requestBody: {
+            limit: entryNumber,
+          },
+        });
+        const initialData = JSON.parse(response.data);
+        showcase = initialData.showcase;
+        // TODO: this is just a temporary fix working only with one result category!
+        initialFilters = initialData.results[0].filters;
+        // if page is not 1 it needs another request with the proper filter!
+        if (page > 1 && initialData.results && initialData.results.length) {
+          const paginationResponse = await $api.public.api_v1_search_create({}, {
+            requestBody: {
+              filters: initialFilters,
+              offset: (page ? (Number(page) - 1) : 0) * entryNumber,
+              limit: entryNumber,
+            },
+          });
+          results = [JSON.parse(paginationResponse.data)];
+        } else {
+          results = initialData.results;
+        }
+      } catch (e) {
+        console.error(e);
+      }
     }
-    return { searchResults: results, appliedFilters: parsedFilters, carouselData: showcase || [] };
+    return {
+      initialFilters,
+      searchResults: results,
+      appliedFilters: parsedFilters,
+      carouselData: showcase || [],
+      pageNumber: page ? Number(page) : 1,
+    };
   },
   data() {
     return {
@@ -85,7 +113,12 @@ export default {
       autocompleteLoaderIndex: -1,
       searchResults: [],
       autocompleteResults: [],
+      // save the filters from initial request in a variable so they are available
+      // when changing pages
+      // TODO: this only works with one result category for now!!
+      initialFilters: null,
       appliedFilters: [],
+      pageNumber: 1,
       // TODO: remove again once API working properly
       defaultCarouselData: [
         {
@@ -275,14 +308,27 @@ export default {
             }];
           }
         } else {
-          // if not - fetch default data to be displayed for search
-          // TODO: add pagination and offset!
-          const { data } = await this.$api.public.api_v1_initial_retrieve({
-            id: process.env.institutionId,
-          });
-          const defaultData = JSON.parse(data);
-          this.searchResults = defaultData.results;
-          this.carouselData = defaultData.showcase;
+          if (requestBody.offset === 0 || !this.initialFilters) {
+            // if not - fetch default data to be displayed for search
+            const { data } = await this.$api.public.api_v1_initial_retrieve({
+              id: process.env.institutionId,
+            });
+            const defaultData = JSON.parse(data);
+            this.carouselData = defaultData.showcase;
+            this.initialFilters = defaultData.results[0].filters;
+            if (requestBody.offset === 0) {
+              this.searchResults = defaultData.results;
+            }
+          }
+          if (requestBody.offset !== 0) {
+            const filterRequest = await this.$api.public.api_v1_search_create({}, {
+              requestBody: {
+                ...requestBody,
+                filters: this.initialFilters,
+              },
+            });
+            this.searchResults = [JSON.parse(filterRequest.data)];
+          }
         }
       } catch (e) {
         console.error(e);

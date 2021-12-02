@@ -47,7 +47,7 @@
               [1150, 6],
             ]"
             :expanded="!useCollapsedMode"
-            :current-page-number.sync="currentPageNumber"
+            :current-page-number="currentPageNumber"
             :expand-text="$t('results.expand')"
             :total="section.total"
             :max-show-more-rows="resultListInt.length > 1 ? 2 : 3"
@@ -59,11 +59,11 @@
             :use-pagination-link-element="'nuxt-link'"
             :scroll-to-offset="55 + 16"
             class="showroom-search__results"
-            @update:expanded="applySectionFilter($event, section.filters)"
-            @items-per-row-changed="itemsPerRow = $event">
+            @items-per-row-changed="itemsPerRow = $event"
+            @update:current-page-number="fetchNewPage">
             <template #header>
               <h4 class="showroom-search__results-header">
-                {{ headerText }}
+                {{ headerText || section.label }}
                 <span class="showroom-search__results-header-number">
                   {{ `(${section.total})` }}
                 </span>
@@ -129,7 +129,6 @@ export default {
   name: 'Search',
   props: {
     /**
-     * @type {Object[]}
      * @property {string} label - the label to display for the section
      * @property {number} total - total number of results available
      * @property {Object[]} data - the actual search results
@@ -147,7 +146,7 @@ export default {
     },
     headerText: {
       type: String,
-      default: 'Search Results',
+      default: '',
     },
     searchRequestOngoing: {
       type: Boolean,
@@ -160,14 +159,27 @@ export default {
     /**
      * variable to store autocomplete response data and pass on to
      * Search component
+     * @type {AutocompleteItem[]}
      */
     autocompleteResults: {
       type: Array,
       default: () => ([]),
     },
+    /**
+     * set from outside if 'show more' should be used (only true for main search
+     * initial mode, never for Details view)
+     */
     useCollapsedMode: {
       type: Boolean,
       default: false,
+    },
+    /**
+     * set page number from outside
+     */
+    pageNumber: {
+      type: Number,
+      required: true,
+      default: 1,
     },
   },
   data() {
@@ -190,14 +202,9 @@ export default {
        * @type {number}
        */
       itemsPerRow: 6,
-      /**
-       * variable to keep the current page number in sync and
-       * trigger search in case it changes
-       * @type {number}
-       */
-      currentPageNumber: 1,
       initialRenderDone: false,
       autocompleteTimeout: null,
+      currentPageNumberInt: 1,
     };
   },
   computed: {
@@ -238,11 +245,37 @@ export default {
       // then it should be prop
       return this.resultListInt.length > 1 ? 2 : 5;
     },
+    /**
+     * calculate the number of entries that should be on one page - needed for limit
+     * and offset calculation for search request
+     *
+     * @return {number}
+     */
     numberOfEntriesOnPage() {
       return this.maxRows * this.itemsPerRow;
     },
+    /**
+     * returns if any of the resultList sections has values to determine
+     * if BaseResultBoxSection should be shown
+     *
+     * @returns {boolean}
+     */
     resultListHasData() {
       return this.resultListInt.some((section) => hasData(section.data));
+    },
+    /**
+     * variable to keep the current page number in sync and
+     * trigger search in case it changes
+     */
+    currentPageNumber: {
+      set(val) {
+        // need internal representation that is immediately updated as well for search request
+        this.currentPageNumberInt = val;
+        this.$emit('update:page-number', val);
+      },
+      get() {
+        return this.pageNumber;
+      },
     },
   },
   watch: {
@@ -286,23 +319,17 @@ export default {
         this.search(this.appliedFiltersInt);
       }
     },
-    $route: {
+    /**
+     * watching prop pageNumber to keep currentPageNumberInt (needed for search) in
+     * sync as well
+     */
+    pageNumber: {
       handler(val) {
-        const { page } = val.query;
-        this.currentPageNumber = Number(page) || 1;
+        if (this.currentPageNumberInt !== val) {
+          this.currentPageNumberInt = val;
+        }
       },
       immediate: true,
-    },
-    currentPageNumber(val) {
-      if (Number(this.$route.query.page) !== val) {
-        this.$router.push({
-          path: this.$route.fullPath,
-          query: {
-            page: val,
-          },
-        });
-      }
-      this.search(this.appliedFiltersInt);
     },
   },
   mounted() {
@@ -311,6 +338,15 @@ export default {
     });
   },
   methods: {
+    /**
+     * function triggered by the BaseAdvancedSearch component as soon as typing in any filter row
+     * occurs
+     *
+     * @param {Object} requestData - the data needed for autocomplete functionality to work
+     *  @property {string} requestData.searchString - the string to autocomplete
+     *  @property {Object} requestData.filter - the filter that triggered the event
+     *  @property {number} requestData.index - the index of the filter in the appliedFilters array
+     */
     async fetchAutocomplete(requestData) {
       if (this.autocompleteTimeout) {
         clearTimeout(this.autocompleteTimeout);
@@ -322,18 +358,30 @@ export default {
         this.$emit('autocomplete', requestData);
       }, 300);
     },
+    /**
+     * function triggered when filters change in BaseAdvancedSearch, responsible for adjusting
+     * url query params and triggering actual search (bzw. search event to parent respectively)
+     *
+     * @param {Object[]} filters - the filters applied as determined by BaseAdvancedSearch component
+     */
     async fetchSearchResults(filters) {
+      // get filters that should be added to route = only the ones which have filter values
       const pathFilters = filters.filter((filter) => hasData(filter.filter_values));
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
       // in asyncData and search does not need to be triggered here anymore
       if (JSON.stringify(pathFilters) !== this.$route.query.filters
         && !(this.$route.query.filters === undefined && !pathFilters.length)) {
+        // whenever a new search is triggered reset the page number to 1
+        this.currentPageNumber = 1;
         // push the filters into the route
         await this.$router.push({
           path: this.$route.fullPath,
           query: {
-            page: 1,
+            // need to user currentpagenumberint here because currentpagenumber is updated
+            // via event to parent and the prop will only be updated after this function
+            // went through
+            page: this.currentPageNumberInt,
             filters: pathFilters && pathFilters.length
               ? JSON.stringify(pathFilters) : undefined,
           },
@@ -341,6 +389,14 @@ export default {
         await this.search(pathFilters);
       }
     },
+    /**
+     * the actual search function triggering an event to the parent component where the actual
+     * search is done
+     * triggered either by modifying filters in BaseAdvancedSearch,
+     * a page change or a window resize and the number of items displayed changes the correct offset
+     *
+     * @param {Object[]} filters - the filters to be applied in search
+     */
     async search(filters) {
       // TODO: temporary data mapping for text filter so values are only string
       const filterRequestData = filters
@@ -350,28 +406,43 @@ export default {
           filter_values: [].concat(filter.type === 'text' ? filter.filter_values.map((value) => value.title || value)
             : filter.filter_values),
         }));
+      /**
+       * event to parent to make search happening in parent (the actual request was moved to parent
+       * because the request params were to different between the views using this component)
+       *
+       * @event search
+       * @type {Object} - an object already containing al the necessary request data
+       *  @property {Object} filters - the filters to be applied
+       *  @property {number} offset - the request offset
+       *  @property {number} limit - the number of items to be returned
+       */
       this.$emit('search', {
         // filter filters that dont contain any values
         filters: filterRequestData.filter((filter) => hasData(filter.filter_values)),
-        offset: (this.currentPageNumber - 1) * this.numberOfEntriesOnPage,
+        offset: (this.currentPageNumberInt - 1) * this.numberOfEntriesOnPage,
         limit: this.numberOfEntriesOnPage,
       });
     },
-    applySectionFilter(expanded, filters) {
-      if (expanded) {
-        const preppedFilters = filters.map((filter) => {
-          const fullFilter = this.filterList.find((filterDef) => filterDef.id === filter.id);
-          return ({
-            ...fullFilter,
-            filter_values: filter.filter_values && fullFilter.type === 'text'
-              ? filter.filter_values.map((value) => ({
-                title: value,
-              }))
-              : filter.filter_values,
+    /**
+     * function triggered when pagination in BaseResultBoxSection is used
+      * @param {number} page
+     */
+    fetchNewPage(page) {
+      // check if page number actually changed
+      if (this.currentPageNumber !== page) {
+        // if yes set it correctly for this component
+        this.currentPageNumber = page;
+        // need to check query page here to prevent double navigation
+        if (Number(this.$route.query.page) !== page) {
+          this.$router.push({
+            path: this.$route.fullPath,
+            query: {
+              page,
+            },
           });
-        });
-        this.appliedFiltersInt = preppedFilters;
-        this.fetchSearchResults(preppedFilters);
+        }
+        // trigger search to get data from new page
+        this.search(this.appliedFiltersInt);
       }
     },
   },
