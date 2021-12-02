@@ -107,6 +107,8 @@
   },
   "search-component": {
     "no-results-heading": "No results found.",
-    "no-results-text": "No results were found with the specified search criteria.\nPlease adjust your search."
-  }
+    "no-results-text": "No results were found with the specified search criteria.\nPlease adjust your search.",
+    "no-results-initial": "No Data for Display Available.",
+    "no-results-text-initial": "There are no data in this showroom that can be displayed here.\nTry to use filters in order to see some Showroom content!"
+ }
 }

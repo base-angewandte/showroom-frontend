@@ -86,10 +86,12 @@
       <template v-else>
         <div class="showroom-search__no-results-area">
           <h5 class="showroom-search__no-results__header">
-            {{ $t('search-component.no-results-heading') }}
+            {{ filtersApplied ? $t('search-component.no-results-heading')
+              : $t('search-component.no-results-initial') }}
           </h5>
           <p class="showroom-search__no-results__text">
-            {{ $t('search-component.no-results-text') }}
+            {{ filtersApplied ? $t('search-component.no-results-text')
+              : $t('search-component.no-results-text-initial') }}
           </p>
         </div>
       </template>
@@ -276,6 +278,10 @@ export default {
       get() {
         return this.pageNumber;
       },
+    },
+    filtersApplied() {
+      return (this.appliedFiltersInt && this.appliedFiltersInt.length > 1)
+      || (this.appliedFiltersInt.length === 1 && hasData(this.appliedFiltersInt[0].filter_values));
     },
   },
   watch: {
