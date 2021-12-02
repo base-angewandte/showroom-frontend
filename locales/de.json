@@ -35,7 +35,9 @@
   "notify": {
     "saveFail": "Speichern fehlgeschlagen",
     "saveSuccess": "Eintrag gespeichert",
-    "saveSuccessSubtext": "Der Eintrag konnte erfolgreich gespeichert werden."
+    "saveSuccessSubtext": "Der Eintrag konnte erfolgreich gespeichert werden.",
+    "errorDownload": "Etwas ist schief gelaufen!",
+    "errorDownloadSubtext": "Beim Herunterladen der Datei {fileName} ist ein Fehler aufgetreten "
   },
   "publisher": "Veröffentlicht von",
   "publishedDate": "Veröffentlicht am",

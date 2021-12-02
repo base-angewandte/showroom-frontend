@@ -197,7 +197,8 @@
         :items="mediaPreviewData"
         :autoplay-media="true"
         :allow-download="false"
-        @hide="showPreview = false" />
+        @hide="showPreview = false"
+        @download="downloadFile" />
     </template>
 
     <!-- linked / parent -->
@@ -587,6 +588,32 @@ export default {
       // find array id depending on item.id
       this.initialPreviewSlide = this.mediaPreviewData.findIndex((item) => item.id === id);
       this.showPreview = true;
+    },
+    /**
+     * download file helper
+     *
+     * @param {String} url
+     * @param {String } fileName
+     */
+    async downloadFile({ url, fileName }) {
+      try {
+        // create a hidden download link, start the download
+        const link = document.createElement('a');
+        link.href = `${url}?download`;
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (e) {
+        // notify user of error
+        this.showPreview = false;
+        this.$notify({
+          group: 'request-notifications',
+          title: this.$t('notify.errorDownload'),
+          text: this.$t('notify.errorDownloadSubtext', { fileName }),
+          type: 'error',
+        });
+      }
     },
     /* EDIT LIST */
     activateList() {

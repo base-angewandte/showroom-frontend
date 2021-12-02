@@ -35,7 +35,9 @@
   "notify": {
     "saveFail": "Saving to database failed",
     "saveSuccess": "Entry saved",
-    "saveSuccessSubtext": "The entry was successfully saved to the database."
+    "saveSuccessSubtext": "The entry was successfully saved to the database.",
+    "errorDownload": "Something went wrong!",
+    "errorDownloadSubtext": "An error occurred during the download of file {fileName}."
   },
   "print": "Print",
   "publisher": "Published by",
