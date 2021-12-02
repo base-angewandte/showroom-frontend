@@ -361,6 +361,7 @@ export default {
           }
         } catch (e) {
           this.autocompleteLoaderIndex = -1;
+          this.autocompleteResults = [];
           console.error(e);
           // TODO: error handling
         }
