@@ -85,11 +85,15 @@
       </template>
       <template v-else>
         <div class="showroom-search__no-results-area">
-          <h5 class="showroom-search__no-results__header">
+          <h5
+            v-if="!searchRequestOngoing"
+            class="showroom-search__no-results__header">
             {{ filtersApplied ? $t('search-component.no-results-heading')
               : $t('search-component.no-results-initial') }}
           </h5>
-          <p class="showroom-search__no-results__text">
+          <p
+            v-if="!searchRequestOngoing"
+            class="showroom-search__no-results__text">
             {{ filtersApplied ? $t('search-component.no-results-text')
               : $t('search-component.no-results-text-initial') }}
           </p>
