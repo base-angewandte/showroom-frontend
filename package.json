@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.1",
-    "base-ui-components": "2.0.0-alpha.3",
+    "base-ui-components": "2.0.0-alpha.4",
     "cookie-universal-nuxt": "^2.1.5",
     "core-js": "^3.19.0",
     "node-fetch": "^2.6.5",
