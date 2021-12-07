@@ -10,8 +10,8 @@ const apiV1EntitiesRead = require('./data/entities.json');
 const apiV1EntitiesSearch = require('./data/entities.id.search.json');
 const apiV1EntitiesActivitiesEditReadSD = require('./data/entities.secondaryDetails.json');
 const apiV1Filters = require('./data/filters.json');
-const apiV1SearchInitialRead = require('./data/discover.search.initial.json');
 const apiV1SearchResultsRead = require('./data/discover.search.results.json');
+const apiV1InitialResults = require('./data/initial.json');
 
 const port = 9001;
 
@@ -48,17 +48,24 @@ const api = new OpenAPIBackend({
         apiV1UserRead,
       );
     },
+    api_v1_initial_retrieve: async (c, req, res) => {
+      res.status(200).json(apiV1InitialResults);
+    },
     api_v1_filters_list: async (c, req, res) => res.status(200).json(
       apiV1Filters,
     ),
     api_v1_search_create: async (c, req, res) => {
       const { offset, limit, filters } = req.body;
       let matching = [];
-      if (!(filters && filters.length)) {
-        matching = apiV1SearchInitialRead.map((category) => ({
-          ...category,
-          data: category.data.slice(offset, offset + limit),
-        }));
+      // check if filter is from initial results (currently a workaround - future of
+      // 'current_activities' filter is unclear
+      if (filters.length === 1 && filters[0].id === 'current_activities') {
+        // if current activities take results from initial data and slice for correct page etc
+        matching = {
+          ...apiV1InitialResults.results[0],
+          data: apiV1InitialResults.results[0].data.slice(offset, offset + limit),
+        };
+        // else assume regular search
       } else {
         let tempResult = [];
         filters.forEach((filter) => {
@@ -91,11 +98,11 @@ const api = new OpenAPIBackend({
           tempResult = [...new Set(tempResult.concat(filterMatches))];
         });
 
-        matching = [{
+        matching = {
           label: 'Search Results',
           total: tempResult.length,
           data: tempResult.slice(offset, offset + limit),
-        }];
+        };
       }
       setTimeout(() => {
         res.status(200).json(

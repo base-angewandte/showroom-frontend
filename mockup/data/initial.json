@@ -1,0 +1,655 @@
+{
+  "id": "dieangewandte-UCiMg4EYyYEPMnHPkHSpdj",
+  "source_institution": {
+    "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+    "url": "https://dieangewandte.at/",
+    "icon": ""
+  },
+  "showcase": [
+    {
+      "uid": "1",
+      "title": "Whatever Works Best For You",
+      "subtext": "On the subject of labor",
+      "description": "Exhibition",
+      "additional": "07.05.2020 - 21.05.2020",
+      "imageUrl": "https://placeimg.com/460/341/arch",
+      "href": "www.angewandte.at",
+      "previews": [
+        {
+          "460w": "https://placeimg.com/460/341/animal"
+        },
+        {
+          "640w": "https://placeimg.com/640/480/animal"
+        },
+        {
+          "768w": "https://placeimg.com/768/576/animal"
+        }
+      ]
+    },
+    {
+      "uid": "2",
+      "title": "Throwing Gestures",
+      "subtext": "Make The Unknown Visible",
+      "description": "Performance",
+      "additional": "07.05.2020 - 21.05.2020",
+      "imageUrl": "https://placeimg.com/640/480/tech",
+      "href": "http://base.uni-ak.ac.at",
+      "previews": [
+        {
+          "460w": "https://placeimg.com/460/341/tech"
+        },
+        {
+          "640w": "https://placeimg.com/640/480/tech"
+        },
+        {
+          "768w": "https://placeimg.com/768/576/tech"
+        }
+      ]
+    },
+    {
+      "uid": "3",
+      "title": "Move From Left to Right and Back and Then Turn Around",
+      "subtext": "Moving Frames and Other Variables",
+      "description": "Video Installation",
+      "additional": "Florian Bettel, Max Arheimer",
+      "imageUrl": "https://placeimg.com/640/480/nature",
+      "href": "http://base.uni-ak.ac.at",
+      "previews": [
+        {
+          "460w": "https://placeimg.com/460/341/nature"
+        },
+        {
+          "640w": "https://placeimg.com/640/480/nature"
+        },
+        {
+          "768w": "https://placeimg.com/768/576/nature"
+        }
+      ]
+    },
+    {
+      "uid": "4",
+      "title": "Title",
+      "subtext": "Subtitle",
+      "description": "Ausstellung 4",
+      "additional": "07.05.2020 - 21.05.2020",
+      "imageUrl": "https://placeimg.com/640/480/animal",
+      "href": "http://base.uni-ak.ac.at",
+      "previews": [
+        {
+          "460w": "https://placeimg.com/460/341/animal"
+        },
+        {
+          "640w": "https://placeimg.com/640/480/animal"
+        },
+        {
+          "768w": "https://placeimg.com/768/576/animal"
+        }
+      ]
+    },
+    {
+      "uid": "5",
+      "title": "Title",
+      "subtext": "Subtitle",
+      "description": "Ausstellung",
+      "additional": "07.05.2020 - 21.05.2020",
+      "imageUrl": "https://placeimg.com/640/480/people",
+      "href": "http://base.uni-ak.ac.at",
+      "previews": [
+        {
+          "460w": "https://placeimg.com/460/341/people"
+        },
+        {
+          "640w": "https://placeimg.com/640/480/people"
+        },
+        {
+          "768w": "https://placeimg.com/768/576/people"
+        }
+      ]
+    },
+    {
+      "uid": "6",
+      "title": "Title",
+      "subtext": "Subtitle",
+      "description": "Ausstellung",
+      "additional": "07.05.2020 - 21.05.2020",
+      "imageUrl": "https://placeimg.com/641/480/arch",
+      "href": "http://base.uni-ak.ac.at",
+      "previews": [
+        {
+          "460w": "https://placeimg.com/461/341/arch"
+        },
+        {
+          "640w": "https://placeimg.com/641/480/arch"
+        },
+        {
+          "768w": "https://placeimg.com/769/576/arch"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "label": "Current activities",
+      "total": 49,
+      "data": [
+        {
+          "id": "SmRD3eGcKoEnrBgQ2EDYQr",
+          "type": "activity",
+          "title": "Portfolio Showroom – Making Art Research Accessible",
+          "subtitle": "Florian Bettel, Alexandra Frank, basis wien Kunst, Information und Archiv, Universität für Musik und Darstellende Kunst Wien, Österreichische Akademie der Wissenschaften, Universität für Angewandte Kunst Wien, Österreich. Bundesministerium für Bildung, Wissenschaft und Forschung",
+          "description": "Research Project, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Design (Fine Arts), Computer Sciences, Cultural Studies, Software Development, Science Communication, Knowledge Management"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/9V7kvcCeoRJRnxnLJLLtcN/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "2TZCGEEMuksvUSgyAKLNbP",
+          "type": "activity",
+          "title": "Bestandserfassung und Neulagerung der Paramentensammlung, Pfarre Gunskirchen",
+          "subtitle": "Otto-Wagner-Pavillon, Röm.-Kath. Pfarre Gunskirchen, BDA Landeskonservatorat für Oberösterreich, Carine Gengler, Kafka, František",
+          "description": "Architectural Project, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Conservation and Restoration"
+          ],
+          "image_url": null,
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "4bYedPe6jJ4cyTYtacJjG5",
+          "type": "activity",
+          "title": "RVK - Neusystematisierung, TESTTESTTEST",
+          "subtitle": "Ursula Gschlacht, Deutsche, Michel, Fiktive Gestalt, FWF, Der Wissenschaftsfonds",
+          "description": "Focus of Activity, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Knowledge Management"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/AL6Mph4VQDXhRLvseHh494/preview.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "QJbaJX4fYU5rq5zUwhEg7u",
+          "type": "activity",
+          "title": "The wonders, Wondering continuously",
+          "subtitle": "Sandra Hauzmayer, Wurst, Conchita, Eisler, Hanns, Ligeti, György, Universität für Angewandte Kunst Wien, Berg, Andrea, Fischer, Helene",
+          "description": "Sound Performance, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Wonder\" is a song by Canadian singer Shawn Mendes from his fourth studio album of the same name. The song, which serves as the album's lead single, was released on October 2, 2020, by Island Records.[3] The track was written and produced by Mendes, Scott Harris, Nate Mercereau and Kid Harpoon. The single reached the top-ten in Canada, Hungary, and Singapore, as well as the top-twenty in twelve countries including Australia, the United Kingdom, and the United States.\nContents\n\nRelease and promotion\n\nThe song and the album were first teased on September 30, 2020, on Mendes' Twitter account, where he tweeted \"WHAT IS #WONDER\".[4] He followed the tweet up with a link to an interactive website, where, on a piece of paper on the floor in the interactive room, was a setlist with the word Wonder. Later on, he posted a handwritten note onto social media and confirmed that the single, as well as an accompanying music video would be released on October 2.[5]\nLive performances\n\nOn October 26, 2020, Mendes announced The Wonder Residency, a series of performances from different theaters & venues performing songs from the album.[6] On October 27, 2020, Mendes performed the song as part of a medley on The Tonight Show Starring Jimmy Fallon for the first time.[7] On October 29, Mendes performed an acoustic version of the song on Global Citizen: EveryVoteCounts/2020.[8] On November 10, Mendes performed the song on BBC Radio 1's Live Lounge.[9] On November 13, he performed the track as part of BBC's Children In Need show.[10] On November 22, Mendes performed the song at the American Music Awards of 2020. On December 6, Mendes performed the song on \"Live From Wonder: The Experience\".[citation needed]\nComposition\n\nThe song has been described as a power ballad.[3] Lyrically, the song sees Mendes contemplating \"imagined scenarios\", as well as \"stepping foot into his friend's shoes\". The singer also comments on toxic masculinity, singing \"I wonder, when I cry into my hands, I'm conditioned to feel like it makes me less of a man\".[11] \"Wonder\" finds Mendes \"broadening his sonic horizons — experimenting with a widescreen, full-bodied sound\".[12] ",
+            "Track list:\n\n1. Aus dieser Welt\n2. Into the Stars\n3. Space to nowhere\n4. In the end",
+            "Keywords: wunder, wonder, faszination, Electronic Music"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/lZowNBp09LF0OP9nRzr9sezPaOEvMehwbzmz0895fDdZxlxOwgiWjN/K8i7LSK3jFmZNB4NwvVbrZ/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "PhQNnUx9qSKeerQpreGig7",
+          "type": "activity",
+          "title": "AuRa - Automated Radio",
+          "subtitle": "Andrea Klaura, Ingo Leindecker, Gottfried Gaisbauer, Christian Pointner, David Trattnig, Richard Blechinger, Ernesto Rico Schmidt, Martin Lasinger, Sarah Kanawin, Andrea Klaura",
+          "description": "Software, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/Wngx5RZk32hKEkd6OLxRu8rZ1oawMEtvbDjW6PD9C4Nvgkn4O1s1lO/SoVcQRM4sNDwbACk32yYdt/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "Yia33uLzoXBCYjxzyayKsR",
+          "type": "activity",
+          "title": "SCRAP API Server",
+          "subtitle": "Andrea Klaura",
+          "description": "Software, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/Wngx5RZk32hKEkd6OLxRu8rZ1oawMEtvbDjW6PD9C4Nvgkn4O1s1lO/CcF9wR97ybBrUNAmwoB8m5/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "hqTMfhRfU2au2xFF7BF5Tm",
+          "type": "activity",
+          "title": "SCRAP Client",
+          "subtitle": "Andrea Klaura",
+          "description": "Software, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: SAST, OpenAPI 3.0, VueJS, Software Security Education, Secure Coding"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/Wngx5RZk32hKEkd6OLxRu8rZ1oawMEtvbDjW6PD9C4Nvgkn4O1s1lO/Mz4r8sjACjdPYSyVXxPP99/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "Ly8ixgPh46BZzigDkiLkFN",
+          "type": "activity",
+          "title": "Living Rooms – The Art of Mobilizing Belonging(s)",
+          "subtitle": "Rosenberger, Sieglinde, Florian Bettel, gangart, Demokratiezentrum Wien, Universität Wien, Wiener Wissenschafts-, Forschungs- und Technologiefonds",
+          "description": "Research Project, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Cultural History, Cultural Studies, Arts, Political Science"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/8khMnaJZskw97QKYgFfo8p/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "T4SUwtxMPWoAeRE3MfH4VE",
+          "type": "activity",
+          "title": "Körperliche Gesten als stille Protestform, Kunst und Ware",
+          "subtitle": "Cornelia Grobner",
+          "description": "Newspaper Review, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Cultural History, Arts, Cultural Studies"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/NWFazfbEo8QYfoZDK3dWbg/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "nTP6DsyFNv5sBmxLqdNF6P",
+          "type": "activity",
+          "title": "Transferprojekt Damaskus–Wien",
+          "subtitle": "Florian Bettel, Universität für Angewandte Kunst Wien",
+          "description": "Artist in Residence, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Fine Arts, Cultural Studies, Raumfahrt, Syrien"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/JLS5WQ7YUuSGENQFkG2JfY/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "mYAVABwSmgywXzZSEUYxkY",
+          "type": "activity",
+          "title": "Von „Idealer Filmerzeugung im frühen Kino“, Ein Versuch über den Film als sinnliches Medium abseits des projizierten Bildes",
+          "subtitle": "Florian Bettel, Krebs, Stefan",
+          "description": "Article, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Kinogeschichte, Cultural History, Cultural Studies, Arts"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/cZJ4NLXSJiJYNsLA5f3Fwy/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "Xgk9SD3rwz4irvp6cPYzzL",
+          "type": "activity",
+          "title": "Leichentransport im Tunnelsystem",
+          "subtitle": "Simone Leonhartsberger, ORF",
+          "description": "Online Newspaper Article, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Cultural History"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/933Fp2VLyNuFYaNJu7oPJ3/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "D8yzFMNoNByqxk7ePUgz7M",
+          "type": "activity",
+          "title": "Rezension zu Stefan Poser: Glücksmaschinen und Maschinenglück",
+          "subtitle": "Florian Bettel",
+          "description": "Review, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Arts, Cultural Studies, Technical History"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/bLx5gfKvDp5pBp7GjiyMi5/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "5uobyvHJA7TikiHVrVp6LA",
+          "type": "activity",
+          "title": "Throwing Gestures, Protest, Economy and the Imperceptible",
+          "subtitle": "Jakob Argauer, Florian Bettel, Larry Achiampong & David Blandy, Dina Boswank, Deller, Jeremy, Herbst, Timo, Honeit, Kerstin, Kaldrack, Irina, Barbara Lippe, Mücke, Silas, Nebe, Marcus, Strutz, Konrad, Tur, Nasan, Young, Laurie, Bahaa Talis, Tobias Schulze, Justine A. Chambers, Florian Bettel",
+          "description": "Group Exhibition, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Fine Arts, Cultural History, Cultural Studies, Arts, Media Research, Media Theory"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/i8A5dHFaNGYW9G6f2cBxCf/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "gXXp55doj9XSkvNA2Cbuzz",
+          "type": "activity",
+          "title": "Chaos Communication Congress – wenn Hacker den Neubeginn feiern",
+          "subtitle": "Sarah Kriesche, Florian Bettel",
+          "description": "Radio Programme, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Cultural History, Cultural Studies, Pneumatik, Rohrpost"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/PCrJbkS8fNGUNErzbU534Y/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "jjcBKTPf9BDaSNAExmj5vb",
+          "type": "activity",
+          "title": "SdK 76: Florian Bettel über Rohrpost und Pneumatik",
+          "subtitle": "Daniel Meßner, Florian Bettel",
+          "description": "Podcast, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Science of History, Cultural History, Cultural Studies, Rohrpost"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/2fGRoLUWv2edp9aCzeEjtz/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "RsyxiodqYD59raCyVNERGt",
+          "type": "activity",
+          "title": "The Entanglement between Gesture, Media and Politics",
+          "subtitle": "Kaldrack, Irina, Florian Bettel, Strutz, Konrad, Universität für Angewandte Kunst Wien, VolkswagenStiftung",
+          "description": "Research Project, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Fine Arts, Cultural Studies, Arts"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/MkPygdkjwPc2C4TKUeod3h/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "LCqRCcLjbgzDds2Y88koVb",
+          "type": "activity",
+          "title": "Throwing Gestures – The Entanglement between Gesture, Media and Politics",
+          "subtitle": "Christian Schwinghammer, Daniel Stoecker",
+          "description": "Conference Proceedings, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Fine Arts, Cultural History, Cultural Studies, Media Theory"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/zPb3a3X4AWi5RPp6XnmvcojGXXaMREsWvWoz10ORh0bVxl9EWRfxja/FiqZ4DdvfzrstJMMcAnnYX/preview.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "YQw4W8UeQUcozpKUPEKkFX",
+          "type": "activity",
+          "title": "Jurymitglied Fred-Adlmüller Stiftungskommission",
+          "subtitle": "Universität für angewandte Kunst Wien, Tanja Kimmel, Hagitani, Boku",
+          "description": "Expert Function, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Printing, Airbrushing, Costume Design, Ecosystem Research"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/Z49zVYjQFkW7fXwkpZxx8v/preview.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "QiSDnxezDNr2h2xr6UBpZk",
+          "type": "activity",
+          "title": "HOW TO VIDEO, scripts",
+          "subtitle": "Bettel, Florian, Alexandra Frank, Veronika Kocher, Alexandra Frank",
+          "description": "Sketch, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Tutorial"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/MigmMNvrp54PFUSizMe5YJ/preview.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "VZPWJj8qRJcmHu6LUToNU8",
+          "type": "activity",
+          "title": "Gastprofessorin am Institut für Theaterwissenschaft, Freie Universität Berlin",
+          "subtitle": "koloman MOSER, Krassimira Kruschkova, Wurm, Erwin, Mougin-Wurm, Élise",
+          "description": "Entertainment Event, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Dance, Performing Arts, Philosophy, Ethics"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/4VZ6LG7YY6sqLBfWRubrus/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "HbdxKLFwEHB5L3635XwGVh",
+          "type": "activity",
+          "title": "Zukunft der Sportpsychologie, Zwischen Verstehen und Evidenz",
+          "subtitle": "Arbeitsgemeinschaft für Sportpsychologie, Günter Amesberger, Sabine Würth, Thomas Finkenzeller",
+          "description": "Conference Proceedings, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Mentales Krafttraining"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/4DcaWwzYphkzZ5hurLVpsE/preview.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "LsJGDD6Sa53arT2ZNCQ3XU",
+          "type": "activity",
+          "title": "Schwerpunkte Biomedizin und Kleidung",
+          "subtitle": "Ingrid Prettenthaler, Alexandra Frank, WWTF",
+          "description": "Focus of Activity, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Textile Technology, Materials Engineering"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/2J2UP6mrJKSiJuxDfmFE2e/preview.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "mNsPpBXiMHdRyYuWAyfSQT",
+          "type": "activity",
+          "title": "Künstlerische Bilanz, Bilanzierte Kunst",
+          "subtitle": "Regina Zachhalmel, Bast, Gerald, BMBWF",
+          "description": "Focus of Activity, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Fine Arts"
+          ],
+          "image_url": null,
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "2QDRZov5Cw4KcM4xfzUAy2",
+          "type": "activity",
+          "title": "SIZE MATTERS . Space for Art & Film",
+          "subtitle": "Adnan Balcinovic, Magic Mike, Peterson, Christopher, Stadt Wien Wiener Brückenbau und Grundbau - MA",
+          "description": "Focus of Activity, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Fine Arts, Film and Television"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/3DkW77Y6S8EPFx3BvaNPKR/preview.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "djz2K7CQd6qoZygefAL2wv",
+          "type": "activity",
+          "title": "LIBERTY and SAUERSTOFF, NEW YORK",
+          "subtitle": "Barak OBAMA, Universitätsbibliothek, Sybille Hentze, Ursula Gschlacht, Hillary CLINTON",
+          "description": "Architectural Model, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Knowledge Management"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/ZFcmdN76oHnmrnBKRFXheJ/preview.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "bqikanfcitcsEiiS4fzrpD",
+          "type": "activity",
+          "title": "annazwingl.com",
+          "subtitle": "Speidel, Klaus-Peter, Speidel, Klaus-Peter, Anna Zwingl, Universität für Angewandte Kunst Wien",
+          "description": "Solo Exhibition, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Fine Arts"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/gMd2AHDCiXEjvRxt6o86pi/preview.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "QLqgzRMt2MwhpvAqmDpfSm",
+          "type": "activity",
+          "title": "Wer bin ich?, Und wer stellt sich diese Frage?",
+          "subtitle": "Alexandra Frank, Universität für Angewandte Kunst Wien",
+          "description": "Article, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Associated Concepts, Happening, Text Art"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/8C2brpUDs7vuLD68jrk6Y6/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "RSfjfnbFT45WU8DFpsyxnE",
+          "type": "activity",
+          "title": "Wissenschaftliche Bilanz",
+          "subtitle": "Birgit Hertel, Knobloch, Peter, Mahler, Gustav, Wotruba, Fritz, Regina Zachhalmel, Kokoschka, Olda",
+          "description": "Corporate Design, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "Keywords: Subject Didactics, Educational Sciences, Art Education"
+          ],
+          "image_url": "https://basedev.uni-ak.ac.at/portfolio/p/AxzEKN54PKTgae5N4Wl3FZgZp4NPmjsvQy4Bd238tw84xLKRW9T8bE/bZ8ntkhMpSKRmYuUQQPERr/tn.jpg",
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        },
+        {
+          "id": "cpbUFTVHhnBRtUCLnRKySQ",
+          "type": "activity",
+          "title": "Urban Change_Next City",
+          "subtitle": "Falkeis, Anton, Storjohann, Petra, Anton Falkeis, Gustav Klimt Zentrum am Attersee",
+          "description": "Assemblage, dieAngewandte - Universität für Angewandte Kunst Wien",
+          "alternative_text": [
+            "ICH KANN KEIN ENGLISCH\n\nWir verwenden SCHOKO Cookies, um unsere Website möglichst benutzerfreundlich zu gestalten. Wenn Sie weiter auf der Seite bleiben, verstehen wir, dass Sie mit der Verwendung von Cookies einverstanden sind und die Installation erlauben. Mehr Informationen\nZustimmen",
+            "Keywords: Architecture (Fine Arts/Design)"
+          ],
+          "image_url": null,
+          "source_institution": {
+            "label": "dieAngewandte - Universität für Angewandte Kunst Wien",
+            "url": "https://dieangewandte.at/",
+            "icon": ""
+          },
+          "score": 0
+        }
+      ],
+      "filters": [
+        {
+          "id": "current_activities",
+          "filter_values": [
+            "42!"
+          ]
+        }
+      ]
+    }
+  ]
+}

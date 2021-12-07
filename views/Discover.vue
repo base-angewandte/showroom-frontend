@@ -255,7 +255,7 @@ export default {
       return this.carouselData && this.carouselData.length ? this.carouselData
         .map((entry) => ({
           ...entry,
-          href: entry.id,
+          href: entry.href || entry.id,
         }))
         : this.defaultCarouselData;
     },
