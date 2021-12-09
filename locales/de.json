@@ -102,6 +102,8 @@
       "autocompleteOngoing": "Einträge werden gesucht...",
       "autocompleteInitial": "Bitte fangen Sie an zu tippen oder wählen Sie einen Filter",
       "chipsNoOptions": "Keine weiteren Optionen verfügbar",
+      "chipsMaxOptions": "Bitte fangen Sie an zu tippen um Optionen zu sehen",
+      "chipsNoMatch":  "Keine passenden Optionen gefunden",
       "chipsOngoing": "Optionen werden geladen..."
     }
   },

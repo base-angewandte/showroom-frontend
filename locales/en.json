@@ -102,6 +102,8 @@
       "autocompleteOngoing": "Autocomplete is being fetched...",
       "autocompleteInitial": "Please start typing or select a filter to see options",
       "chipsNoOptions": "No more options available",
+      "chipsMaxOptions": "Please start typing to see options",
+      "chipsNoMatch":  "No matchingg options found",
       "chipsOngoing": "Options are being loaded..."
     }
   },
