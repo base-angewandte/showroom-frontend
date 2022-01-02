@@ -2,10 +2,12 @@
   <Detail
     type="person"
     :data="data"
-    :user-can-edit="userCanEdit" />
+    :user-can-edit="isUserProfile" />
 </template>
 
 <script>
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { mapGetters } from 'vuex';
 import Detail from '@/components/Detail';
 
 export default {
@@ -74,7 +76,6 @@ export default {
   data() {
     return {
       data: {},
-      userCanEdit: false,
     };
   },
   head() {
@@ -82,6 +83,24 @@ export default {
       title: `${this.data.title} | ${process.env.appTitle}`,
     };
     // TODO: add additional meta-tags, at least description
+  },
+  computed: {
+    /**
+     * get the data that only need fetching once for all search components from
+     * the searchData store module
+     */
+    ...mapGetters({
+      /**
+       * a list of all filters defined in the backend and available to the user
+       */
+      userId: 'appData/getUserId',
+    }),
+    entryId() {
+      return this.$route.params.id;
+    },
+    isUserProfile() {
+      return this.entryId.includes(this.userId);
+    },
   },
 };
 </script>

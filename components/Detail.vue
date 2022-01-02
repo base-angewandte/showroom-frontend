@@ -83,6 +83,28 @@
           :data="data.featured_media"
           @clicked="previewMedia([data.featured_media], data.featured_media.id)" />
       </div>
+      <div
+        v-else-if="userCanEdit"
+        :style="featuredMediaHeight"
+        class="base-sr-row base-sr-head__media base-sr-featured-media
+               base-sr-featured-media__profile-image">
+        <!-- TODO: this is just a placeholder - add properly styled user
+        add image elements and info! -->
+        <p class="base-sr-featured-media__profile-image__header">
+          {{ $t('entityView.profileImageHeader') }}
+        </p>
+        <p>
+          {{ $t('entityView.profileImageLink1') }}
+          <a
+            href="https://basedev.uni-ak.ac.at/userpreferences">
+            <span class="base-sr-featured-media__profile-image__link">
+              {{ $t('entityView.profileImageLink2') }}
+            </span>
+          </a>
+          {{ $t('entityView.profileImageLink3') }}
+        </p>
+
+      </div>
     </div>
 
     <!-- lists -->
@@ -248,6 +270,7 @@
       :autocomplete-results="autocompleteResults"
       :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
+      :page-number="1"
       @autocomplete="fetchAutocomplete"
       @search="search" />
 
@@ -730,6 +753,25 @@ export default {
       object-fit: cover;
       width: 100%;
       height: 100%;
+    }
+
+    &__profile-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      color: $font-color-second;
+
+      .base-sr-featured-media__profile-image__header {
+        font-size: $font-size-large;
+        margin-bottom: $spacing-small;
+      }
+
+      .base-sr-featured-media__profile-image__link {
+        text-decoration: underline;
+        text-decoration-color: $app-color;
+      }
     }
   }
 

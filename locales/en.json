@@ -112,5 +112,11 @@
     "no-results-text": "No results were found with the specified search criteria.\nPlease adjust your search.",
     "no-results-initial": "No Data for Display Available.",
     "no-results-text-initial": "There are no data in this showroom that can be displayed here.\nTry to use filters in order to see some Showroom content!"
- }
+ },
+  "entityView": {
+    "profileImageHeader": "Add User Profile Image",
+    "profileImageLink1": "Please go to your ",
+    "profileImageLink2": "User Preferences ",
+    "profileImageLink3": "to add a profile image to your personal page."
+  }
 }

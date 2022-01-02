@@ -2,7 +2,6 @@
 const state = () => ({
   locales: process.env.locales,
   locale: '',
-  authenticated: false,
   user: null,
 });
 
@@ -18,6 +17,9 @@ const getters = {
   },
   getLocale(state) {
     return state.locale;
+  },
+  getUserId() {
+    return state.user ? state.user.entry_id : null;
   },
 };
 
