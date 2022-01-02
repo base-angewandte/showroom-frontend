@@ -9,11 +9,25 @@
       class="base-sr--ml-small"
       @activated="activate" />
 
-    <!-- display showcase -->
-    <BaseCarousel
-      v-if="data && !edit"
-      :items="data"
-      :swiper-options="carouselOptions" />
+    <div class="base-sr--showcase">
+      <div
+        v-if="!!placeholderData && !edit"
+        class="base-sr--showcase-placeholder">
+        <BaseBoxButton
+          :text="$t('entityView.placeholderCarouselButton')"
+          :box-size="{ width: '200px' }"
+          :show-plus="true"
+          icon="file-object"
+          box-style="large"
+          box-type="button"
+          class="base-sr--showcase-placeholder__button" />
+      </div>
+      <!-- display showcase -->
+      <BaseCarousel
+        v-if="(data || placeholderData) && !edit"
+        :items="data && data.length ? data : placeholderData"
+        :swiper-options="carouselOptions" />
+    </div>
 
     <!-- edit showcase -->
     <BaseResultBoxSection
@@ -161,8 +175,40 @@ export default {
           },
         },
       },
+      placeholderData: [],
       selectedBoxes: [],
     };
+  },
+  async created() {
+    // TODO: this is not working!!
+    // (carousel view remains empty even though data are there)
+    // TODO 2: not even sure if this is a good idea but where to get appropriate data from?
+    // or should it look differently??
+    if (!this.data || !this.data.length) {
+      try {
+        const response = await this.$api.public.api_v1_initial_retrieve({
+          id: process.env.institutionId,
+        },
+        {
+          requestBody: {
+            limit: 3,
+          },
+        });
+        const { showcase } = JSON.parse(response.data);
+        if (showcase && showcase[0]
+          && showcase[0].data && showcase[0].data.length) {
+          this.placeholderData = showcase[0].data
+            .filter((entry) => !!entry.image_url)
+            .slice(0, 3)
+            .map((entry) => ({
+              ...entry,
+              href: entry.id,
+            }));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
   },
   methods: {
     addSelectedEntries() {
@@ -190,3 +236,27 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.base-sr--showcase {
+  position: relative;
+
+  .base-sr--showcase-placeholder {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: $loading-background;
+    z-index: map-get($zindex, showcase-overlay);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .base-sr--showcase-placeholder__button {
+      box-shadow: $max-box-shadow;
+      z-index: map-get($zindex, showcase-overlay-button);
+    }
+  }
+}
+</style>

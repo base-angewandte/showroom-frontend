@@ -117,6 +117,7 @@
     "profileImageHeader": "Add User Profile Image",
     "profileImageLink1": "Please go to your ",
     "profileImageLink2": "User Preferences ",
-    "profileImageLink3": "to add a profile image to your personal page."
+    "profileImageLink3": "to add a profile image to your personal page.",
+    "placeholderCarouselButton": "Add Activities"
   }
 }

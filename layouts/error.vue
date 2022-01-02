@@ -44,11 +44,10 @@ Vue.use(BaseIcon);
 
 export default {
   name: 'Error',
-  // eslint-disable-next-line vue/require-prop-types
-  props: ['error'],
-  methods: {
-    returnToHome() {
-      window.location.href = process.env.appPrefix;
+  props: {
+    error: {
+      type: Object,
+      required: true,
     },
   },
   head() {
@@ -63,6 +62,12 @@ export default {
       ],
     };
   },
+  methods: {
+    returnToHome() {
+      window.location.href = process.env.appPrefix;
+    },
+  },
+
 };
 </script>
 

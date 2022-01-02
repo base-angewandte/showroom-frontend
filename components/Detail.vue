@@ -68,7 +68,7 @@
 
       <!-- secondary details -->
       <SecondaryDetails
-        v-if="data.secondary_details && data.secondary_details.length"
+        v-if="(data.secondary_details && data.secondary_details.length) || userCanEdit"
         :data="titleCaseLabels(data.secondary_details)"
         :user-can-edit="userCanEdit"
         class="base-sr-head__secondary" />
@@ -103,7 +103,6 @@
           </a>
           {{ $t('entityView.profileImageLink3') }}
         </p>
-
       </div>
     </div>
 
@@ -148,9 +147,8 @@
     <!-- activity showcase -->
     <Showcase
       v-if="type === 'person'
-        && data.showcase
-        && data.showcase.length"
-      :data="data.showcase"
+        && ((data.showcase && data.showcase.length)
+          || userCanEdit)"
       :title="$t('activityShowcase')"
       :user-can-edit="userCanEdit"
       class="base-sr-row" />

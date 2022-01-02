@@ -209,6 +209,9 @@ export default {
           });
 
           // update initial data
+          // TODO: i suppressed the below error message for now but this should probably be
+          // handled differently!
+          // eslint-disable-next-line vue/no-mutating-props
           this.data[0].data = this.textInput[this.$t(this.$i18n.locale)];
 
           setTimeout(() => {
