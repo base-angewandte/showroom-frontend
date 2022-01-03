@@ -353,48 +353,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    patch:
-      description: 'Partially update a certain entity; currently only for fields "secondary_details", "showcase"'
-      operationId: api_v1_entities_partial_update
-      tags:
-        - auth
-      parameters:
-        - description: ID of entity to patch
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Entity'
-        description: Object with key/values to be partially changed
-        required: true
-      responses:
-        '204':
-          description: Successfully updated
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Invalid input
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Forbidden
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Not found
-        5XX:
-          description: Unexpected error
     delete:
       description: Delete the entity
       operationId: api_v1_entities_destroy
