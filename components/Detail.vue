@@ -96,7 +96,8 @@
         <p>
           {{ $t('entityView.profileImageLink1') }}
           <a
-            href="https://basedev.uni-ak.ac.at/userpreferences">
+            :href="userPreferencesUrl"
+            :title="$t('entityView.profileImageLink2')">
             <span class="base-sr-featured-media__profile-image__link">
               {{ $t('entityView.profileImageLink2') }}
             </span>
@@ -435,10 +436,12 @@ export default {
         return this.data.activities;
       },
     },
+    userPreferencesUrl() {
+      return process.env.userPreferencesUrl;
+    },
   },
   methods: {
     async search(requestBody) {
-      console.log(this.$route);
       this.searchOngoing = true;
       try {
         const { data } = await this.$api.public.api_v1_entities_search_create({

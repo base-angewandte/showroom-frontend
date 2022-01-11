@@ -68,6 +68,7 @@ Following variables in the `.env` file contained in project folder can be define
 | LOCALES                     | available locales                                                                   |
 | DEFAULT_LOCALE              | default language, if one should be set (else the browser language will be used)     |
 | EN_TITLE_CASING             | as per default with locale set to english, all text except complete sentences will be title-cased. Set false to turn this behaviour off.     |
+| USER_PREFERENCES_URL        | url where the user preferences app is located                                       |
 
 Following `.env` variable get updated during project start up - so no need to set up!
 

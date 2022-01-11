@@ -69,6 +69,7 @@ export default {
     locales: process.env.LOCALES,
     defaultLocale: process.env.DEFAULT_LOCALE,
     enTitleCasing: process.env.EN_TITLE_CASING,
+    userPreferencesUrl: process.env.USER_PREFERENCES_URL,
   },
   /*
   ** Plugins to load before mounting the App
