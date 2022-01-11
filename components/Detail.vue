@@ -84,7 +84,7 @@
           @clicked="previewMedia([data.featured_media], data.featured_media.id)" />
       </div>
       <div
-        v-else-if="userCanEdit"
+        v-else-if="isUserProfile"
         :style="featuredMediaHeight"
         class="base-sr-row base-sr-head__media base-sr-featured-media
                base-sr-featured-media__profile-image">
@@ -371,6 +371,13 @@ export default {
       validate(val) {
         return ['person', 'object'].includes(val);
       },
+    },
+    /**
+     * set additional rights for editing own profile
+     */
+    isUserProfile: {
+      type: Boolean,
+      default: false,
     },
     /**
      * set edit mode

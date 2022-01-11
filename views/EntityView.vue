@@ -2,7 +2,8 @@
   <Detail
     type="person"
     :data="data"
-    :user-can-edit="isUserProfile" />
+    :is-user-profile="isUserProfile"
+    :user-can-edit="userCanEdit" />
 </template>
 
 <script>
@@ -94,12 +95,17 @@ export default {
        * a list of all filters defined in the backend and available to the user
        */
       userId: 'appData/getUserId',
+      userEditPermissions: 'appData/getUserEditPermissions',
     }),
     entryId() {
       return this.$route.params.id;
     },
     isUserProfile() {
       return this.entryId.includes(this.userId);
+    },
+    userCanEdit() {
+      return this.entryId.includes(this.userId)
+        || this.entryId.includes(this.userEditPermissions);
     },
   },
 };

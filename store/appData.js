@@ -18,8 +18,11 @@ const getters = {
   getLocale(state) {
     return state.locale;
   },
-  getUserId() {
-    return state.user ? state.user.entry_id : null;
+  getUserId(state) {
+    return state.user ? state.user.entity_id : null;
+  },
+  getUserEditPermissions(state) {
+    return state.user ? state.user.entity_editing : null;
   },
 };
 
