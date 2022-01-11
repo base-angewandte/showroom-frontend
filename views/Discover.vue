@@ -126,14 +126,13 @@ export default {
       // TODO: remove again once API working properly
       defaultCarouselData: [
         {
-          uid: '1',
+          id: '1',
           title: 'Whatever Works Best For You',
           subtext: 'On the subject of labor',
           description: 'Exhibition',
           additional: '07.05.2020 - 21.05.2020',
           // eslint-disable-next-line global-require
           imageUrl: 'https://placeimg.com/460/341/arch',
-          href: 'www.angewandte.at',
           previews: [
             {
               '460w': 'https://placeimg.com/460/341/animal',
@@ -147,13 +146,12 @@ export default {
           ],
         },
         {
-          uid: '2',
+          id: '2',
           title: 'Throwing Gestures',
           subtext: 'Make The Unknown Visible',
           description: 'Performance',
           additional: '07.05.2020 - 21.05.2020',
           imageUrl: 'https://placeimg.com/640/480/tech',
-          href: 'http://base.uni-ak.ac.at',
           previews: [
             {
               '460w': 'https://placeimg.com/460/341/tech',
@@ -167,13 +165,12 @@ export default {
           ],
         },
         {
-          uid: '3',
+          id: '3',
           title: 'Move From Left to Right and Back and Then Turn Around',
           subtext: 'Moving Frames and Other Variables',
           description: 'Video Installation',
           additional: 'Florian Bettel, Max Arheimer',
           imageUrl: 'https://placeimg.com/640/480/nature',
-          href: 'http://base.uni-ak.ac.at',
           previews: [
             {
               '460w': 'https://placeimg.com/460/341/nature',
@@ -187,13 +184,12 @@ export default {
           ],
         },
         {
-          uid: '4',
+          id: '4',
           title: 'Title',
           subtext: 'Subtitle',
           description: 'Ausstellung 4',
           additional: '07.05.2020 - 21.05.2020',
           imageUrl: 'https://placeimg.com/640/480/animal',
-          href: 'http://base.uni-ak.ac.at',
           previews: [
             {
               '460w': 'https://placeimg.com/460/341/animal',
@@ -207,13 +203,12 @@ export default {
           ],
         },
         {
-          uid: '5',
+          id: '5',
           title: 'Title',
           subtext: 'Subtitle',
           description: 'Ausstellung',
           additional: '07.05.2020 - 21.05.2020',
           imageUrl: 'https://placeimg.com/640/480/people',
-          href: 'http://base.uni-ak.ac.at',
           previews: [
             {
               '460w': 'https://placeimg.com/460/341/people',
@@ -227,13 +222,12 @@ export default {
           ],
         },
         {
-          uid: '6',
+          id: '6',
           title: 'Title',
           subtext: 'Subtitle',
           description: 'Ausstellung',
           additional: '07.05.2020 - 21.05.2020',
           imageUrl: 'https://placeimg.com/641/480/arch',
-          href: 'http://base.uni-ak.ac.at',
           previews: [
             {
               '460w': 'https://placeimg.com/461/341/arch',
