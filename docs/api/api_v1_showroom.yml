@@ -463,19 +463,23 @@ paths:
           required: true
           schema:
             type: string
-        - name: field
+        - name: secondary_details
           in: query
-          required: true
-          description: |
-            Defines which user-editable field from the entity model should be requested. This currently can be either "secondary_details" or "showcase"
+          required: false
+          default: false
+          description: 'Whether to include secondary_details in the response'
           schema:
-            type: string
-            enum:
-              - secondary_details
-              - showcase
+            type: boolean
+        - name: showcase
+          in: query
+          required: false
+          default: false
+          description: 'Whether to include showcasxe in the response'
+          schema:
+            type: boolean
       responses:
         '200':
-          description: Array of the items in the user-editable field that was requested
+          description: Object containing the requested user-editable fields/lists
           content:
             application/json:
               schema:
@@ -492,9 +496,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    put:
+    patch:
       description: (Fully) Update user-editable information of an entity
-      operationId: api_v1_entities_edit_update
+      operationId: api_v1_entities_edit_partial_update
       tags:
         - auth
       parameters:
@@ -503,22 +507,12 @@ paths:
           required: true
           schema:
             type: string
-        - name: field
-          in: query
-          required: true
-          description: |
-            Defines which user-editable field from the entity model should be updated. This currently can be either "secondary_details" or "showcase"
-          schema:
-            type: string
-            enum:
-              - secondary_details
-              - showcase
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/EntityEdit'
-        description: Request array with ordered objects
+        description: Object containing the fields/lists to update
         required: true
       responses:
         '204':
@@ -1056,14 +1050,18 @@ components:
       example:
         - 455w: path to file
         - 654w: path to file
+
     EntityEdit:
-      type: array
-      items:
-        oneOf:
-          - $ref: '#/components/schemas/EntitySecondaryDetailsEdit'
-          - $ref: '#/components/schemas/EntityShowcaseEdit'
-      description: |
-        Contains all translations of the contents of a user-editable field (like secondary_details or showcase). Every item of this list is an object containing all available ISO 2 letter codes as properties, holding the list of CommonText objects to be translated as values.
+      type: object
+      properties:
+        secondary_details:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntitySecondaryDetailsEdit'
+        showcase:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityShowcaseEdit'
 
     EntitySecondaryDetailsEdit:
       type: object
@@ -1075,12 +1073,20 @@ components:
           $ref: '#/components/schemas/CommonTextList'
         xx:
           $ref: '#/components/schemas/CommonTextList'
+      description: |
+        Contains all available translations for this list of CommonText objects
 
     EntityShowcaseEdit:
       type: object
       properties:
         id:
           type: string
+        type:
+          type: string
+          description: The type of showcase object (activity, album, entity). Defaults
+            to activity, if not specified
+      required:
+      - id
 
     EntityActivitiesEdit:
       type: array
