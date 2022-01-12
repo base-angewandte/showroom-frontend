@@ -7,12 +7,15 @@
       :edit="edit"
       :title="title"
       class="base-sr--ml-small"
-      @activated="activate" />
+      @activated="enableEdit" />
 
-    <div class="base-sr--showcase">
+    <div class="base-sr-showcase">
       <div
-        v-if="!!placeholderData && !edit"
-        class="base-sr--showcase-placeholder">
+        v-if="!!placeholderData
+          && !edit
+          && userCanEdit
+          && carouselInitialized"
+        class="base-sr-showcase__placeholder">
         <BaseBoxButton
           :text="$t('entityView.placeholderCarouselButton')"
           :box-size="{ width: '200px' }"
@@ -20,13 +23,20 @@
           icon="file-object"
           box-style="large"
           box-type="button"
-          class="base-sr--showcase-placeholder__button" />
+          class="base-sr-showcase__placeholder__button"
+          @clicked="(edit = true) + (showAddActivityPopUp = true)" />
       </div>
+
+      <BaseLoader
+        v-if="isLoading && !carouselInitialized"
+        class="base-sr-showcase__loader" />
+
       <!-- display showcase -->
       <BaseCarousel
-        v-if="(data || placeholderData) && !edit"
+        v-if="(data.length || placeholderData.length) && !edit"
         :items="data && data.length ? data : placeholderData"
-        :swiper-options="carouselOptions" />
+        :swiper-options="carouselOptions"
+        @initialized="carouselInitialized = true" />
     </div>
 
     <!-- edit showcase -->
@@ -53,30 +63,32 @@
           {{ title }}
         </h2>
       </template>
+
       <template #optionButtons="scope">
         <BaseButton
-          :text="$t('add_activity')"
+          :text="$t('add_activities')"
           icon-size="large"
-          icon="sheet-empty"
+          icon="add-new-object"
           button-style="single"
           @clicked="scope.submitAction('addActivity')" />
         <BaseButton
-          :text="'delete'"
+          :text="$t('delete')"
           icon-size="large"
           icon="waste-bin"
           button-style="single"
           @clicked="scope.submitAction('delete')" />
       </template>
 
-      <template #actionButtons>
-        <BaseBoxButton
-          :text="$t('add_activity')"
-          :box-size="{ width: 'auto' }"
-          :show-plus="true"
-          icon="sheet-empty"
-          box-style="large"
-          box-type="button"
-          class="base-result-box-section__box" />
+      <template #resultBox="{ item }">
+        <BaseImageBox
+          :key="item.id"
+          :title="item.title"
+          :subtext="item.subtitle"
+          :description="item.description"
+          :image-url="item.previews[0]['640w']"
+          :link-to="item.id"
+          :box-text="item.alternative_text"
+          render-element-as="nuxt-link" />
       </template>
     </BaseResultBoxSection>
 
@@ -88,8 +100,18 @@
       @button-left="showAddActivityPopUp = false"
       @button-right="addSelectedEntries"
       @close="showAddActivityPopUp = false">
-      <!-- Todo: implement entry selection -->
-      select entries
+      <BaseEntrySelector
+        ref="entrySelector"
+        :entries="selectorEntries"
+        :entries-number="selectorEntriesNumber"
+        :entries-per-page="selectorEntriesPerPage"
+        :entries-selectable="true"
+        :height="'calc(50vh - 32px)'"
+        :is-loading="isLoading"
+        :options-hidden="true"
+        :sort-options="sortOptions"
+        class="base-sr-entry-selector"
+        @fetch-entries="fetchEntries" />
     </BasePopUp>
   </div>
 </template>
@@ -101,6 +123,8 @@ import {
   BaseBoxButton,
   BaseCarousel,
   BaseEditControl,
+  BaseEntrySelector,
+  BaseLoader,
   BasePopUp,
   BaseResultBoxSection,
 } from 'base-ui-components';
@@ -109,12 +133,16 @@ import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
 import 'base-ui-components/dist/components/BaseBoxButton/BaseBoxButton.css';
 import 'base-ui-components/dist/components/BaseCarousel/BaseCarousel.css';
 import 'base-ui-components/dist/components/BasePopUp/BasePopUp.css';
+import 'base-ui-components/dist/components/BaseEntrySelector/BaseEntrySelector.css';
+import 'base-ui-components/dist/components/BaseLoader/BaseLoader.css';
 import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSection.css';
 
 Vue.use(BaseButton);
 Vue.use(BaseBoxButton);
 Vue.use(BaseCarousel);
 Vue.use(BaseEditControl);
+Vue.use(BaseEntrySelector);
+Vue.use(BaseLoader);
 Vue.use(BasePopUp);
 Vue.use(BaseResultBoxSection);
 
@@ -146,10 +174,7 @@ export default {
   },
   data() {
     return {
-      dataInt: this.data,
       activeAction: '',
-      edit: false,
-      showAddActivityPopUp: false,
       carouselOptions: {
         slidesPerView: 1,
         slidesPerGroup: 1,
@@ -175,17 +200,54 @@ export default {
           },
         },
       },
+      carouselInitialized: false,
+      dataInt: this.data,
+      edit: false,
+      isLoading: false,
       placeholderData: [],
       selectedBoxes: [],
+      selectorEntries: [],
+      selectorEntriesNumber: null,
+      selectorEntriesPerPage: 4,
+      showAddActivityPopUp: false,
+      sortOptions: [
+        {
+          label: 'By Type',
+          value: 'type_en',
+        },
+        {
+          label: 'A - Z',
+          value: 'title',
+        },
+        {
+          label: 'Z - A',
+          value: '-title',
+        },
+        {
+          label: 'Last Created',
+          value: '-date_created',
+        },
+        {
+          label: 'First Created',
+          value: 'date_created',
+        },
+        {
+          label: 'Last Modified',
+          value: 'date_modified',
+        },
+      ],
     };
   },
   async created() {
-    // TODO: this is not working!!
-    // (carousel view remains empty even though data are there)
-    // TODO 2: not even sure if this is a good idea but where to get appropriate data from?
-    // or should it look differently??
+    /**
+     * if no user data found, try to fetch global showcase or prefill with empty entries
+     * TODO: if not showcase entries are added,
+     *       prefill showcase carousel if possible:
+     *       1. user entries or 2. global entries or 3. empty entries
+     */
     if (!this.data || !this.data.length) {
       try {
+        this.isLoading = true;
         const response = await this.$api.public.api_v1_initial_retrieve({
           id: process.env.institutionId,
         },
@@ -195,16 +257,26 @@ export default {
           },
         });
         const { showcase } = JSON.parse(response.data);
-        if (showcase && showcase[0]
-          && showcase[0].data && showcase[0].data.length) {
-          this.placeholderData = showcase[0].data
-            .filter((entry) => !!entry.image_url)
-            .slice(0, 3)
-            .map((entry) => ({
-              ...entry,
-              href: entry.id,
-            }));
+
+        // filter entries with preview image
+        const showcaseFiltered = showcase
+          .filter((entry) => !!entry.previews.length)
+          .slice(0, 3)
+          .map((entry) => ({
+            ...entry,
+            href: entry.id,
+          }));
+
+        if (showcaseFiltered.length) {
+          this.placeholderData = showcaseFiltered;
+          // otherwise prefill with empty entries
+        } else {
+          for (let i = 1; i <= 3; i += 1) {
+            this.placeholderData.push({ title: '', href: '#' });
+          }
         }
+
+        this.isLoading = false;
       } catch (e) {
         console.error(e);
       }
@@ -213,6 +285,7 @@ export default {
   methods: {
     addSelectedEntries() {
       console.log('addSelectedEntries');
+      // TODO: add request to add selected entries
     },
     action(value) {
       if (value === 'addActivity') {
@@ -220,10 +293,29 @@ export default {
       }
       console.log(value);
     },
+    // Todo: refactor magic values, maybe with props?
+    calcSelectorEntriesPerPage() {
+      const { entrySelector } = this.$refs;
+      let bodyHeight = entrySelector.$refs.body.clientHeight;
+
+      // if pagination element is not present yet (on initial render) deduct height and spacing
+      // from height
+      if (!entrySelector.$refs.pagination) {
+        bodyHeight = bodyHeight - 48 - 16;
+      }
+      // hardcoded because unfortunately no other possibility found
+      const entryHeight = this.isMobile ? 48 : 57;
+      const numberOfEntries = Math.floor(bodyHeight / entryHeight);
+
+      return numberOfEntries > 4 ? numberOfEntries : 4;
+    },
     entriesChanged(entries) {
       console.log(entries);
     },
-    activate() {
+    /**
+     * enable edit mode
+     */
+    enableEdit() {
       this.edit = true;
     },
     transformData(data) {
@@ -233,15 +325,53 @@ export default {
         && typeof item.subtext[0] === 'string' ? item.subtext.join(', ') : item.subtext,
       }));
     },
+    /**
+     * search/fetch entries for add activities popup
+     */
+    async fetchEntries(requestObject) {
+      try {
+        this.isLoading = true;
+
+        this.selectorEntriesPerPage = this.calcSelectorEntriesPerPage();
+
+        let results = [];
+        const filters = [
+          {
+            label: 'Fulltext',
+            id: 'default',
+            // TODO: check how to fetch all entries without setting filter_value to ['a']
+            filter_values: requestObject.query.length ? requestObject.query.split(' ') : ['a'],
+            type: 'activity',
+          },
+        ];
+        const response = await this.$api.public.api_v1_search_create({}, {
+          requestBody: {
+            filters,
+            offset: (requestObject.page - 1) * this.selectorEntriesPerPage,
+            limit: this.selectorEntriesPerPage,
+          },
+        });
+        results = [JSON.parse(response.data)];
+
+        if (results) {
+          this.selectorEntriesNumber = results[0].total;
+          this.selectorEntries = results[0].data;
+        }
+
+        this.isLoading = false;
+      } catch (e) {
+        console.error(e);
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.base-sr--showcase {
+.base-sr-showcase {
   position: relative;
 
-  .base-sr--showcase-placeholder {
+  .base-sr-showcase__placeholder {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -253,10 +383,15 @@ export default {
     justify-content: center;
     align-items: center;
 
-    .base-sr--showcase-placeholder__button {
+    .base-sr-showcase__placeholder__button {
       box-shadow: $max-box-shadow;
       z-index: map-get($zindex, showcase-overlay-button);
     }
   }
+}
+
+.base-sr-entry-selector {
+  padding: 0 $spacing $spacing;
+  background-color: $background-color;
 }
 </style>
