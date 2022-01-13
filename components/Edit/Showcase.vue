@@ -52,10 +52,9 @@
       :options-button-text="$t('editView.optionsButtonText')"
       :selected-list="selectedBoxes"
       :select-options-text="{
-        selectAll: $t('editView.selectOptionsText.selectAll'),
-        selectNone: $t('editView.selectOptionsText.selectNone'),
+        ...$t('editView.selectOptionsText'),
         entriesSelected: $t('editView.selectOptionsText.entriesSelected',
-                            { type: $tc('activity', 0) }),
+                            { type: $tc('activity', selectedBoxes.length) }),
       }"
       :show-options="true"
       :show-action-button-box="true"
@@ -105,6 +104,8 @@
       @button-left="showAddActivityPopUp = false"
       @button-right="addSelectedEntries"
       @close="showAddActivityPopUp = false">
+      <!-- TODO: fix number of selected boxes as soon as number is available
+      in front end -->
       <BaseEntrySelector
         ref="entrySelector"
         :entries="selectorEntries"
@@ -116,8 +117,7 @@
         :options-hidden="true"
         :sort-options="sortOptions"
         :entry-selector-text="{
-          selectAll: $t('editView.selectOptionsText.selectAll'),
-          selectNone: $t('editView.selectOptionsText.selectNone'),
+          ...$t('editView.selectOptionsText'),
           entriesSelected: $t('editView.selectOptionsText.entriesSelected',
                               { type: $tc('activity', 0) }),
           ...$t('editView.selectActivitiesPopUp')
