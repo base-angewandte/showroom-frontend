@@ -1,7 +1,7 @@
 {
+  "activity": "Activities | Activity | Activities",
   "de": "German",
   "en": "English",
-  "activity": "Activities | Activity | Activities",
   "detailView": {
     "activityLists": "Activity list",
     "lists": "Lists",
@@ -79,13 +79,7 @@
     "selectOptionsText": {
       "selectAll": "select all",
       "selectNone": "select none",
-      "entriesSelected": {
-        "string": "entries selected",
-        "count": 0,
-        "variables": {
-          "type": "activity"
-        }
-      }
+      "entriesSelected": "{type} selected"
     },
     "selectActivitiesPopUp": {
       "noEntriesTitle": "No matching activities found",

@@ -1,4 +1,5 @@
 {
+  "activity": "Aktivitäten | Aktivität | Aktivitäten",
   "de": "Deutsch",
   "en": "Englisch",
   "detailView": {
@@ -78,13 +79,7 @@
     "selectOptionsText": {
       "selectAll": "Alle auswählen",
       "selectNone": "Keine auswählen",
-      "entriesSelected": {
-        "string": "ausgewählte Einträge",
-        "count": 0,
-        "variables": {
-          "type": "Datei"
-        }
-      }
+      "entriesSelected": "{type} ausgewählt"
     },
     "selectActivitiesPopUp": {
       "noEntriesTitle": "Keine passenden Aktivitäten gefunden",

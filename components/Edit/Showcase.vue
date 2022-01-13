@@ -51,7 +51,12 @@
       :message-subtext="$t('editView.message.subtext')"
       :options-button-text="$t('editView.optionsButtonText')"
       :selected-list="selectedBoxes"
-      :select-options-text="$t('editView.selectOptionsText')"
+      :select-options-text="{
+        selectAll: $t('editView.selectOptionsText.selectAll'),
+        selectNone: $t('editView.selectOptionsText.selectNone'),
+        entriesSelected: $t('editView.selectOptionsText.entriesSelected',
+                            { type: $tc('activity', 0) }),
+      }"
       :show-options="true"
       :show-action-button-box="true"
       @submit-action="action"
@@ -111,7 +116,10 @@
         :options-hidden="true"
         :sort-options="sortOptions"
         :entry-selector-text="{
-          ...$t('editView.selectOptionsText'),
+          selectAll: $t('editView.selectOptionsText.selectAll'),
+          selectNone: $t('editView.selectOptionsText.selectNone'),
+          entriesSelected: $t('editView.selectOptionsText.entriesSelected',
+                              { type: $tc('activity', 0) }),
           ...$t('editView.selectActivitiesPopUp')
         }"
         class="base-sr-entry-selector"
@@ -241,6 +249,13 @@ export default {
         },
       ],
     };
+  },
+  watch: {
+    showAddActivityPopUp(val) {
+      if (!val) {
+        this.edit = val;
+      }
+    },
   },
   async created() {
     /**
