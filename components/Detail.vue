@@ -4,8 +4,8 @@
       class="base-sr-head">
       <BaseExpandBox
         :auto-height="true"
-        :show-more-text="$t('show_more')"
-        :show-less-text="$t('show_less')"
+        :show-more-text="$t('detailView.showMore')"
+        :show-less-text="$t('detailView.showLess')"
         padding="large"
         class="base-sr-row base-sr-head__primary"
         @box-height="setFeaturedMediaHeight">
@@ -27,7 +27,7 @@
             <h2
               v-if="data.expertise"
               class="base-sr-chips__label">
-              {{ $t('expertise') }}
+              {{ $t('detailView.expertise') }}
             </h2>
 
             <template v-if="type === 'person'">
@@ -57,7 +57,7 @@
         <template #footer>
           <BaseButton
             :has-background-color="false"
-            :text="$i18n.t('print')"
+            :text="$i18n.t('detailView.print')"
             :icon-colored="true"
             icon="print"
             icon-position="top"
@@ -91,18 +91,18 @@
         <!-- TODO: this is just a placeholder - add properly styled user
         add image elements and info! -->
         <p class="base-sr-featured-media__profile-image__header">
-          {{ $t('entityView.profileImageHeader') }}
+          {{ $t('editView.profileImageHeader') }}
         </p>
         <p>
-          {{ $t('entityView.profileImageLink1') }}
+          {{ $t('editView.profileImageLink1') }}
           <a
             :href="userPreferencesUrl"
-            :title="$t('entityView.profileImageLink2')">
+            :title="$t('editView.profileImageLink2')">
             <span class="base-sr-featured-media__profile-image__link">
-              {{ $t('entityView.profileImageLink2') }}
+              {{ $t('editView.profileImageLink2') }}
             </span>
           </a>
-          {{ $t('entityView.profileImageLink3') }}
+          {{ $t('editView.profileImageLink3') }}
         </p>
       </div>
     </div>
@@ -116,7 +116,7 @@
         :controls="true"
         :edit="editList"
         :subtitle="'(' + data.list.filter(item => !item.hidden).length + ')'"
-        :title="type !== 'person' ? $t('lists') : $t('activityLists')"
+        :title="type !== 'person' ? $t('detailView.lists') : $t('detailsView.activityLists')"
         class="base-sr--ml-small"
         @activated="activateList"
         @canceled="cancelList"
@@ -128,8 +128,8 @@
         :data="editList
           ? titleCaseLabels(data.list)
           : titleCaseLabels(data.list).filter(item => !item.hidden)"
-        :show-more-text="$t('show_all')"
-        :show-less-text="$t('show_less')"
+        :show-more-text="$t('detailView.showAll')"
+        :show-less-text="$t('detailView.showLess')"
         @saved="saveListEdit">
         <template #content="props">
           <BaseLink
@@ -150,7 +150,7 @@
       v-if="type === 'person'
         && ((data.showcase && data.showcase.length)
           || userCanEdit)"
-      :title="$t('activityShowcase')"
+      :title="$t('detailView.activityShowcase')"
       :user-can-edit="userCanEdit"
       class="base-sr-row" />
 
@@ -159,17 +159,17 @@
       v-if="data.locations && data.locations.length"
       class="base-sr-row">
       <h2 class="base-sr--ml-small">
-        {{ data.locations.length > 1 ? $t('locations') : $t('location') }}
+        {{ $tc('detailView.location', data.locations.length) }}
       </h2>
 
       <base-expand-box
-        :show-more-text="$t('show_more_map')"
-        :show-less-text="$t('show_less_map')">
+        :show-more-text="$t('detailView.showMoreMap')"
+        :show-less-text="$t('detailView.showLessMap')">
         <base-map-locations
           attribution-position="topright"
           :attribution="mapAttribution"
           :copyright="mapCopyright"
-          :label="data.locations.length > 1 ? $t('addresses') : $t('address')"
+          :label="$tc('detailView.address', data.locations.length)"
           :locations="data.locations"
           :options="mapOptions"
           :tile-layer-service="mapTileLayerService"
@@ -181,23 +181,19 @@
     <BaseResultBoxSection
       v-if="data.entries && data.entries.media && data.entries.media.length"
       :entry-list="data.entries.media"
-      :expand-text="$t('results.expand')"
+      :expand-text="$t('resultsView.expand')"
       :is-loading="isLoading"
       :jump-to-top="true"
       :max-rows="2"
       :current-page-number="1"
       :max-show-more-rows="1"
-      :message-text="$t('results.message.text')"
-      :message-subtext="$t('results.message.subtext')"
-      :options-button-text="$t('results.optionsButtonText')"
-      :select-options-text="$t('results.selectOptionsText')"
       :show-options="false"
       :use-expand-mode="true"
       :use-pagination="true"
       class="base-sr-row">
       <template #header>
         <h2 class="base-sr--ml-small">
-          {{ $t('associatedMediaFiles') }}
+          {{ $t('detailView.associatedMediaFiles') }}
         </h2>
       </template>
 
@@ -232,7 +228,7 @@
           :key="index"
           :entry-list="section"
           :show-options="false"
-          :expand-text="$t('results.expand')"
+          :expand-text="$t('resultsView.expand')"
           :total="section.length"
           :max-show-more-rows="1"
           :current-page-number="1"
@@ -243,7 +239,7 @@
           class="base-sr-row">
           <template #header>
             <h2 class="base-sr--ml-small">
-              {{ $t(`linked_${index}`) }}
+              {{ $t(`detailView.linked_${index}`) }}
             </h2>
           </template>
           <template #resultBox="{ item }">
@@ -263,7 +259,7 @@
 
     <Search
       v-if="type === 'person'"
-      :header-text="$t('results.headerText.entityResults', { entity: data.title })"
+      :header-text="$t('resultsView.headerText.entityResults', { entity: data.title })"
       :result-list.sync="searchResults"
       :applied-filters.sync="appliedFilters"
       :autocomplete-results="autocompleteResults"
@@ -280,11 +276,11 @@
       <p>
         <template
           v-if="data.publisher.length">
-          {{ $t('publisher') }}: {{ data.publisher[0].name }} |
+          {{ $t('detailView.publisher') }}: {{ data.publisher[0].name }} |
         </template>
         Showroom Instance: {{ data.source_institution.label }} |
-        {{ $t('publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
-        {{ $t('editedDate') }}: {{ createHumanReadableDate(data.date_changed) }}
+        {{ $t('detailView.publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
+        {{ $t('detailView.editedDate') }}: {{ createHumanReadableDate(data.date_changed) }}
       </p>
     </div>
   </div>
@@ -578,7 +574,7 @@ export default {
           title: !obj.title && item.alternative
             ? item.alternative.join(', ')
             : '',
-          additionalInfo: [`${this.$t('license')}: ${item.license.label}`],
+          additionalInfo: [`${this.$t('detailView.license')}: ${item.license.label}`],
           ...obj,
         };
       });

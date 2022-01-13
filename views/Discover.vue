@@ -1,7 +1,7 @@
 <template>
   <div class="discover__container">
     <h1 class="hide">
-      {{ $t('discover.title') }}
+      {{ $t('discoverView.title') }}
     </h1>
 
     <client-only>

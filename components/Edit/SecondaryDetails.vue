@@ -16,8 +16,8 @@
     <BaseExpandBox
       v-if="data[0] && data[0].data.length && !edit"
       :auto-height="true"
-      :show-more-text="$i18n.t('show_more')"
-      :show-less-text="$i18n.t('show_less')"
+      :show-more-text="$i18n.t('detailView.showMore')"
+      :show-less-text="$i18n.t('detailView.showLess')"
       padding="large">
       <BaseTextList
         render-label-as="h2"
@@ -37,14 +37,14 @@
       <!-- empty data -->
       <template
         v-if="!edit">
-        <h2>{{ $t('details') }}</h2>
+        <h2>{{ $t('detailView.details') }}</h2>
 
         <div>
-          <span>{{ $t('editTextReminder') }}</span>
+          <span>{{ $t('editView.editTextReminder') }}</span>
           <button
             class="base-sr-text-button"
             @click="activateEdit()">
-            {{ $t('editNow') }}
+            {{ $t('editView.editNow') }}
           </button>.
         </div>
       </template>
@@ -55,8 +55,8 @@
         v-model="textInput"
         :tabs="tabs"
         :active-tab="activeTab"
-        :label="data[0] && data[0].label ? data[0].label: $t('details')"
-        :placeholder="$t('editTextReminder')" />
+        :label="data[0] && data[0].label ? data[0].label: $t('detailView.details')"
+        :placeholder="$t('editView.editTextReminder')" />
     </BaseBox>
   </div>
 </template>
@@ -184,6 +184,7 @@ export default {
 
       // format requestBody
       const requestBody = this.editData;
+      // TODO: why is this always the english being fetched?
       this.locales.forEach((locale) => {
         requestBody[0][locale][0].data = this.textInput[this.$t('en')];
       });

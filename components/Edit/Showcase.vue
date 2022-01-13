@@ -17,7 +17,7 @@
           && carouselInitialized"
         class="base-sr-showcase__placeholder">
         <BaseBoxButton
-          :text="$t('entityView.placeholderCarouselButton')"
+          :text="$t('editView.addActivities')"
           :box-size="{ width: '200px' }"
           :show-plus="true"
           icon="file-object"
@@ -45,13 +45,13 @@
       v-model="dataInt"
       :draggable="true"
       :edit-mode.sync="edit"
-      :expand-text="$t('results.expand')"
+      :expand-text="$t('resultsView.expand')"
       :is-loading="false"
-      :message-text="$t('results.message.text')"
-      :message-subtext="$t('results.message.subtext')"
-      :options-button-text="$t('results.optionsButtonText')"
+      :message-text="$t('editView.message.text')"
+      :message-subtext="$t('editView.message.subtext')"
+      :options-button-text="$t('editView.optionsButtonText')"
       :selected-list="selectedBoxes"
-      :select-options-text="$t('results.selectOptionsText')"
+      :select-options-text="$t('editView.selectOptionsText')"
       :show-options="true"
       :show-action-button-box="true"
       @submit-action="action"
@@ -66,13 +66,13 @@
 
       <template #optionButtons="scope">
         <BaseButton
-          :text="$t('add_activities')"
+          :text="$t('editView.addActivities')"
           icon-size="large"
           icon="add-new-object"
           button-style="single"
           @clicked="scope.submitAction('addActivity')" />
         <BaseButton
-          :text="$t('delete')"
+          :text="$t('editView.delete')"
           icon-size="large"
           icon="waste-bin"
           button-style="single"
@@ -94,9 +94,9 @@
 
     <!-- add activity -->
     <BasePopUp
-      :button-right-text="$t('selectEntries')"
+      :button-right-text="$t('editView.selectCarouselActivities')"
       :show="showAddActivityPopUp"
-      :title="$t('add_activities')"
+      :title="$t('editView.addActivities')"
       @button-left="showAddActivityPopUp = false"
       @button-right="addSelectedEntries"
       @close="showAddActivityPopUp = false">
@@ -110,6 +110,10 @@
         :is-loading="isLoading"
         :options-hidden="true"
         :sort-options="sortOptions"
+        :entry-selector-text="{
+          ...$t('editView.selectOptionsText'),
+          ...$t('editView.selectActivitiesPopUp')
+        }"
         class="base-sr-entry-selector"
         @fetch-entries="fetchEntries" />
     </BasePopUp>

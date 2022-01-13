@@ -1,85 +1,29 @@
 {
-  "activityLists": "Aktivitätenlisten",
-  "activityShowcase": "Showcase",
-  "address": "Adresse",
-  "addresses": "Adressen",
-  "add_activity": "Aktivität hinzufügen",
-  "add_activities": "Aktivitäten hinzufügen",
-  "associatedMediaFiles": "Mediendateien",
-  "details": "Details",
   "de": "Deutsch",
   "en": "Englisch",
-  "editButtonText": "editieren",
-  "editNow": "Jetzt bearbeiten",
-  "editTextReminder": "Hier kann individueller Text eingetragen werden.",
-  "editedDate": "Geändert am",
-  "errors": {
-    "homepage": "Startseite",
-    "404": {
-      "title": "Error 404",
-      "description": "Die angeforderte URL wurde auf diesem Server nicht gefunden."
-    },
-    "500": {
-      "title": "Error 500 - Interner Serverfehler",
-      "description": "Sorry, ein Fehler ist aufgetreten."
-    }
+  "detailView": {
+    "activityLists": "Aktivitätenlisten",
+    "lists": "Listen",
+    "activityShowcase": "Showcase",
+    "associatedMediaFiles": "Mediendateien",
+    "details": "Details",
+    "address": "Adressen | Adresse | Adressen",
+    "expertise": "Expertise",
+    "publisher": "Veröffentlicht von",
+    "editedDate": "Geändert am",
+    "publishedDate": "Veröffentlicht am",
+    "linked_from": "Übergeordnete Aktivität",
+    "linked_to": "Verknüpfte Aktivitäten",
+    "location": "Orte | Ort | Orte",
+    "showMore": "Mehr anzeigen",
+    "showMoreMap": "Karte und Adresse anzeigen",
+    "showLess": "Weniger anzeigen",
+    "showLessMap": "Karte und Adresse verstecken",
+    "showAll": "Alle anzeigen",
+    "license": "Lizenz",
+    "print": "Drucken"
   },
-  "expertise": "Expertise",
-  "frontend": "Showroom",
-  "license": "Lizenz",
-  "linked_from": "Übergeordnete Aktivität",
-  "linked_to": "Verknüpfte Aktivitäten",
-  "lists": "Listen",
-  "location": "Ort",
-  "locations": "Orte",
-  "notify": {
-    "saveFail": "Speichern fehlgeschlagen",
-    "saveSuccess": "Eintrag gespeichert",
-    "saveSuccessSubtext": "Der Eintrag konnte erfolgreich gespeichert werden.",
-    "errorDownload": "Etwas ist schief gelaufen!",
-    "errorDownloadSubtext": "Beim Herunterladen der Datei {fileName} ist ein Fehler aufgetreten "
-  },
-  "publisher": "Veröffentlicht von",
-  "publishedDate": "Veröffentlicht am",
-  "print": "Drucken",
-  "results": {
-    "expand": {
-      "expand": "weitere Objekte",
-      "collapse": "weniger anzeigen"
-    },
-    "message": {
-      "text": "Verschieben oder Auswählen",
-      "subtext": "Sortiere die Einträge per Drag & Drop oder wähle die Einträge und eine Aktion aus"
-    },
-    "optionsButtonText": {
-      "show": "editieren",
-      "hide": "abbrechen"
-    },
-    "selectOptionsText": {
-      "selectAll": "Alle auswählen",
-      "selectNone": "Keine auswählen",
-      "entriesSelected": {
-        "string": "ausgewählte Einträge",
-        "count": 0,
-        "variables": {
-          "type": "Datei"
-        }
-      }
-    },
-    "headerText": {
-      "latestActivities": "Aktuelle Aktivitäten",
-      "results": "Suchergebnisse",
-      "entityResults": "{entity}'s Aktivitäten"
-    }
-  },
-  "search": "Suche",
-  "selectEntries": "Einträge auswählen",
-  "show_more": "Mehr anzeigen",
-  "show_more_map": "Karte und Adresse anzeigen",
-  "show_less": "Weniger anzeigen",
-  "show_less_map": "Karte und Adresse verstecken",
-  "show_all": "Alle anzeigen",
-  "discover": {
+  "discoverView": {
     "title": "Search and Discover Showroom"
   },
   "searchView": {
@@ -105,19 +49,78 @@
       "chipsMaxOptions": "Bitte fangen Sie an zu tippen um Optionen zu sehen",
       "chipsNoMatch":  "Keine passenden Optionen gefunden",
       "chipsOngoing": "Optionen werden geladen..."
+    },
+    "noResultsHeading": "Keine Ergebnisse gefunden.",
+    "noResultsText": "Es wurden keine Suchergebnisse mit den angewandten Kriterien gefunden.\nBitte passen Sie Ihre Suche an.",
+    "noResultsInitial": "Keine Daten zum Anzeigen vorhanden.",
+    "noResultsTextInitial": "Es gibt hier noch keine Daten anzuzeigen.\nVersuche Filter anzuwenden um Inhalte dieses Showrooms zu sehen!"
+  },
+  "resultsView": {
+    "expand": {
+      "expand": "weitere Objekte",
+      "collapse": "weniger anzeigen"
+    },
+    "headerText": {
+      "latestActivities": "Aktuelle Aktivitäten",
+      "results": "Suchergebnisse",
+      "entityResults": "{entity}'s Aktivitäten"
     }
   },
-  "search-component": {
-    "no-results-heading": "Keine Ergebnisse gefunden.",
-    "no-results-text": "Es wurden keine Suchergebnisse mit den angewandten Kriterien gefunden.\nBitte passen Sie Ihre Suche an.",
-    "no-results-initial": "Keine Daten zum Anzeigen vorhanden.",
-    "no-results-text-initial": "Es gibt hier noch keine Daten anzuzeigen.\nVersuche Filter anzuwenden um Inhalte dieses Showrooms zu sehen!"
-  },
-  "entityView": {
+  "editView": {
     "profileImageHeader": "Userbild hinzufügen",
     "profileImageLink1": "Bitte besuchen Sie ihre ",
     "profileImageLink2": "Benutzerpräferenzenseite ",
     "profileImageLink3": "um ein Userbild zu Ihrer persönlichen Seite hinzuzufügen.",
-    "placeholderCarouselButton": "Aktivitäten hinzufügen"
+    "editNow": "Jetzt bearbeiten",
+    "editTextReminder": "Hier kann individueller Text eingetragen werden.",
+    "addActivities": "Aktivitäten hinzufügen",
+    "delete": "Aktivitäten entfernen",
+    "selectOptionsText": {
+      "selectAll": "Alle auswählen",
+      "selectNone": "Keine auswählen",
+      "entriesSelected": {
+        "string": "ausgewählte Einträge",
+        "count": 0,
+        "variables": {
+          "type": "Datei"
+        }
+      }
+    },
+    "selectActivitiesPopUp": {
+      "noEntriesTitle": "Keine passenden Aktivitäten gefunden",
+      "noEntriesSubtext": "Bitte passen Sie die Suchkriterien an.",
+      "options": {
+        "show": "Optionen",
+        "hide": "Optionen"
+      },
+      "search": "Alle Aktivitiäten durchsuchen"
+    },
+    "selectCarouselActivities": "Einträge auswählen",
+    "message": {
+      "text": "Verschieben oder Auswählen",
+      "subtext": "Sortiere die Einträge per Drag & Drop oder wähle die Einträge und eine Aktion aus"
+    },
+    "optionsButtonText": {
+      "show": "editieren",
+      "hide": "abbrechen"
+    }
+  },
+  "notify": {
+    "saveFail": "Speichern fehlgeschlagen",
+    "saveSuccess": "Eintrag gespeichert",
+    "saveSuccessSubtext": "Der Eintrag konnte erfolgreich gespeichert werden.",
+    "errorDownload": "Etwas ist schief gelaufen!",
+    "errorDownloadSubtext": "Beim Herunterladen der Datei {fileName} ist ein Fehler aufgetreten "
+  },
+  "errors": {
+    "homepage": "Startseite",
+    "404": {
+      "title": "Error 404",
+      "description": "Die angeforderte URL wurde auf diesem Server nicht gefunden."
+    },
+    "500": {
+      "title": "Error 500 - Interner Serverfehler",
+      "description": "Sorry, ein Fehler ist aufgetreten."
+    }
   }
 }

@@ -48,7 +48,7 @@
             ]"
             :expanded="!useCollapsedMode"
             :current-page-number="currentPageNumber"
-            :expand-text="$t('results.expand')"
+            :expand-text="$t('resultsView.expand')"
             :total="section.total"
             :max-show-more-rows="resultListInt.length > 1 ? 2 : 3"
             :use-pagination="true"
@@ -88,14 +88,14 @@
           <h5
             v-if="!searchRequestOngoing"
             class="showroom-search__no-results__header">
-            {{ filtersApplied ? $t('search-component.no-results-heading')
-              : $t('search-component.no-results-initial') }}
+            {{ filtersApplied ? $t('searchView.noResultsHeading')
+              : $t('searchView.noResultsInitial') }}
           </h5>
           <p
             v-if="!searchRequestOngoing"
             class="showroom-search__no-results__text">
-            {{ filtersApplied ? $t('search-component.no-results-text')
-              : $t('search-component.no-results-text-initial') }}
+            {{ filtersApplied ? $t('searchView.noResultsText')
+              : $t('searchView.noResultsTextInitial') }}
           </p>
         </div>
       </template>
