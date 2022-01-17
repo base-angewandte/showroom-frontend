@@ -5,6 +5,7 @@
       v-if="userCanEdit && !edit"
       :controls="true"
       :edit="edit"
+      :disabled="!dataInt.length"
       :title="title"
       class="base-sr--ml-small"
       @activated="enableEdit" />
@@ -12,6 +13,7 @@
     <div class="base-sr-showcase">
       <div
         v-if="!!placeholderData
+          && !dataInt.length
           && !edit
           && userCanEdit
           && carouselInitialized"
@@ -24,7 +26,7 @@
           box-style="large"
           box-type="button"
           class="base-sr-showcase__placeholder__button"
-          @clicked="(edit = true) + (showAddActivityPopUp = true)" />
+          @clicked="(showPopUp = true)" />
       </div>
 
       <BaseLoader
@@ -33,8 +35,8 @@
 
       <!-- display showcase -->
       <BaseCarousel
-        v-if="(data.length || placeholderData.length) && !edit"
-        :items="data && data.length ? data : placeholderData"
+        v-if="(dataInt.length || placeholderData.length) && !edit"
+        :items="dataInt && dataInt.length ? dataInt : placeholderData"
         :swiper-options="carouselOptions"
         @initialized="carouselInitialized = true" />
     </div>
@@ -50,7 +52,7 @@
       :message-text="$t('editView.message.text')"
       :message-subtext="$t('editView.message.subtext')"
       :options-button-text="$t('editView.optionsButtonText')"
-      :selected-list="selectedBoxes"
+      :selected-list.sync="selectedBoxes"
       :select-options-text="{
         ...$t('editView.selectOptionsText'),
         entriesSelected: $t('editView.selectOptionsText.entriesSelected',
@@ -58,8 +60,8 @@
       }"
       :show-options="true"
       :show-action-button-box="true"
-      @submit-action="action"
-      @entries-changed="entriesChanged">
+      @submit-action="actionHandler"
+      @entries-changed="actionHandler('sort', $event)">
       <template
         v-if="title"
         #header>
@@ -74,36 +76,26 @@
           icon-size="large"
           icon="add-new-object"
           button-style="single"
-          @clicked="scope.submitAction('addActivity')" />
+          @clicked="scope.submitAction('showPopup')" />
         <BaseButton
           :text="$t('editView.delete')"
+          :disabled="!selectedBoxes.length"
           icon-size="large"
           icon="waste-bin"
           button-style="single"
           @clicked="scope.submitAction('delete')" />
       </template>
-
-      <template #resultBox="{ item }">
-        <BaseImageBox
-          :key="item.id"
-          :title="item.title"
-          :subtext="item.subtitle"
-          :description="item.description"
-          :image-url="item.previews[0]['640w']"
-          :link-to="item.id"
-          :box-text="item.alternative_text"
-          render-element-as="nuxt-link" />
-      </template>
     </BaseResultBoxSection>
 
     <!-- add activity -->
     <BasePopUp
-      :button-right-text="$t('editView.selectCarouselActivities')"
-      :show="showAddActivityPopUp"
+      :button-right-text="$t('selectEntries')"
       :title="$t('editView.addActivities')"
-      @button-left="showAddActivityPopUp = false"
+      :show="showPopUp"
+      class="base-sr-popup"
+      @button-left="showPopUp = false"
       @button-right="addSelectedEntries"
-      @close="showAddActivityPopUp = false">
+      @close="showPopUp = false">
       <!-- TODO: fix number of selected boxes as soon as number is available
       in front end -->
       <BaseEntrySelector
@@ -123,7 +115,36 @@
           ...$t('editView.selectActivitiesPopUp')
         }"
         class="base-sr-entry-selector"
-        @fetch-entries="fetchEntries" />
+        @selected-changed="selectorSelectedEntries = $event"
+        @fetch-entries="fetchEntriesRequest" />
+
+      <template #button-row>
+        <base-button
+          button-style="single"
+          :text="$t('cancel')"
+          icon="remove"
+          icon-position="right"
+          icon-size="small"
+          class="base-sr-popup__button"
+          @clicked="cancel" />
+        <base-button
+          button-style="single"
+          :text="$t('editView.addActivities')"
+          :icon="isSaving ? '' : 'check-mark'"
+          :disabled="!selectorSelectedEntries.length"
+          icon-position="right"
+          icon-size="small"
+          class="base-sr-popup__button"
+          @clicked="actionHandler('add')">
+          <template
+            v-if="isSaving"
+            slot="right-of-text">
+            <span class="base-sr-popup__button__loader">
+              <BaseLoader />
+            </span>
+          </template>
+        </base-button>
+      </template>
     </BasePopUp>
   </div>
 </template>
@@ -163,7 +184,7 @@ export default {
   components: {},
   props: {
     /**
-     * specify array to render showcase
+     * specify data to render showcase
      */
     data: {
       type: Array,
@@ -216,12 +237,14 @@ export default {
       dataInt: this.data,
       edit: false,
       isLoading: false,
+      isSaving: false,
       placeholderData: [],
       selectedBoxes: [],
       selectorEntries: [],
       selectorEntriesNumber: null,
       selectorEntriesPerPage: 4,
-      showAddActivityPopUp: false,
+      selectorSelectedEntries: [],
+      showPopUp: false,
       sortOptions: [
         {
           label: 'By Type',
@@ -251,11 +274,11 @@ export default {
     };
   },
   watch: {
-    showAddActivityPopUp(val) {
-      if (!val) {
-        this.edit = val;
-      }
-    },
+    // showPopUp(val) {
+    //   if (!val) {
+    //     this.edit = val;
+    //   }
+    // },
   },
   async created() {
     /**
@@ -264,7 +287,7 @@ export default {
      *       prefill showcase carousel if possible:
      *       1. user entries or 2. global entries or 3. empty entries
      */
-    if (!this.data || !this.data.length) {
+    if (!this.dataInt || !this.dataInt.length) {
       try {
         this.isLoading = true;
         const response = await this.$api.public.api_v1_initial_retrieve({
@@ -302,15 +325,94 @@ export default {
     }
   },
   methods: {
-    addSelectedEntries() {
-      console.log('addSelectedEntries');
-      // TODO: add request to add selected entries
+    cancel() {
+      this.showPopUp = false;
+      this.isLoading = false;
+      this.isSaving = false;
     },
-    action(value) {
-      if (value === 'addActivity') {
-        this.showAddActivityPopUp = true;
+    /**
+     * request to save data to db
+     *
+     * @param {Array} data - entries
+     * @param {String} action
+     * @returns {Promise<void>}
+     */
+    async updateRequest(data, action) {
+      try {
+        this.isSaving = true;
+        const response = await this.$api.auth.api_v1_entities_edit_partial_update(
+          {
+            id: this.$route.params.id,
+          },
+          {
+            requestBody: {
+              showcase: data,
+            },
+          },
+        );
+
+        // add notifications depending on action
+        if (action !== 'sort') {
+          this.$notify({
+            group: 'request-notifications',
+            title: this.$t('notify.saveSuccess'),
+            text: this.$t('notify.saveSuccessSubtext'),
+            type: 'success',
+          });
+        }
+
+        // empty container variables
+        this.selectedBoxes = [];
+        this.selectorSelectedEntries = [];
+
+        // update states
+        this.showPopUp = false;
+        this.isSaving = false;
+
+        // update showcase data
+        this.dataInt = JSON.parse(response.data).showcase
+          // format data for component
+          .map((entry) => ({
+            ...entry.data,
+            imageUrl: entry.data.image_url,
+          }));
+
+        // hide edit mode if all entries have been removed
+        this.edit = !!this.dataInt.length;
+      } catch (e) {
+        console.log(e);
       }
-      console.log(value);
+    },
+    async actionHandler(action, entries = []) {
+      if (action === 'showPopup') {
+        this.showPopUp = true;
+        return;
+      }
+
+      let showcase = [];
+
+      if (action === 'delete') {
+        showcase = this.dataInt.filter((entry) => !this.selectedBoxes.includes(entry.id));
+      }
+
+      if (action === 'add') {
+        showcase = [
+          ...this.dataInt,
+          ...this.selectorSelectedEntries,
+        ];
+      }
+
+      if (action === 'sort') {
+        showcase = entries;
+      }
+
+      // filter relevant request data
+      const requestData = showcase.map((item) => ({
+        id: item.id,
+        type: item.type,
+      }));
+
+      await this.updateRequest(requestData, action);
     },
     // Todo: refactor magic values, maybe with props?
     calcSelectorEntriesPerPage() {
@@ -328,32 +430,23 @@ export default {
 
       return numberOfEntries > 4 ? numberOfEntries : 4;
     },
-    entriesChanged(entries) {
-      console.log(entries);
-    },
     /**
      * enable edit mode
      */
     enableEdit() {
       this.edit = true;
     },
-    transformData(data) {
-      return data.map((item) => ({
-        ...item,
-        subtext: typeof item.subtext === 'object'
-        && typeof item.subtext[0] === 'string' ? item.subtext.join(', ') : item.subtext,
-      }));
-    },
     /**
      * search/fetch entries for add activities popup
+     *
+     * @param {Object} requestObject
+     * @returns {Promise<void>}
      */
-    async fetchEntries(requestObject) {
+    async fetchEntriesRequest(requestObject) {
       try {
         this.isLoading = true;
-
         this.selectorEntriesPerPage = this.calcSelectorEntriesPerPage();
 
-        let results = [];
         const filters = [
           {
             label: 'Fulltext',
@@ -363,6 +456,7 @@ export default {
             type: 'activity',
           },
         ];
+
         const response = await this.$api.public.api_v1_search_create({}, {
           requestBody: {
             filters,
@@ -370,11 +464,12 @@ export default {
             limit: this.selectorEntriesPerPage,
           },
         });
-        results = [JSON.parse(response.data)];
+
+        const results = JSON.parse(response.data);
 
         if (results) {
-          this.selectorEntriesNumber = results[0].total;
-          this.selectorEntries = results[0].data;
+          this.selectorEntriesNumber = results.total;
+          this.selectorEntries = results.data;
         }
 
         this.isLoading = false;
@@ -413,4 +508,29 @@ export default {
   padding: 0 $spacing $spacing;
   background-color: $background-color;
 }
+
+.base-sr-popup {
+
+  &__button {
+    flex-basis: 100%;
+
+    &__loader {
+      position: relative;
+      transform: scale(0.5);
+      margin-left: $spacing;
+      padding-left: $spacing;
+    }
+  }
+
+  &__button + &__button {
+    margin-left: 0;
+    margin-top: $spacing-small;
+
+    @media screen and (min-width: $breakpoint-small) {
+      margin-left: $spacing;
+      margin-top: 0;
+    }
+  }
+}
+
 </style>
