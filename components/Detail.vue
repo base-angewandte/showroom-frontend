@@ -98,9 +98,9 @@
           <a
             :href="userPreferencesUrl"
             :title="$t('editView.profileImageLink2')">
-            <span class="base-sr-featured-media__profile-image__link">
-              {{ $t('editView.profileImageLink2') }}
-            </span>
+            <span
+              class="base-sr-featured-media__profile-image__link">
+              {{ $t('editView.profileImageLink2') }}</span>
           </a>
           {{ $t('editView.profileImageLink3') }}
         </p>

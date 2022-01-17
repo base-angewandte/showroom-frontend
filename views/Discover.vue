@@ -246,12 +246,12 @@ export default {
   computed: {
     // TODO: remove again once API works properly
     appliedCarouselData() {
-      return this.carouselData && this.carouselData.length ? this.carouselData
-        .map((entry) => ({
-          ...entry,
-          href: entry.href || entry.id,
-        }))
-        : this.defaultCarouselData;
+      const data = this.carouselData && this.carouselData.length
+        ? this.carouselData : this.defaultCarouselData;
+      return data.map((entry) => ({
+        ...entry,
+        href: entry.href || entry.id,
+      }));
     },
     /**
      * determine if landing page mode should be applied (for search results and
