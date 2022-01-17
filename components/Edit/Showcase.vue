@@ -90,12 +90,14 @@
     <!-- add activity -->
     <BasePopUp
       :button-right-text="$t('selectEntries')"
+      :button-right-disabled="isSaving || !selectorSelectedEntries.length"
+      :is-loading="isSaving"
       :title="$t('editView.addActivities')"
       :show="showPopUp"
       class="base-sr-popup"
-      @button-left="showPopUp = false"
-      @button-right="addSelectedEntries"
-      @close="showPopUp = false">
+      @button-left="cancel"
+      @button-right="actionHandler('add')"
+      @close="cancel">
       <!-- TODO: fix number of selected boxes as soon as number is available
       in front end -->
       <BaseEntrySelector
@@ -117,34 +119,6 @@
         class="base-sr-entry-selector"
         @selected-changed="selectorSelectedEntries = $event"
         @fetch-entries="fetchEntriesRequest" />
-
-      <template #button-row>
-        <base-button
-          button-style="single"
-          :text="$t('cancel')"
-          icon="remove"
-          icon-position="right"
-          icon-size="small"
-          class="base-sr-popup__button"
-          @clicked="cancel" />
-        <base-button
-          button-style="single"
-          :text="$t('editView.addActivities')"
-          :icon="isSaving ? '' : 'check-mark'"
-          :disabled="!selectorSelectedEntries.length"
-          icon-position="right"
-          icon-size="small"
-          class="base-sr-popup__button"
-          @clicked="actionHandler('add')">
-          <template
-            v-if="isSaving"
-            slot="right-of-text">
-            <span class="base-sr-popup__button__loader">
-              <BaseLoader />
-            </span>
-          </template>
-        </base-button>
-      </template>
     </BasePopUp>
   </div>
 </template>
@@ -325,6 +299,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * cancel and reset popup
+     */
     cancel() {
       this.showPopUp = false;
       this.isLoading = false;
@@ -374,6 +351,7 @@ export default {
           // format data for component
           .map((entry) => ({
             ...entry.data,
+            href: entry.id,
             imageUrl: entry.data.image_url,
           }));
 
