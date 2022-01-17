@@ -8,7 +8,7 @@ const apiV1ActivitiesRead = require('./data/activities.json');
 const apiV1EntitiesActivitiesRead = require('./data/entities.activities.json');
 const apiV1EntitiesRead = require('./data/entities.json');
 const apiV1EntitiesSearch = require('./data/entities.id.search.json');
-const apiV1EntitiesActivitiesEditReadSD = require('./data/entities.secondaryDetails.json');
+const apiV1EntitiesSecondaryDetails = require('./data/entities.secondaryDetails.json');
 const apiV1Filters = require('./data/filters.json');
 const apiV1SearchResultsRead = require('./data/discover.search.results.json');
 const apiV1InitialResults = require('./data/initial.json');
@@ -165,15 +165,38 @@ const api = new OpenAPIBackend({
       apiV1EntitiesActivitiesRead,
     ),
     api_v1_entities_edit_retrieve: async (c, req, res) => {
-      if (req.query.field === 'secondary_details') {
-        res.status(200).json(apiV1EntitiesActivitiesEditReadSD);
+      let response = {};
+      if (req.query.secondary_details) {
+        response = { secondary_details: apiV1EntitiesSecondaryDetails };
       }
 
-      if (req.query.field === 'showcase') {
-        res.status(200).json({ message: 'tbd.' });
+      if (req.query.showcase) {
+        response = { showcase: [] };
       }
+
+      res.status(200).json(response);
     },
-    api_v1_entities_edit_update: async (c, req, res) => res.status(200).json(),
+    api_v1_entities_edit_partial_update: async (c, req, res) => {
+      let response = [];
+      if (req.body.secondary_details) {
+        // eslint-disable-next-line camelcase
+        const secondary_details = req.body;
+        response = { secondary_details };
+      }
+
+      if (req.body.showcase) {
+        const showcase = req.body.showcase.map((entry) => ({
+          ...entry,
+          data: apiV1SearchResultsRead.find((data) => data.id === entry.id),
+        }));
+
+        response = { showcase };
+      }
+
+      setTimeout(() => {
+        res.status(200).json(response);
+      }, 1000);
+    },
     swagger: async (c, req, res) => {
       // remove schema 'CommonList', due problems with converting circular structures to JSON
       // - not needed for further frontend processing
