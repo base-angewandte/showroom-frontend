@@ -179,16 +179,23 @@ const api = new OpenAPIBackend({
     api_v1_entities_edit_partial_update: async (c, req, res) => {
       let response = [];
       if (req.body.secondary_details) {
-        // eslint-disable-next-line camelcase
-        const secondary_details = req.body;
-        response = { secondary_details };
+        response = req.body;
       }
 
       if (req.body.showcase) {
-        const showcase = req.body.showcase.map((entry) => ({
-          ...entry,
-          data: apiV1SearchResultsRead.find((data) => data.id === entry.id),
-        }));
+        const showcase = req.body.showcase.map((item) => {
+          const data = apiV1SearchResultsRead.find((entry) => entry.id === item.id);
+          return {
+            ...item,
+            data: {
+              ...data,
+              previews: [
+                { '640w': 'https://placeimg.com/640/400/arch' },
+                { '768w': 'https://placeimg.com/768/600/arch' },
+              ],
+            },
+          };
+        });
 
         response = { showcase };
       }
