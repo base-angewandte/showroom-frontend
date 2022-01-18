@@ -89,7 +89,7 @@
 
     <!-- add activity -->
     <BasePopUp
-      :button-right-text="$t('selectEntries')"
+      :button-right-text="$t('editView.addActivities')"
       :button-right-disabled="isSaving || !selectorSelectedEntries.length"
       :is-loading="isSaving"
       :title="$t('editView.addActivities')"
