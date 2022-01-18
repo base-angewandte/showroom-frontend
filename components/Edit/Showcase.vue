@@ -182,31 +182,7 @@ export default {
   data() {
     return {
       activeAction: '',
-      carouselOptions: {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-        spaceBetween: 15,
-        loop: this.data.showcase && this.data.showcase.length > 3,
-        speed: 750,
-        // simulateTouch: false,
-        keyboard: {
-          enabled: true,
-        },
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        breakpoints: {
-          640: {
-            slidesPerView: 2,
-            slidesPerGroup: 2,
-          },
-          1024: {
-            slidesPerView: this.data.showcase && this.data.showcase.length < 3 ? 2 : 3,
-            slidesPerGroup: this.data.showcase && this.data.showcase.length < 3 ? 2 : 3,
-          },
-        },
-      },
+      carouselOptions: {},
       carouselInitialized: false,
       dataInt: this.data,
       edit: false,
@@ -248,11 +224,12 @@ export default {
     };
   },
   watch: {
-    // showPopUp(val) {
-    //   if (!val) {
-    //     this.edit = val;
-    //   }
-    // },
+    dataInt(val) {
+      this.setCarouselOptions(val);
+    },
+    placeholderData(val) {
+      this.setCarouselOptions(val);
+    },
   },
   async created() {
     /**
@@ -306,6 +283,37 @@ export default {
       this.showPopUp = false;
       this.isLoading = false;
       this.isSaving = false;
+    },
+    /**
+     * set carouselOptions
+     *
+     * @param {Array} data - array with carousel objects
+     */
+    setCarouselOptions(data) {
+      this.carouselOptions = {
+        slidesPerView: 1,
+        slidesPerGroup: 1,
+        spaceBetween: 15,
+        loop: data && data.length > 3,
+        speed: 750,
+        keyboard: {
+          enabled: true,
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        breakpoints: {
+          640: {
+            slidesPerView: 2,
+            slidesPerGroup: 2,
+          },
+          1024: {
+            slidesPerView: data && data.length < 3 ? 2 : 3,
+            slidesPerGroup: data && data.length < 3 ? 2 : 3,
+          },
+        },
+      };
     },
     /**
      * request to save data to db
