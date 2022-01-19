@@ -842,21 +842,46 @@ components:
       properties:
         id:
           type: string
-          description: the LDAP(?) id
+          description: The user id in the auth backend (i.e. source repo)
+          example: 0123456789ABCDEF0123456789ABCDEF
         name:
           type: string
-          description: the user's full name
+          description: The display name of the user
+          example: Firstname Lastname
         email:
           type: string
-          description: the user's email
+          description: The user's e-mail address
+          example: addy@example.org
         entity_id:
           type: string
-          description: The users Showroom ID
+          description: The user's associated showroom entity id. Or null, if no associated
+            showroom entity can be found
+          example: xZy2345aceg98QPT0246aC
+        entity_editing:
+          type: array
+          items:
+            type: string
+          description: List of entities that this user is allowed to edit
+          example:
+            - xZy2345aceg98QPT0246aC
+            - MtEaiJ7ZgjhFBbTn6rBMTU
+        groups:
+          type: array
+          items:
+            type: string
+          description: The groups this user belongs to.
+          example:
+            - foo_users
+            - bar_members
         permissions:
           type: array
           items:
             type: string
-          description: the permissions needed by base header
+          description: The permissions this user has.
+          example:
+            - view_foo
+            - view_bar
+            - edit_bar
 
     InitialData:
       type: object
