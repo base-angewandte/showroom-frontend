@@ -150,6 +150,7 @@
       v-if="type === 'person'
         && ((data.showcase && data.showcase.length)
           || userCanEdit)"
+      :data="data.showcase"
       :title="$t('detailView.activityShowcase')"
       :user-can-edit="userCanEdit"
       class="base-sr-row" />
