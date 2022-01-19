@@ -458,25 +458,30 @@ paths:
       tags:
         - auth
       parameters:
-        - name: id
-          in: path
-          required: true
+        - in: path
+          name: id
           schema:
             type: string
-        - name: secondary_details
-          in: query
-          required: false
-          default: false
-          description: 'Whether to include secondary_details in the response'
+          description: A unique value identifying this entity.
+          required: true
+        - in: query
+          name: secondary_details
           schema:
             type: boolean
-        - name: showcase
-          in: query
-          required: false
-          default: false
-          description: 'Whether to include showcasxe in the response'
+            default: false
+          description: Whether to include secondary_details in the response
+        - in: query
+          name: showcase
           schema:
             type: boolean
+            default: false
+          description: Whether to include showcase in the response
+        - in: query
+          name: showcase_details
+          schema:
+            type: boolean
+            default: false
+          description: Whether to include the pre-rendered showcase item details
       responses:
         '200':
           description: Object containing the requested user-editable fields/lists
@@ -491,7 +496,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Entity/Activities not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -502,11 +507,12 @@ paths:
       tags:
         - auth
       parameters:
-        - name: id
-          in: path
-          required: true
+        - in: path
+          name: id
           schema:
             type: string
+          description: A unique value identifying this entity.
+          required: true
       requestBody:
         content:
           application/json:
@@ -515,8 +521,12 @@ paths:
         description: Object containing the fields/lists to update
         required: true
       responses:
-        '204':
+        '200':
           description: Successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityEdit'
         '400':
           description: Invalid input
           content:
@@ -530,7 +540,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Not found
+          description: Not Found
           content:
             application/json:
               schema:
