@@ -287,6 +287,9 @@ export default {
       }
     }
   },
+  mounted() {
+    this.setCarouselOptions(this.dataInt);
+  },
   methods: {
     /**
      * cancel and reset popup
