@@ -153,6 +153,7 @@
       :data="data.showcase"
       :title="$t('detailView.activityShowcase')"
       :user-can-edit="userCanEdit"
+      :data="data.showcase"
       class="base-sr-row" />
 
     <!-- locations -->
