@@ -91,6 +91,7 @@
       },
       "search": "Search all Activities"
     },
+    "sortBy": "Sort by",
     "selectCarouselActivities": "Select entries",
     "message": {
       "text": "Drag or Select",

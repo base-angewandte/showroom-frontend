@@ -103,17 +103,29 @@
       <BaseEntrySelector
         ref="entrySelector"
         :entries="selectorEntries"
-        :entries-number="selectorEntriesNumber"
+        :entries-total="selectorEntriesNumber"
         :entries-per-page="selectorEntriesPerPage"
         :entries-selectable="true"
         :height="'calc(50vh - 32px)'"
         :is-loading="isLoading"
+        :language="$i18n.locale"
         :options-hidden="true"
         :sort-options="sortOptions"
+        :sort-config="{
+          label: $t('editView.sortBy'),
+          default: {
+            label: {
+              en: 'Last Modified',
+              de: 'Zuletzt geändert',
+            },
+            value: 'date_modified',
+          },
+          valuePropertyName: 'value',
+        }"
         :entry-selector-text="{
           ...$t('editView.selectOptionsText'),
           entriesSelected: $t('editView.selectOptionsText.entriesSelected',
-                              { type: $tc('activity', 0) }),
+                              { type: $tc('activity', selectorSelectedEntries.length || 0) }),
           ...$t('editView.selectActivitiesPopUp')
         }"
         class="base-sr-entry-selector"
