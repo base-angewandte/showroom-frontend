@@ -98,8 +98,8 @@
       "subtext": "Sortiere die Einträge per Drag & Drop oder wähle die Einträge und eine Aktion aus"
     },
     "optionsButtonText": {
-      "show": "editieren",
-      "hide": "abbrechen"
+      "show": "Editieren",
+      "hide": "Fertig"
     }
   },
   "notify": {
@@ -107,7 +107,16 @@
     "saveSuccess": "Eintrag gespeichert",
     "saveSuccessSubtext": "Der Eintrag konnte erfolgreich gespeichert werden.",
     "errorDownload": "Etwas ist schief gelaufen!",
-    "errorDownloadSubtext": "Beim Herunterladen der Datei {fileName} ist ein Fehler aufgetreten "
+    "errorDownloadSubtext": "Beim Herunterladen der Datei {fileName} ist ein Fehler aufgetreten ",
+    "showcaseItem": "Showcase Elemente | Showcase Element | Showcase Elemente",
+    "delete": "Entfernen",
+    "add": "Hinzufügen",
+    "deleteD": "entfernt",
+    "addD": "hinzugefügt",
+    "successActionTitle": "{action} von {type} erfolgreich",
+    "successActionSubtext": "0 {type} wurden erfolgreich {action}. | 1 {type} wurde erfolgreich {action}. | {count} {type} wurden erfolgreich {action}.",
+    "errorActionTitle": "{action} von {type} fehlgeschlagen",
+    "errorActionSubtext": "Leider konnten die folgenden {type} nicht {action} werden: | Leider konnte das {type} nicht {action} werden. | Leider konnten {count} {type} nicht {action} werden."
   },
   "errors": {
     "homepage": "Startseite",

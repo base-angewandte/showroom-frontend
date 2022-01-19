@@ -156,6 +156,8 @@ import 'base-ui-components/dist/components/BaseEntrySelector/BaseEntrySelector.c
 import 'base-ui-components/dist/components/BaseLoader/BaseLoader.css';
 import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSection.css';
 
+import { userInfo } from '@/mixins/userNotifications';
+
 Vue.use(BaseButton);
 Vue.use(BaseBoxButton);
 Vue.use(BaseCarousel);
@@ -168,6 +170,7 @@ Vue.use(BaseResultBoxSection);
 export default {
   name: 'Showcase',
   components: {},
+  mixins: [userInfo],
   props: {
     /**
      * specify data to render showcase
@@ -333,11 +336,15 @@ export default {
     /**
      * request to save data to db
      *
-     * @param {Array} data - entries
+     * @param {Object[]} data - entries
+     * @property {string} data[].id - the entry id
+     * @property {string} data[].type - the showcase type of the entry (e.g. 'activity')
      * @param {String} action
      * @returns {Promise<void>}
      */
     async updateRequest(data, action) {
+      // get number of items that should be altered
+      const count = Math.abs(this.dataInt.length - data.length);
       try {
         this.isSaving = true;
         const response = await this.$api.auth.api_v1_entities_edit_partial_update(
@@ -350,20 +357,6 @@ export default {
             },
           },
         );
-
-        // add notifications depending on action
-        if (action !== 'sort') {
-          this.$notify({
-            group: 'request-notifications',
-            title: this.$t('notify.saveSuccess'),
-            text: this.$t('notify.saveSuccessSubtext'),
-            type: 'success',
-          });
-        }
-
-        // empty container variables
-        this.selectedBoxes = [];
-        this.selectorSelectedEntries = [];
 
         // update states
         this.showPopUp = false;
@@ -378,10 +371,30 @@ export default {
             imageUrl: entry.data.image_url,
           }));
 
+        // add notifications depending on action
+        if (action !== 'sort') {
+          this.informUser({
+            action,
+            count,
+            type: 'showcase',
+            notificationType: 'success',
+          });
+        }
+
+        // empty container variables
+        this.selectedBoxes = [];
+        this.selectorSelectedEntries = [];
+
         // hide edit mode if all entries have been removed
         this.edit = !!this.dataInt.length;
       } catch (e) {
         console.log(e);
+        this.informUser({
+          action,
+          count,
+          type: 'showcase',
+          notificationType: 'error',
+        });
       }
     },
     async actionHandler(action, entries = []) {

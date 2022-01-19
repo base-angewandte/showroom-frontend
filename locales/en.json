@@ -95,11 +95,11 @@
     "selectCarouselActivities": "Select entries",
     "message": {
       "text": "Drag or Select",
-      "subtext": "Drag'n Drop to reorder or select the relevant items and choose an action"
+      "subtext": "Drag'n Drop to reorder or select the relevant items and choose an action."
     },
     "optionsButtonText": {
       "show": "edit",
-      "hide": "cancel"
+      "hide": "done"
     }
   },
   "notify": {
@@ -107,7 +107,16 @@
     "saveSuccess": "Entry saved",
     "saveSuccessSubtext": "The entry was successfully saved to the database.",
     "errorDownload": "Something went wrong!",
-    "errorDownloadSubtext": "An error occurred during the download of file {fileName}."
+    "errorDownloadSubtext": "An error occurred during the download of file {fileName}.",
+    "showcaseItem": "showcase items | showcase item | showcase items",
+    "delete": "removing",
+    "add": "adding",
+    "deleteD": "removed",
+    "addD": "added",
+    "successActionTitle": "{action} of {type} successful",
+    "successActionSubtext": "0 {type} were successfully {action}. | 1 {type} was successfully {action}. | {count} {type} were successfully {action}.",
+    "errorActionTitle": "{action} of {type} failed",
+    "errorActionSubtext": "Unfortunately these {type} could not be {action}: | Unfortunately one {type} could not be {action} | Unfortunately {count} {type} could not be {action}."
   },
   "errors": {
     "homepage": "Homepage",
