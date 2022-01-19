@@ -19,6 +19,7 @@
     "base-ui-components": "2.0.0-alpha.9",
     "cookie-universal-nuxt": "^2.1.5",
     "core-js": "^3.19.0",
+    "messageformat": "^2.3.0",
     "node-fetch": "^2.6.5",
     "normalize.css": "^8.0.1",
     "nuxt": "^2.15.4",
