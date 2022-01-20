@@ -10,6 +10,7 @@
         name="fade">
         <Showcase
           v-if="initialDataMode && appliedCarouselData && appliedCarouselData.length"
+          :user-can-edit="userCanEdit"
           :data="appliedCarouselData" />
       </transition>
     </client-only>
@@ -272,7 +273,11 @@ export default {
        * a list of all filters defined in the backend and available to the user
        */
       filterList: 'searchData/getFilters',
+      userEditPermissions: 'appData/getUserEditPermissions',
     }),
+    userCanEdit() {
+      return this.userEditPermissions.includes(process.env.institutionId);
+    },
   },
   methods: {
     async search(requestBody) {
