@@ -276,18 +276,20 @@ export default {
             limit: 3,
           },
         });
-        const { showcase } = JSON.parse(response.data);
+        let showcaseFiltered = [];
+        if (response.data && typeof response.data === 'string') {
+          const { showcase } = JSON.parse(response.data);
 
-        // filter entries with preview image
-        const showcaseFiltered = showcase
-          .filter((entry) => !!entry.previews.length)
-          .slice(0, 3)
-          .map((entry) => ({
-            ...entry,
-            href: entry.id,
-          }));
-
-        if (showcaseFiltered.length) {
+          // filter entries with preview image
+          showcaseFiltered = showcase
+            .filter((entry) => !!entry.previews.length)
+            .slice(0, 3)
+            .map((entry) => ({
+              ...entry,
+              href: entry.id,
+            }));
+        }
+        if (response.data && showcaseFiltered.length) {
           this.placeholderData = showcaseFiltered;
           // otherwise prefill with empty entries
         } else {
@@ -356,7 +358,8 @@ export default {
         this.isSaving = true;
         const response = await this.$api.auth.api_v1_entities_edit_partial_update(
           {
-            id: this.$route.params.id,
+            // TODO: needs adaption for departments etc.
+            id: this.$route.params.id || process.env.institutionId,
           },
           {
             requestBody: {
@@ -410,6 +413,9 @@ export default {
           type: 'showcase',
           notificationType: 'error',
         });
+        // update states
+        this.showPopUp = false;
+        this.isSaving = false;
       }
     },
     async actionHandler(action, entries = []) {

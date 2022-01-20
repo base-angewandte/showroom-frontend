@@ -9,9 +9,9 @@
       <transition
         name="fade">
         <Showcase
-          v-if="initialDataMode && appliedCarouselData && appliedCarouselData.length"
+          v-if="initialDataMode && (userCanEdit || carouselData && carouselData.length)"
           :user-can-edit="userCanEdit"
-          :data="appliedCarouselData" />
+          :data="carouselData" />
       </transition>
     </client-only>
 
@@ -125,136 +125,10 @@ export default {
       initialFilters: null,
       appliedFilters: [],
       pageNumber: 1,
-      // TODO: remove again once API working properly
-      defaultCarouselData: [
-        {
-          id: '1',
-          title: 'Whatever Works Best For You',
-          subtext: 'On the subject of labor',
-          description: 'Exhibition',
-          additional: '07.05.2020 - 21.05.2020',
-          // eslint-disable-next-line global-require
-          imageUrl: 'https://placeimg.com/460/341/arch',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/460/341/animal',
-            },
-            {
-              '640w': 'https://placeimg.com/640/480/animal',
-            },
-            {
-              '768w': 'https://placeimg.com/768/576/animal',
-            },
-          ],
-        },
-        {
-          id: '2',
-          title: 'Throwing Gestures',
-          subtext: 'Make The Unknown Visible',
-          description: 'Performance',
-          additional: '07.05.2020 - 21.05.2020',
-          imageUrl: 'https://placeimg.com/640/480/tech',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/460/341/tech',
-            },
-            {
-              '640w': 'https://placeimg.com/640/480/tech',
-            },
-            {
-              '768w': 'https://placeimg.com/768/576/tech',
-            },
-          ],
-        },
-        {
-          id: '3',
-          title: 'Move From Left to Right and Back and Then Turn Around',
-          subtext: 'Moving Frames and Other Variables',
-          description: 'Video Installation',
-          additional: 'Florian Bettel, Max Arheimer',
-          imageUrl: 'https://placeimg.com/640/480/nature',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/460/341/nature',
-            },
-            {
-              '640w': 'https://placeimg.com/640/480/nature',
-            },
-            {
-              '768w': 'https://placeimg.com/768/576/nature',
-            },
-          ],
-        },
-        {
-          id: '4',
-          title: 'Title',
-          subtext: 'Subtitle',
-          description: 'Ausstellung 4',
-          additional: '07.05.2020 - 21.05.2020',
-          imageUrl: 'https://placeimg.com/640/480/animal',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/460/341/animal',
-            },
-            {
-              '640w': 'https://placeimg.com/640/480/animal',
-            },
-            {
-              '768w': 'https://placeimg.com/768/576/animal',
-            },
-          ],
-        },
-        {
-          id: '5',
-          title: 'Title',
-          subtext: 'Subtitle',
-          description: 'Ausstellung',
-          additional: '07.05.2020 - 21.05.2020',
-          imageUrl: 'https://placeimg.com/640/480/people',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/460/341/people',
-            },
-            {
-              '640w': 'https://placeimg.com/640/480/people',
-            },
-            {
-              '768w': 'https://placeimg.com/768/576/people',
-            },
-          ],
-        },
-        {
-          id: '6',
-          title: 'Title',
-          subtext: 'Subtitle',
-          description: 'Ausstellung',
-          additional: '07.05.2020 - 21.05.2020',
-          imageUrl: 'https://placeimg.com/641/480/arch',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/461/341/arch',
-            },
-            {
-              '640w': 'https://placeimg.com/641/480/arch',
-            },
-            {
-              '768w': 'https://placeimg.com/769/576/arch',
-            },
-          ],
-        },
-      ],
+      carouselData: [],
     };
   },
   computed: {
-    // TODO: remove again once API works properly
-    appliedCarouselData() {
-      const data = this.carouselData && this.carouselData.length
-        ? this.carouselData : this.defaultCarouselData;
-      return data.map((entry) => ({
-        ...entry,
-        href: entry.href || entry.id,
-      }));
-    },
     /**
      * determine if landing page mode should be applied (for search results and
      * carousel display)
