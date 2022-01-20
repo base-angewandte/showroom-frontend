@@ -7,6 +7,7 @@
       :edit="edit"
       :disabled="!dataInt.length"
       :title="title"
+      :edit-button-text="$i18n.t('editView.edit')"
       class="base-sr--ml-small"
       @activated="enableEdit" />
 
@@ -374,7 +375,9 @@ export default {
           .map((entry) => ({
             ...entry.details,
             href: entry.id,
-            imageUrl: Object.values(entry.details.previews[0])[0] || entry.details.image_url || '',
+            imageUrl: entry.details.previews && entry.details.previews.length
+              ? Object.values(entry.details.previews[0])[0]
+              : entry.details.image_url || '',
           }));
 
         // add notifications depending on action
@@ -400,7 +403,7 @@ export default {
           this.setCarouselOptions(this.placeholderData);
         }
       } catch (e) {
-        console.log(e);
+        console.error(e);
         this.informUser({
           action,
           count,

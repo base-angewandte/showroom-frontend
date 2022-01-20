@@ -112,14 +112,17 @@
     "errorDownload": "Etwas ist schief gelaufen!",
     "errorDownloadSubtext": "Beim Herunterladen der Datei {fileName} ist ein Fehler aufgetreten ",
     "showcaseItem": "Showcase Elemente | Showcase Element | Showcase Elemente",
+    "showcaseItemN": "Showcase Elementen | Showcase Elementn | Showcase Elementen",
     "delete": "Entfernen",
     "add": "Hinzufügen",
+    "sort": "Sortieren",
     "deleteD": "entfernt",
     "addD": "hinzugefügt",
+    "sortD": "sortiert",
     "successActionTitle": "{action} von {type} erfolgreich",
     "successActionSubtext": "0 {type} wurden erfolgreich {action}. | 1 {type} wurde erfolgreich {action}. | {count} {type} wurden erfolgreich {action}.",
     "errorActionTitle": "{action} von {type} fehlgeschlagen",
-    "errorActionSubtext": "Leider konnten die folgenden {type} nicht {action} werden: | Leider konnte das {type} nicht {action} werden. | Leider konnten {count} {type} nicht {action} werden."
+    "errorActionSubtext": "Leider konnten die {type} nicht {action} werden. | Leider konnte das {type} nicht {action} werden. | Leider konnten {count} {type} nicht {action} werden."
   },
   "errors": {
     "homepage": "Startseite",

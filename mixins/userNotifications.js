@@ -13,7 +13,9 @@ export const userInfo = {
           count,
           {
             action: this.$t(`notify.${action}`),
-            type: this.$tc(`notify.${type}Item`, count),
+            // needed to have separate item type string (with 'N')
+            // because of german cases
+            type: this.$tc(`notify.${type}ItemN`, count),
           }),
         text: this.$tc(`notify.${notificationType}ActionSubtext`,
           count,
