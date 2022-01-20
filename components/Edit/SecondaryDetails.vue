@@ -8,7 +8,7 @@
       title=""
       :edit="edit"
       :edit-button-text="$i18n.t('editView.edit')"
-      :cancel-button-text="$i18n.t('editView.ready')"
+      :cancel-button-text="$i18n.t('editView.cancel')"
       :save-button-text="$i18n.t('editView.save')"
       :is-loading="isLoading"
       @activated="activateEdit"
@@ -19,7 +19,7 @@
     <!-- TODO: add logic to display alternative language if possible
                and add a corresponing html lang="" attribute -->
     <BaseExpandBox
-      v-if="dataInt[0][$i18n.locale][0].data && !edit"
+      v-if="!!secondaryDetailsData && !!secondaryDetailsData.length && !edit"
       :auto-height="true"
       :show-more-text="$i18n.t('detailView.showMore')"
       :show-less-text="$i18n.t('detailView.showLess')"
@@ -34,7 +34,7 @@
     <!-- userCanEdit -->
     <BaseBox
       v-if="(userCanEdit && edit)
-        || (userCanEdit && !dataInt[0][$i18n.locale][0].data.length)"
+        || (userCanEdit && !secondaryDetailsData.length)"
       box-ratio="0"
       :box-size="{}"
       :box-hover="false"
@@ -160,6 +160,14 @@ export default {
      */
     tabs() {
       return this.locales.map((locale) => this.$t(locale));
+    },
+    secondaryDetailsData() {
+      return this.dataInt && this.dataInt[0]
+        && this.dataInt[0][this.$i18n.locale]
+        && this.dataInt[0][this.$i18n.locale][0]
+        && this.dataInt[0][this.$i18n.locale][0].data
+        ? this.dataInt[0][this.$i18n.locale][0].data
+        : [];
     },
   },
   methods: {
