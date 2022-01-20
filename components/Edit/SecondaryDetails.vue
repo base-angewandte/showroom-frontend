@@ -1,34 +1,40 @@
 <template>
   <div
     :class="['base-sr-secondary',
-             { 'base-sr-row': userCanEdit || edit || data.length }]">
+             { 'base-sr-row': userCanEdit || edit || dataInt.length }]">
     <BaseEditControl
       v-if="userCanEdit"
       :controls="true"
       title=""
       :edit="edit"
+      :edit-button-text="$i18n.t('editView.edit')"
+      :cancel-button-text="$i18n.t('editView.ready')"
+      :save-button-text="$i18n.t('editView.save')"
       :is-loading="isLoading"
       @activated="activateEdit"
       @canceled="cancel"
       @saved="save" />
 
     <!-- show data if not empty and not in edit mode -->
+    <!-- TODO: add logic to display alternative language if possible
+               and add a corresponing html lang="" attribute -->
     <BaseExpandBox
-      v-if="data[0] && data[0].data.length && !edit"
+      v-if="dataInt[0][$i18n.locale][0].data && !edit"
       :auto-height="true"
       :show-more-text="$i18n.t('detailView.showMore')"
       :show-less-text="$i18n.t('detailView.showLess')"
       padding="large">
       <BaseTextList
         render-label-as="h2"
-        :label-margin-bottom="data.length === 1"
-        :data="data"
+        :label-margin-bottom="dataInt.length === 1"
+        :data="dataInt[0][$i18n.locale]"
         :cols2="true" />
     </BaseExpandBox>
 
     <!-- userCanEdit -->
     <BaseBox
-      v-if="(userCanEdit && edit) || (userCanEdit && !data.length)"
+      v-if="(userCanEdit && edit)
+        || (userCanEdit && !dataInt[0][$i18n.locale][0].data.length)"
       box-ratio="0"
       :box-size="{}"
       :box-hover="false"
@@ -55,7 +61,7 @@
         v-model="textInput"
         :tabs="tabs"
         :active-tab="activeTab"
-        :label="data[0] && data[0].label ? data[0].label: $t('detailView.details')"
+        :label="dataInt[0] && dataInt[0].label ? dataInt[0].label: $t('detailView.details')"
         :placeholder="$t('editView.editTextReminder')" />
     </BaseBox>
   </div>
@@ -104,16 +110,30 @@ export default {
   },
   data() {
     return {
+      dataInt: this.data,
       // toggle edit-mode
       edit: false,
       // async edit-data
-      editData: [],
+      editData: [
+        {
+          en: [
+            {
+              label: 'Details',
+              data: '',
+            },
+          ],
+          de: [
+            {
+              label: 'Details',
+              data: '',
+            },
+          ],
+        },
+      ],
       // loading indicator
       isLoading: false,
       // used for BaseMultilineTextInput
       textInput: {},
-      // set time the loader is minimal shown
-      loadingDelay: 0,
     };
   },
   computed: {
@@ -155,72 +175,74 @@ export default {
     cancel() {
       this.edit = false;
       this.textInput = {};
+      this.isLoading = false;
     },
     /**
      * load data with all languages
      */
     async read() {
-      this.isLoading = true;
-      this.editData = await this.$api.auth.api_v1_entities_edit_retrieve({
-        id: this.$route.params.id,
-        field: 'secondary_details',
-      }).then((response) => JSON.parse(response.data));
+      try {
+        this.isLoading = true;
 
-      // format textInput
-      this.locales.forEach((locale) => {
-        this.textInput[this.$t(locale)] = this.editData[0][locale][0].data;
-      });
+        const response = await this.$api.auth.api_v1_entities_edit_retrieve({
+          id: this.$route.params.id,
+          secondary_details: true,
+        });
 
-      setTimeout(() => {
+        if (JSON.parse(response.data).secondary_details) {
+          this.editData = JSON.parse(response.data).secondary_details;
+        }
+
+        // format textInput
+        this.locales.forEach((locale) => {
+          this.textInput[this.$t(locale)] = this.editData[0][locale][0].data;
+        });
+
         this.isLoading = false;
         this.edit = true;
-      }, this.loadingDelay);
+      } catch (e) {
+        console.log(e);
+      }
     },
     /**
      * save data
      */
     async save() {
-      this.isLoading = true;
+      try {
+        this.isLoading = true;
 
-      // format requestBody
-      const requestBody = this.editData;
-      // TODO: why is this always the english being fetched?
-      this.locales.forEach((locale) => {
-        requestBody[0][locale][0].data = this.textInput[this.$t('en')];
-      });
+        // set requestBody
+        const requestBody = { secondary_details: this.editData };
 
-      // TODO: this seems like a weird mixture of ES5 .then() and ES6 async/await Promise syntax?
-      // is the .then() really necessary?
-      // also: error handling / user info necessary?
-      await this.$api.auth.api_v1_entities_edit_update(
-        {
-          id: this.$route.params.id,
-          field: 'secondary_details',
-        },
-        {
-          requestBody,
-        },
-      ).then((response) => {
-        if (response.status === 200) {
-          this.$notify({
-            group: 'request-notifications',
-            title: this.$t('notify.saveSuccess'),
-            text: this.$t('notify.saveSuccessSubtext'),
-            type: 'success',
-          });
+        // format requestBody
+        this.locales.forEach((locale) => {
+          requestBody.secondary_details[0][locale][0].data = this.textInput[this.$t(locale)];
+        });
 
-          // update initial data
-          // TODO: i suppressed the below error message for now but this should probably be
-          // handled differently!
-          // eslint-disable-next-line vue/no-mutating-props
-          this.data[0].data = this.textInput[this.$t(this.$i18n.locale)];
+        const response = await this.$api.auth.api_v1_entities_edit_partial_update(
+          {
+            id: this.$route.params.id,
+          },
+          {
+            requestBody,
+          },
+        );
 
-          setTimeout(() => {
-            this.isLoading = false;
-            this.edit = false;
-          }, this.loadingDelay);
-        }
-      });
+        this.$notify({
+          group: 'request-notifications',
+          title: this.$t('notify.saveSuccess'),
+          text: this.$t('notify.saveSuccessSubtext'),
+          type: 'success',
+        });
+
+        // update initial data
+        this.dataInt = JSON.parse(response.data).secondary_details;
+
+        this.isLoading = false;
+        this.edit = false;
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 };

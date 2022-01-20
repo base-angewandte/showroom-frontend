@@ -77,6 +77,9 @@
     "addActivities": "Add Activities",
     "cancel": "Cancel",
     "delete": "Remove Activities",
+    "save": "Save",
+    "edit": "Edit",
+    "ready": "Done",
     "selectOptionsText": {
       "selectAll": "select all",
       "selectNone": "select none",
@@ -98,8 +101,8 @@
       "subtext": "Drag'n Drop to reorder or select the relevant items and choose an action."
     },
     "optionsButtonText": {
-      "show": "edit",
-      "hide": "done"
+      "show": "Edit",
+      "hide": "Done"
     }
   },
   "notify": {
