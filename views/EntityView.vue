@@ -105,7 +105,8 @@ export default {
     },
     userCanEdit() {
       return this.entryId.includes(this.userId)
-        || this.entryId.includes(this.userEditPermissions);
+        || this.userEditPermissions.includes(this.entryId)
+        || this.userEditPermissions.includes(this.entryId.split('-').pop());
     },
   },
 };
