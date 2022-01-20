@@ -60,6 +60,7 @@
       }"
       :show-options="true"
       :show-action-button-box="true"
+      class="base-sr-showcase-edit"
       @submit-action="actionHandler"
       @entries-changed="actionHandler('sort', $event)">
       <template
@@ -525,6 +526,18 @@ export default {
     .base-sr-showcase__placeholder__button {
       box-shadow: $max-box-shadow;
       z-index: map-get($zindex, showcase-overlay-button);
+    }
+  }
+}
+
+.base-sr-showcase-edit {
+  &::v-deep  {
+    .base-options {
+      .base-options__row.base-options__row-right {
+        > button:last-child {
+          padding-right: 0;
+        }
+      }
     }
   }
 }
