@@ -1092,24 +1092,11 @@ components:
         secondary_details:
           type: array
           items:
-            $ref: '#/components/schemas/EntitySecondaryDetailsEdit'
+            $ref: '#/components/schemas/CommonTextLocalisations'
         showcase:
           type: array
           items:
             $ref: '#/components/schemas/EntityShowcaseEdit'
-
-    EntitySecondaryDetailsEdit:
-      type: object
-      title: CommonTextTranslation
-      properties:
-        en:
-          $ref: '#/components/schemas/CommonTextList'
-        de:
-          $ref: '#/components/schemas/CommonTextList'
-        xx:
-          $ref: '#/components/schemas/CommonTextList'
-      description: |
-        Contains all available translations for this list of CommonText objects
 
     EntityShowcaseEdit:
       type: object
@@ -1580,6 +1567,19 @@ components:
       required:
         - label
         - data
+
+    CommonTextLocalisations:
+      type: object
+      properties:
+        en:
+          $ref: '#/components/schemas/CommonText'
+        de:
+          $ref: '#/components/schemas/CommonText'
+        xx:
+          $ref: '#/components/schemas/CommonText'
+      description: |
+        Contains all available translations of a CommonText object
+
     CommonTextString:
       type: string
     CommonTextArray:
