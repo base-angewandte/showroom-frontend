@@ -435,7 +435,8 @@ export default {
       // filter relevant request data
       const requestData = showcase.map((item) => ({
         id: item.id,
-        type: item.type,
+        // Todo: check showcase_type is always available
+        type: 'activity',
       }));
 
       await this.updateRequest(requestData, action);
