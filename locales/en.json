@@ -22,10 +22,12 @@
     "showLessMap": "Collapse Map and Address",
     "showAll": "Show all",
     "license": "License",
-    "print": "Print"
+    "print": "Print",
+    "noResultsTextInitial": "You don't have any entries yet that can be displayed.\nPublish entries in Portfolio to make them visible here!"
   },
   "discoverView": {
-    "title": "Search and Discover Showroom"
+    "title": "Search and Discover Showroom",
+    "noResultsTextInitial": "There are no data in this showroom that can be displayed here.\nTry to use filters in order to see some Showroom content!"
   },
   "searchView": {
     "fulltext": "Fulltext",
@@ -53,8 +55,7 @@
     },
     "noResultsHeading": "No results found.",
     "noResultsText": "No results were found with the specified search criteria.\nPlease adjust your search.",
-    "noResultsInitial": "No Data for Display Available.",
-    "noResultsTextInitial": "There are no data in this showroom that can be displayed here.\nTry to use filters in order to see some Showroom content!"
+    "noResultsInitial": "No Data for Display Available."
   },
   "resultsView": {
     "expand": {

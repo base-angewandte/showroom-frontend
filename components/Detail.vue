@@ -94,7 +94,7 @@
           {{ $t('editView.profileImageHeader') }}
         </p>
         <p>
-          {{ $t('editView.profileImageLink1') }}
+          {{ $t('editView.profileImageLink1', { toTitleCase: false }) }}
           <a
             :href="userPreferencesUrl"
             :title="$t('editView.profileImageLink2')">
@@ -259,7 +259,8 @@
     </template>
 
     <Search
-      v-if="type === 'person'"
+      v-if="type === 'person' && (userCanEdit
+        || userHasShowroomEntries)"
       :header-text="$t('resultsView.headerText.entityResults', { entity: data.title })"
       :result-list.sync="searchResults"
       :applied-filters.sync="appliedFilters"
@@ -267,6 +268,7 @@
       :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :page-number="1"
+      :no-results-text-initial="$t('detailView.noResultsTextInitial')"
       @autocomplete="fetchAutocomplete"
       @search="search" />
 
@@ -422,6 +424,11 @@ export default {
        * @type {Object[]}
        */
       appliedFilters: [],
+      /**
+       * store if user actually has entries that can be displayed in search
+       * @type {boolean}
+       */
+      userHasShowroomEntries: false,
     };
   },
   computed: {
@@ -443,6 +450,14 @@ export default {
     userPreferencesUrl() {
       return process.env.userPreferencesUrl;
     },
+  },
+  mounted() {
+    // only check once with initial data if user actually has entries that can be
+    // displayed in search
+    // TODO: remove check for this.searchResults[0].data again? (could break with real data
+    // only here because entities_search_create not implemented yet)
+    this.userHasShowroomEntries = !!this.searchResults.length
+      && !!this.searchResults[0].data && !!this.searchResults[0].data.length;
   },
   methods: {
     async search(requestBody) {

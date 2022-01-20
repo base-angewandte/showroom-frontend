@@ -22,6 +22,7 @@
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :use-collapsed-mode="false"
       :page-number.sync="pageNumber"
+      :no-results-text-initial="$t('discoverView.noResultsTextInitial')"
       class="discover-search"
       @autocomplete="fetchAutocomplete"
       @search="search" />

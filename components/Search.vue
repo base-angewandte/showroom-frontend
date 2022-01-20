@@ -95,7 +95,7 @@
             v-if="!searchRequestOngoing"
             class="showroom-search__no-results__text">
             {{ filtersApplied ? $t('searchView.noResultsText')
-              : $t('searchView.noResultsTextInitial') }}
+              : noResultsTextInitial }}
           </p>
         </div>
       </template>
@@ -151,6 +151,10 @@ export default {
       default: () => [],
     },
     headerText: {
+      type: String,
+      default: '',
+    },
+    noResultsTextInitial: {
       type: String,
       default: '',
     },
