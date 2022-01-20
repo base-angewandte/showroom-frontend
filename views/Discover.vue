@@ -150,7 +150,8 @@ export default {
       userEditPermissions: 'appData/getUserEditPermissions',
     }),
     userCanEdit() {
-      return this.userEditPermissions.includes(process.env.institutionId);
+      return this.userEditPermissions && this.userEditPermissions.length
+        && this.userEditPermissions.includes(process.env.institutionId);
     },
   },
   methods: {
