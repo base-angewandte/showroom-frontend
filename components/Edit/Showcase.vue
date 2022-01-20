@@ -246,6 +246,9 @@ export default {
       this.setCarouselOptions(val);
     },
   },
+  mounted() {
+    this.setCarouselOptions(this.dataInt);
+  },
   async created() {
     /**
      * if no user data found, try to fetch global showcase or prefill with empty entries
@@ -254,6 +257,13 @@ export default {
      *       1. user entries or 2. global entries or 3. empty entries
      */
     if (!this.dataInt || !this.dataInt.length) {
+      await this.fetchPlaceholderRequest();
+    }
+  },
+  methods: {
+    async fetchPlaceholderRequest() {
+      // clear placeholderData
+      this.placeholderData = [];
       try {
         this.isLoading = true;
         const response = await this.$api.public.api_v1_initial_retrieve({
@@ -288,12 +298,7 @@ export default {
       } catch (e) {
         console.error(e);
       }
-    }
-  },
-  mounted() {
-    this.setCarouselOptions(this.dataInt);
-  },
-  methods: {
+    },
     /**
      * cancel and reset popup
      */
@@ -366,9 +371,9 @@ export default {
         this.dataInt = JSON.parse(response.data).showcase
           // format data for component
           .map((entry) => ({
-            ...entry.data,
+            ...entry.details,
             href: entry.id,
-            imageUrl: entry.data.image_url,
+            imageUrl: Object.values(entry.details.previews[0])[0] || entry.details.image_url || '',
           }));
 
         // add notifications depending on action
@@ -385,8 +390,14 @@ export default {
         this.selectedBoxes = [];
         this.selectorSelectedEntries = [];
 
-        // hide edit mode if all entries have been removed
+        // set edit mode
         this.edit = !!this.dataInt.length;
+
+        // if no entries left, fill with placeHolder data
+        if (!this.dataInt.length) {
+          await this.fetchPlaceholderRequest();
+          this.setCarouselOptions(this.placeholderData);
+        }
       } catch (e) {
         console.log(e);
         this.informUser({

@@ -184,11 +184,11 @@ const api = new OpenAPIBackend({
 
       if (req.body.showcase) {
         const showcase = req.body.showcase.map((item) => {
-          const data = apiV1SearchResultsRead.find((entry) => entry.id === item.id);
+          const details = apiV1SearchResultsRead.find((entry) => entry.id === item.id);
           return {
             ...item,
-            data: {
-              ...data,
+            details: {
+              ...details,
               previews: [
                 { '640w': 'https://placeimg.com/640/400/arch' },
                 { '768w': 'https://placeimg.com/768/600/arch' },
