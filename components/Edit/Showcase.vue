@@ -514,7 +514,7 @@ export default {
     formatData(data) {
       return data.map((entry) => {
         // entry.detail includes entire entry data (response from /edit route)
-        const item = entry.detail ? entry.detail : entry;
+        const item = entry.details ? entry.details : entry;
         return {
           ...item,
           href: item.id,
