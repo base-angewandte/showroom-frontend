@@ -85,7 +85,10 @@ export default {
           },
         });
         const initialData = JSON.parse(response.data);
-        showcase = initialData.showcase;
+        showcase = initialData.showcase.map((entry) => ({
+          ...entry,
+          href: entry.id,
+        }));
         // TODO: this is just a temporary fix working only with one result category!
         initialFilters = initialData.results[0].filters;
         // if page is not 1 it needs another request with the proper filter!
