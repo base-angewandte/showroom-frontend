@@ -201,7 +201,7 @@ export default {
       activeAction: '',
       carouselOptions: {},
       carouselInitialized: false,
-      dataInt: this.data,
+      dataInt: this.formatData(this.data),
       edit: false,
       isLoading: false,
       isSaving: false,
@@ -372,16 +372,8 @@ export default {
         this.showPopUp = false;
         this.isSaving = false;
 
-        // update showcase data
-        this.dataInt = JSON.parse(response.data).showcase
-          // format data for component
-          .map((entry) => ({
-            ...entry.details,
-            href: entry.id,
-            imageUrl: entry.details.previews && entry.details.previews.length
-              ? Object.values(entry.details.previews[0])[0]
-              : entry.details.image_url || '',
-          }));
+        // format/update showcase data
+        this.dataInt = this.formatData(JSON.parse(response.data).showcase);
 
         // add notifications depending on action
         if (action !== 'sort') {
@@ -512,6 +504,24 @@ export default {
       } catch (e) {
         console.error(e);
       }
+    },
+    /**
+     * set missing props if needed
+     *
+     * @param data - showcase entries
+     * @returns {*}
+     */
+    formatData(data) {
+      return data.map((entry) => {
+        // entry.detail includes entire entry data (response from /edit route)
+        const item = entry.detail ? entry.detail : entry;
+        return {
+          ...item,
+          href: item.id,
+          imageUrl: item.previews && item.previews.length
+            ? Object.values(item.previews[0])[0] : item.image_url || '',
+        };
+      });
     },
   },
 };
