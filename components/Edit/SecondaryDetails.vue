@@ -38,7 +38,8 @@
     <!-- userCanEdit -->
     <BaseBox
       v-if="(userCanEdit && edit)
-        || (userCanEdit && !dataInt[0].data)"
+        || (userCanEdit && !dataInt.length)
+        || (userCanEdit && dataInt.length && !dataInt[0].data)"
       box-ratio="0"
       :box-size="{}"
       :box-hover="false"
