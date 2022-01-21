@@ -19,7 +19,11 @@
     <!-- TODO: add logic to display alternative language if possible
                and add a corresponing html lang="" attribute -->
     <BaseExpandBox
-      v-if="!!secondaryDetailsData && !!secondaryDetailsData.length && !edit"
+      v-if="!!dataInt
+        && !!dataInt.length
+        && !!dataInt[0].data
+        && !!dataInt[0].data.length
+        && !edit"
       :auto-height="true"
       :show-more-text="$i18n.t('detailView.showMore')"
       :show-less-text="$i18n.t('detailView.showLess')"
@@ -27,14 +31,14 @@
       <BaseTextList
         render-label-as="h2"
         :label-margin-bottom="dataInt.length === 1"
-        :data="dataInt[0][$i18n.locale]"
+        :data="dataInt"
         :cols2="true" />
     </BaseExpandBox>
 
     <!-- userCanEdit -->
     <BaseBox
       v-if="(userCanEdit && edit)
-        || (userCanEdit && !secondaryDetailsData.length)"
+        || (userCanEdit && !dataInt[0].data)"
       box-ratio="0"
       :box-size="{}"
       :box-hover="false"
@@ -161,14 +165,6 @@ export default {
     tabs() {
       return this.locales.map((locale) => this.$t(locale));
     },
-    secondaryDetailsData() {
-      return this.dataInt && this.dataInt[0]
-        && this.dataInt[0][this.$i18n.locale]
-        && this.dataInt[0][this.$i18n.locale][0]
-        && this.dataInt[0][this.$i18n.locale][0].data
-        ? this.dataInt[0][this.$i18n.locale][0].data
-        : [];
-    },
   },
   methods: {
     /**
@@ -197,13 +193,15 @@ export default {
           secondary_details: true,
         });
 
-        if (JSON.parse(response.data).secondary_details) {
-          this.editData = JSON.parse(response.data).secondary_details;
+        const secondaryDetails = JSON.parse(response.data).secondary_details;
+
+        if (secondaryDetails) {
+          this.editData = secondaryDetails;
         }
 
         // format textInput
         this.locales.forEach((locale) => {
-          this.textInput[this.$t(locale)] = this.editData[0][locale][0].data;
+          this.textInput[this.$t(locale)] = this.editData[0][locale].data;
         });
 
         this.isLoading = false;
@@ -219,13 +217,19 @@ export default {
       try {
         this.isLoading = true;
 
-        // set requestBody
-        const requestBody = { secondary_details: this.editData };
-
-        // format requestBody
+        // set secondaryDetails array object
+        const secondaryDetails = {};
         this.locales.forEach((locale) => {
-          requestBody.secondary_details[0][locale][0].data = this.textInput[this.$t(locale)];
+          secondaryDetails[locale] = {
+            label: 'Details',
+            data: this.textInput[this.$t(locale)] || '',
+          };
         });
+
+        // set requestBody
+        const requestBody = {
+          secondary_details: [secondaryDetails],
+        };
 
         const response = await this.$api.auth.api_v1_entities_edit_partial_update(
           {
@@ -244,7 +248,8 @@ export default {
         });
 
         // update initial data
-        this.dataInt = JSON.parse(response.data).secondary_details;
+        const obj = JSON.parse(response.data).secondary_details;
+        this.dataInt = [obj[0][this.$i18n.locale]];
 
         this.isLoading = false;
         this.edit = false;

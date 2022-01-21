@@ -68,7 +68,11 @@
 
       <!-- secondary details -->
       <SecondaryDetails
-        v-if="(data.secondary_details && data.secondary_details.length) || userCanEdit"
+        v-if="(data.secondary_details
+          && data.secondary_details.length
+          && data.secondary_details[0].data
+          && data.secondary_details[0].data.length)
+          || userCanEdit"
         :data="titleCaseLabels(data.secondary_details)"
         :user-can-edit="userCanEdit"
         class="base-sr-head__secondary" />
@@ -456,8 +460,9 @@ export default {
     // displayed in search
     // TODO: remove check for this.searchResults[0].data again? (could break with real data
     // only here because entities_search_create not implemented yet)
-    this.userHasShowroomEntries = !!this.searchResults.length
-      && !!this.searchResults[0].data && !!this.searchResults[0].data.length;
+    // TODO: disabled due 500 on activities
+    // this.userHasShowroomEntries = !!this.searchResults.length
+    //   && !!this.searchResults[0].data && !!this.searchResults[0].data.length;
   },
   methods: {
     async search(requestBody) {
