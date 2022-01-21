@@ -140,8 +140,8 @@
 <script>
 import Vue from 'vue';
 import {
-  BaseButton,
   BaseBoxButton,
+  BaseButton,
   BaseCarousel,
   BaseEditControl,
   BaseEntrySelector,
@@ -497,7 +497,7 @@ export default {
 
         if (results) {
           this.selectorEntriesNumber = results.total;
-          this.selectorEntries = results.data;
+          this.selectorEntries = this.disableEntries(results.data);
         }
 
         this.isLoading = false;
@@ -506,10 +506,23 @@ export default {
       }
     },
     /**
+     * set property disabled to already linked entries or which are not type 'activity'
+     *
+     * @param {Object[]} entries - showcase entries
+     * @returns {Object[]}
+     */
+    disableEntries(entries) {
+      const linkedEntries = this.dataInt.map((entry) => entry.id);
+      return entries.map((entry) => ({
+        ...entry,
+        disabled: linkedEntries.includes(entry.id) || entry.type !== 'activity',
+      }));
+    },
+    /**
      * set missing props if needed
      *
-     * @param data - showcase entries
-     * @returns {*}
+     * @param {Object[]} data - showcase entries
+     * @returns {Object[]}
      */
     formatData(data) {
       return data.map((entry) => {
