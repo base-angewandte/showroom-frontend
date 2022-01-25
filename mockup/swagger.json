@@ -942,6 +942,20 @@
             "description": "Forbidden"
           },
           "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
             "description": "Not Found"
           }
         }
@@ -978,15 +992,19 @@
               "default": false
             },
             "description": "Whether to include showcase in the response"
+          },
+          {
+            "in": "query",
+            "name": "showcase_details",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Whether to include the pre-rendered showcase item details"
           }
         ],
         "tags": [
           "auth"
-        ],
-        "security": [
-          {
-            "cookieAuth": []
-          }
         ],
         "responses": {
           "200": {
@@ -1071,11 +1089,6 @@
             }
           }
         },
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -1822,7 +1835,11 @@
                       "id": "0123456789ABCDEF0123456789ABCDEF",
                       "name": "Firstname Lastname",
                       "email": "addy@example.org",
-                      "entry_id": "xZy2345aceg98QPT0246aC",
+                      "entity_id": "xZy2345aceg98QPT0246aC",
+                      "entity_editing": [
+                        "xZy2345aceg98QPT0246aC",
+                        "MtEaiJ7ZgjhFBbTn6rBMTU"
+                      ],
                       "groups": [
                         "foo_users",
                         "bar_members"
@@ -1840,7 +1857,8 @@
                       "id": "0123456789ABCDEF0123456789ABCDEF",
                       "name": "Firstname Lastname",
                       "email": "addy@example.org",
-                      "entry_id": null,
+                      "entity_id": null,
+                      "entity_editing": [],
                       "groups": [
                         "foo_users",
                         "bar_members"
@@ -2153,76 +2171,73 @@
             "type": "string"
           },
           "data": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "string",
-                  "example": "A generic standalone label"
+            "oneOf": [
+              {
+                "type": "string",
+                "example": "A generic standalone label"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
                 },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
+                "example": [
+                  "Item 1",
+                  "Item 2",
+                  "Item 3"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "example": "www",
+                    "description": "A label prefix"
                   },
-                  "example": [
-                    "Item 1",
-                    "Item 2",
-                    "Item 3"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "label": {
-                      "type": "string",
-                      "example": "www",
-                      "description": "A label prefix"
-                    },
-                    "value": {
-                      "type": "string",
-                      "example": "example.org",
-                      "description": "The actual label content"
-                    },
-                    "url": {
-                      "type": "string",
-                      "example": "https://example.org",
-                      "description": "An optional link for this item"
-                    },
-                    "source": {
-                      "type": "string",
-                      "example": "jane-doe-d2JnH6L5WAdj7sQzZTRhUC",
-                      "description": "An optional internal object (e.g. entity) id"
-                    },
-                    "additional": {
-                      "type": "array",
-                      "description": "Optional list of labels for a tooltip",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "label": {
-                            "type": "string",
-                            "example": "Weblink"
-                          },
-                          "value": {
-                            "type": "string",
-                            "example": "example.org"
-                          },
-                          "url": {
-                            "type": "string",
-                            "example": "https://example.com"
-                          }
+                  "value": {
+                    "type": "string",
+                    "example": "example.org",
+                    "description": "The actual label content"
+                  },
+                  "url": {
+                    "type": "string",
+                    "example": "https://example.org",
+                    "description": "An optional link for this item"
+                  },
+                  "source": {
+                    "type": "string",
+                    "example": "jane-doe-d2JnH6L5WAdj7sQzZTRhUC",
+                    "description": "An optional internal object (e.g. entity) id"
+                  },
+                  "additional": {
+                    "type": "array",
+                    "description": "Optional list of labels for a tooltip",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "example": "Weblink"
+                        },
+                        "value": {
+                          "type": "string",
+                          "example": "example.org"
+                        },
+                        "url": {
+                          "type": "string",
+                          "example": "https://example.com"
                         }
                       }
                     }
-                  },
-                  "required": [
-                    "label",
-                    "value"
-                  ]
-                }
-              ]
-            }
+                  }
+                },
+                "required": [
+                  "label",
+                  "value"
+                ]
+              }
+            ]
           },
           "language": {
             "allOf": [
@@ -2235,8 +2250,7 @@
         },
         "required": [
           "data",
-          "label",
-          "language"
+          "label"
         ]
       },
       "Entity": {
@@ -2334,22 +2348,13 @@
         "type": "object",
         "properties": {
           "en": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CommonText"
-            }
+            "$ref": "#/components/schemas/CommonText"
           },
           "de": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CommonText"
-            }
+            "$ref": "#/components/schemas/CommonText"
           },
           "xx": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CommonText"
-            }
+            "$ref": "#/components/schemas/CommonText"
           }
         }
       },
@@ -2360,13 +2365,25 @@
             "type": "string"
           },
           "type": {
-            "type": "string",
-            "description": "The type of showcase object (activity, album, entity). Defaults to activity, if not specified"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EntityShowcaseEditTypeEnum"
+              }
+            ],
+            "description": "The type of showcase object. Defaults to activity, if not specified"
           }
         },
         "required": [
           "id"
         ]
+      },
+      "EntityShowcaseEditTypeEnum": {
+        "enum": [
+          "activity",
+          "album",
+          "entity"
+        ],
+        "type": "string"
       },
       "EntityTypeEnum": {
         "enum": [
@@ -2856,9 +2873,16 @@
             "type": "string",
             "description": "The user's e-mail address"
           },
-          "entry_id": {
+          "entity_id": {
             "type": "string",
             "description": "The user's associated showroom entity id. Or null, if no associated showroom entity can be found"
+          },
+          "entity_editing": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of entities that this user is allowed to edit"
           },
           "groups": {
             "type": "array",
@@ -2877,7 +2901,8 @@
         },
         "required": [
           "email",
-          "entry_id",
+          "entity_editing",
+          "entity_id",
           "groups",
           "id",
           "name",
@@ -2899,8 +2924,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:9001/",
-      "description": "The local mock server"
+      "url": "http://localhost:9001",
+      "description": "The local mockup server"
     }
   ],
   "tags": [

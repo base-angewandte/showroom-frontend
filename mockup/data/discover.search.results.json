@@ -1,7 +1,7 @@
 [
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3dddzRTLM4dJR4",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -70,7 +70,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3zRTLM4dJR2",
-    "type": "albums",
+    "type": "album",
     "title": "And so long we stand tested",
     "subtitle": "A sing along",
     "description": "Sound Recording",
@@ -82,7 +82,7 @@
   },
   {
     "id": "pCSLgasdfgvdsi8asfdsrrrrrdfb3zRTLM4dJR3",
-    "type": "activities",
+    "type": "activity",
     "title": "Smash it",
     "subtitle": "H. W. Arkheimer",
     "description": "Master Thesis",
@@ -94,7 +94,7 @@
   },
   {
     "id": "pCSLggvdsi8aasdsfdsrrrrrdfb3zRTLM4dJR2",
-    "type": "activities",
+    "type": "activity",
     "title": "The Eye",
     "subtitle": "Mission accomplished",
     "description": "Exhibition",
@@ -114,7 +114,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrasrrdfb3zRTLM4dJR1",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 5",
     "subtitle": "A test",
     "description": "Performance",
@@ -126,7 +126,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrrdsrdfb3zRTLM4dJR1",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 6",
     "subtitle": "A test",
     "description": "Architecture",
@@ -138,7 +138,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrrrdfb3zRTLM4dJR1",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 6",
     "subtitle": "A test",
     "description": "albums",
@@ -150,7 +150,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsdfb3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 7",
     "subtitle": "A test",
     "description": "Concert",
@@ -170,7 +170,7 @@
   },
   {
     "id": "pCSLggvdsi8basdfsssssadf3zRTLM4dJR2",
-    "type": "activities",
+    "type": "activity",
     "title": "An extra extra long title",
     "subtitle": "A test",
     "description": "Conference",
@@ -182,7 +182,7 @@
   },
   {
     "id": "pCSLggvdsddddi8b3zRTLM4dJR2",
-    "type": "albums",
+    "type": "album",
     "title": "Minor Chords",
     "subtitle": "A symphony in C++",
     "description": "Software",
@@ -194,7 +194,7 @@
   },
   {
     "id": "pCSLggvdsi8b3zRTLM4dJR1",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 9",
     "subtitle": "A test",
     "description": "Musical",
@@ -214,7 +214,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3zRTLM4dJR3",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -226,7 +226,7 @@
   },
   {
     "id": "pCSLggvdsi8b3fffzRTLM4dJR4",
-    "type": "activities",
+    "type": "activity",
     "description": "Exhibition",
     "title": "TBD",
     "subtitle": "Misterious",
@@ -255,7 +255,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3dddzRTLM4dJR3",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Publication",
     "subtitle": "Alexander Grande",
@@ -267,13 +267,11 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3zRTLM4dJR3",
-    "type": "albums",
+    "type": "department",
     "title": "And so long we stand tested",
     "subtitle": "A sing along",
-    "description": "Sound Recording",
-    "alternative_text": [
-			"07.05.2020 - 21.05.2020"
-		],
+    "description": "department",
+    "alternative_text": [],
     "image_url": "https://placeimg.com/640/480/animal",
 		"source_institution": {},
     "keywords": [{
@@ -296,7 +294,7 @@
   },
   {
     "id": "pCSLgasdfgvdsi8asfdsrrrrrdfb3zRTLM4dJR1",
-    "type": "activities",
+    "type": "activity",
     "title": "Smash it",
     "subtitle": "H. W. Arkheimer",
     "description": "Master Thesis",
@@ -322,7 +320,7 @@
   },
   {
     "id": "pCSLggvdsi8aasdsfdsrrrrrdfb3zRTLM4dJR3",
-    "type": "activities",
+    "type": "activity",
     "title": "The Eye",
     "subtitle": "Mission accomplished",
     "description": "Exhibition",
@@ -342,7 +340,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrasrrdfb3zRTLM4dJR2",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 5",
     "subtitle": "A test",
     "description": "Musical",
@@ -354,7 +352,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrrdsrdfb3zRTLM4dJR2",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 6",
     "subtitle": "A test",
     "description": "Software",
@@ -410,7 +408,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsdfb3zRTLM4dJR1",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 7",
     "subtitle": "A test",
     "description": "Performance",
@@ -430,7 +428,7 @@
   },
   {
     "id": "pCSLggvdsi8basdfsssssadf3zRTLM4dJR3",
-    "type": "activities",
+    "type": "activity",
     "title": "An extra extra long title",
     "subtitle": "A test",
     "description": "Performance",
@@ -442,7 +440,7 @@
   },
   {
     "id": "pCSLggvdsddddi8b3zRTLM4dJR3",
-    "type": "albums",
+    "type": "album",
     "title": "Title 8",
     "subtitle": "A test",
     "description": "Performance",
@@ -466,7 +464,7 @@
   },
   {
     "id": "pCSLggvdsi8b3zRTLM4dJR2",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 9",
     "subtitle": "A test",
     "description": "Performance",
@@ -478,7 +476,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3zRTLM4dJR1",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -490,7 +488,7 @@
   },
   {
     "id": "pCSLggvdsi8b3fffzRTLM4dJR1",
-    "type": "activities",
+    "type": "activity",
     "title": "TBD",
     "subtitle": "Misterious",
     "alternative_text": [
@@ -501,7 +499,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3dddzRTLM4dJR5",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -513,7 +511,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3zRTLM4dJR1",
-    "type": "albums",
+    "type": "album",
     "title": "And so long we stand tested",
     "subtitle": "A sing along",
     "description": "Sound Recording",
@@ -525,7 +523,7 @@
   },
   {
     "id": "pCSLgasdfgvdsi8asfdsrrrrrdfb3zRTLM4dJR2",
-    "type": "activities",
+    "type": "activity",
     "title": "Smash it",
     "subtitle": "H. W. Arkheimer",
     "description": "Master Thesis",
@@ -537,7 +535,7 @@
   },
   {
     "id": "pCSLggvdsi8aasdsfdsrrrrrdfb3zRTLM4dJR1",
-    "type": "activities",
+    "type": "activity",
     "title": "The Eye",
     "subtitle": "Mission accomplished",
     "description": "Exhibition",
@@ -549,7 +547,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrasrrdfb3zRTLM4dJR3",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 5",
     "subtitle": "A test",
     "description": "Performance",
@@ -561,7 +559,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrrdsrdfb3zRTLM4dJR3",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 6",
     "subtitle": "A test",
     "description": "Performance",
@@ -573,7 +571,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrrrdfb3zRTLM4dJR3",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 6",
     "subtitle": "A test",
     "description": "Performance",
@@ -585,7 +583,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsdfb3zRTLM4dJR2",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 7",
     "subtitle": "A test",
     "description": "Performance",
@@ -595,7 +593,7 @@
   },
   {
     "id": "pCSLggvdsi8basdfsssssadf3zRTLM4dJR4",
-    "type": "activities",
+    "type": "activity",
     "title": "An extra extra long title",
     "subtitle": "A test",
     "description": "Performance",
@@ -607,7 +605,7 @@
   },
   {
     "id": "pCSLggvdsddddi8b3zRTLM4dJR4",
-    "type": "albums",
+    "type": "album",
     "title": "Title 8",
     "subtitle": "A test",
     "description": "Performance",
@@ -619,7 +617,7 @@
   },
   {
     "id": "pCSLggvdsi8b3zRTLM4dJR3",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 9",
     "subtitle": "A test",
     "description": "Performance",
@@ -631,7 +629,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3zRTLM4dJR2",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -643,7 +641,7 @@
   },
   {
     "id": "pCSLggvdsi8b3fffzRTLM4dJR2",
-    "type": "activities",
+    "type": "activity",
     "title": "TBD",
     "subtitle": "Misterious",
     "alternative_text": [
@@ -654,7 +652,7 @@
   },
   {
     "id": "pCSLggvdsssdfi8asfdsrruuurrrdfb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Tomorrow we start...",
     "subtitle": "Meaning within",
     "description": "Painting",
@@ -666,7 +664,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdffsgdb3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Have you been there?",
     "subtitle": "12.02. - 13.02.2021",
     "description": "Group Exhibition",
@@ -678,7 +676,7 @@
   },
   {
     "id": "pCSLgasdsdfgfgvdsi8asfdsrrrrrdfb3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Mystery solved",
     "subtitle": "A test",
     "description": "Performance",
@@ -690,7 +688,7 @@
   },
   {
     "id": "pCSLggvdsi8aasdfgsdsfdsrrrrrdfb3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Wanna test that?",
     "subtitle": "A test",
     "description": "Performance",
@@ -702,7 +700,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrasrrdfb3zRTLM4dJR4",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 5",
     "subtitle": "A test",
     "description": "Performance",
@@ -714,7 +712,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrrdsrdfb3zRTLM4dJR4",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 6",
     "subtitle": "A test",
     "description": "Performance",
@@ -726,7 +724,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrrrdfb3zRTLM4dJR4",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 6",
     "subtitle": "A test",
     "description": "Performance",
@@ -738,7 +736,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsdfb3zRTLM4dJR3",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 7",
     "subtitle": "A test",
     "description": "Performance",
@@ -748,7 +746,7 @@
   },
   {
     "id": "pCSLggvdsi8basdfsssssadf3zRTLM4dJR1",
-    "type": "activities",
+    "type": "activity",
     "title": "An extra extra long title",
     "subtitle": "A test",
     "description": "Performance",
@@ -760,7 +758,7 @@
   },
   {
     "id": "pCSLggvdsddddi8b3zRTLM4dJR1",
-    "type": "albums",
+    "type": "album",
     "title": "Title 8",
     "subtitle": "A test",
     "description": "Performance",
@@ -772,7 +770,7 @@
   },
   {
     "id": "pCSLggvdsi8b3fffzRTLM4dJR3",
-    "type": "activities",
+    "type": "activity",
     "title": "TBD",
     "subtitle": "Misterious",
     "alternative_text": [
@@ -783,7 +781,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Throwing Gestures",
     "subtitle": "Protest, Economy and the Imperceptible",
     "description": "Group Exhibition",
@@ -795,7 +793,7 @@
   },
   {
     "id": "pCSLgasdfgvdsi8asfdsrrrrrdfb3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Smash it",
     "subtitle": "H. W. Arkheimer",
     "description": "Master Thesis",
@@ -807,7 +805,7 @@
   },
   {
     "id": "pCSLggvdsi8aasdsfdsrrrrrdfb3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "The Eye",
     "subtitle": "Mission accomplished",
     "description": "Exhibition",
@@ -819,7 +817,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrasrrdfb3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Piece for Strings",
     "subtitle": "Minoria",
     "description": "Composition",
@@ -831,7 +829,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrrdsrdfb3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Sounding Clouds",
     "subtitle": "19.01.2020",
     "description": "Concert",
@@ -843,7 +841,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrrrrrdfb3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Title 6",
     "subtitle": "A test",
     "description": "Film Score",
@@ -855,7 +853,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsdfb3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Bach Sonata III Reloaded",
     "subtitle": "Emanuel Singer",
     "description": "Chamber Music",
@@ -867,7 +865,7 @@
   },
   {
     "id": "pCSLggvdsi8basdfsssssadf3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "An extra extra long title",
     "subtitle": "Modernism explained",
     "description": "Electronic Music",
@@ -879,7 +877,7 @@
   },
   {
     "id": "pCSLggvdsddddi8b3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "On the subject of being lonely",
     "subtitle": "A. B. Lanzfrau",
     "description": "Opera",
@@ -891,7 +889,7 @@
   },
   {
     "id": "pCSLggvdsi845654b3zRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "Minor Inconvenience",
     "subtitle": "12.02. - 13.02.2000",
     "description": "Artist Conference",
@@ -903,7 +901,7 @@
   },
   {
     "id": "pCSLggvdsiasdf854656b3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -915,7 +913,7 @@
   },
   {
     "id": "pCSLgghjkvdsiasdf8b3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -927,7 +925,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3ppzRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -939,7 +937,7 @@
   },
   {
     "id": "pCSLggvdggsiasdf8b3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -951,7 +949,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3fghfgzRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -963,7 +961,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3zRTLääM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -975,7 +973,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3zRpppTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -987,7 +985,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3ziiiRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -999,7 +997,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3wwwzRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1011,7 +1009,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3zRTLeeeM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1023,7 +1021,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3zRTgggLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1035,7 +1033,7 @@
   },
   {
     "id": "pCSLggvdsiasdf8b3zRTLdasdM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1047,7 +1045,7 @@
   },
   {
     "id": "pCSLggvdsi8b3fffzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "TBD",
     "subtitle": "Misterious",
     "description": "Audio",
@@ -1060,7 +1058,7 @@
   },
   {
     "id": "pCSLgghjkvdsiasdf8b3äääzRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1072,7 +1070,7 @@
   },
   {
     "id": "pCSLgghjkvdsghuuuiasdf8b3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1084,7 +1082,7 @@
   },
   {
     "id": "pCSLgghjkvdshjliasdf8b3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1096,7 +1094,7 @@
   },
   {
     "id": "pCSLgghjkvdsiasdf8b3zRTklöLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1108,7 +1106,7 @@
   },
   {
     "id": "pCSLgghjkvdsiasdf8b3zRTiopiLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1120,7 +1118,7 @@
   },
   {
     "id": "pCSLgghjkvdsiasdf8b3zRhhhTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1132,7 +1130,7 @@
   },
   {
     "id": "pCSLgsssghjkvdsiasdf8b3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1144,7 +1142,7 @@
   },
   {
     "id": "pCSLgghjkvdsiasdf8asdfsb3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1156,7 +1154,7 @@
   },
   {
     "id": "pCSLgghjkvdsiasdf8b3zRTuuuLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1168,7 +1166,7 @@
   },
   {
     "id": "pCSLgghfffjkvdsiasdf8b3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1180,7 +1178,7 @@
   },
   {
     "id": "pCSsssLgghjkvdsiasdf8b3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1192,7 +1190,7 @@
   },
   {
     "id": "pCSLgghjkvdsiasdf8fdfsdfb3zRTLM4dJR",
-    "type": "albums",
+    "type": "album",
     "title": "Unknown",
     "subtitle": "Lets find it out and look deeper",
     "description": "Novel",
@@ -1204,7 +1202,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1216,7 +1214,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuu6546rrrdfb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1228,7 +1226,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuu333rrrdfb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1240,7 +1238,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3dddzRTL333M4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1252,7 +1250,7 @@
   },
   {
     "id": "pCSLggvd345si8asfdsrruuurrrdfb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1264,7 +1262,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3dd6663dzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1276,7 +1274,7 @@
   },
   {
     "id": "pCSLggvdsi8678678asfdsrruuurrrdfb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1288,7 +1286,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrd678fb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1300,7 +1298,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdfb3dddzRTLizuiM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1312,7 +1310,7 @@
   },
   {
     "id": "pCSLggvdsqwerwei8asfdsrruuurrrdfb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1324,7 +1322,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrwerwerrdfb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1336,7 +1334,7 @@
   },
   {
     "id": "pCSLggvdsi8asfwerdsrruuurrrdfb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
@@ -1348,7 +1346,7 @@
   },
   {
     "id": "pCSLggvdsi8asfdsrruuurrrdgfdsgfdfb3dddzRTLM4dJR",
-    "type": "activities",
+    "type": "activity",
     "title": "101 Beginnings",
     "description": "Performance",
     "subtitle": "Alexander Grande",
