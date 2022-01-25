@@ -458,25 +458,30 @@ paths:
       tags:
         - auth
       parameters:
-        - name: id
-          in: path
-          required: true
+        - in: path
+          name: id
           schema:
             type: string
-        - name: secondary_details
-          in: query
-          required: false
-          default: false
-          description: 'Whether to include secondary_details in the response'
+          description: A unique value identifying this entity.
+          required: true
+        - in: query
+          name: secondary_details
           schema:
             type: boolean
-        - name: showcase
-          in: query
-          required: false
-          default: false
-          description: 'Whether to include showcasxe in the response'
+            default: false
+          description: Whether to include secondary_details in the response
+        - in: query
+          name: showcase
           schema:
             type: boolean
+            default: false
+          description: Whether to include showcase in the response
+        - in: query
+          name: showcase_details
+          schema:
+            type: boolean
+            default: false
+          description: Whether to include the pre-rendered showcase item details
       responses:
         '200':
           description: Object containing the requested user-editable fields/lists
@@ -491,7 +496,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Entity/Activities not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -502,11 +507,12 @@ paths:
       tags:
         - auth
       parameters:
-        - name: id
-          in: path
-          required: true
+        - in: path
+          name: id
           schema:
             type: string
+          description: A unique value identifying this entity.
+          required: true
       requestBody:
         content:
           application/json:
@@ -515,8 +521,12 @@ paths:
         description: Object containing the fields/lists to update
         required: true
       responses:
-        '204':
+        '200':
           description: Successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityEdit'
         '400':
           description: Invalid input
           content:
@@ -530,7 +540,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -842,21 +852,46 @@ components:
       properties:
         id:
           type: string
-          description: the LDAP(?) id
+          description: The user id in the auth backend (i.e. source repo)
+          example: 0123456789ABCDEF0123456789ABCDEF
         name:
           type: string
-          description: the user's full name
+          description: The display name of the user
+          example: Firstname Lastname
         email:
           type: string
-          description: the user's email
+          description: The user's e-mail address
+          example: addy@example.org
         entity_id:
           type: string
-          description: The users Showroom ID
+          description: The user's associated showroom entity id. Or null, if no associated
+            showroom entity can be found
+          example: xZy2345aceg98QPT0246aC
+        entity_editing:
+          type: array
+          items:
+            type: string
+          description: List of entities that this user is allowed to edit
+          example:
+            - xZy2345aceg98QPT0246aC
+            - MtEaiJ7ZgjhFBbTn6rBMTU
+        groups:
+          type: array
+          items:
+            type: string
+          description: The groups this user belongs to.
+          example:
+            - foo_users
+            - bar_members
         permissions:
           type: array
           items:
             type: string
-          description: the permissions needed by base header
+          description: The permissions this user has.
+          example:
+            - view_foo
+            - view_bar
+            - edit_bar
 
     InitialData:
       type: object
@@ -1057,24 +1092,11 @@ components:
         secondary_details:
           type: array
           items:
-            $ref: '#/components/schemas/EntitySecondaryDetailsEdit'
+            $ref: '#/components/schemas/CommonTextLocalisations'
         showcase:
           type: array
           items:
             $ref: '#/components/schemas/EntityShowcaseEdit'
-
-    EntitySecondaryDetailsEdit:
-      type: object
-      title: CommonTextTranslation
-      properties:
-        en:
-          $ref: '#/components/schemas/CommonTextList'
-        de:
-          $ref: '#/components/schemas/CommonTextList'
-        xx:
-          $ref: '#/components/schemas/CommonTextList'
-      description: |
-        Contains all available translations for this list of CommonText objects
 
     EntityShowcaseEdit:
       type: object
@@ -1545,6 +1567,19 @@ components:
       required:
         - label
         - data
+
+    CommonTextLocalisations:
+      type: object
+      properties:
+        en:
+          $ref: '#/components/schemas/CommonText'
+        de:
+          $ref: '#/components/schemas/CommonText'
+        xx:
+          $ref: '#/components/schemas/CommonText'
+      description: |
+        Contains all available translations of a CommonText object
+
     CommonTextString:
       type: string
     CommonTextArray:
