@@ -515,7 +515,8 @@ export default {
       const linkedEntries = this.dataInt.map((entry) => entry.id);
       return entries.map((entry) => ({
         ...entry,
-        disabled: linkedEntries.includes(entry.id) || entry.type !== 'activity',
+        disabled: linkedEntries.includes(entry.id)
+          || !['activity', 'album'].includes(entry.type),
       }));
     },
     /**
