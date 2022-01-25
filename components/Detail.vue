@@ -94,10 +94,13 @@
                base-sr-featured-media__profile-image">
         <!-- TODO: this is just a placeholder - add properly styled user
         add image elements and info! -->
+        <base-icon
+          name="camera"
+          class="base-sr-featured-media__profile-image__icon" />
         <p class="base-sr-featured-media__profile-image__header">
           {{ $t('editView.profileImageHeader') }}
         </p>
-        <p>
+        <p class="base-sr-featured-media__profile-image__subtext">
           {{ $t('editView.profileImageLink1', { toTitleCase: false }) }}
           <a
             :href="userPreferencesUrl"
@@ -787,13 +790,28 @@ export default {
       flex-direction: column;
       text-align: center;
       color: $font-color-second;
+      border: 2px solid $font-color-third;
+      padding: $spacing;
 
-      .base-sr-featured-media__profile-image__header {
+      &__icon {
+        width: $icon-large;
+        margin-bottom: $spacing-small;
+
+        @media screen and (min-width: $breakpoint-small) {
+          width: $icon-large * 2;
+        }
+      }
+
+      &__header {
         font-size: $font-size-large;
         margin-bottom: $spacing-small;
       }
 
-      .base-sr-featured-media__profile-image__link {
+      &__subtext {
+        font-size: $font-size-small;
+      }
+
+      &__link {
         text-decoration: underline;
         text-decoration-color: $app-color;
       }
