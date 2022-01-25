@@ -89,6 +89,8 @@ import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
 import 'base-ui-components/dist/components/BaseMultilineTextInput/BaseMultilineTextInput.css';
 import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
 
+import { userInfo } from '@/mixins/userNotifications';
+
 Vue.use(BaseBox);
 Vue.use(BaseEditControl);
 Vue.use(BaseExpandBox);
@@ -97,6 +99,7 @@ Vue.use(BaseTextList);
 
 export default {
   name: 'SecondaryDetails',
+  mixins: [userInfo],
   props: {
     /**
      * specify array to render secondary_details
@@ -241,21 +244,32 @@ export default {
           },
         );
 
-        this.$notify({
-          group: 'request-notifications',
-          title: this.$t('notify.saveSuccess'),
-          text: this.$t('notify.saveSuccessSubtext'),
-          type: 'success',
+        // add notification
+        this.informUser({
+          action: 'save',
+          type: 'text',
+          notificationType: 'success',
         });
 
         // update initial data
         const obj = JSON.parse(response.data).secondary_details;
         this.dataInt = [obj[0][this.$i18n.locale]];
 
+        // update states
         this.isLoading = false;
         this.edit = false;
       } catch (e) {
         console.log(e);
+
+        this.informUser({
+          action: 'save',
+          type: 'text',
+          notificationType: 'error',
+        });
+
+        // update states
+        this.isLoading = false;
+        this.edit = false;
       }
     },
   },
