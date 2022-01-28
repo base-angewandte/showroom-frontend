@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div
+    :class="[{ 'base-sr-edit-active': editModeInt }]">
     <!-- edit controls -->
     <BaseEditControl
-      v-if="userCanEdit && !edit"
+      v-if="userCanEdit && !editModeInt"
       :controls="true"
-      :edit="edit"
+      :edit="editModeInt"
       :disabled="!dataInt.length"
       :title="title"
       :edit-button-text="$i18n.t('editView.edit')"
@@ -15,7 +16,7 @@
       <div
         v-if="!!placeholderData
           && !dataInt.length
-          && !edit
+          && !editModeInt
           && userCanEdit
           && carouselInitialized"
         class="base-sr-showcase__placeholder">
@@ -36,7 +37,7 @@
 
       <!-- display showcase -->
       <BaseCarousel
-        v-if="(dataInt.length || placeholderData.length) && !edit"
+        v-if="(dataInt.length || placeholderData.length) && !editModeInt"
         :items="dataInt && dataInt.length ? dataInt : placeholderData"
         :swiper-options="carouselOptions"
         @initialized="carouselInitialized = true" />
@@ -44,10 +45,11 @@
 
     <!-- edit showcase -->
     <BaseResultBoxSection
-      v-if="edit"
+      v-if="editModeInt"
       v-model="dataInt"
       :draggable="true"
-      :edit-mode.sync="edit"
+      :edit-mode.sync="editModeInt"
+      :edit-mode-white-background="true"
       :expand-text="$t('resultsView.expand')"
       :is-loading="false"
       :message-text="$t('editView.message.text')"
@@ -67,7 +69,7 @@
       <template
         v-if="title"
         #header>
-        <h2 class="base-sr--ml-small">
+        <h2 class="base-sr--mb-0 base-sr--ml-small">
           {{ title }}
         </h2>
       </template>
@@ -182,9 +184,16 @@ export default {
       default: () => [],
     },
     /**
-     * set edit mode
+     * set if user is allowed to edit
      */
     userCanEdit: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * set edit mode from outside
+     */
+    editMode: {
       type: Boolean,
       default: false,
     },
@@ -202,7 +211,7 @@ export default {
       carouselOptions: {},
       carouselInitialized: false,
       dataInt: this.formatData(this.data),
-      edit: false,
+      editModeInt: this.editMode,
       isLoading: false,
       isSaving: false,
       placeholderData: [],
@@ -246,6 +255,24 @@ export default {
     },
     placeholderData(val) {
       this.setCarouselOptions(val);
+    },
+    editMode: {
+      handler(val) {
+        this.editModeInt = val;
+      },
+      immediate: true,
+    },
+    editModeInt(val) {
+      if (val !== this.editMode) {
+        /**
+         * emitted on edit mode toggle<br>
+         *   the [.sync modifier](https://vuejs.org/v2/guide/components-custom-events.html#sync-Modifier) may be used on the corresponding prop
+         *
+         * @event update:edit-mode
+         * @param {Object}
+         */
+        this.$emit('update:edit-mode', { name: 'showcase', editMode: val });
+      }
     },
   },
   mounted() {
@@ -390,7 +417,7 @@ export default {
         this.selectorSelectedEntries = [];
 
         // set edit mode
-        this.edit = !!this.dataInt.length;
+        this.editModeInt = !!this.dataInt.length;
 
         // if no entries left, fill with placeHolder data
         if (!this.dataInt.length) {
@@ -462,7 +489,7 @@ export default {
      * enable edit mode
      */
     enableEdit() {
-      this.edit = true;
+      this.editModeInt = true;
     },
     /**
      * search/fetch entries for add activities popup
@@ -560,6 +587,22 @@ export default {
     .base-sr-showcase__placeholder__button {
       box-shadow: $max-box-shadow;
       z-index: map-get($zindex, showcase-overlay-button);
+    }
+  }
+}
+
+.base-sr-edit-active {
+  &::v-deep  {
+    .base-options {
+      .base-button {
+        background-color: transparent !important;
+      }
+    }
+
+    .base-select-options {
+      .base-button {
+        background-color: transparent !important;
+      }
     }
   }
 }

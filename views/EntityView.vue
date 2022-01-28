@@ -103,6 +103,11 @@ export default {
     isUserProfile() {
       return this.entryId.includes(this.userId);
     },
+    /**
+     * check if user is allowed to edit page elements
+     *
+     * @returns {boolean}
+     */
     userCanEdit() {
       return this.entryId.includes(this.userId)
         || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId))

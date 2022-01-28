@@ -75,7 +75,9 @@
           || userCanEdit"
         :data="titleCaseLabels(data.secondary_details)"
         :user-can-edit="userCanEdit"
-        class="base-sr-head__secondary" />
+        :edit-mode.sync="editMode.secondaryDetails"
+        class="base-sr-head__secondary"
+        @update:edit-mode="editModeHandler" />
 
       <!-- featured media -->
       <div
@@ -115,42 +117,15 @@
     </div>
 
     <!-- lists -->
-    <div
+    <List
       v-if="data.list && data.list.length"
-      class="base-sr-row">
-      <BaseEditControl
-        v-if="userCanEdit"
-        :controls="true"
-        :edit="editList"
-        :subtitle="'(' + data.list.filter(item => !item.hidden).length + ')'"
-        :title="type !== 'person' ? $t('detailView.lists') : $t('detailsView.activityLists')"
-        class="base-sr--ml-small"
-        @activated="activateList"
-        @canceled="cancelList"
-        @saved="saveList" />
-
-      <BaseExpandList
-        ref="baseExpandList"
-        :edit="userCanEdit && editList"
-        :data="editList
-          ? titleCaseLabels(data.list)
-          : titleCaseLabels(data.list).filter(item => !item.hidden)"
-        :show-more-text="$t('detailView.showAll')"
-        :show-less-text="$t('detailView.showLess')"
-        @saved="saveListEdit">
-        <template #content="props">
-          <BaseLink
-            :render-link-as="'nuxt-link'"
-            :source="props.data.source"
-            :url="props.data.url"
-            :value="props.data.value"
-            class="base-sr-link--mr" />
-          <template v-if="props.data.attributes">
-            - {{ props.data.attributes.join(', ') }}
-          </template>
-        </template>
-      </BaseExpandList>
-    </div>
+      :data="titleCaseLabels(data.list)"
+      :edit-mode.sync="editMode.list"
+      :entity-type="type"
+      :user-can-edit="userCanEdit"
+      :class="['base-sr-row',
+               { 'base-sr-edit-active': editMode.list }]"
+      @update:edit-mode="editModeHandler" />
 
     <!-- activity showcase -->
     <Showcase
@@ -160,7 +135,9 @@
       :data="data.showcase"
       :title="$t('detailView.activityShowcase')"
       :user-can-edit="userCanEdit"
-      class="base-sr-row" />
+      :edit-mode.sync="editMode.showcase"
+      class="base-sr-row"
+      @update:edit-mode="editModeHandler" />
 
     <!-- locations -->
     <div
@@ -293,6 +270,11 @@
         {{ $t('detailView.editedDate') }}: {{ createHumanReadableDate(data.date_changed) }}
       </p>
     </div>
+
+    <!-- edit-mode-background -->
+    <div
+      v-if="editModeIsActive"
+      class="base-sr-edit-overlay" />
   </div>
 </template>
 
@@ -304,7 +286,6 @@ import {
   BaseCarousel,
   BaseEditControl,
   BaseExpandBox,
-  BaseExpandList,
   BaseLink,
   BaseMapLocations,
   BaseMediaCarousel,
@@ -314,13 +295,13 @@ import {
 
 import Showcase from '~/components/Edit/Showcase';
 import SecondaryDetails from '~/components/Edit/SecondaryDetails';
+import List from '~/components/Edit/List';
 import MediaItem from '~/components/MediaItem';
 
 import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
 import 'base-ui-components/dist/components/BaseCarousel/BaseCarousel.css';
 import 'base-ui-components/dist/components/BaseEditControl/BaseEditControl.css';
 import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
-import 'base-ui-components/dist/components/BaseExpandList/BaseExpandList.css';
 import 'base-ui-components/dist/components/BaseLink/BaseLink.css';
 import 'base-ui-components/dist/components/BaseMapLocations/BaseMapLocations.css';
 import 'base-ui-components/dist/components/BaseMediaCarousel/BaseMediaCarousel.css';
@@ -330,14 +311,13 @@ import Search from '~/components/Search';
 
 import {
   toTitleString,
-  checkForLabel,
+  titleCaseLabels,
 } from '~/utils/common';
 
 Vue.use(BaseButton);
 Vue.use(BaseCarousel);
 Vue.use(BaseEditControl);
 Vue.use(BaseExpandBox);
-Vue.use(BaseExpandList);
 Vue.use(BaseLink);
 Vue.use(BaseMapLocations);
 Vue.use(BaseMediaCarousel);
@@ -350,6 +330,7 @@ export default {
     Search,
     SecondaryDetails,
     Showcase,
+    List,
     MediaItem,
   },
   props: {
@@ -395,8 +376,6 @@ export default {
   },
   data() {
     return {
-      editList: false,
-      editShowcase: false,
       // leaflet map
       mapAttribution: process.env.leaflet.attribution,
       mapCopyright: process.env.leaflet.copyright,
@@ -410,6 +389,16 @@ export default {
       initialPreviewSlide: null,
       mediaPreviewData: null,
       toTitleString,
+      titleCaseLabels,
+      /**
+       * edit-mode for different edit sections
+       * @type {Object}
+       */
+      editMode: {
+        showcase: false,
+        secondaryDetails: false,
+        list: false,
+      },
       // search related variables
       /**
        * indicator if search is ongoing
@@ -457,6 +446,14 @@ export default {
     userPreferencesUrl() {
       return process.env.userPreferencesUrl;
     },
+    /**
+     * check if some edit-mode is active
+     *
+     * @returns {boolean}
+     */
+    editModeIsActive() {
+      return Object.values(this.editMode).some((value) => value !== false);
+    },
   },
   mounted() {
     // only check once with initial data if user actually has entries that can be
@@ -468,6 +465,17 @@ export default {
     //   && !!this.searchResults[0].data && !!this.searchResults[0].data.length;
   },
   methods: {
+    /**
+     * toggle components edit-mode (types: secondaryDetails, lists, showcase)
+     *
+     * @param {Object} component - { name: 'componentName', editMode: boolean }
+     */
+    editModeHandler(component) {
+      // close all edit sections
+      this.editMode = Object.fromEntries(Object.keys(this.editMode).map((key) => [key, false]));
+      // set edit-mode for current object
+      this.editMode[component.name] = component.editMode;
+    },
     async search(requestBody) {
       this.searchOngoing = true;
       try {
@@ -534,24 +542,6 @@ export default {
       } else {
         this.autocompleteResults = [];
       }
-    },
-    /**
-     * title case labels
-     *
-     * @param {Array} data
-     * @returns {Array}
-     */
-    titleCaseLabels(data) {
-      if (data) {
-        return Object.values(
-          Object.entries(data)
-            .reduce((prev, [key, value]) => {
-              const newVal = checkForLabel(value);
-              return { ...prev, ...{ [key]: newVal } };
-            }, {}),
-        );
-      }
-      return [];
     },
     /**
      * modify data for media preview
@@ -665,21 +655,6 @@ export default {
           type: 'error',
         });
       }
-    },
-    /* EDIT LIST */
-    activateList() {
-      this.editList = true;
-    },
-    cancelList() {
-      this.editList = false;
-      this.$refs.baseExpandList.reset();
-    },
-    saveList() {
-      this.editList = false;
-      this.$refs.baseExpandList.save();
-    },
-    saveListEdit(val) {
-      console.log('save list', val);
     },
   },
 };

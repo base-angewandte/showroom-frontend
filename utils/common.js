@@ -1,4 +1,5 @@
 import Vue from 'vue';
+// eslint-disable-next-line
 import i18n from '@/plugins/i18n';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -138,4 +139,23 @@ export const hasData = (fieldValues) => {
     hasContent = fieldValues === 0 || !!fieldValues || hasContent;
   }
   return hasContent;
+};
+
+/**
+ * function to walk through object array and title case values with key 'label'
+ *
+ * @param {Array} data - data array
+ * @returns {Array} - modified data array
+ */
+export const titleCaseLabels = (data) => {
+  if (data) {
+    return Object.values(
+      Object.entries(data)
+        .reduce((prev, [key, value]) => {
+          const newVal = checkForLabel(value);
+          return { ...prev, ...{ [key]: newVal } };
+        }, {}),
+    );
+  }
+  return [];
 };

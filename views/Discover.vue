@@ -11,7 +11,9 @@
         <Showcase
           v-if="initialDataMode && (userCanEdit || carouselData && carouselData.length)"
           :user-can-edit="userCanEdit"
-          :data="carouselData" />
+          :data="carouselData"
+          :edit-mode.sync="editMode.showcase"
+          @update:edit-mode="editModeHandler" />
       </transition>
     </client-only>
 
@@ -27,6 +29,11 @@
       class="discover-search"
       @autocomplete="fetchAutocomplete"
       @search="search" />
+
+    <!-- edit-mode-background -->
+    <div
+      v-if="editModeIsActive"
+      class="base-sr-edit-overlay" />
   </div>
 </template>
 
@@ -129,6 +136,13 @@ export default {
       appliedFilters: [],
       pageNumber: 1,
       carouselData: [],
+      /**
+       * edit-mode for different edit sections
+       * @type {Object}
+       */
+      editMode: {
+        showcase: false,
+      },
     };
   },
   computed: {
@@ -152,16 +166,29 @@ export default {
       filterList: 'searchData/getFilters',
       userEditPermissions: 'appData/getUserEditPermissions',
     }),
+    /**
+     * check if user is allowed to edit page elements
+     *
+     * @returns {boolean}
+     */
     userCanEdit() {
       // get the id without name prefix
       const institutionId = process.env.institutionId.split('-').pop();
       return this.userEditPermissions && this.userEditPermissions.length
         && this.userEditPermissions.includes(institutionId);
     },
+    /**
+     * check if some edit-mode is active
+     *
+     * @returns {boolean}
+     */
+    editModeIsActive() {
+      return Object.values(this.editMode).some((value) => value !== false);
+    },
   },
   methods: {
     async search(requestBody) {
-      // indicate to component that search is onging
+      // indicate to component that search is ongoing
       this.searchOngoing = true;
       try {
         // check if there are any filters applied
@@ -249,6 +276,17 @@ export default {
       } else {
         this.autocompleteResults = [];
       }
+    },
+    /**
+     * toggle components edit-mode (types: secondaryDetails, lists, showcase)
+     *
+     * @param {Object} component - { name: 'componentName', editMode: boolean }
+     */
+    editModeHandler(component) {
+      // close all edit sections
+      this.editMode = Object.fromEntries(Object.keys(this.editMode).map((key) => [key, false]));
+      // set edit-mode for current object
+      this.editMode[component.name] = component.editMode;
     },
   },
 };

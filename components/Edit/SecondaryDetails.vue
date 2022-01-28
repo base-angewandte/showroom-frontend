@@ -1,29 +1,30 @@
 <template>
   <div
     :class="['base-sr-secondary',
-             { 'base-sr-row': userCanEdit || edit || dataInt.length }]">
+             { 'base-sr-edit-active': editModeInt },
+             { 'base-sr-row': userCanEdit || editModeInt || dataInt.length }]">
     <BaseEditControl
       v-if="userCanEdit"
       :controls="true"
       title=""
-      :edit="edit"
+      :edit="editModeInt"
       :edit-button-text="$i18n.t('editView.edit')"
       :cancel-button-text="$i18n.t('editView.cancel')"
       :save-button-text="$i18n.t('editView.save')"
       :is-loading="isLoading"
-      @activated="activateEdit"
+      @activated="enableEdit"
       @canceled="cancel"
       @saved="save" />
 
     <!-- show data if not empty and not in edit mode -->
     <!-- TODO: add logic to display alternative language if possible
-               and add a corresponing html lang="" attribute -->
+               and add a corresponding html lang="" attribute -->
     <BaseExpandBox
       v-if="!!dataInt
         && !!dataInt.length
         && !!dataInt[0].data
         && !!dataInt[0].data.length
-        && !edit"
+        && !editModeInt"
       :auto-height="true"
       :show-more-text="$i18n.t('detailView.showMore')"
       :show-less-text="$i18n.t('detailView.showLess')"
@@ -37,24 +38,24 @@
 
     <!-- userCanEdit -->
     <BaseBox
-      v-if="(userCanEdit && edit)
+      v-if="(userCanEdit && editModeInt)
         || (userCanEdit && !dataInt.length)
         || (userCanEdit && dataInt.length && !dataInt[0].data)"
       box-ratio="0"
       :box-size="{}"
       :box-hover="false"
-      :box-shadow-size="!edit ? 'small' : 'large'"
+      :box-shadow-size="!editModeInt ? 'small' : 'large'"
       class="base-sr-edit-box base-sr--p-large">
       <!-- empty data -->
       <template
-        v-if="!edit">
+        v-if="!editModeInt">
         <h2>{{ $t('detailView.details') }}</h2>
 
         <div>
           <span>{{ $t('editView.editTextReminder') }}</span>
           <button
             class="base-sr-text-button"
-            @click="activateEdit()">
+            @click="enableEdit()">
             {{ $t('editView.editNow') }}
           </button>.
         </div>
@@ -62,7 +63,7 @@
 
       <!-- edit data -->
       <BaseMultilineTextInput
-        v-if="edit"
+        v-if="editModeInt"
         v-model="textInput"
         :tabs="tabs"
         :active-tab="activeTab"
@@ -109,18 +110,26 @@ export default {
       default: () => [{ label: 'Details', data: [] }],
     },
     /**
-     * set edit mode
+     * set if user is allowed to edit
      */
     userCanEdit: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * set edit mode from outside
+     */
+    editMode: {
       type: Boolean,
       default: false,
     },
   },
   data() {
     return {
+      // internal data array object
       dataInt: this.data,
       // toggle edit-mode
-      edit: false,
+      editModeInt: this.editMode,
       // async edit-data
       editData: [
         {
@@ -170,18 +179,38 @@ export default {
       return this.locales.map((locale) => this.$t(locale));
     },
   },
+  watch: {
+    editMode: {
+      handler(val) {
+        this.editModeInt = val;
+      },
+      immediate: true,
+    },
+    editModeInt(val) {
+      if (val !== this.editMode) {
+        /**
+         * emitted on edit mode toggle<br>
+         *   the [.sync modifier](https://vuejs.org/v2/guide/components-custom-events.html#sync-Modifier) may be used on the corresponding prop
+         *
+         * @event update:edit-mode
+         * @param {Object}
+         */
+        this.$emit('update:edit-mode', { name: 'secondaryDetails', editMode: val });
+      }
+    },
+  },
   methods: {
     /**
      * read data and activate edit-mode
      */
-    activateEdit() {
+    enableEdit() {
       this.read();
     },
     /**
      * cancel edit-mode
      */
     cancel() {
-      this.edit = false;
+      this.editModeInt = false;
       this.textInput = {};
       this.isLoading = false;
     },
@@ -209,7 +238,7 @@ export default {
         });
 
         this.isLoading = false;
-        this.edit = true;
+        this.editModeInt = true;
       } catch (e) {
         console.log(e);
       }
@@ -257,7 +286,7 @@ export default {
 
         // update states
         this.isLoading = false;
-        this.edit = false;
+        this.editModeInt = false;
       } catch (e) {
         console.log(e);
 
@@ -269,7 +298,7 @@ export default {
 
         // update states
         this.isLoading = false;
-        this.edit = false;
+        this.editModeInt = false;
       }
     },
   },
