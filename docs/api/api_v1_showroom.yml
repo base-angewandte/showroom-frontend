@@ -390,7 +390,7 @@ paths:
       description: Returns array of activities related to a specific entity.
       operationId: api_v1_entities_list_retrieve
       tags:
-        - public
+        - auth
       parameters:
         - name: id
           in: path
@@ -403,7 +403,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommonList'
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommonList'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Entity/Activities not found
           content:
@@ -429,8 +437,14 @@ paths:
         description: Request array with ordered objects
         required: true
       responses:
-        '204':
+        '200':
           description: Successfully updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommonList'
         '400':
           description: Invalid input
           content:
@@ -449,8 +463,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        5XX:
-          description: Unexpected error
   '/entities/{id}/edit/':
     get:
       description: 'Returns user-editable information from a specific field of an entity, in all available languages.'
@@ -1437,6 +1449,7 @@ components:
           type: string
         hidden:
           type: boolean
+          description: 'Whether this list item should be visible in public requests. Only available in authenticated requests.'
         data:
           type: array
           items:
@@ -1444,19 +1457,25 @@ components:
               - $ref: '#/components/schemas/CommonList'
               - $ref: '#/components/schemas/CommonListItem'
       example:
-        label: string
-        hidden: boolean
+        id: publications
+        label: Publications
+        hidden: false
         data:
-          - attributes:
-              - string
-            value: string
-            id: string
-          - label: string
+          - value: 'Deconstructing Solid States'
+            source: 'MG7A6cMXcmGrgoqUWiDhRe'
+            attributes:
+              - 'Wile E. Coyote'
+              - 'Yosemite Sam'
+          - label: Conference contributions
             data:
-              - attributes:
-                  - string
-                value: string
-                id: string
+              - value: 'Kapow!'
+                url: 'https://acme.example.org'
+                attributes:
+                  - 'Yosemite Sam'
+                additional:
+                  - label: 'Project website'
+                    value: 'acme.example.org/kapow'
+                    url: 'https://acme.example.org/kapow'
 
     CommonListItem:
       type: object
