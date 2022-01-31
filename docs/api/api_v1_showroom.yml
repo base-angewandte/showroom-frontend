@@ -1445,6 +1445,7 @@ components:
       properties:
         id:
           type: string
+          description: 'Only used in the first layer of a list in authenticated requests, to set the ordering of list items'
         label:
           type: string
         hidden:
@@ -1480,14 +1481,31 @@ components:
     CommonListItem:
       type: object
       properties:
+        value:
+          type: string
+        source:
+          type: string
+          description: 'An internal identifier (e.g. ShortUUID) to link to a showroom object'
+        uri:
+          type: string
+          description: 'An external link. Mutually exclusive with source'
         attributes:
           type: array
           items:
             type: string
-        value:
-          type: string
-        id:
-          type: string
+          description: 'List of strings, added after the list items value, (e.g. author names if list item is a publication)'
+        additional:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              value:
+                type: string
+              url:
+                type: string
+          description: 'List of additional (linkable) label/value pairs extending the list entry (e.g. by display in a tooltip)'
 
     ## Location
     CommonLocation:
