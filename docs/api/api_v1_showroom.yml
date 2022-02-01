@@ -1486,7 +1486,7 @@ components:
         source:
           type: string
           description: 'An internal identifier (e.g. ShortUUID) to link to a showroom object'
-        uri:
+        url:
           type: string
           description: 'An external link. Mutually exclusive with source'
         attributes:
