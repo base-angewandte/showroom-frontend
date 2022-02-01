@@ -347,7 +347,11 @@ export default {
       this.carouselOptions = {
         slidesPerView: 1,
         slidesPerGroup: 1,
-        spaceBetween: 15,
+        spaceBetween: 16,
+        threshold: 2,
+        autoplay: {
+          delay: 7000,
+        },
         loop: data && data.length > 3,
         speed: 750,
         keyboard: {
