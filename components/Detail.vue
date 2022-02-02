@@ -6,6 +6,9 @@
         :auto-height="true"
         :show-more-text="$t('detailView.showMore')"
         :show-less-text="$t('detailView.showLess')"
+        :max-collapsed-height="!isMobile()
+          ? 445 - 4 * 16 // box height - 2 * $spacing-large
+          : 300"
         padding="large"
         class="base-sr-row base-sr-head__primary"
         @box-height="setFeaturedMediaHeight">
@@ -54,7 +57,8 @@
           class="base-sr-head__text-list" />
 
         <!-- action links: eg. print, sharing, subscribe -->
-        <template #footer>
+        <!-- TODO: add print css before -->
+        <!--template #footer>
           <BaseButton
             :has-background-color="false"
             :text="$i18n.t('detailView.print')"
@@ -63,7 +67,7 @@
             icon-position="top"
             icon-size="large"
             style="padding-left: 0;" />
-        </template>
+        </template-->
       </BaseExpandBox>
 
       <!-- secondary details -->
