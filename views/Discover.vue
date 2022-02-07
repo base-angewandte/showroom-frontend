@@ -1,7 +1,7 @@
 <template>
   <div class="discover__container">
     <h1 class="hide">
-      {{ $t('discover.title') }}
+      {{ $t('discoverView.title') }}
     </h1>
 
     <client-only>
@@ -9,8 +9,11 @@
       <transition
         name="fade">
         <Showcase
-          v-if="initialDataMode && appliedCarouselData && appliedCarouselData.length"
-          :data="appliedCarouselData" />
+          v-if="initialDataMode && (userCanEdit || carouselData && carouselData.length)"
+          :user-can-edit="userCanEdit"
+          :data="carouselData"
+          :edit-mode.sync="editMode.showcase"
+          @update:edit-mode="editModeHandler" />
       </transition>
     </client-only>
 
@@ -22,9 +25,15 @@
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :use-collapsed-mode="false"
       :page-number.sync="pageNumber"
+      :no-results-text-initial="$t('discoverView.noResultsTextInitial')"
       class="discover-search"
       @autocomplete="fetchAutocomplete"
       @search="search" />
+
+    <!-- edit-mode-background -->
+    <div
+      v-if="editModeIsActive"
+      class="base-sr-edit-overlay" />
   </div>
 </template>
 
@@ -83,7 +92,10 @@ export default {
           },
         });
         const initialData = JSON.parse(response.data);
-        showcase = initialData.showcase;
+        showcase = initialData.showcase.map((entry) => ({
+          ...entry,
+          href: entry.id,
+        }));
         // TODO: this is just a temporary fix working only with one result category!
         initialFilters = initialData.results[0].filters;
         // if page is not 1 it needs another request with the proper filter!
@@ -123,136 +135,17 @@ export default {
       initialFilters: null,
       appliedFilters: [],
       pageNumber: 1,
-      // TODO: remove again once API working properly
-      defaultCarouselData: [
-        {
-          id: '1',
-          title: 'Whatever Works Best For You',
-          subtext: 'On the subject of labor',
-          description: 'Exhibition',
-          additional: '07.05.2020 - 21.05.2020',
-          // eslint-disable-next-line global-require
-          imageUrl: 'https://placeimg.com/460/341/arch',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/460/341/animal',
-            },
-            {
-              '640w': 'https://placeimg.com/640/480/animal',
-            },
-            {
-              '768w': 'https://placeimg.com/768/576/animal',
-            },
-          ],
-        },
-        {
-          id: '2',
-          title: 'Throwing Gestures',
-          subtext: 'Make The Unknown Visible',
-          description: 'Performance',
-          additional: '07.05.2020 - 21.05.2020',
-          imageUrl: 'https://placeimg.com/640/480/tech',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/460/341/tech',
-            },
-            {
-              '640w': 'https://placeimg.com/640/480/tech',
-            },
-            {
-              '768w': 'https://placeimg.com/768/576/tech',
-            },
-          ],
-        },
-        {
-          id: '3',
-          title: 'Move From Left to Right and Back and Then Turn Around',
-          subtext: 'Moving Frames and Other Variables',
-          description: 'Video Installation',
-          additional: 'Florian Bettel, Max Arheimer',
-          imageUrl: 'https://placeimg.com/640/480/nature',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/460/341/nature',
-            },
-            {
-              '640w': 'https://placeimg.com/640/480/nature',
-            },
-            {
-              '768w': 'https://placeimg.com/768/576/nature',
-            },
-          ],
-        },
-        {
-          id: '4',
-          title: 'Title',
-          subtext: 'Subtitle',
-          description: 'Ausstellung 4',
-          additional: '07.05.2020 - 21.05.2020',
-          imageUrl: 'https://placeimg.com/640/480/animal',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/460/341/animal',
-            },
-            {
-              '640w': 'https://placeimg.com/640/480/animal',
-            },
-            {
-              '768w': 'https://placeimg.com/768/576/animal',
-            },
-          ],
-        },
-        {
-          id: '5',
-          title: 'Title',
-          subtext: 'Subtitle',
-          description: 'Ausstellung',
-          additional: '07.05.2020 - 21.05.2020',
-          imageUrl: 'https://placeimg.com/640/480/people',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/460/341/people',
-            },
-            {
-              '640w': 'https://placeimg.com/640/480/people',
-            },
-            {
-              '768w': 'https://placeimg.com/768/576/people',
-            },
-          ],
-        },
-        {
-          id: '6',
-          title: 'Title',
-          subtext: 'Subtitle',
-          description: 'Ausstellung',
-          additional: '07.05.2020 - 21.05.2020',
-          imageUrl: 'https://placeimg.com/641/480/arch',
-          previews: [
-            {
-              '460w': 'https://placeimg.com/461/341/arch',
-            },
-            {
-              '640w': 'https://placeimg.com/641/480/arch',
-            },
-            {
-              '768w': 'https://placeimg.com/769/576/arch',
-            },
-          ],
-        },
-      ],
+      carouselData: [],
+      /**
+       * edit-mode for different edit sections
+       * @type {Object}
+       */
+      editMode: {
+        showcase: false,
+      },
     };
   },
   computed: {
-    // TODO: remove again once API works properly
-    appliedCarouselData() {
-      return this.carouselData && this.carouselData.length ? this.carouselData
-        .map((entry) => ({
-          ...entry,
-          href: entry.href || entry.id,
-        }))
-        : this.defaultCarouselData;
-    },
     /**
      * determine if landing page mode should be applied (for search results and
      * carousel display)
@@ -271,11 +164,31 @@ export default {
        * a list of all filters defined in the backend and available to the user
        */
       filterList: 'searchData/getFilters',
+      userEditPermissions: 'appData/getUserEditPermissions',
     }),
+    /**
+     * check if user is allowed to edit page elements
+     *
+     * @returns {boolean}
+     */
+    userCanEdit() {
+      // get the id without name prefix
+      const institutionId = process.env.institutionId.split('-').pop();
+      return this.userEditPermissions && this.userEditPermissions.length
+        && this.userEditPermissions.includes(institutionId);
+    },
+    /**
+     * check if some edit-mode is active
+     *
+     * @returns {boolean}
+     */
+    editModeIsActive() {
+      return Object.values(this.editMode).some((value) => value !== false);
+    },
   },
   methods: {
     async search(requestBody) {
-      // indicate to component that search is onging
+      // indicate to component that search is ongoing
       this.searchOngoing = true;
       try {
         // check if there are any filters applied
@@ -363,6 +276,17 @@ export default {
       } else {
         this.autocompleteResults = [];
       }
+    },
+    /**
+     * toggle components edit-mode (types: secondaryDetails, lists, showcase)
+     *
+     * @param {Object} component - { name: 'componentName', editMode: boolean }
+     */
+    editModeHandler(component) {
+      // close all edit sections
+      this.editMode = Object.fromEntries(Object.keys(this.editMode).map((key) => [key, false]));
+      // set edit-mode for current object
+      this.editMode[component.name] = component.editMode;
     },
   },
 };

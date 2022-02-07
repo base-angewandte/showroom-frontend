@@ -16,10 +16,11 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.1",
-    "base-ui-components": "2.0.0-alpha.4",
+    "base-ui-components": "2.0.0-alpha.14",
     "cookie-universal-nuxt": "^2.1.5",
     "core-js": "^3.19.0",
-    "node-fetch": "^2.6.5",
+    "messageformat": "^2.3.0",
+    "node-fetch": "^2.6.7",
     "normalize.css": "^8.0.1",
     "nuxt": "^2.15.4",
     "swagger-client": "^3.13.1",

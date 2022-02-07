@@ -4,8 +4,11 @@
       class="base-sr-head">
       <BaseExpandBox
         :auto-height="true"
-        :show-more-text="$t('show_more')"
-        :show-less-text="$t('show_less')"
+        :show-more-text="$t('detailView.showMore')"
+        :show-less-text="$t('detailView.showLess')"
+        :max-collapsed-height="!isMobile()
+          ? 445 - 4 * 16 // box height - 2 * $spacing-large
+          : 300"
         padding="large"
         class="base-sr-row base-sr-head__primary"
         @box-height="setFeaturedMediaHeight">
@@ -27,7 +30,7 @@
             <h2
               v-if="data.expertise"
               class="base-sr-chips__label">
-              {{ $t('expertise') }}
+              {{ $t('detailView.expertise') }}
             </h2>
 
             <template v-if="type === 'person'">
@@ -54,24 +57,31 @@
           class="base-sr-head__text-list" />
 
         <!-- action links: eg. print, sharing, subscribe -->
-        <template #footer>
+        <!-- TODO: add print css before -->
+        <!--template #footer>
           <BaseButton
             :has-background-color="false"
-            :text="$i18n.t('print')"
+            :text="$i18n.t('detailView.print')"
             :icon-colored="true"
             icon="print"
             icon-position="top"
             icon-size="large"
             style="padding-left: 0;" />
-        </template>
+        </template-->
       </BaseExpandBox>
 
       <!-- secondary details -->
       <SecondaryDetails
-        v-if="(data.secondary_details && data.secondary_details.length) || userCanEdit"
+        v-if="(data.secondary_details
+          && data.secondary_details.length
+          && data.secondary_details[0].data
+          && data.secondary_details[0].data.length)
+          || userCanEdit"
         :data="titleCaseLabels(data.secondary_details)"
         :user-can-edit="userCanEdit"
-        class="base-sr-head__secondary" />
+        :edit-mode.sync="editMode.secondaryDetails"
+        class="base-sr-head__secondary"
+        @update:edit-mode="editModeHandler" />
 
       <!-- featured media -->
       <div
@@ -90,86 +100,65 @@
                base-sr-featured-media__profile-image">
         <!-- TODO: this is just a placeholder - add properly styled user
         add image elements and info! -->
+        <base-icon
+          name="camera"
+          class="base-sr-featured-media__profile-image__icon" />
         <p class="base-sr-featured-media__profile-image__header">
-          {{ $t('entityView.profileImageHeader') }}
+          {{ $t('editView.profileImageHeader') }}
         </p>
-        <p>
-          {{ $t('entityView.profileImageLink1') }}
+        <p class="base-sr-featured-media__profile-image__subtext">
+          {{ $t('editView.profileImageLink1', { toTitleCase: false }) }}
           <a
             :href="userPreferencesUrl"
-            :title="$t('entityView.profileImageLink2')">
-            <span class="base-sr-featured-media__profile-image__link">
-              {{ $t('entityView.profileImageLink2') }}
-            </span>
+            :title="$t('editView.profileImageLink2')">
+            <span
+              class="base-sr-featured-media__profile-image__link">
+              {{ $t('editView.profileImageLink2') }}</span>
           </a>
-          {{ $t('entityView.profileImageLink3') }}
+          {{ $t('editView.profileImageLink3') }}
         </p>
       </div>
     </div>
 
     <!-- lists -->
-    <div
+    <List
       v-if="data.list && data.list.length"
-      class="base-sr-row">
-      <BaseEditControl
-        v-if="userCanEdit"
-        :controls="true"
-        :edit="editList"
-        :subtitle="'(' + data.list.filter(item => !item.hidden).length + ')'"
-        :title="type !== 'person' ? $t('lists') : $t('activityLists')"
-        class="base-sr--ml-small"
-        @activated="activateList"
-        @canceled="cancelList"
-        @saved="saveList" />
-
-      <BaseExpandList
-        ref="baseExpandList"
-        :edit="userCanEdit && editList"
-        :data="editList
-          ? titleCaseLabels(data.list)
-          : titleCaseLabels(data.list).filter(item => !item.hidden)"
-        :show-more-text="$t('show_all')"
-        :show-less-text="$t('show_less')"
-        @saved="saveListEdit">
-        <template #content="props">
-          <BaseLink
-            :render-link-as="'nuxt-link'"
-            :source="props.data.source"
-            :url="props.data.url"
-            :value="props.data.value"
-            class="base-sr-link--mr" />
-          <template v-if="props.data.attributes">
-            - {{ props.data.attributes.join(', ') }}
-          </template>
-        </template>
-      </BaseExpandList>
-    </div>
+      :data="titleCaseLabels(data.list)"
+      :edit-mode.sync="editMode.list"
+      :entity-type="type"
+      :user-can-edit="userCanEdit"
+      :class="['base-sr-row',
+               { 'base-sr-edit-active': editMode.list }]"
+      @update:edit-mode="editModeHandler" />
 
     <!-- activity showcase -->
     <Showcase
       v-if="type === 'person'
         && ((data.showcase && data.showcase.length)
           || userCanEdit)"
-      :title="$t('activityShowcase')"
+      :data="data.showcase"
+      :title="$t('detailView.activityShowcase')"
       :user-can-edit="userCanEdit"
-      class="base-sr-row" />
+      :edit-mode.sync="editMode.showcase"
+      class="base-sr-row"
+      @update:edit-mode="editModeHandler" />
 
     <!-- locations -->
     <div
       v-if="data.locations && data.locations.length"
       class="base-sr-row">
       <h2 class="base-sr--ml-small">
-        {{ data.locations.length > 1 ? $t('locations') : $t('location') }}
+        {{ $tc('detailView.location', data.locations.length) }}
       </h2>
 
       <base-expand-box
-        :show-more-text="$t('show_more_map')"
-        :show-less-text="$t('show_less_map')">
+        :show-more-text="$t('detailView.showMoreMap')"
+        :show-less-text="$t('detailView.showLessMap')">
         <base-map-locations
           attribution-position="topright"
           :attribution="mapAttribution"
           :copyright="mapCopyright"
-          :label="data.locations.length > 1 ? $t('addresses') : $t('address')"
+          :label="$tc('detailView.address', data.locations.length)"
           :locations="data.locations"
           :options="mapOptions"
           :tile-layer-service="mapTileLayerService"
@@ -181,23 +170,19 @@
     <BaseResultBoxSection
       v-if="data.entries && data.entries.media && data.entries.media.length"
       :entry-list="data.entries.media"
-      :expand-text="$t('results.expand')"
+      :expand-text="$t('resultsView.expand')"
       :is-loading="isLoading"
       :jump-to-top="true"
       :max-rows="2"
       :current-page-number="1"
       :max-show-more-rows="1"
-      :message-text="$t('results.message.text')"
-      :message-subtext="$t('results.message.subtext')"
-      :options-button-text="$t('results.optionsButtonText')"
-      :select-options-text="$t('results.selectOptionsText')"
       :show-options="false"
       :use-expand-mode="true"
       :use-pagination="true"
       class="base-sr-row">
       <template #header>
         <h2 class="base-sr--ml-small">
-          {{ $t('associatedMediaFiles') }}
+          {{ $t('detailView.associatedMediaFiles') }}
         </h2>
       </template>
 
@@ -232,7 +217,7 @@
           :key="index"
           :entry-list="section"
           :show-options="false"
-          :expand-text="$t('results.expand')"
+          :expand-text="$t('resultsView.expand')"
           :total="section.length"
           :max-show-more-rows="1"
           :current-page-number="1"
@@ -243,7 +228,7 @@
           class="base-sr-row">
           <template #header>
             <h2 class="base-sr--ml-small">
-              {{ $t(`linked_${index}`) }}
+              {{ $t(`detailView.linked_${index}`) }}
             </h2>
           </template>
           <template #resultBox="{ item }">
@@ -262,14 +247,16 @@
     </template>
 
     <Search
-      v-if="type === 'person'"
-      :header-text="$t('results.headerText.entityResults', { entity: data.title })"
+      v-if="type === 'person' && (userCanEdit
+        || userHasShowroomEntries)"
+      :header-text="$t('resultsView.headerText.entityResults', { entity: data.title })"
       :result-list.sync="searchResults"
       :applied-filters.sync="appliedFilters"
       :autocomplete-results="autocompleteResults"
       :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :page-number="1"
+      :no-results-text-initial="$t('detailView.noResultsTextInitial')"
       @autocomplete="fetchAutocomplete"
       @search="search" />
 
@@ -280,13 +267,18 @@
       <p>
         <template
           v-if="data.publisher.length">
-          {{ $t('publisher') }}: {{ data.publisher[0].name }} |
+          {{ $t('detailView.publisher') }}: {{ data.publisher[0].name }} |
         </template>
         Showroom Instance: {{ data.source_institution.label }} |
-        {{ $t('publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
-        {{ $t('editedDate') }}: {{ createHumanReadableDate(data.date_changed) }}
+        {{ $t('detailView.publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
+        {{ $t('detailView.editedDate') }}: {{ createHumanReadableDate(data.date_changed) }}
       </p>
     </div>
+
+    <!-- edit-mode-background -->
+    <div
+      v-if="editModeIsActive"
+      class="base-sr-edit-overlay" />
   </div>
 </template>
 
@@ -298,7 +290,6 @@ import {
   BaseCarousel,
   BaseEditControl,
   BaseExpandBox,
-  BaseExpandList,
   BaseLink,
   BaseMapLocations,
   BaseMediaCarousel,
@@ -308,13 +299,13 @@ import {
 
 import Showcase from '~/components/Edit/Showcase';
 import SecondaryDetails from '~/components/Edit/SecondaryDetails';
+import List from '~/components/Edit/List';
 import MediaItem from '~/components/MediaItem';
 
 import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
 import 'base-ui-components/dist/components/BaseCarousel/BaseCarousel.css';
 import 'base-ui-components/dist/components/BaseEditControl/BaseEditControl.css';
 import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
-import 'base-ui-components/dist/components/BaseExpandList/BaseExpandList.css';
 import 'base-ui-components/dist/components/BaseLink/BaseLink.css';
 import 'base-ui-components/dist/components/BaseMapLocations/BaseMapLocations.css';
 import 'base-ui-components/dist/components/BaseMediaCarousel/BaseMediaCarousel.css';
@@ -324,14 +315,13 @@ import Search from '~/components/Search';
 
 import {
   toTitleString,
-  checkForLabel,
+  titleCaseLabels,
 } from '~/utils/common';
 
 Vue.use(BaseButton);
 Vue.use(BaseCarousel);
 Vue.use(BaseEditControl);
 Vue.use(BaseExpandBox);
-Vue.use(BaseExpandList);
 Vue.use(BaseLink);
 Vue.use(BaseMapLocations);
 Vue.use(BaseMediaCarousel);
@@ -344,6 +334,7 @@ export default {
     Search,
     SecondaryDetails,
     Showcase,
+    List,
     MediaItem,
   },
   props: {
@@ -389,8 +380,6 @@ export default {
   },
   data() {
     return {
-      editList: false,
-      editShowcase: false,
       // leaflet map
       mapAttribution: process.env.leaflet.attribution,
       mapCopyright: process.env.leaflet.copyright,
@@ -404,6 +393,16 @@ export default {
       initialPreviewSlide: null,
       mediaPreviewData: null,
       toTitleString,
+      titleCaseLabels,
+      /**
+       * edit-mode for different edit sections
+       * @type {Object}
+       */
+      editMode: {
+        showcase: false,
+        secondaryDetails: false,
+        list: false,
+      },
       // search related variables
       /**
        * indicator if search is ongoing
@@ -425,6 +424,11 @@ export default {
        * @type {Object[]}
        */
       appliedFilters: [],
+      /**
+       * store if user actually has entries that can be displayed in search
+       * @type {boolean}
+       */
+      userHasShowroomEntries: false,
     };
   },
   computed: {
@@ -446,8 +450,36 @@ export default {
     userPreferencesUrl() {
       return process.env.userPreferencesUrl;
     },
+    /**
+     * check if some edit-mode is active
+     *
+     * @returns {boolean}
+     */
+    editModeIsActive() {
+      return Object.values(this.editMode).some((value) => value !== false);
+    },
+  },
+  mounted() {
+    // only check once with initial data if user actually has entries that can be
+    // displayed in search
+    // TODO: remove check for this.searchResults[0].data again? (could break with real data
+    // only here because entities_search_create not implemented yet)
+    // TODO: disabled due 500 on activities
+    // this.userHasShowroomEntries = !!this.searchResults.length
+    //   && !!this.searchResults[0].data && !!this.searchResults[0].data.length;
   },
   methods: {
+    /**
+     * toggle components edit-mode (types: secondaryDetails, lists, showcase)
+     *
+     * @param {Object} component - { name: 'componentName', editMode: boolean }
+     */
+    editModeHandler(component) {
+      // close all edit sections
+      this.editMode = Object.fromEntries(Object.keys(this.editMode).map((key) => [key, false]));
+      // set edit-mode for current object
+      this.editMode[component.name] = component.editMode;
+    },
     async search(requestBody) {
       this.searchOngoing = true;
       try {
@@ -516,24 +548,6 @@ export default {
       }
     },
     /**
-     * title case labels
-     *
-     * @param {Array} data
-     * @returns {Array}
-     */
-    titleCaseLabels(data) {
-      if (data) {
-        return Object.values(
-          Object.entries(data)
-            .reduce((prev, [key, value]) => {
-              const newVal = checkForLabel(value);
-              return { ...prev, ...{ [key]: newVal } };
-            }, {}),
-        );
-      }
-      return [];
-    },
-    /**
      * modify data for media preview
      *
      * @returns {object} - modified object for baseMediaCarousel
@@ -578,7 +592,7 @@ export default {
           title: !obj.title && item.alternative
             ? item.alternative.join(', ')
             : '',
-          additionalInfo: [`${this.$t('license')}: ${item.license.label}`],
+          additionalInfo: [`${this.$t('detailView.license')}: ${item.license.label}`],
           ...obj,
         };
       });
@@ -645,21 +659,6 @@ export default {
           type: 'error',
         });
       }
-    },
-    /* EDIT LIST */
-    activateList() {
-      this.editList = true;
-    },
-    cancelList() {
-      this.editList = false;
-      this.$refs.baseExpandList.reset();
-    },
-    saveList() {
-      this.editList = false;
-      this.$refs.baseExpandList.save();
-    },
-    saveListEdit(val) {
-      console.log('save list', val);
     },
   },
 };
@@ -770,13 +769,28 @@ export default {
       flex-direction: column;
       text-align: center;
       color: $font-color-second;
+      border: 2px solid $font-color-third;
+      padding: $spacing;
 
-      .base-sr-featured-media__profile-image__header {
+      &__icon {
+        width: $icon-large;
+        margin-bottom: $spacing-small;
+
+        @media screen and (min-width: $breakpoint-small) {
+          width: $icon-large * 2;
+        }
+      }
+
+      &__header {
         font-size: $font-size-large;
         margin-bottom: $spacing-small;
       }
 
-      .base-sr-featured-media__profile-image__link {
+      &__subtext {
+        font-size: $font-size-small;
+      }
+
+      &__link {
         text-decoration: underline;
         text-decoration-color: $app-color;
       }

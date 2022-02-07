@@ -103,9 +103,15 @@ export default {
     isUserProfile() {
       return this.entryId.includes(this.userId);
     },
+    /**
+     * check if user is allowed to edit page elements
+     *
+     * @returns {boolean}
+     */
     userCanEdit() {
       return this.entryId.includes(this.userId)
-        || this.entryId.includes(this.userEditPermissions);
+        || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId))
+        || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId.split('-').pop()));
     },
   },
 };

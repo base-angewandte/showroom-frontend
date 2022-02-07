@@ -1,62 +1,74 @@
 <template>
   <div
     :class="['base-sr-secondary',
-             { 'base-sr-row': userCanEdit || edit || data.length }]">
+             { 'base-sr-edit-active': editModeInt },
+             { 'base-sr-row': userCanEdit || editModeInt || dataInt.length }]">
     <BaseEditControl
       v-if="userCanEdit"
       :controls="true"
       title=""
-      :edit="edit"
+      :edit="editModeInt"
+      :edit-button-text="$i18n.t('editView.edit')"
+      :cancel-button-text="$i18n.t('editView.cancel')"
+      :save-button-text="$i18n.t('editView.save')"
       :is-loading="isLoading"
-      @activated="activateEdit"
+      @activated="enableEdit"
       @canceled="cancel"
       @saved="save" />
 
     <!-- show data if not empty and not in edit mode -->
+    <!-- TODO: add logic to display alternative language if possible
+               and add a corresponding html lang="" attribute -->
     <BaseExpandBox
-      v-if="data[0] && data[0].data.length && !edit"
+      v-if="!!dataInt
+        && !!dataInt.length
+        && !!dataInt[0].data
+        && !!dataInt[0].data.length
+        && !editModeInt"
       :auto-height="true"
-      :show-more-text="$i18n.t('show_more')"
-      :show-less-text="$i18n.t('show_less')"
+      :show-more-text="$i18n.t('detailView.showMore')"
+      :show-less-text="$i18n.t('detailView.showLess')"
       padding="large">
       <BaseTextList
         render-label-as="h2"
-        :label-margin-bottom="data.length === 1"
-        :data="data"
+        :label-margin-bottom="dataInt.length === 1"
+        :data="dataInt"
         :cols2="true" />
     </BaseExpandBox>
 
     <!-- userCanEdit -->
     <BaseBox
-      v-if="(userCanEdit && edit) || (userCanEdit && !data.length)"
+      v-if="(userCanEdit && editModeInt)
+        || (userCanEdit && !dataInt.length)
+        || (userCanEdit && dataInt.length && !dataInt[0].data)"
       box-ratio="0"
       :box-size="{}"
       :box-hover="false"
-      :box-shadow-size="!edit ? 'small' : 'large'"
+      :box-shadow-size="!editModeInt ? 'small' : 'large'"
       class="base-sr-edit-box base-sr--p-large">
       <!-- empty data -->
       <template
-        v-if="!edit">
-        <h2>{{ $t('details') }}</h2>
+        v-if="!editModeInt">
+        <h2>{{ $t('detailView.details') }}</h2>
 
         <div>
-          <span>{{ $t('editTextReminder') }}</span>
+          <span>{{ $t('editView.editTextReminder') }}</span>
           <button
             class="base-sr-text-button"
-            @click="activateEdit()">
-            {{ $t('editNow') }}
+            @click="enableEdit()">
+            {{ $t('editView.editNow') }}
           </button>.
         </div>
       </template>
 
       <!-- edit data -->
       <BaseMultilineTextInput
-        v-if="edit"
+        v-if="editModeInt"
         v-model="textInput"
         :tabs="tabs"
         :active-tab="activeTab"
-        :label="data[0] && data[0].label ? data[0].label: $t('details')"
-        :placeholder="$t('editTextReminder')" />
+        :label="dataInt[0] && dataInt[0].label ? dataInt[0].label: $t('detailView.details')"
+        :placeholder="$t('editView.editTextReminder')" />
     </BaseBox>
   </div>
 </template>
@@ -78,6 +90,8 @@ import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
 import 'base-ui-components/dist/components/BaseMultilineTextInput/BaseMultilineTextInput.css';
 import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
 
+import { userInfo } from '@/mixins/userNotifications';
+
 Vue.use(BaseBox);
 Vue.use(BaseEditControl);
 Vue.use(BaseExpandBox);
@@ -86,6 +100,7 @@ Vue.use(BaseTextList);
 
 export default {
   name: 'SecondaryDetails',
+  mixins: [userInfo],
   props: {
     /**
      * specify array to render secondary_details
@@ -95,25 +110,47 @@ export default {
       default: () => [{ label: 'Details', data: [] }],
     },
     /**
-     * set edit mode
+     * set if user is allowed to edit
      */
     userCanEdit: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * set edit mode from outside
+     */
+    editMode: {
       type: Boolean,
       default: false,
     },
   },
   data() {
     return {
+      // internal data array object
+      dataInt: this.data,
       // toggle edit-mode
-      edit: false,
+      editModeInt: this.editMode,
       // async edit-data
-      editData: [],
+      editData: [
+        {
+          en: [
+            {
+              label: 'Details',
+              data: '',
+            },
+          ],
+          de: [
+            {
+              label: 'Details',
+              data: '',
+            },
+          ],
+        },
+      ],
       // loading indicator
       isLoading: false,
       // used for BaseMultilineTextInput
       textInput: {},
-      // set time the loader is minimal shown
-      loadingDelay: 0,
     };
   },
   computed: {
@@ -142,84 +179,127 @@ export default {
       return this.locales.map((locale) => this.$t(locale));
     },
   },
+  watch: {
+    editMode: {
+      handler(val) {
+        this.editModeInt = val;
+      },
+      immediate: true,
+    },
+    editModeInt(val) {
+      if (val !== this.editMode) {
+        /**
+         * emitted on edit mode toggle<br>
+         *   the [.sync modifier](https://vuejs.org/v2/guide/components-custom-events.html#sync-Modifier) may be used on the corresponding prop
+         *
+         * @event update:edit-mode
+         * @param {Object}
+         */
+        this.$emit('update:edit-mode', { name: 'secondaryDetails', editMode: val });
+      }
+    },
+  },
   methods: {
     /**
      * read data and activate edit-mode
      */
-    activateEdit() {
+    enableEdit() {
       this.read();
     },
     /**
      * cancel edit-mode
      */
     cancel() {
-      this.edit = false;
+      this.editModeInt = false;
       this.textInput = {};
+      this.isLoading = false;
     },
     /**
      * load data with all languages
      */
     async read() {
-      this.isLoading = true;
-      this.editData = await this.$api.auth.api_v1_entities_edit_retrieve({
-        id: this.$route.params.id,
-        field: 'secondary_details',
-      }).then((response) => JSON.parse(response.data));
+      try {
+        this.isLoading = true;
 
-      // format textInput
-      this.locales.forEach((locale) => {
-        this.textInput[this.$t(locale)] = this.editData[0][locale][0].data;
-      });
+        const response = await this.$api.auth.api_v1_entities_edit_retrieve({
+          id: this.$route.params.id,
+          secondary_details: true,
+        });
 
-      setTimeout(() => {
+        const secondaryDetails = JSON.parse(response.data).secondary_details;
+
+        if (secondaryDetails) {
+          this.editData = secondaryDetails;
+        }
+
+        // format textInput
+        this.locales.forEach((locale) => {
+          this.textInput[this.$t(locale)] = this.editData[0][locale].data;
+        });
+
         this.isLoading = false;
-        this.edit = true;
-      }, this.loadingDelay);
+        this.editModeInt = true;
+      } catch (e) {
+        console.log(e);
+      }
     },
     /**
      * save data
      */
     async save() {
-      this.isLoading = true;
+      try {
+        this.isLoading = true;
 
-      // format requestBody
-      const requestBody = this.editData;
-      this.locales.forEach((locale) => {
-        requestBody[0][locale][0].data = this.textInput[this.$t('en')];
-      });
+        // set secondaryDetails array object
+        const secondaryDetails = {};
+        this.locales.forEach((locale) => {
+          secondaryDetails[locale] = {
+            label: 'Details',
+            data: this.textInput[this.$t(locale)] || '',
+          };
+        });
 
-      // TODO: this seems like a weird mixture of ES5 .then() and ES6 async/await Promise syntax?
-      // is the .then() really necessary?
-      // also: error handling / user info necessary?
-      await this.$api.auth.api_v1_entities_edit_update(
-        {
-          id: this.$route.params.id,
-          field: 'secondary_details',
-        },
-        {
-          requestBody,
-        },
-      ).then((response) => {
-        if (response.status === 200) {
-          this.$notify({
-            group: 'request-notifications',
-            title: this.$t('notify.saveSuccess'),
-            text: this.$t('notify.saveSuccessSubtext'),
-            type: 'success',
-          });
+        // set requestBody
+        const requestBody = {
+          secondary_details: [secondaryDetails],
+        };
 
-          // update initial data
-          // TODO: i suppressed the below error message for now but this should probably be
-          // handled differently!
-          // eslint-disable-next-line vue/no-mutating-props
-          this.data[0].data = this.textInput[this.$t(this.$i18n.locale)];
+        const response = await this.$api.auth.api_v1_entities_edit_partial_update(
+          {
+            id: this.$route.params.id,
+          },
+          {
+            requestBody,
+          },
+        );
 
-          setTimeout(() => {
-            this.isLoading = false;
-            this.edit = false;
-          }, this.loadingDelay);
-        }
-      });
+        // add notification
+        this.informUser({
+          action: 'save',
+          type: 'text',
+          notificationType: 'success',
+        });
+
+        // update initial data
+        const obj = JSON.parse(response.data).secondary_details;
+        this.dataInt = [obj[0][this.$i18n.locale]];
+
+        // update states
+        this.isLoading = false;
+        this.editModeInt = false;
+      } catch (e) {
+        console.log(e);
+
+        this.informUser({
+          action: 'save',
+          type: 'text',
+          notificationType: 'error',
+        });
+
+        // update states
+        this.isLoading = false;
+        this.editModeInt = false;
+      }
     },
   },
 };

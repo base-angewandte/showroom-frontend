@@ -1,95 +1,140 @@
 <template>
-  <div>
+  <div
+    :class="[{ 'base-sr-edit-active': editModeInt }]">
     <!-- edit controls -->
     <BaseEditControl
-      v-if="userCanEdit && !edit"
+      v-if="userCanEdit && !editModeInt"
       :controls="true"
-      :edit="edit"
+      :edit="editModeInt"
+      :disabled="!dataInt.length"
       :title="title"
+      :edit-button-text="$i18n.t('editView.edit')"
       class="base-sr--ml-small"
-      @activated="activate" />
+      @activated="enableEdit" />
 
-    <div class="base-sr--showcase">
+    <div class="base-sr-showcase">
       <div
-        v-if="!!placeholderData && !edit"
-        class="base-sr--showcase-placeholder">
+        v-if="!!placeholderData
+          && !dataInt.length
+          && !editModeInt
+          && userCanEdit
+          && carouselInitialized"
+        class="base-sr-showcase__placeholder">
         <BaseBoxButton
-          :text="$t('entityView.placeholderCarouselButton')"
+          :text="$t('editView.addActivities')"
           :box-size="{ width: '200px' }"
           :show-plus="true"
           icon="file-object"
           box-style="large"
           box-type="button"
-          class="base-sr--showcase-placeholder__button" />
+          class="base-sr-showcase__placeholder__button"
+          @clicked="(showPopUp = true)" />
       </div>
+
+      <BaseLoader
+        v-if="isLoading && !carouselInitialized"
+        class="base-sr-showcase__loader" />
+
       <!-- display showcase -->
       <BaseCarousel
-        v-if="(data || placeholderData) && !edit"
-        :items="data && data.length ? data : placeholderData"
-        :swiper-options="carouselOptions" />
+        v-if="(dataInt.length || placeholderData.length) && !editModeInt"
+        :items="dataInt && dataInt.length ? dataInt : placeholderData"
+        :swiper-options="carouselOptions"
+        @initialized="carouselInitialized = true" />
     </div>
 
     <!-- edit showcase -->
     <BaseResultBoxSection
-      v-if="edit"
+      v-if="editModeInt"
       v-model="dataInt"
       :draggable="true"
-      :edit-mode.sync="edit"
-      :expand-text="$t('results.expand')"
+      :edit-mode.sync="editModeInt"
+      :edit-mode-white-background="true"
+      :expand-text="$t('resultsView.expand')"
       :is-loading="false"
-      :message-text="$t('results.message.text')"
-      :message-subtext="$t('results.message.subtext')"
-      :options-button-text="$t('results.optionsButtonText')"
-      :selected-list="selectedBoxes"
-      :select-options-text="$t('results.selectOptionsText')"
+      :message-text="$t('editView.message.text')"
+      :message-subtext="$t('editView.message.subtext')"
+      :options-button-text="$t('editView.optionsButtonText')"
+      :selected-list.sync="selectedBoxes"
+      :select-options-text="{
+        ...$t('editView.selectOptionsText'),
+        entriesSelected: $t('editView.selectOptionsText.entriesSelected',
+                            { type: $tc('activity', selectedBoxes.length) }),
+      }"
       :show-options="true"
       :show-action-button-box="true"
-      @submit-action="action"
-      @entries-changed="entriesChanged">
+      class="base-sr-showcase-edit"
+      @submit-action="actionHandler"
+      @entries-changed="actionHandler('sort', $event)">
       <template
         v-if="title"
         #header>
-        <h2 class="base-sr--ml-small">
+        <h2 class="base-sr--mb-0 base-sr--ml-small">
           {{ title }}
         </h2>
       </template>
+
       <template #optionButtons="scope">
         <BaseButton
-          :text="$t('add_activity')"
+          :text="$t('editView.addActivities')"
           icon-size="large"
-          icon="sheet-empty"
+          icon="add-new-object"
           button-style="single"
-          @clicked="scope.submitAction('addActivity')" />
+          @clicked="scope.submitAction('showPopup')" />
         <BaseButton
-          :text="'delete'"
+          :text="$t('editView.delete')"
+          :disabled="!selectedBoxes.length"
           icon-size="large"
           icon="waste-bin"
           button-style="single"
           @clicked="scope.submitAction('delete')" />
       </template>
-
-      <template #actionButtons>
-        <BaseBoxButton
-          :text="$t('add_activity')"
-          :box-size="{ width: 'auto' }"
-          :show-plus="true"
-          icon="sheet-empty"
-          box-style="large"
-          box-type="button"
-          class="base-result-box-section__box" />
-      </template>
     </BaseResultBoxSection>
 
     <!-- add activity -->
     <BasePopUp
-      :button-right-text="$t('selectEntries')"
-      :show="showAddActivityPopUp"
-      :title="$t('add_activities')"
-      @button-left="showAddActivityPopUp = false"
-      @button-right="addSelectedEntries"
-      @close="showAddActivityPopUp = false">
-      <!-- Todo: implement entry selection -->
-      select entries
+      :button-right-text="$t('editView.addActivities')"
+      :button-right-disabled="isSaving || !selectorSelectedEntries.length"
+      :is-loading="isSaving"
+      :title="$t('editView.addActivities')"
+      :show="showPopUp"
+      class="base-sr-popup"
+      @button-left="cancel"
+      @button-right="actionHandler('add')"
+      @close="cancel">
+      <!-- TODO: fix number of selected boxes as soon as number is available
+      in front end -->
+      <BaseEntrySelector
+        ref="entrySelector"
+        :entries="selectorEntries"
+        :entries-total="selectorEntriesNumber"
+        :entries-per-page="selectorEntriesPerPage"
+        :entries-selectable="true"
+        :height="'calc(50vh - 32px)'"
+        :is-loading="isLoading"
+        :language="$i18n.locale"
+        :options-hidden="true"
+        :sort-options="sortOptions"
+        :sort-config="{
+          label: $t('editView.sortBy'),
+          default: {
+            label: {
+              en: 'Last Modified',
+              de: 'Zuletzt geändert',
+            },
+            value: 'date_modified',
+          },
+          valuePropertyName: 'value',
+        }"
+        :entry-selector-text="{
+          ...$t('editView.selectOptionsText'),
+          entriesSelected: $t('editView.selectOptionsText.entriesSelected',
+                              { type: $tc('activity', selectorSelectedEntries.length || 0) }),
+          ...$t('editView.selectActivitiesPopUp')
+        }"
+        class="base-sr-entry-selector"
+        @selected-changed="selectorSelectedEntries = $event"
+        @fetch-entries="fetchEntriesRequest" />
     </BasePopUp>
   </div>
 </template>
@@ -97,10 +142,12 @@
 <script>
 import Vue from 'vue';
 import {
-  BaseButton,
   BaseBoxButton,
+  BaseButton,
   BaseCarousel,
   BaseEditControl,
+  BaseEntrySelector,
+  BaseLoader,
   BasePopUp,
   BaseResultBoxSection,
 } from 'base-ui-components';
@@ -109,30 +156,44 @@ import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
 import 'base-ui-components/dist/components/BaseBoxButton/BaseBoxButton.css';
 import 'base-ui-components/dist/components/BaseCarousel/BaseCarousel.css';
 import 'base-ui-components/dist/components/BasePopUp/BasePopUp.css';
+import 'base-ui-components/dist/components/BaseEntrySelector/BaseEntrySelector.css';
+import 'base-ui-components/dist/components/BaseLoader/BaseLoader.css';
 import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSection.css';
+
+import { userInfo } from '@/mixins/userNotifications';
 
 Vue.use(BaseButton);
 Vue.use(BaseBoxButton);
 Vue.use(BaseCarousel);
 Vue.use(BaseEditControl);
+Vue.use(BaseEntrySelector);
+Vue.use(BaseLoader);
 Vue.use(BasePopUp);
 Vue.use(BaseResultBoxSection);
 
 export default {
   name: 'Showcase',
   components: {},
+  mixins: [userInfo],
   props: {
     /**
-     * specify array to render showcase
+     * specify data to render showcase
      */
     data: {
       type: Array,
       default: () => [],
     },
     /**
-     * set edit mode
+     * set if user is allowed to edit
      */
     userCanEdit: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * set edit mode from outside
+     */
+    editMode: {
       type: Boolean,
       default: false,
     },
@@ -146,17 +207,153 @@ export default {
   },
   data() {
     return {
-      dataInt: this.data,
       activeAction: '',
-      edit: false,
-      showAddActivityPopUp: false,
-      carouselOptions: {
+      carouselOptions: {},
+      carouselInitialized: false,
+      dataInt: this.formatData(this.data),
+      editModeInt: this.editMode,
+      isLoading: false,
+      isSaving: false,
+      placeholderData: [],
+      selectedBoxes: [],
+      selectorEntries: [],
+      selectorEntriesNumber: null,
+      selectorEntriesPerPage: 4,
+      selectorSelectedEntries: [],
+      showPopUp: false,
+      sortOptions: [
+        {
+          label: 'By Type',
+          value: 'type_en',
+        },
+        {
+          label: 'A - Z',
+          value: 'title',
+        },
+        {
+          label: 'Z - A',
+          value: '-title',
+        },
+        {
+          label: 'Last Created',
+          value: '-date_created',
+        },
+        {
+          label: 'First Created',
+          value: 'date_created',
+        },
+        {
+          label: 'Last Modified',
+          value: 'date_modified',
+        },
+      ],
+    };
+  },
+  watch: {
+    dataInt(val) {
+      this.setCarouselOptions(val);
+    },
+    placeholderData(val) {
+      this.setCarouselOptions(val);
+    },
+    editMode: {
+      handler(val) {
+        this.editModeInt = val;
+      },
+      immediate: true,
+    },
+    editModeInt(val) {
+      if (val !== this.editMode) {
+        /**
+         * emitted on edit mode toggle<br>
+         *   the [.sync modifier](https://vuejs.org/v2/guide/components-custom-events.html#sync-Modifier) may be used on the corresponding prop
+         *
+         * @event update:edit-mode
+         * @param {Object}
+         */
+        this.$emit('update:edit-mode', { name: 'showcase', editMode: val });
+      }
+    },
+  },
+  mounted() {
+    this.setCarouselOptions(this.dataInt);
+  },
+  async created() {
+    /**
+     * if no user data found, try to fetch global showcase or prefill with empty entries
+     * TODO: if not showcase entries are added,
+     *       prefill showcase carousel if possible:
+     *       1. user entries or 2. global entries or 3. empty entries
+     */
+    if (!this.dataInt || !this.dataInt.length) {
+      await this.fetchPlaceholderRequest();
+    }
+  },
+  methods: {
+    async fetchPlaceholderRequest() {
+      // clear placeholderData
+      this.placeholderData = [];
+      try {
+        this.isLoading = true;
+        const response = await this.$api.public.api_v1_initial_retrieve({
+          id: process.env.institutionId,
+        },
+        {
+          requestBody: {
+            limit: 3,
+          },
+        });
+        let showcaseFiltered = [];
+        if (response.data && typeof response.data === 'string') {
+          const { showcase } = JSON.parse(response.data);
+
+          // filter entries with preview image
+          showcaseFiltered = showcase
+            .filter((entry) => !!entry.previews.length)
+            .slice(0, 3)
+            .map((entry) => ({
+              ...entry,
+              href: entry.id,
+            }));
+        }
+        if (response.data && showcaseFiltered.length) {
+          this.placeholderData = showcaseFiltered;
+          // otherwise prefill with empty entries
+        } else {
+          for (let i = 1; i <= 3; i += 1) {
+            this.placeholderData.push({ title: '', href: '#' });
+          }
+        }
+
+        this.isLoading = false;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    /**
+     * cancel and reset popup
+     */
+    cancel() {
+      this.showPopUp = false;
+      this.isLoading = false;
+      this.isSaving = false;
+    },
+    /**
+     * set carouselOptions
+     *
+     * @param {Array} data - array with carousel objects
+     */
+    setCarouselOptions(data) {
+      this.carouselOptions = {
         slidesPerView: 1,
         slidesPerGroup: 1,
-        spaceBetween: 15,
-        loop: this.data.showcase && this.data.showcase.length > 3,
+        spaceBetween: 16,
+        threshold: 2,
+        autoplay: {
+          delay: 7000,
+        },
+        loop: data && data.length > 3,
         speed: 750,
-        // simulateTouch: false,
         keyboard: {
           enabled: true,
         },
@@ -170,78 +367,216 @@ export default {
             slidesPerGroup: 2,
           },
           1024: {
-            slidesPerView: this.data.showcase && this.data.showcase.length < 3 ? 2 : 3,
-            slidesPerGroup: this.data.showcase && this.data.showcase.length < 3 ? 2 : 3,
+            slidesPerView: data && data.length < 3 ? 2 : 3,
+            slidesPerGroup: data && data.length < 3 ? 2 : 3,
           },
         },
-      },
-      placeholderData: [],
-      selectedBoxes: [],
-    };
-  },
-  async created() {
-    // TODO: this is not working!!
-    // (carousel view remains empty even though data are there)
-    // TODO 2: not even sure if this is a good idea but where to get appropriate data from?
-    // or should it look differently??
-    if (!this.data || !this.data.length) {
+      };
+    },
+    /**
+     * request to save data to db
+     *
+     * @param {Object[]} data - entries
+     * @property {string} data[].id - the entry id
+     * @property {string} data[].type - the showcase type of the entry (e.g. 'activity')
+     * @param {String} action
+     * @returns {Promise<void>}
+     */
+    async updateRequest(data, action) {
+      // get number of items that should be altered
+      const count = Math.abs(this.dataInt.length - data.length);
       try {
-        const response = await this.$api.public.api_v1_initial_retrieve({
-          id: process.env.institutionId,
-        },
-        {
-          requestBody: {
-            limit: 3,
+        this.isSaving = true;
+        const response = await this.$api.auth.api_v1_entities_edit_partial_update(
+          {
+            // TODO: needs adaption for departments etc.
+            id: this.$route.params.id || process.env.institutionId,
           },
-        });
-        const { showcase } = JSON.parse(response.data);
-        if (showcase && showcase[0]
-          && showcase[0].data && showcase[0].data.length) {
-          this.placeholderData = showcase[0].data
-            .filter((entry) => !!entry.image_url)
-            .slice(0, 3)
-            .map((entry) => ({
-              ...entry,
-              href: entry.id,
-            }));
+          {
+            requestBody: {
+              showcase: data,
+            },
+          },
+        );
+
+        // update states
+        this.showPopUp = false;
+        this.isSaving = false;
+
+        // format/update showcase data
+        this.dataInt = this.formatData(JSON.parse(response.data).showcase);
+
+        // add notifications depending on action
+        if (action !== 'sort') {
+          this.informUser({
+            action,
+            count,
+            type: 'showcase',
+            notificationType: 'success',
+          });
+        }
+
+        // empty container variables
+        this.selectedBoxes = [];
+        this.selectorSelectedEntries = [];
+
+        // set edit mode
+        this.editModeInt = !!this.dataInt.length;
+
+        // if no entries left, fill with placeHolder data
+        if (!this.dataInt.length) {
+          await this.fetchPlaceholderRequest();
+          this.setCarouselOptions(this.placeholderData);
         }
       } catch (e) {
         console.error(e);
+        this.informUser({
+          action,
+          count,
+          type: 'showcase',
+          notificationType: 'error',
+        });
+        // update states
+        this.showPopUp = false;
+        this.isSaving = false;
       }
-    }
-  },
-  methods: {
-    addSelectedEntries() {
-      console.log('addSelectedEntries');
     },
-    action(value) {
-      if (value === 'addActivity') {
-        this.showAddActivityPopUp = true;
+    async actionHandler(action, entries = []) {
+      if (action === 'showPopup') {
+        this.showPopUp = true;
+        return;
       }
-      console.log(value);
-    },
-    entriesChanged(entries) {
-      console.log(entries);
-    },
-    activate() {
-      this.edit = true;
-    },
-    transformData(data) {
-      return data.map((item) => ({
-        ...item,
-        subtext: typeof item.subtext === 'object'
-        && typeof item.subtext[0] === 'string' ? item.subtext.join(', ') : item.subtext,
+
+      let showcase = [];
+
+      if (action === 'delete') {
+        showcase = this.dataInt.filter((entry) => !this.selectedBoxes.includes(entry.id));
+      }
+
+      if (action === 'add') {
+        showcase = [
+          ...this.dataInt,
+          ...this.selectorSelectedEntries,
+        ];
+      }
+
+      if (action === 'sort') {
+        showcase = entries;
+      }
+
+      // filter relevant request data
+      const requestData = showcase.map((item) => ({
+        id: item.id,
+        // Todo: check showcase_type is always available
+        type: 'activity',
       }));
+
+      await this.updateRequest(requestData, action);
+    },
+    // Todo: refactor magic values, maybe with props?
+    calcSelectorEntriesPerPage() {
+      const { entrySelector } = this.$refs;
+      let bodyHeight = entrySelector.$refs.body.clientHeight;
+
+      // if pagination element is not present yet (on initial render) deduct height and spacing
+      // from height
+      if (!entrySelector.$refs.pagination) {
+        bodyHeight = bodyHeight - 48 - 16;
+      }
+      // hardcoded because unfortunately no other possibility found
+      const entryHeight = this.isMobile ? 48 : 57;
+      const numberOfEntries = Math.floor(bodyHeight / entryHeight);
+
+      return numberOfEntries > 4 ? numberOfEntries : 4;
+    },
+    /**
+     * enable edit mode
+     */
+    enableEdit() {
+      this.editModeInt = true;
+    },
+    /**
+     * search/fetch entries for add activities popup
+     *
+     * @param {Object} requestObject
+     * @returns {Promise<void>}
+     */
+    async fetchEntriesRequest(requestObject) {
+      try {
+        this.isLoading = true;
+        this.selectorEntriesPerPage = this.calcSelectorEntriesPerPage();
+
+        const filters = [
+          {
+            label: 'Fulltext',
+            id: 'default',
+            // TODO: check how to fetch all entries without setting filter_value to ['a']
+            filter_values: requestObject.query.length ? requestObject.query.split(' ') : ['a'],
+            type: 'activity',
+          },
+        ];
+
+        const response = await this.$api.public.api_v1_search_create({}, {
+          requestBody: {
+            filters,
+            offset: (requestObject.page - 1) * this.selectorEntriesPerPage,
+            limit: this.selectorEntriesPerPage,
+          },
+        });
+
+        const results = JSON.parse(response.data);
+
+        if (results) {
+          this.selectorEntriesNumber = results.total;
+          this.selectorEntries = this.disableEntries(results.data);
+        }
+
+        this.isLoading = false;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    /**
+     * set property disabled to already linked entries or which are not type 'activity'
+     *
+     * @param {Object[]} entries - showcase entries
+     * @returns {Object[]}
+     */
+    disableEntries(entries) {
+      const linkedEntries = this.dataInt.map((entry) => entry.id);
+      return entries.map((entry) => ({
+        ...entry,
+        disabled: linkedEntries.includes(entry.id)
+          || !['activity', 'album'].includes(entry.type),
+      }));
+    },
+    /**
+     * set missing props if needed
+     *
+     * @param {Object[]} data - showcase entries
+     * @returns {Object[]}
+     */
+    formatData(data) {
+      return data.map((entry) => {
+        // entry.detail includes entire entry data (response from /edit route)
+        const item = entry.details ? entry.details : entry;
+        return {
+          ...item,
+          href: item.id,
+          imageUrl: item.previews && item.previews.length
+            ? Object.values(item.previews[0])[0] : item.image_url || '',
+        };
+      });
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.base-sr--showcase {
+.base-sr-showcase {
   position: relative;
 
-  .base-sr--showcase-placeholder {
+  .base-sr-showcase__placeholder {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -253,10 +588,68 @@ export default {
     justify-content: center;
     align-items: center;
 
-    .base-sr--showcase-placeholder__button {
+    .base-sr-showcase__placeholder__button {
       box-shadow: $max-box-shadow;
       z-index: map-get($zindex, showcase-overlay-button);
     }
   }
 }
+
+.base-sr-edit-active {
+  &::v-deep  {
+    .base-options {
+      .base-button {
+        background-color: transparent !important;
+      }
+    }
+
+    .base-select-options {
+      .base-button {
+        background-color: transparent !important;
+      }
+    }
+  }
+}
+
+.base-sr-showcase-edit {
+  &::v-deep  {
+    .base-options {
+      .base-options__row.base-options__row-right {
+        > button:last-child {
+          padding-right: 0;
+        }
+      }
+    }
+  }
+}
+
+.base-sr-entry-selector {
+  padding: 0 $spacing $spacing;
+  background-color: $background-color;
+}
+
+.base-sr-popup {
+
+  &__button {
+    flex-basis: 100%;
+
+    &__loader {
+      position: relative;
+      transform: scale(0.5);
+      margin-left: $spacing;
+      padding-left: $spacing;
+    }
+  }
+
+  &__button + &__button {
+    margin-left: 0;
+    margin-top: $spacing-small;
+
+    @media screen and (min-width: $breakpoint-small) {
+      margin-left: $spacing;
+      margin-top: 0;
+    }
+  }
+}
+
 </style>

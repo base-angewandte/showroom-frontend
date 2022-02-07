@@ -1,86 +1,33 @@
 {
-  "activityLists": "Activity list",
-  "activityShowcase": "Showcase",
-  "address": "Address",
-  "addresses": "Addresses",
-  "add_activity": "add activity",
-  "add_activities": "Add activities",
-  "associatedMediaFiles": "Associated media files",
-  "details": "Details",
+  "activity": "Activities | Activity | Activities",
   "de": "German",
   "en": "English",
-  "editButtonText": "Edit",
-  "editNow": "Edit now",
-  "editTextReminder": "Individual text can be entered here.",
-  "editedDate": "Edit Date",
-  "errors": {
-    "homepage": "Homepage",
-    "404": {
-      "title": "Error 404",
-      "description": "The requested URL was not found on this server."
-    },
-    "500": {
-      "title": "Error 500 - Internal Server Error",
-      "description": "Sorry, an error has occurred."
-    }
+  "detailView": {
+    "activityLists": "Activity list",
+    "lists": "Lists",
+    "activityShowcase": "Showcase",
+    "associatedMediaFiles": "Associated media files",
+    "details": "Details",
+    "address": "Addresses | Address | Addresses",
+    "expertise": "Expertise",
+    "publisher": "Published by",
+    "editedDate": "Edit Date",
+    "publishedDate": "Publication Date",
+    "linked_from": "Parent Activity",
+    "linked_to": "Related Activities",
+    "location": "Locations | Location | Locations",
+    "showMore": "Show more",
+    "showMoreMap": "Show Map and Address",
+    "showLess": "Show less",
+    "showLessMap": "Collapse Map and Address",
+    "showAll": "Show all",
+    "license": "License",
+    "print": "Print",
+    "noResultsTextInitial": "You don't have any entries yet that can be displayed.\nPublish entries in Portfolio to make them visible here!"
   },
-  "expertise": "Expertise",
-  "frontend": "Showroom",
-  "license": "License",
-  "linked_from": "Parent Activity",
-  "linked_to": "Related Activities",
-  "lists": "Lists",
-  "location": "Location",
-  "locations": "Locations",
-  "notify": {
-    "saveFail": "Saving to database failed",
-    "saveSuccess": "Entry saved",
-    "saveSuccessSubtext": "The entry was successfully saved to the database.",
-    "errorDownload": "Something went wrong!",
-    "errorDownloadSubtext": "An error occurred during the download of file {fileName}."
-  },
-  "print": "Print",
-  "publisher": "Published by",
-  "publishedDate": "Publication Date",
-  "results": {
-    "expand": {
-      "expand": "More Objects",
-      "collapse": "Show Less"
-    },
-    "message": {
-      "text": "Drag or Select",
-      "subtext": "Drag'n Drop to reorder or select the relevant items and choose an action"
-    },
-    "optionsButtonText": {
-      "show": "edit",
-      "hide": "cancel"
-    },
-    "selectOptionsText": {
-      "selectAll": "select all",
-      "selectNone": "select none",
-      "entriesSelected": {
-        "string": "entries selected",
-        "count": 0,
-        "variables": {
-          "type": "entry"
-        }
-      }
-    },
-    "headerText": {
-      "latestActivities": "Latest Activities",
-      "results": "Search results",
-      "entityResults": "{entity}'s Activities"
-    }
-  },
-  "search": "Search",
-  "selectEntries": "Select entries",
-  "show_more": "Show more",
-  "show_more_map": "Show Map and Address",
-  "show_less": "Show less",
-  "show_less_map": "Collapse Map and Address",
-  "show_all": "Show all",
-  "discover": {
-    "title": "Search and Discover Showroom"
+  "discoverView": {
+    "title": "Search and Discover Showroom",
+    "noResultsTextInitial": "There are no data in this showroom that can be displayed here.\nTry to use filters in order to see some Showroom content!"
   },
   "searchView": {
     "fulltext": "Fulltext",
@@ -103,21 +50,91 @@
       "autocompleteInitial": "Please start typing or select a filter to see options",
       "chipsNoOptions": "No more options available",
       "chipsMaxOptions": "Please start typing to see options",
-      "chipsNoMatch":  "No matchingg options found",
+      "chipsNoMatch":  "No matching options found",
       "chipsOngoing": "Options are being loaded..."
+    },
+    "noResultsHeading": "No results found.",
+    "noResultsText": "No results were found with the specified search criteria.\nPlease adjust your search.",
+    "noResultsInitial": "No Data for Display Available."
+  },
+  "resultsView": {
+    "expand": {
+      "expand": "More Objects",
+      "collapse": "Show Less"
+    },
+    "headerText": {
+      "latestActivities": "Latest Activities",
+      "results": "Search results",
+      "entityResults": "{entity}'s Activities"
     }
   },
-  "search-component": {
-    "no-results-heading": "No results found.",
-    "no-results-text": "No results were found with the specified search criteria.\nPlease adjust your search.",
-    "no-results-initial": "No Data for Display Available.",
-    "no-results-text-initial": "There are no data in this showroom that can be displayed here.\nTry to use filters in order to see some Showroom content!"
- },
-  "entityView": {
+  "editView": {
     "profileImageHeader": "Add User Profile Image",
-    "profileImageLink1": "Please go to your ",
-    "profileImageLink2": "User Preferences ",
-    "profileImageLink3": "to add a profile image to your personal page.",
-    "placeholderCarouselButton": "Add Activities"
+    "profileImageLink1": "Please visit your ",
+    "profileImageLink2": "User Preferences",
+    "profileImageLink3": " to add a profile image to your personal page.",
+    "editNow": "Edit now",
+    "editTextReminder": "Individual text can be entered here.",
+    "addActivities": "Add Activities",
+    "cancel": "Cancel",
+    "delete": "Remove Activities",
+    "save": "Save",
+    "edit": "Edit",
+    "ready": "Done",
+    "selectOptionsText": {
+      "selectAll": "select all",
+      "selectNone": "select none",
+      "entriesSelected": "{type} selected"
+    },
+    "selectActivitiesPopUp": {
+      "noEntriesTitle": "No matching activities found",
+      "noEntriesSubtext": "Please adjust your search criteria.",
+      "options": {
+        "show": "Options",
+        "hide": "Options"
+      },
+      "search": "Search all Activities"
+    },
+    "sortBy": "Sort by",
+    "selectCarouselActivities": "Select entries",
+    "message": {
+      "text": "Drag or Select",
+      "subtext": "Drag'n Drop to reorder or select the relevant items and choose an action."
+    },
+    "optionsButtonText": {
+      "show": "Edit",
+      "hide": "Done"
+    }
+  },
+  "notify": {
+    "errorDownload": "Something went wrong!",
+    "errorDownloadSubtext": "An error occurred during the download of file {fileName}.",
+    "textItem": "text items | text item | text items",
+    "textItemN": "text items | text item | text items",
+    "showcaseItem": "showcase items | showcase item | showcase items",
+    "showcaseItemN": "showcase items | showcase item | showcase items",
+    "delete": "removing",
+    "add": "adding",
+    "sort": "sort",
+    "save": "save",
+    "deleteD": "removed",
+    "addD": "added",
+    "sortD": "sorted",
+    "saveD": "saved",
+    "successActionTitle": "{action} of {type} successful",
+    "successActionSubtext": "0 {type} were successfully {action}. | 1 {type} was successfully {action}. | {count} {type} were successfully {action}.",
+    "errorActionTitle": "{action} of {type} failed",
+    "errorActionSubtext": "Unfortunately the {type} could not be {action}. | Unfortunately one {type} could not be {action} | Unfortunately {count} {type} could not be {action}."
+  },
+  "errors": {
+    "homepage": "Homepage",
+    "404": {
+      "title": "Error 404",
+      "description": "The requested URL was not found on this server."
+    },
+    "500": {
+      "title": "Error 500 - Internal Server Error",
+      "description": "Sorry, an error has occurred."
+    }
   }
 }

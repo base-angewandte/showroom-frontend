@@ -1,225 +1,15 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
-    "title": "Showroom API",
-    "description": "Showroom API",
-    "version": "1.0.0"
+    "title": "Showroom API v1",
+    "version": "1.0.0 (v1)",
+    "description": "Provides public access to all activities published to *Showroom*, as well as authenticated access\n    for users and repositories to publish and update activites, create and maintain albums. For a general project\n    description visit the [Portfolio/Showroom website](https://portfolio-showroom.ac.at), for the sources and\n    documentation of this component go to **TODO:insertlinktogithubrepo**.\n    "
   },
-  "servers": [
-    {
-      "url": "http://127.0.0.1:8500",
-      "description": "Local Dev Server (if set up according to Showroom backend docs)"
-    }
-  ],
-  "tags": [
-    {
-      "name": "public",
-      "description": "Methods that can be used by the frontend without authentication."
-    },
-    {
-      "name": "auth",
-      "description": "Methods that can only be used by authenticated users"
-    },
-    {
-      "name": "repo",
-      "description": "Methods that are reserved for backend repositories to keep showroom content synchronized"
-    }
-  ],
   "paths": {
-    "/user/": {
-      "get": {
-        "description": "if user is logged in get user data",
-        "operationId": "api_v1_user_retrieve",
-        "tags": [
-          "auth"
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns an array of search results.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/inital/{id}/": {
-      "get": {
-        "description": "Initial Landing Page request, delivering \"search results\" and carousel data",
-        "operationId": "api_v1_initial_retrieve",
-        "tags": [
-          "public"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "description": "the institution (entity) id for which the initial page data is requested",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "description": "the number of items per result category to be returned",
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns an array of search results.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InitialData"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/autocomplete/": {
+    "/api/v1/activities/": {
       "post": {
-        "description": "Exact string search matching titles.",
-        "operationId": "api_v1_autocomplete_create",
-        "tags": [
-          "public"
-        ],
-        "parameters": [
-          {
-            "name": "q",
-            "description": "Search query string.",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "minLength": 3
-            }
-          },
-          {
-            "name": "filter_id",
-            "description": "filter category to return",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns an array of search results.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Autocomplete"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/filters/": {
-      "get": {
-        "description": "Returns all possible filters for the search.",
-        "operationId": "api_v1_filters_list",
-        "tags": [
-          "public"
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns all possible filters for the search.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Filter"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/search/": {
-      "post": {
-        "description": "Returns all possible results.",
-        "operationId": "api_v1_search_create",
-        "tags": [
-          "public"
-        ],
-        "parameters": [
-          {
-            "name": "filters",
-            "description": "Array of objects with all filters applied",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/CommonSearchFilter"
-              }
-            }
-          },
-          {
-            "name": "limit",
-            "description": "Number of results to return per page.",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "default": 5
-            }
-          },
-          {
-            "name": "offset",
-            "description": "The initial index to return the results.",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns an array of search results.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchResults"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/activities/": {
-      "post": {
-        "description": "Create one or more activities. If an activity already exists, it will be updated with the new values.",
         "operationId": "api_v1_activities_create",
+        "description": "",
         "tags": [
           "repo"
         ],
@@ -227,445 +17,183 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Activity"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "All items successfully created/updated.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "created": {
-                      "type": "array",
-                      "description": "List of newly created activities. Empty if none.",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "integer",
-                            "description": "The original id of the repository entry."
-                          },
-                          "showroom_id": {
-                            "type": "integer",
-                            "description": "The new showroom id of this activity."
-                          }
-                        }
-                      }
-                    },
-                    "updated": {
-                      "type": "array",
-                      "description": "List of updated activities. Empty if none.",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "integer",
-                            "description": "The original id of the repository entry."
-                          },
-                          "showroom_id": {
-                            "type": "integer",
-                            "description": "Showroom id of the updated activity."
-                          }
-                        }
-                      }
-                    },
-                    "errors": {
-                      "type": "array",
-                      "description": "List of errors when creating/updating certain activities. Empty if none.",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "integer",
-                            "description": "The original id of the repository entry."
-                          },
-                          "detail": {
-                            "type": "string",
-                            "description": "Description of the error when trying to create/update this activity."
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "required": [
-                    "created",
-                    "updated",
-                    "errors"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/activities/{id}/": {
-      "get": {
-        "description": "Returns a single activity object.",
-        "operationId": "api_v1_activities_retrieve",
-        "tags": [
-          "public"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns a single activity object.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Activity"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Activity not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "description": "Delete the activity",
-        "operationId": "api_v1_activities_destroy",
-        "tags": [
-          "repo"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successfully deleted"
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "$ref": "#/components/schemas/Activity"
               }
             },
-            "description": "Invalid input"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            },
-            "description": "Forbidden"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            },
-            "description": "Not found"
-          }
-        }
-      }
-    },
-    "/activities/{id}/media/": {
-      "get": {
-        "description": "Returns an array of media objects related to an specific activity.",
-        "operationId": "api_v1_activities_media_list",
-        "tags": [
-          "public"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns an array of media objects related to an specific activity.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Media"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Activity/Media not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/entities/": {
-      "post": {
-        "description": "Create one or more entities. If an entity already exists, it will be updated with the new values.",
-        "operationId": "api_v1_entities_create",
-        "tags": [
-          "repo"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Entity"
-                }
+                "$ref": "#/components/schemas/Activity"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Activity"
               }
             }
-          }
+          },
+          "required": true
         },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "responses": {
           "201": {
-            "description": "All entities successfully created/updated.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "created": {
-                      "type": "integer",
-                      "description": "Number of newly created entities."
-                    },
-                    "updated": {
-                      "type": "integer",
-                      "description": "Number of updated entities."
+                  "$ref": "#/components/schemas/Activity"
+                }
+              }
+            },
+            "description": ""
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
                     }
                   }
                 }
               }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/entities/{id}/": {
-      "get": {
-        "description": "Returns a single entity object.",
-        "operationId": "api_v1_entities_retrieve",
-        "tags": [
-          "public"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns a single entity object.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Entity"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Entity not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "description": "Partially update a certain entity; currently only for fields \"secondary_details\", \"showcase\"",
-        "operationId": "api_v1_entities_partial_update",
-        "tags": [
-          "auth"
-        ],
-        "parameters": [
-          {
-            "description": "ID of entity to patch",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Entity"
-              }
-            }
-          },
-          "description": "Object with key/values to be partially changed",
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "Successfully updated"
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
             },
-            "description": "Invalid input"
+            "description": "Bad Request"
           },
           "403": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
                 }
               }
             },
             "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/activities/{id}/": {
+      "get": {
+        "operationId": "api_v1_activities_retrieve",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this activity.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "public"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Activity"
+                }
+              }
+            },
+            "description": ""
           },
           "404": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
                 }
               }
             },
-            "description": "Not found"
-          },
-          "5XX": {
-            "description": "Unexpected error"
+            "description": "Not Found"
           }
         }
       },
       "delete": {
-        "description": "Delete the entity",
-        "operationId": "api_v1_entities_destroy",
+        "operationId": "api_v1_activities_destroy",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The source repo's id for this activity",
+            "required": true
+          }
+        ],
         "tags": [
           "repo"
         ],
-        "parameters": [
+        "security": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "cookieAuth": []
           }
         ],
         "responses": {
           "204": {
-            "description": "Successfully deleted"
+            "description": "No response body"
           },
           "400": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
+                    }
+                  }
                 }
               }
             },
-            "description": "Invalid input"
+            "description": "Bad Request"
           },
           "403": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
                 }
               }
             },
@@ -676,389 +204,166 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
                 }
               }
             },
-            "description": "Not found"
+            "description": "Not Found"
           }
         }
       }
     },
-    "/entities/{id}/list/": {
+    "/api/v1/activities/{id}/media/": {
       "get": {
-        "description": "Returns array of activities related to a specific entity.",
-        "operationId": "api_v1_entities_list_retrieve",
+        "operationId": "api_v1_activities_media_list",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this activity.",
+            "required": true
+          }
+        ],
         "tags": [
           "public"
         ],
-        "parameters": [
+        "security": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "cookieAuth": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Returns array of activities related to an specific entity.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CommonList"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Media"
+                  }
                 }
               }
-            }
+            },
+            "description": ""
           },
           "404": {
-            "description": "Entity/Activities not found",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
                 }
               }
-            }
+            },
+            "description": "Not Found"
           }
         }
-      },
-      "patch": {
-        "description": "Update order and visibility of activities",
-        "operationId": "api_v1_entities_list_partial_update",
-        "tags": [
-          "auth"
-        ],
+      }
+    },
+    "/api/v1/activities/{id}/relations/": {
+      "post": {
+        "operationId": "api_v1_activities_relations_create",
+        "description": "",
         "parameters": [
           {
-            "name": "id",
             "in": "path",
-            "required": true,
+            "name": "id",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The source repo's id for this activity",
+            "required": true
           }
+        ],
+        "tags": [
+          "repo"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EntityActivitiesEdit"
+                "$ref": "#/components/schemas/ActivityRelation"
               }
-            }
-          },
-          "description": "Request array with ordered objects",
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "Successfully updated"
-          },
-          "400": {
-            "description": "Invalid input",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "5XX": {
-            "description": "Unexpected error"
-          }
-        }
-      }
-    },
-    "/entities/{id}/edit/": {
-      "get": {
-        "description": "Returns user-editable information from a specific field of an entity, in all available languages.",
-        "operationId": "api_v1_entities_edit_retrieve",
-        "tags": [
-          "auth"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "field",
-            "in": "query",
-            "required": true,
-            "description": "Defines which user-editable field from the entity model should be requested. This currently can be either \"secondary_details\" or \"showcase\"\n",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "secondary_details",
-                "showcase"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Array of the items in the user-editable field that was requested",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EntityEdit"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Entity/Activities not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "description": "(Fully) Update user-editable information of an entity",
-        "operationId": "api_v1_entities_edit_update",
-        "tags": [
-          "auth"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "field",
-            "in": "query",
-            "required": true,
-            "description": "Defines which user-editable field from the entity model should be updated. This currently can be either \"secondary_details\" or \"showcase\"\n",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "secondary_details",
-                "showcase"
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
+            },
+            "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/EntityEdit"
+                "$ref": "#/components/schemas/ActivityRelation"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivityRelation"
               }
             }
           },
-          "description": "Request array with ordered objects",
           "required": true
         },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "responses": {
-          "204": {
-            "description": "Successfully updated"
+          "201": {
+            "description": "The relationship was successfully added."
           },
           "400": {
-            "description": "Invalid input",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
+                    }
+                  }
                 }
               }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+            },
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not found",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
                 }
               }
-            }
+            },
+            "description": "Not Found"
           }
         }
       }
     },
-    "/entities/{id}/search/": {
-      "post": {
-        "description": "Returns all possible results of a specific entity, e.g. person.",
-        "operationId": "api_v1_entities_search_create",
-        "tags": [
-          "public"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filters",
-            "description": "array of objects with all filters applied",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/CommonSearchFilter"
-              }
-            }
-          },
-          {
-            "name": "limit",
-            "description": "Number of results to return per page.",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "default": 5
-            }
-          },
-          {
-            "name": "offset",
-            "description": "The initial index to return the results.",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns an array of search results",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchResults"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Entity not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/entities/{id}/autocomplete/": {
-      "post": {
-        "description": "Exact string search matching titles and delivering back activities owned by entity or imported by entity. For now same schema as general /autocomplete/ endpoint.",
-        "operationId": "api_v1_entities_autocomplete_create",
-        "tags": [
-          "public"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "q",
-            "description": "Search query string.",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "minLength": 3
-            }
-          },
-          {
-            "name": "filter_id",
-            "description": "filter category to return",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns an array of search results.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Autocomplete"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/albums/": {
+    "/api/v1/albums/": {
       "post": {
         "operationId": "api_v1_albums_create",
-        "description": "Create an album belonging to the authenticated user",
+        "description": "",
         "tags": [
           "auth"
         ],
@@ -1068,118 +373,208 @@
               "schema": {
                 "$ref": "#/components/schemas/Album"
               }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Album"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Album"
+              }
             }
-          }
+          },
+          "required": true
         },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "responses": {
           "201": {
-            "description": "Album was created",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Album"
                 }
               }
-            }
+            },
+            "description": ""
           },
           "400": {
-            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
+                    }
+                  }
                 }
               }
-            }
+            },
+            "description": "Bad Request"
           },
           "403": {
-            "description": "Forbidden",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
                 }
               }
-            }
+            },
+            "description": "Forbidden"
           }
         }
       }
     },
-    "/albums/{id}/": {
+    "/api/v1/albums/{id}/": {
       "get": {
-        "description": "Returns a single album object.",
         "operationId": "api_v1_albums_retrieve",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this album.",
+            "required": true
+          }
+        ],
         "tags": [
           "public"
         ],
-        "parameters": [
+        "security": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
+            "cookieAuth": []
+          },
+          {}
         ],
         "responses": {
           "200": {
-            "description": "Returns a single album object.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Album"
                 }
               }
-            }
+            },
+            "description": ""
           },
           "404": {
-            "description": "Album not found",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
                 }
               }
-            }
+            },
+            "description": "Not Found"
           }
         }
       },
       "patch": {
-        "description": "Update the album",
         "operationId": "api_v1_albums_partial_update",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this album.",
+            "required": true
+          }
+        ],
         "tags": [
           "auth"
         ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchedAlbum"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchedAlbum"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchedAlbum"
+              }
             }
+          }
+        },
+        "security": [
+          {
+            "cookieAuth": []
           }
         ],
         "responses": {
-          "204": {
-            "description": "Successfully updated"
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Album"
+                }
+              }
+            },
+            "description": ""
           },
           "400": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
+                    }
+                  }
                 }
               }
             },
-            "description": "Invalid input"
+            "description": "Bad Request"
           },
           "403": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
                 }
               }
             },
@@ -1190,48 +585,75 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
                 }
               }
             },
-            "description": "Not found"
+            "description": "Not Found"
           }
         }
       },
       "delete": {
-        "description": "Delete the album",
         "operationId": "api_v1_albums_destroy",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this album.",
+            "required": true
+          }
+        ],
         "tags": [
           "auth"
         ],
-        "parameters": [
+        "security": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "cookieAuth": []
           }
         ],
         "responses": {
           "204": {
-            "description": "Successfully deleted"
+            "description": "No response body"
           },
           "400": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
+                    }
+                  }
                 }
               }
             },
-            "description": "Invalid input"
+            "description": "Bad Request"
           },
           "403": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
                 }
               }
             },
@@ -1242,18 +664,74 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
                 }
               }
             },
-            "description": "Not found"
+            "description": "Not Found"
           }
         }
       }
     },
-    "/media/": {
+    "/api/v1/autocomplete/": {
       "post": {
-        "description": "Create one or more media. If one already exists, it will be updated with the new values.",
-        "operationId": "api_v1_media_create",
+        "operationId": "api_v1_autocomplete_create",
+        "description": "Retrieves available autocomplete results for a specific string and\nfilter.",
+        "tags": [
+          "public"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutocompleteRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/AutocompleteRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AutocompleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AutocompleteItem"
+                  }
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/entities/": {
+      "post": {
+        "operationId": "api_v1_entities_create",
+        "description": "",
         "tags": [
           "repo"
         ],
@@ -1261,94 +739,203 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Media"
-                }
+                "$ref": "#/components/schemas/Entity"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Entity"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Entity"
               }
             }
-          }
+          },
+          "required": true
         },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "responses": {
           "201": {
-            "description": "All media successfully created/updated.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "created": {
-                      "type": "integer",
-                      "description": "Number of newly created media."
-                    },
-                    "updated": {
-                      "type": "integer",
-                      "description": "Number of updated media."
+                  "$ref": "#/components/schemas/Entity"
+                }
+              }
+            },
+            "description": ""
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
                     }
                   }
                 }
               }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+            },
+            "description": "Bad Request"
           },
           "403": {
-            "description": "Forbidden",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
                 }
               }
-            }
+            },
+            "description": "Forbidden"
           }
         }
       }
     },
-    "/media/{id}/": {
-      "delete": {
-        "description": "Delete the media entry",
-        "operationId": "api_v1_media_destroy",
-        "tags": [
-          "repo"
-        ],
+    "/api/v1/entities/{id}/": {
+      "get": {
+        "operationId": "api_v1_entities_retrieve",
+        "description": "",
         "parameters": [
           {
-            "name": "id",
             "in": "path",
-            "required": true,
+            "name": "id",
             "schema": {
               "type": "string"
+            },
+            "description": "A unique value identifying this entity.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "public"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Entity"
+                }
+              }
+            },
+            "description": ""
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "api_v1_entities_partial_update",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this entity.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchedEntity"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchedEntity"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchedEntity"
+              }
             }
+          }
+        },
+        "security": [
+          {
+            "cookieAuth": []
           }
         ],
         "responses": {
           "204": {
-            "description": "Successfully deleted"
+            "description": "No response body"
           },
           "400": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
+                    }
+                  }
                 }
               }
             },
-            "description": "Invalid input"
+            "description": "Bad Request"
           },
           "403": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
                 }
               }
             },
@@ -1359,10 +946,952 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
                 }
               }
             },
-            "description": "Not found"
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/entities/{id}/edit/": {
+      "get": {
+        "operationId": "api_v1_entities_edit_retrieve",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this entity.",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "secondary_details",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Whether to include secondary_details in the response"
+          },
+          {
+            "in": "query",
+            "name": "showcase",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Whether to include showcase in the response"
+          },
+          {
+            "in": "query",
+            "name": "showcase_details",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Whether to include the pre-rendered showcase item details"
+          }
+        ],
+        "tags": [
+          "auth"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityEdit"
+                }
+              }
+            },
+            "description": ""
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "api_v1_entities_edit_partial_update",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this entity.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchedEntityEdit"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchedEntityEdit"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchedEntityEdit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityEdit"
+                }
+              }
+            },
+            "description": ""
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/entities/{id}/list/": {
+      "get": {
+        "operationId": "api_v1_entities_list_retrieve",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this entity.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "public"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonList"
+                }
+              }
+            },
+            "description": "a list of things"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/entities/{id}/search/": {
+      "post": {
+        "operationId": "api_v1_entities_search_create",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this entity.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "public"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entity"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Entity"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Entity"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "cookieAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchResult"
+                  }
+                }
+              }
+            },
+            "description": ""
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/filters/": {
+      "get": {
+        "operationId": "api_v1_filters_list",
+        "description": "Get all the available filters that can be used in search and\nautocomplete.",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string",
+              "default": "en"
+            },
+            "description": "The ISO 2 letter language code to use for localisation"
+          }
+        ],
+        "tags": [
+          "public"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Filter"
+                  }
+                },
+                "examples": {
+                  "Activities,Persons,DateRangeAndKeywordsFilter": {
+                    "value": [
+                      {
+                        "id": "activities",
+                        "label": "Activities",
+                        "type": "text"
+                      },
+                      {
+                        "id": "persons",
+                        "label": "Persons",
+                        "type": "text"
+                      },
+                      {
+                        "id": "date_range",
+                        "label": "Date Range",
+                        "type": "daterange"
+                      },
+                      {
+                        "id": "keywords",
+                        "type": "chios",
+                        "label": "Keywords",
+                        "freetext_allowed": false,
+                        "options": [
+                          {
+                            "id": "Assemblage",
+                            "label": "Assemblage"
+                          },
+                          {
+                            "id": "Community Radio",
+                            "label": "Community Radio"
+                          },
+                          {
+                            "id": "Explosion Research",
+                            "label": "Explosion Research"
+                          }
+                        ]
+                      }
+                    ],
+                    "summary": "Activities, persons, date range and keywords filter"
+                  }
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/initial/": {
+      "get": {
+        "operationId": "api_v1_initial_list",
+        "description": "Initial Landing Page request, delivering \"search results\" and carousel\ndata.",
+        "tags": [
+          "public"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InitialData"
+                  }
+                }
+              }
+            },
+            "description": ""
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/initial/{id}/": {
+      "get": {
+        "operationId": "api_v1_initial_retrieve",
+        "description": "Initial Landing Page request, delivering \"search results\" and carousel\ndata.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "ShortUUID of the entity for which initial data should be presented",
+            "required": true
+          }
+        ],
+        "tags": [
+          "public"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InitialData"
+                }
+              }
+            },
+            "description": ""
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/media/": {
+      "post": {
+        "operationId": "api_v1_media_create",
+        "description": "",
+        "tags": [
+          "repo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Media"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Media"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Media"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Media"
+                }
+              }
+            },
+            "description": ""
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/media/{id}/": {
+      "delete": {
+        "operationId": "api_v1_media_destroy",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The source repo's id for this activity",
+            "required": true
+          }
+        ],
+        "tags": [
+          "repo"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No response body"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/schema/openapi3.json": {
+      "get": {
+        "operationId": "api_v1_schema_openapi3.json_retrieve",
+        "description": "OpenApi3 schema for this API. Format can be selected via content negotiation.\n\n- YAML: application/vnd.oai.openapi\n- JSON: application/vnd.oai.openapi+json",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "lang",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "de",
+                "en"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "api"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.oai.openapi+json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/schema/openapi3.yaml": {
+      "get": {
+        "operationId": "api_v1_schema_openapi3.yaml_retrieve",
+        "description": "OpenApi3 schema for this API. Format can be selected via content negotiation.\n\n- YAML: application/vnd.oai.openapi\n- JSON: application/vnd.oai.openapi+json",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "format",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "json",
+                "yaml"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "lang",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "de",
+                "en"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "api"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.oai.openapi": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              },
+              "application/yaml": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              },
+              "application/vnd.oai.openapi+json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/search/": {
+      "post": {
+        "operationId": "api_v1_search_create",
+        "description": "Submit a search to Showroom.",
+        "tags": [
+          "public"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResult"
+                }
+              }
+            },
+            "description": ""
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/user/": {
+      "get": {
+        "operationId": "api_v1_user_retrieve",
+        "description": "",
+        "tags": [
+          "auth"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserData"
+                },
+                "examples": {
+                  "WithAssociatedEntityId": {
+                    "value": {
+                      "id": "0123456789ABCDEF0123456789ABCDEF",
+                      "name": "Firstname Lastname",
+                      "email": "addy@example.org",
+                      "entity_id": "xZy2345aceg98QPT0246aC",
+                      "entity_editing": [
+                        "xZy2345aceg98QPT0246aC",
+                        "MtEaiJ7ZgjhFBbTn6rBMTU"
+                      ],
+                      "groups": [
+                        "foo_users",
+                        "bar_members"
+                      ],
+                      "permissions": [
+                        "view_foo",
+                        "view_bar",
+                        "edit_bar"
+                      ]
+                    },
+                    "summary": "With associated entity_id"
+                  },
+                  "WithoutAssociatedEntityId": {
+                    "value": {
+                      "id": "0123456789ABCDEF0123456789ABCDEF",
+                      "name": "Firstname Lastname",
+                      "email": "addy@example.org",
+                      "entity_id": null,
+                      "entity_editing": [],
+                      "groups": [
+                        "foo_users",
+                        "bar_members"
+                      ],
+                      "permissions": [
+                        "view_foo",
+                        "view_bar",
+                        "edit_bar"
+                      ]
+                    },
+                    "summary": "Without associated entity_id"
+                  }
+                }
+              }
+            },
+            "description": ""
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden"
           }
         }
       }
@@ -1370,826 +1899,222 @@
   },
   "components": {
     "schemas": {
-      "AutocompleteDataItem": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "subtext": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "AutocompleteItem": {
-        "type": "object",
-        "properties": {
-          "source": {
-            "type": "string",
-            "example": "person"
-          },
-          "label": {
-            "type": "string",
-            "example": "Person"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AutocompleteDataItem"
-            }
-          }
-        }
-      },
-      "User": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "the LDAP(?) id"
-          },
-          "name": {
-            "type": "string",
-            "description": "the user's full name"
-          },
-          "email": {
-            "type": "string",
-            "description": "the user's email"
-          },
-          "entity_id": {
-            "type": "string",
-            "description": "The users Showroom ID"
-          },
-          "permissions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "the permissions needed by base header"
-          }
-        }
-      },
-      "InitialData": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "the institution (entity) id (to be able to link to the entity page for editing?)"
-          },
-          "source_institution": {
-            "$ref": "#/components/schemas/CommonSourceInstitution"
-          },
-          "showcase": {
-            "type": "array",
-            "description": "the data needed for the start page carousel",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/EntityShowcaseTypeAlbum"
-                },
-                {
-                  "$ref": "#/components/schemas/EntityShowcaseTypeActivity"
-                }
-              ]
-            }
-          },
-          "results": {
-            "type": "array",
-            "description": "the data needed for initial display of recent events, starred items, etc. and information about the filter used in that category",
-            "items": {
-              "$ref": "#/components/schemas/SearchInitial"
-            }
-          }
-        }
-      },
-      "Autocomplete": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/AutocompleteItem"
-        }
-      },
       "Activity": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
-          },
-          "date_changed": {
             "type": "string",
-            "format": "date-time"
+            "readOnly": true
           },
-          "date_created": {
+          "title": {
             "type": "string",
-            "format": "date-time"
+            "maxLength": 255
           },
-          "entries": {
+          "subtext": {
             "type": "object",
-            "properties": {
-              "media": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "List of linked media objects."
-              },
-              "linked": {
-                "type": "object",
-                "properties": {
-                  "from": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/SearchItem"
-                    }
-                  },
-                  "to": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/SearchItem"
-                    }
-                  }
-                }
-              }
-            }
+            "additionalProperties": {},
+            "nullable": true
           },
           "list": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CommonList"
-            }
-          },
-          "locations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CommonLocation"
-            }
-          },
-          "featured_media": {
-            "$ref": "#/components/schemas/CommonFeaturedMedia"
-          },
-          "primary_details": {
-            "$ref": "#/components/schemas/CommonTextList"
-          },
-          "publisher": {
-            "$ref": "#/components/schemas/CommonPublisher"
-          },
-          "secondary_details": {
-            "$ref": "#/components/schemas/CommonTextList"
-          },
-          "source_institution": {
-            "$ref": "#/components/schemas/CommonSourceInstitution"
-          },
-          "subtext": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "title": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          }
-        }
-      },
-      "Entity": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "date_changed": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "date_created": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "expertise": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "list": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CommonList"
-            }
-          },
-          "locations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CommonLocation"
-            }
-          },
-          "featured_media": {
-            "$ref": "#/components/schemas/CommonFeaturedMedia"
-          },
-          "primary_details": {
-            "$ref": "#/components/schemas/CommonTextList"
-          },
-          "secondary_details": {
-            "$ref": "#/components/schemas/CommonTextList"
-          },
-          "showcase": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/EntityShowcaseTypeAlbum"
-                },
-                {
-                  "$ref": "#/components/schemas/EntityShowcaseTypeActivity"
-                }
-              ]
-            }
-          },
-          "source_institution": {
-            "$ref": "#/components/schemas/CommonSourceInstitution"
-          },
-          "subtext": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "title": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "person",
-              "institution",
-              "department"
-            ],
-            "description": "Future version should be configurable with cms - see issue #1121"
-          }
-        }
-      },
-      "EntityShowcaseTypeActivity": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "additional": {
-            "type": "string"
-          },
-          "media": {
             "type": "object",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EntityShowcaseMedia"
-              }
-            ]
+            "additionalProperties": {},
+            "nullable": true
           },
-          "showcase_type": {
+          "primary_details": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "secondary_details": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "locations": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "source_repo": {
+            "type": "integer",
+            "maximum": 32767
+          },
+          "source_repo_entry_id": {
             "type": "string",
-            "enum": [
-              "activity"
-            ]
+            "maxLength": 255
           },
-          "subtext": {
-            "type": "string"
+          "source_repo_owner_id": {
+            "type": "string",
+            "maxLength": 255
           },
-          "title": {
-            "type": "string"
+          "source_repo_data": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
           },
-          "type": {
-            "type": "string"
-          }
-        }
-      },
-      "EntityShowcaseTypeAlbum": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
+          "featured_media": {
+            "type": "string",
+            "nullable": true
           },
-          "media": {
+          "belongs_to": {
+            "type": "string",
+            "nullable": true
+          },
+          "relations_to": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EntityShowcaseMedia"
+              "type": "string"
             }
           },
-          "showcase_type": {
-            "type": "string",
-            "enum": [
-              "album"
-            ]
+          "type": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
           },
-          "title": {
+          "keywords": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "source_repo_data_text": {
             "type": "string"
-          },
-          "subtext": {
-            "type": "string"
-          },
-          "total": {
-            "type": "number"
           }
-        }
-      },
-      "EntityShowcaseMedia": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "minLength": 1,
-          "maxLength": 4
         },
-        "example": [
-          {
-            "455w": "path to file"
-          },
-          {
-            "654w": "path to file"
-          }
+        "required": [
+          "id",
+          "source_repo",
+          "source_repo_entry_id",
+          "source_repo_owner_id",
+          "title"
         ]
       },
-      "EntityEdit": {
-        "type": "array",
-        "items": {
-          "oneOf": [
-            {
-              "$ref": "#/components/schemas/EntitySecondaryDetailsEdit"
-            },
-            {
-              "$ref": "#/components/schemas/EntityShowcaseEdit"
-            }
-          ]
-        }
-      },
-      "EntitySecondaryDetailsEdit": {
-        "type": "object",
-        "title": "CommonTextTranslation",
-        "properties": {
-          "en": {
-            "$ref": "#/components/schemas/CommonTextList"
-          },
-          "de": {
-            "$ref": "#/components/schemas/CommonTextList"
-          },
-          "xx": {
-            "$ref": "#/components/schemas/CommonTextList"
-          }
-        },
-        "description": "Contains all translations of the contents of a user-editable field (like secondary_details or showcase). Every item of this list is an object containing all available ISO 2 letter codes as properties, holding the list of CommonText objects to be translated as values.\n"
-      },
-      "EntityShowcaseEdit": {
+      "ActivityRelation": {
         "type": "object",
         "properties": {
-          "id": {
+          "activity_id": {
             "type": "string"
           }
-        }
-      },
-      "EntityActivitiesEdit": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "hidden": {
-              "type": "boolean"
-            }
-          }
-        }
+        },
+        "required": [
+          "activity_id"
+        ]
       },
       "Album": {
         "type": "object",
         "properties": {
           "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "subtitle": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "secondary_details": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "belongs_to": {
             "type": "string"
           },
           "activities": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/SearchItem"
+              "type": "string"
             }
+          }
+        },
+        "required": [
+          "activities",
+          "belongs_to",
+          "id",
+          "subtitle",
+          "title"
+        ]
+      },
+      "AutocompleteItem": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AutocompleteItemData"
+            }
+          }
+        },
+        "required": [
+          "data",
+          "label",
+          "source"
+        ]
+      },
+      "AutocompleteItemData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
           },
           "title": {
             "type": "string"
           },
           "subtext": {
-            "type": "string"
-          },
-          "secondary_details": {
-            "$ref": "#/components/schemas/CommonTextList"
-          },
-          "publisher": {
-            "$ref": "#/components/schemas/CommonPublisher"
-          }
-        }
-      },
-      "Media": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "anyOf": [
-            {
-              "$ref": "#/components/schemas/MediaAudio"
-            },
-            {
-              "$ref": "#/components/schemas/MediaDocument"
-            },
-            {
-              "$ref": "#/components/schemas/MediaImage"
-            },
-            {
-              "$ref": "#/components/schemas/MediaUndefined"
-            },
-            {
-              "$ref": "#/components/schemas/MediaVideo"
-            }
-          ]
-        }
-      },
-      "MediaImage": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "alternative": {
-            "$ref": "#/components/schemas/MediaAlternative"
-          },
-          "licence": {
-            "$ref": "#/components/schemas/MediaLicence"
-          },
-          "original": {
-            "type": "string",
-            "format": "uri"
-          },
-          "previews": {
-            "description": "Return all generated size/sources.",
             "type": "array",
-            "items": {
-              "type": "object"
-            }
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "i"
-            ]
-          }
-        }
-      },
-      "MediaAudio": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "alternative": {
-            "$ref": "#/components/schemas/MediaAlternative"
-          },
-          "licence": {
-            "$ref": "#/components/schemas/MediaLicence"
-          },
-          "duration": {
-            "type": "string"
-          },
-          "mp3": {
-            "type": "string",
-            "format": "uri"
-          },
-          "original": {
-            "type": "string",
-            "format": "uri"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "a"
-            ]
-          }
-        }
-      },
-      "MediaVideo": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "cover": {
-            "type": "object",
-            "properties": {
-              "gif": {
-                "type": "string",
-                "format": "uri"
-              },
-              "jpg": {
-                "type": "string",
-                "format": "uri"
-              }
-            }
-          },
-          "playlist": {
-            "type": "string",
-            "format": "uri",
-            "description": "path to playlist.m3u8"
-          },
-          "original": {
-            "type": "string",
-            "format": "uri"
-          },
-          "alternative": {
-            "$ref": "#/components/schemas/MediaAlternative"
-          },
-          "licence": {
-            "$ref": "#/components/schemas/MediaLicence"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "v"
-            ]
-          }
-        }
-      },
-      "MediaDocument": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "cover": {
-            "type": "object",
-            "properties": {
-              "gif": {
-                "type": "string",
-                "format": "uri"
-              },
-              "jpg": {
-                "type": "string",
-                "format": "uri"
-              }
-            }
-          },
-          "pdf": {
-            "type": "string",
-            "format": "uri",
-            "description": "path to file.pdf"
-          },
-          "original": {
-            "type": "string",
-            "format": "uri"
-          },
-          "alternative": {
-            "$ref": "#/components/schemas/MediaAlternative"
-          },
-          "licence": {
-            "$ref": "#/components/schemas/MediaLicence"
-          },
-          "thumbnail": {
-            "type": "string",
-            "description": ""
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "d"
-            ]
-          }
-        }
-      },
-      "MediaUndefined": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "original": {
-            "type": "string",
-            "format": "uri"
-          },
-          "alternative": {
-            "$ref": "#/components/schemas/MediaAlternative"
-          },
-          "licence": {
-            "$ref": "#/components/schemas/MediaLicence"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "x"
-            ]
-          }
-        }
-      },
-      "MediaLicence": {
-        "type": "object",
-        "properties": {
-          "label": {
-            "type": "string"
-          },
-          "source": {
-            "type": "string",
-            "format": "uri",
-            "description": "url to licence page"
-          }
-        }
-      },
-      "MediaAlternative": {
-        "type": "array",
-        "description": "return list of strings from meta data if available: eg; ['FileSize', 'ImageSize', 'Title', 'Artist', 'Year']",
-        "items": {
-          "type": "string"
-        }
-      },
-      "SearchItem": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "type": {
-            "description": "the type of result e.g. \"activity\", \"person\", \"album\", \"department\"",
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "subtitle": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "description": "the activity type for activities or result type for e.g. persons or albums"
-          },
-          "alternative_text": {
-            "type": "array",
-            "description": "text to be displayed when no image is present",
             "items": {
               "type": "string"
             }
-          },
-          "image_url": {
-            "type": "string",
-            "format": "uri",
-            "description": "size: thumbnail"
-          },
-          "source_institution": {
-            "$ref": "#/components/schemas/CommonSourceInstitution"
           }
-        }
-      },
-      "SearchResults": {
-        "type": "object",
-        "properties": {
-          "total": {
-            "description": "Total number of activities in that result set.",
-            "type": "number"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SearchItem"
-            }
-          }
-        }
-      },
-      "SearchInitial": {
-        "type": "array",
-        "description": "the data delivered back for the initial display in the search results section",
-        "items": {
-          "type": "object",
-          "properties": {
-            "label": {
-              "type": "string",
-              "description": "the label to be displayed for the said category"
-            },
-            "total": {
-              "description": "Total number of activities in that result set.",
-              "type": "number"
-            },
-            "data": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/SearchItem"
-              }
-            },
-            "filters": {
-              "type": "array",
-              "description": "the filters applied on that section - so when i click \"show more\" these filters can be applied.",
-              "items": {
-                "$ref": "#/components/schemas/CommonSearchFilter"
-              }
-            }
-          }
-        }
-      },
-      "Filter": {
-        "type": "array",
-        "items": {
-          "oneOf": [
-            {
-              "$ref": "#/components/schemas/FilterType"
-            },
-            {
-              "$ref": "#/components/schemas/FilterTypeOptions"
-            }
-          ]
         },
-        "example": [
-          {
-            "label": "string",
-            "type": "text"
-          },
-          {
-            "label": "string",
-            "type": "date"
-          },
-          {
-            "label": "string",
-            "type": "daterange"
-          },
-          {
-            "label": "string",
-            "type": "chips",
-            "options": [
-              {
-                "label": "string",
-                "id": "string"
-              }
-            ]
-          }
+        "required": [
+          "id",
+          "subtext",
+          "title"
         ]
       },
-      "FilterType": {
+      "AutocompleteRequest": {
         "type": "object",
-        "required": [
-          "label",
-          "type",
-          "id"
-        ],
         "properties": {
-          "label": {
+          "q": {
             "type": "string"
           },
-          "id": {
-            "type": "string"
-          },
-          "type": {
+          "filter_id": {
             "type": "string",
-            "enum": [
-              "text",
-              "date",
-              "daterange"
-            ]
+            "default": "activities"
+          },
+          "limit": {
+            "type": "integer"
           }
-        }
+        },
+        "required": [
+          "q"
+        ]
       },
-      "FilterTypeOptions": {
+      "ChipsFilterOptions": {
         "type": "object",
-        "required": [
-          "label",
-          "id",
-          "type",
-          "options"
-        ],
         "properties": {
-          "label": {
-            "type": "string"
-          },
           "id": {
-            "type": "string"
-          },
-          "type": {
             "type": "string",
-            "enum": [
-              "chips"
-            ]
+            "description": "The non-localised default value"
           },
-          "freetext_allowed": {
-            "type": "boolean",
-            "default": false
-          },
-          "options": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "label": {
-                  "type": "string"
-                }
-              }
-            }
+          "label": {
+            "type": "string",
+            "description": "The localised label of this value"
           }
-        }
+        },
+        "required": [
+          "id",
+          "label"
+        ]
       },
       "CommonList": {
         "type": "object",
@@ -2197,7 +2122,7 @@
           "id": {
             "type": "string"
           },
-          "label": {
+          "labels": {
             "type": "string"
           },
           "hidden": {
@@ -2208,383 +2133,813 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/CommonList"
+                  "type": "object",
+                  "description": "a recursive CommonList entry"
                 },
                 {
-                  "$ref": "#/components/schemas/CommonListItem"
-                }
-              ]
-            }
-          }
-        },
-        "example": {
-          "label": "string",
-          "hidden": "boolean",
-          "data": [
-            {
-              "attributes": [
-                "string"
-              ],
-              "value": "string",
-              "id": "string"
-            },
-            {
-              "label": "string",
-              "data": [
-                {
-                  "attributes": [
-                    "string"
-                  ],
-                  "value": "string",
-                  "id": "string"
-                }
-              ]
-            }
-          ]
-        }
-      },
-      "CommonListItem": {
-        "type": "object",
-        "properties": {
-          "attributes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "value": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          }
-        }
-      },
-      "CommonLocation": {
-        "type": "object",
-        "properties": {
-          "coordinates": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "example": {
-          "coordinates": [
-            "16.384510",
-            "48.208370"
-          ],
-          "data": [
-            "Oskar Kokoschka-Platz 2",
-            "1010 Wien",
-            "Austria"
-          ]
-        }
-      },
-      "CommonFeaturedMedia": {
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/MediaAudio"
-          },
-          {
-            "$ref": "#/components/schemas/MediaImage"
-          },
-          {
-            "$ref": "#/components/schemas/MediaVideo"
-          },
-          {
-            "$ref": "#/components/schemas/MediaDocument"
-          },
-          {
-            "$ref": "#/components/schemas/MediaUndefined"
-          }
-        ]
-      },
-      "CommonTextList": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/CommonText"
-        },
-        "description": "An array of text objects that will be rendered by the [BaseTextList](https://base-angewandte.github.io/base-ui-components/#basetextlist) component.\n",
-        "example": [
-          {
-            "label": "string",
-            "data": "string"
-          },
-          {
-            "label": "string",
-            "data": [
-              "string",
-              "string"
-            ]
-          },
-          {
-            "label": "string",
-            "data": [
-              {
-                "label": "string",
-                "value": "string"
-              },
-              {
-                "label": "string",
-                "value": "string",
-                "url": "https://www.domain.com",
-                "source": "string"
-              },
-              {
-                "label": "string",
-                "value": "string",
-                "url": "mailto:name@domain.com",
-                "source": "string"
-              },
-              {
-                "label": "string",
-                "value": "string",
-                "additional": [
-                  {
-                    "label": "string",
-                    "value": "string",
-                    "url": "string"
+                  "type": "object",
+                  "description": "a CommonListItem without any further recursion",
+                  "properties": {
+                    "attributes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    }
                   }
-                ]
-              }
-            ]
+                }
+              ]
+            }
           }
+        },
+        "required": [
+          "data",
+          "id",
+          "labels"
         ]
       },
       "CommonText": {
         "type": "object",
-        "title": "CommonText",
         "properties": {
           "label": {
             "type": "string"
           },
           "data": {
-            "type": "object",
-            "anyOf": [
+            "oneOf": [
               {
-                "$ref": "#/components/schemas/CommonTextString"
-              },
-              {
-                "$ref": "#/components/schemas/CommonTextArray"
-              },
-              {
-                "$ref": "#/components/schemas/CommonTextObject"
-              }
-            ]
-          },
-          "language": {
-            "type": "object",
-            "description": "This property will only be set, if the requested language could not be found",
-            "properties": {
-              "iso": {
                 "type": "string",
-                "description": "The ISO 2 letter code for the language this content was returned in"
+                "example": "A generic standalone label"
               },
-              "label": {
-                "type": "object",
-                "properties": {
-                  "en": {
-                    "type": "string"
-                  },
-                  "de": {
-                    "type": "string"
-                  },
-                  "xx": {
-                    "type": "string"
-                  }
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
                 },
-                "description": "Contains all available translations of the label that should be used if the language of the content is to be rendered.\n"
-              }
-            }
-          }
-        },
-        "required": [
-          "label",
-          "data"
-        ]
-      },
-      "CommonTextString": {
-        "type": "string"
-      },
-      "CommonTextArray": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "CommonTextObject": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "required": [
-            "label",
-            "value"
-          ],
-          "properties": {
-            "label": {
-              "type": "string",
-              "description": "A label to prefix the value, including a colon. In the format \"label: value\". If empty, only the value should be put on the line by itself, like \"value\".\n"
-            },
-            "value": {
-              "type": "string",
-              "description": "The value to be displayed"
-            },
-            "url": {
-              "type": "string",
-              "format": "uri",
-              "description": "A clickable link for this value"
-            },
-            "source": {
-              "type": "string",
-              "description": "An internal identifier, e.g. of an entity or activity"
-            },
-            "additional": {
-              "type": "array",
-              "items": {
+                "example": [
+                  "Item 1",
+                  "Item 2",
+                  "Item 3"
+                ]
+              },
+              {
                 "type": "object",
                 "properties": {
                   "label": {
                     "type": "string",
-                    "description": "A label to prefix the value. e.g. GND"
+                    "example": "www",
+                    "description": "A label prefix"
                   },
                   "value": {
                     "type": "string",
-                    "description": "An identifier, e.g. GND-ID"
+                    "example": "example.org",
+                    "description": "The actual label content"
                   },
                   "url": {
                     "type": "string",
-                    "format": "uri",
-                    "description": "A clickable link for this value"
+                    "example": "https://example.org",
+                    "description": "An optional link for this item"
+                  },
+                  "source": {
+                    "type": "string",
+                    "example": "jane-doe-d2JnH6L5WAdj7sQzZTRhUC",
+                    "description": "An optional internal object (e.g. entity) id"
+                  },
+                  "additional": {
+                    "type": "array",
+                    "description": "Optional list of labels for a tooltip",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "example": "Weblink"
+                        },
+                        "value": {
+                          "type": "string",
+                          "example": "example.org"
+                        },
+                        "url": {
+                          "type": "string",
+                          "example": "https://example.com"
+                        }
+                      }
+                    }
                   }
-                }
+                },
+                "required": [
+                  "label",
+                  "value"
+                ]
               }
+            ]
+          },
+          "language": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Language"
+              }
+            ],
+            "description": "This property will only be set, if the requested language could not be found"
+          }
+        },
+        "required": [
+          "data",
+          "label"
+        ]
+      },
+      "Entity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "subtext": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "list": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "primary_details": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "secondary_details": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "locations": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "source_repo": {
+            "type": "integer",
+            "maximum": 32767
+          },
+          "source_repo_entry_id": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "type": {
+            "$ref": "#/components/schemas/EntityTypeEnum"
+          },
+          "expertise": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "showcase": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "photo": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "parent": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "source_repo",
+          "source_repo_entry_id",
+          "title",
+          "type"
+        ]
+      },
+      "EntityEdit": {
+        "type": "object",
+        "properties": {
+          "secondary_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntitySecondaryDetailsEdit"
+            }
+          },
+          "showcase": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityShowcaseEdit"
             }
           }
         }
       },
-      "CommonSourceInstitution": {
-        "description": "relevant if more ",
+      "EntitySecondaryDetailsEdit": {
         "type": "object",
         "properties": {
-          "label": {
-            "type": "string",
-            "description": "name of institution"
+          "en": {
+            "$ref": "#/components/schemas/CommonText"
           },
-          "url": {
-            "type": "string",
-            "format": "uri",
-            "description": "url to institution / institutions showroom page"
+          "de": {
+            "$ref": "#/components/schemas/CommonText"
           },
-          "icon": {
-            "type": "string",
-            "format": "uri",
-            "description": "path to media file"
+          "xx": {
+            "$ref": "#/components/schemas/CommonText"
           }
         }
       },
-      "CommonSearchFilter": {
+      "EntityShowcaseEdit": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EntityShowcaseEditTypeEnum"
+              }
+            ],
+            "description": "The type of showcase object. Defaults to activity, if not specified"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "EntityShowcaseEditTypeEnum": {
+        "enum": [
+          "activity",
+          "album",
+          "entity"
+        ],
+        "type": "string"
+      },
+      "EntityTypeEnum": {
+        "enum": [
+          "P",
+          "I",
+          "D"
+        ],
+        "type": "string"
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "A message describing the error"
+          }
+        },
+        "required": [
+          "detail"
+        ]
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The label to identify this filter in search queries"
+          },
+          "type": {
+            "$ref": "#/components/schemas/FilterTypes"
+          },
+          "label": {
+            "type": "string",
+            "description": "Localised label for this filter"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChipsFilterOptions"
+            },
+            "description": "All selectable options in case of a chips type filter"
+          },
+          "freetext_allowed": {
+            "type": "boolean",
+            "description": "In case of a chips type filter, whether only the provided options can be searched for or freetext is allowed additionally"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "type"
+        ]
+      },
+      "FilterTypes": {
+        "type": "string",
+        "enum": [
+          "text",
+          "date",
+          "daterange",
+          "chips"
+        ]
+      },
+      "InitialData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Entity ID of the institution managing the start page"
+          },
+          "source_institution": {
+            "$ref": "#/components/schemas/SearchItemSourceInstitution"
+          },
+          "showcase": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {}
+            },
+            "description": "The showcase object of the entity referred by ID, which is displayed as the start page carousel"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InitialSearchResult"
+            },
+            "description": "The data needed for initial display of recent events, starred items, etc. and information about the filter used in that category"
+          }
+        },
+        "required": [
+          "id",
+          "results",
+          "showcase",
+          "source_institution"
+        ]
+      },
+      "InitialSearchResult": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchItem"
+            }
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchFilter"
+            }
+          }
+        },
+        "required": [
+          "data",
+          "filters",
+          "label",
+          "total"
+        ]
+      },
+      "Language": {
+        "type": "object",
+        "properties": {
+          "iso": {
+            "type": "string",
+            "description": "The ISO 2 letter code for the language this content was returned in"
+          },
+          "label": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageLabel"
+              }
+            ],
+            "description": "Contains all available translations of the label that should be used if the language of the content is to be rendered."
+          }
+        },
+        "required": [
+          "iso",
+          "label"
+        ]
+      },
+      "LanguageLabel": {
+        "type": "object",
+        "properties": {
+          "en": {
+            "type": "string"
+          },
+          "de": {
+            "type": "string"
+          },
+          "xx": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "de",
+          "en",
+          "xx"
+        ]
+      },
+      "Media": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "type": {
+            "$ref": "#/components/schemas/MediaTypeEnum"
+          },
+          "file": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "activity": {
+            "type": "string"
+          },
+          "mime_type": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "exif": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "license": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "specifics": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "source_repo_media_id": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "activity",
+          "file",
+          "id",
+          "mime_type",
+          "source_repo_media_id",
+          "type"
+        ]
+      },
+      "MediaTypeEnum": {
+        "enum": [
+          "i",
+          "a",
+          "v",
+          "d",
+          "x"
+        ],
+        "type": "string"
+      },
+      "PatchedAlbum": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "subtitle": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "secondary_details": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "belongs_to": {
+            "type": "string"
+          },
+          "activities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PatchedEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "subtext": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "list": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "primary_details": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "secondary_details": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "locations": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "source_repo": {
+            "type": "integer",
+            "maximum": 32767
+          },
+          "source_repo_entry_id": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "type": {
+            "$ref": "#/components/schemas/EntityTypeEnum"
+          },
+          "expertise": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "showcase": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
+          },
+          "photo": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "parent": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PatchedEntityEdit": {
+        "type": "object",
+        "properties": {
+          "secondary_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntitySecondaryDetailsEdit"
+            }
+          },
+          "showcase": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityShowcaseEdit"
+            }
+          }
+        }
+      },
+      "SearchFilter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id of the filter as obtained from the /filters endpoint"
           },
           "filter_values": {
             "type": "array",
             "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/CommonSearchFilterText"
-                },
-                {
-                  "$ref": "#/components/schemas/CommonSearchFilterDate"
-                },
-                {
-                  "$ref": "#/components/schemas/CommonSearchFilterDateRange"
-                },
-                {
-                  "$ref": "#/components/schemas/CommonSearchFilterChips"
-                }
-              ]
-            }
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "text",
-              "date",
-              "daterange",
-              "chips"
-            ]
-          }
-        }
-      },
-      "CommonPublisher": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "example": "Firstname Lastname"
+              "type": "object",
+              "additionalProperties": {}
             },
-            "source": {
-              "type": "string",
-              "description": "showroom id"
-            }
+            "description": "Array of either strings, dates, date ranges or a chips options. Multiple values will be combined in a logical OR."
           }
-        }
+        },
+        "required": [
+          "filter_values",
+          "id"
+        ]
       },
-      "CommonSearchFilterText": {
-        "type": "string"
-      },
-      "CommonSearchFilterDateRange": {
+      "SearchItem": {
         "type": "object",
         "properties": {
-          "date_from": {
-            "type": "string",
-            "format": "date"
+          "id": {
+            "type": "string"
           },
-          "date_to": {
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "alternative_text": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "image_url": {
             "type": "string",
-            "format": "date"
+            "format": "uri"
+          },
+          "source_institution": {
+            "$ref": "#/components/schemas/SearchItemSourceInstitution"
+          },
+          "score": {
+            "type": "integer"
           }
-        }
+        },
+        "required": [
+          "alternative_text",
+          "description",
+          "id",
+          "image_url",
+          "score",
+          "source_institution",
+          "subtitle",
+          "title",
+          "type"
+        ]
       },
-      "CommonSearchFilterDate": {
-        "type": "string",
-        "format": "date"
+      "SearchItemSourceInstitution": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Name of institution"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to institution or the institution's showroom page"
+          },
+          "icon": {
+            "type": "string",
+            "format": "uri",
+            "description": "Path to the institution's icon file"
+          }
+        },
+        "required": [
+          "icon",
+          "label",
+          "url"
+        ]
       },
-      "CommonSearchFilterChips": {
+      "SearchRequest": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchFilter"
+            },
+            "description": "Array of logical AND filters that should be applied to the search."
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "filters"
+        ]
+      },
+      "SearchResult": {
         "type": "object",
         "properties": {
           "label": {
             "type": "string"
           },
-          "id": {
-            "type": "string"
+          "total": {
+            "type": "integer"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchItem"
+            }
           }
-        }
-      },
-      "Error": {
-        "type": "object",
+        },
         "required": [
-          "detail"
-        ],
+          "data",
+          "label",
+          "total"
+        ]
+      },
+      "UserData": {
+        "type": "object",
         "properties": {
-          "detail": {
-            "type": "string"
+          "id": {
+            "type": "string",
+            "description": "The user id in the auth backend (i.e. source repo)"
+          },
+          "name": {
+            "type": "string",
+            "description": "The display name of the user"
+          },
+          "email": {
+            "type": "string",
+            "description": "The user's e-mail address"
+          },
+          "entity_id": {
+            "type": "string",
+            "description": "The user's associated showroom entity id. Or null, if no associated showroom entity can be found"
+          },
+          "entity_editing": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of entities that this user is allowed to edit"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The groups this user belongs to."
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The permissions this user has."
           }
-        }
+        },
+        "required": [
+          "email",
+          "entity_editing",
+          "entity_id",
+          "groups",
+          "id",
+          "name",
+          "permissions"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "basicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      },
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "Session"
       }
     }
-  }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:9001",
+      "description": "The local mockup server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "public"
+    },
+    {
+      "name": "auth"
+    },
+    {
+      "name": "repo"
+    },
+    {
+      "name": "api"
+    }
+  ]
 }
