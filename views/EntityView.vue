@@ -38,7 +38,7 @@ export default {
       const results = [];
       // TODO: use 'entities_search_create' instead of main search!!
       // create requests for all the relevant data
-      ['entities_retrieve', 'entities_list_retrieve', 'search_create'].forEach((operation) => {
+      ['entities_retrieve', 'search_create'].forEach((operation) => {
         // add a request body only for search request
         const requestBody = operation === 'search_create' ? {
           filters: parsedFilters,
@@ -53,12 +53,11 @@ export default {
         }));
       });
       // wait for the requests to return
-      const [entityDataResponse, entityListsResponse, searchResultsResponse] = await Promise
+      const [entityDataResponse, searchResultsResponse] = await Promise
         .all(results);
       // assemble all the data to be used in Detail.vue
       entryData = {
         ...JSON.parse(entityDataResponse.data),
-        list: JSON.parse(entityListsResponse.data),
         activities: [].concat(JSON.parse(searchResultsResponse.data)),
       };
       // add an href element that is currently necessary for carousel data
