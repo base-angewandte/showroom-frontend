@@ -18,21 +18,19 @@
     <BaseExpandList
       ref="baseExpandList"
       :edit="userCanEdit && editModeInt"
-      :data="editModeInt
-        ? data
-        : data.filter(item => !item.hidden)"
+      :data="listData"
       :show-more-text="$t('detailView.showAll')"
       :show-less-text="$t('detailView.showLess')"
       @saved="saveEdit">
-      <template #content="{ data: listData }">
+      <template #content="{ data: slotListData }">
         <BaseLink
           :render-link-as="'nuxt-link'"
-          :source="listData.source"
-          :url="listData.url"
-          :value="listData.value"
+          :source="slotListData.source"
+          :url="slotListData.url"
+          :value="slotListData.value"
           class="base-sr-link--mr" />
-        <template v-if="listData.attributes">
-          - {{ listData.attributes.join(', ') }}
+        <template v-if="slotListData.attributes">
+          - {{ slotListData.attributes.join(', ') }}
         </template>
       </template>
     </BaseExpandList>
@@ -90,10 +88,20 @@ export default {
   },
   data() {
     return {
-      dataInt: this.data,
       editModeInt: this.editMode,
       isLoading: false,
     };
+  },
+  computed: {
+    listData() {
+      // TODO: check if this is what we want or empty list items should be visible
+      // or alternatively: should also be hidden in edit mode (but i would vote no
+      // so when an item newly arrives it is sorted correctly already)
+      // third option: only show all for own user profile
+      return this.editModeInt
+        ? this.data
+        : this.data.filter((item) => !item.hidden && !!item.data.length);
+    },
   },
   watch: {
     editMode: {
