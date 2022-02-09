@@ -24,15 +24,15 @@
       :show-more-text="$t('detailView.showAll')"
       :show-less-text="$t('detailView.showLess')"
       @saved="saveEdit">
-      <template #content="props">
+      <template #content="{ data: listData }">
         <BaseLink
           :render-link-as="'nuxt-link'"
-          :source="props.data.source"
-          :url="props.data.url"
-          :value="props.data.value"
+          :source="listData.source"
+          :url="listData.url"
+          :value="listData.value"
           class="base-sr-link--mr" />
-        <template v-if="props.data.attributes">
-          - {{ props.data.attributes.join(', ') }}
+        <template v-if="listData.attributes">
+          - {{ listData.attributes.join(', ') }}
         </template>
       </template>
     </BaseExpandList>
@@ -140,7 +140,12 @@ export default {
      * load data with all languages
      */
     saveEdit(val) {
-      console.log('save list', val);
+      // TODO: we need id instead of manual mapping!!
+      const data = val.map((listEntry) => ({
+        id: listEntry.label.toLowerCase().replace('/', '_'),
+        hidden: listEntry.hidden || false,
+      }));
+      this.$emit('update-list', { prop: 'list', data });
     },
   },
 };

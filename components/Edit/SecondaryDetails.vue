@@ -195,8 +195,11 @@ export default {
          * @event update:edit-mode
          * @param {Object}
          */
-        this.$emit('update:edit-mode', { name: 'secondaryDetails', editMode: val });
+        this.$emit('update:edit-mode', { name: 'secondary_details', editMode: val });
       }
+    },
+    data(val) {
+      this.dataInt = JSON.parse(JSON.stringify(val));
     },
   },
   methods: {
@@ -259,30 +262,35 @@ export default {
           };
         });
 
-        // set requestBody
-        const requestBody = {
-          secondary_details: [secondaryDetails],
-        };
-
-        const response = await this.$api.auth.api_v1_entities_edit_partial_update(
-          {
-            id: this.$route.params.id,
-          },
-          {
-            requestBody,
-          },
-        );
-
-        // add notification
-        this.informUser({
-          action: 'save',
-          type: 'text',
-          notificationType: 'success',
+        this.$emit('update-data', {
+          prop: 'secondary_details',
+          data: [secondaryDetails],
         });
 
-        // update initial data
-        const obj = JSON.parse(response.data).secondary_details;
-        this.dataInt = [obj[0][this.$i18n.locale]];
+        // // set requestBody
+        // const requestBody = {
+        //   secondary_details: [secondaryDetails],
+        // };
+        //
+        // const response = await this.$api.auth.api_v1_entities_edit_partial_update(
+        //   {
+        //     id: this.$route.params.id,
+        //   },
+        //   {
+        //     requestBody,
+        //   },
+        // );
+        //
+        // // add notification
+        // this.informUser({
+        //   action: 'save',
+        //   type: 'text',
+        //   notificationType: 'success',
+        // });
+        //
+        // // update initial data
+        // const obj = JSON.parse(response.data).secondary_details;
+        // this.dataInt = [obj[0][this.$i18n.locale]];
 
         // update states
         this.isLoading = false;

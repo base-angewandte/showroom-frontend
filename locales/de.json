@@ -110,10 +110,12 @@
   "notify": {
     "errorDownload": "Etwas ist schief gelaufen!",
     "errorDownloadSubtext": "Beim Herunterladen der Datei {fileName} ist ein Fehler aufgetreten ",
-    "textItem": "Text Elemente | Text Element | Text Elemente",
-    "textItemN": "Text Elementen | Text Element | Text Elementen",
+    "secondary_detailsItem": "Text Elemente | Text Element | Text Elemente",
+    "secondary_detailsItemN": "Text Elementen | Text Element | Text Elementen",
     "showcaseItem": "Showcase Elemente | Showcase Element | Showcase Elemente",
     "showcaseItemN": "Showcase Elementen | Showcase Element | Showcase Elementen",
+    "listItem": "Liste",
+    "listItemN": "Liste",
     "delete": "Entfernen",
     "add": "Hinzufügen",
     "sort": "Sortieren",
@@ -123,7 +125,7 @@
     "sortD": "sortiert",
     "saveD": "gespeichert",
     "successActionTitle": "{action} von {type} erfolgreich",
-    "successActionSubtext": "0 {type} wurden erfolgreich {action}. | 1 {type} wurde erfolgreich {action}. | {count} {type} wurden erfolgreich {action}.",
+    "successActionSubtext": "{type} wurden erfolgreich {action}. | 1 {type} wurde erfolgreich {action}. | {count} {type} wurden erfolgreich {action}.",
     "errorActionTitle": "{action} von {type} fehlgeschlagen",
     "errorActionSubtext": "Leider konnten die {type} nicht {action} werden. | Leider konnte das {type} nicht {action} werden. | Leider konnten {count} {type} nicht {action} werden."
   },

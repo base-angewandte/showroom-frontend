@@ -70,7 +70,7 @@
         </template-->
       </BaseExpandBox>
 
-      <!-- secondary details -->
+      <!-- SECONDARY DETAILS -->
       <SecondaryDetails
         v-if="(data.secondary_details
           && data.secondary_details.length
@@ -79,8 +79,9 @@
           || userCanEdit"
         :data="titleCaseLabels(data.secondary_details)"
         :user-can-edit="userCanEdit"
-        :edit-mode.sync="editMode.secondaryDetails"
+        :edit-mode="editMode.secondary_details"
         class="base-sr-head__secondary"
+        @update-data="updateEntityData"
         @update:edit-mode="editModeHandler" />
 
       <!-- featured media -->
@@ -124,11 +125,12 @@
     <List
       v-if="data.list && data.list.length"
       :data="titleCaseLabels(data.list)"
-      :edit-mode.sync="editMode.list"
+      :edit-mode="editMode.list"
       :entity-type="type"
       :user-can-edit="userCanEdit"
       :class="['base-sr-row',
                { 'base-sr-edit-active': editMode.list }]"
+      @update-list="updateEntityData"
       @update:edit-mode="editModeHandler" />
 
     <!-- activity showcase -->
@@ -139,7 +141,7 @@
       :data="data.showcase"
       :title="$t('detailView.activityShowcase')"
       :user-can-edit="userCanEdit"
-      :edit-mode.sync="editMode.showcase"
+      :edit-mode="editMode.showcase"
       class="base-sr-row"
       @update:edit-mode="editModeHandler" />
 
@@ -301,6 +303,7 @@ import Showcase from '~/components/Edit/Showcase';
 import SecondaryDetails from '~/components/Edit/SecondaryDetails';
 import List from '~/components/Edit/List';
 import MediaItem from '~/components/MediaItem';
+import { userInfo } from '@/mixins/userNotifications';
 
 import 'base-ui-components/dist/components/BaseButton/BaseButton.css';
 import 'base-ui-components/dist/components/BaseCarousel/BaseCarousel.css';
@@ -337,6 +340,7 @@ export default {
     List,
     MediaItem,
   },
+  mixins: [userInfo],
   props: {
     /**
      * specify object to render detail
@@ -400,7 +404,7 @@ export default {
        */
       editMode: {
         showcase: false,
-        secondaryDetails: false,
+        secondary_details: false,
         list: false,
       },
       // search related variables
@@ -470,15 +474,15 @@ export default {
   },
   methods: {
     /**
-     * toggle components edit-mode (types: secondaryDetails, lists, showcase)
+     * toggle components edit-mode (types: secondary_details, list, showcase)
      *
      * @param {Object} component - { name: 'componentName', editMode: boolean }
      */
-    editModeHandler(component) {
+    editModeHandler({ name, editMode }) {
       // close all edit sections
       this.editMode = Object.fromEntries(Object.keys(this.editMode).map((key) => [key, false]));
       // set edit-mode for current object
-      this.editMode[component.name] = component.editMode;
+      this.editMode[name] = editMode;
     },
     async search(requestBody) {
       this.searchOngoing = true;
@@ -659,6 +663,22 @@ export default {
           type: 'error',
         });
       }
+    },
+
+    /**
+     * EDIT MODE FUNCTIONALITIES
+     */
+
+    /**
+     * function for updating edited entity view data
+     *
+     * @param data
+     * @property {string} data.prop
+     * @property {object} data.requestBody
+     * @returns {Promise<void>}
+     */
+    updateEntityData(data) {
+      this.$emit('update-entity', data);
     },
   },
 };

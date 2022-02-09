@@ -3,12 +3,14 @@
     type="person"
     :data="data"
     :is-user-profile="isUserProfile"
-    :user-can-edit="userCanEdit" />
+    :user-can-edit="userCanEdit"
+    @update-entity="updateEntityData" />
 </template>
 
 <script>
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapGetters } from 'vuex';
+import { userInfo } from '@/mixins/userNotifications';
 import Detail from '@/components/Detail';
 
 export default {
@@ -16,6 +18,7 @@ export default {
   components: {
     Detail,
   },
+  mixins: [userInfo],
   async asyncData({
     $api, params, query,
   }) {
@@ -111,6 +114,69 @@ export default {
       return this.entryId.includes(this.userId)
         || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId))
         || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId.split('-').pop()));
+    },
+  },
+  methods: {
+    /**
+     * EDIT MODE FUNCTIONALITIES
+     */
+
+    /**
+     * function for updating edited entity view data
+     *
+     * @param prop
+     * @param requestBody
+     * @returns {Promise<void>}
+     */
+    async updateEntityData({ prop, data }) {
+      const requestOperationId = `api_v1_entities_${prop === 'list' ? 'list' : 'edit'}_partial_update`;
+      const requestBody = prop === 'list' ? data : {
+        [prop]: data,
+      };
+      try {
+        const response = await this.$api.auth[requestOperationId](
+          {
+            id: this.$route.params.id,
+          },
+          {
+            requestBody,
+          },
+        );
+        if (response.data) {
+          // parse the data that are provided stringified
+          const responseData = JSON.parse(response.data);
+          // now map the data to the view data
+          // save the current data in a variable
+          const currentData = this.data[prop];
+          // set a newData variable that will be modified if necessary
+          let newData = responseData[prop] || responseData;
+          // check if data in array are actually lang specific (needed for secondary details)
+          if (newData.length && newData[0][this.$i18n.locale]) {
+            newData = newData[0][this.$i18n.locale];
+          }
+          // now check if the formats of response data and view data are compatible
+          // first check if view data is array and response data is object
+          if (currentData.length && !newData.length) {
+            // if so - wrap response data in array
+            newData = [newData[this.$i18n.locale] || newData];
+            // else check if current data is array but response data is object
+          } else if (!currentData.length && newData.length) {
+            // if so - take the first element of this response array
+            [newData] = newData[this.$i18n.locale] || newData;
+          }
+          // now set the modified respones data as the entity view data
+          this.$set(this.data, prop, newData);
+        }
+        // now inform user that update was sucessful
+        this.informUser({
+          action: 'save',
+          count: 0,
+          type: prop,
+          notificationType: 'success',
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
   },
 };
