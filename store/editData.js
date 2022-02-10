@@ -37,7 +37,7 @@ const mutations = {
 
 const actions = {
   async fetchEditData({ commit }, { type, id }) {
-    const apiPath = `api_v1_entities_${type === 'list' ? 'list_list' : 'edit_retrieve'}`;
+    const apiPath = `api_v1_entities_${type === 'list' ? 'list' : 'edit'}_retrieve`;
     const response = await this.$api.auth[apiPath]({
       id,
       [type]: true,
