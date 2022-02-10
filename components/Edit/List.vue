@@ -8,7 +8,7 @@
       :cancel-button-text="$i18n.t('editView.cancel')"
       :save-button-text="$i18n.t('editView.save')"
       :is-loading="isLoading"
-      :subtitle="'(' + data.filter(item => !item.hidden).length + ')'"
+      :subtitle="'(' + listData.length + ')'"
       :title="entityType !== 'person' ? $t('detailView.lists') : $t('detailView.activityLists')"
       class="base-sr--ml-small"
       @activated="enableEdit"
@@ -39,6 +39,8 @@
 
 <script>
 import Vue from 'vue';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { mapActions, mapGetters } from 'vuex';
 import {
   BaseEditControl,
   BaseExpandList,
@@ -90,17 +92,22 @@ export default {
     return {
       editModeInt: this.editMode,
       isLoading: false,
+      dataInt: this.data,
     };
   },
   computed: {
-    listData() {
-      // TODO: check if this is what we want or empty list items should be visible
-      // or alternatively: should also be hidden in edit mode (but i would vote no
-      // so when an item newly arrives it is sorted correctly already)
-      // third option: only show all for own user profile
-      return this.editModeInt
-        ? this.data
-        : this.data.filter((item) => !item.hidden && !!item.data.length);
+    ...mapGetters({
+      getEditDataItem: 'editData/getEditDataItem',
+    }),
+    listData: {
+      set(val) {
+        this.dataInt = val;
+      },
+      get() {
+        return this.editModeInt
+          ? this.getEditDataItem({ type: 'list', id: this.$route.params.id })
+          : this.dataInt.filter((item) => (!item.hidden && !!item.data.length));
+      },
     },
   },
   watch: {
@@ -124,11 +131,28 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      fetchEditData: 'editData/fetchEditData',
+      saveEditData: 'editData/saveEditData',
+    }),
     /**
      * enable edit mode
      */
-    enableEdit() {
-      this.editModeInt = true;
+    async enableEdit() {
+      try {
+        // fetch edit data from store
+        await this.fetchEditData({ type: 'list', id: this.$route.params.id });
+        // if data fetch worked out set edit mode to true
+        this.editModeInt = true;
+      } catch (e) {
+        console.error(e);
+        this.informUser({
+          action: 'fetch',
+          count: 0,
+          type: 'list',
+          notificationType: 'error',
+        });
+      }
     },
     /**
      * cancel edit-mode
@@ -141,19 +165,31 @@ export default {
      * load data with all languages
      */
     save() {
-      this.editModeInt = false;
+      // this.editModeInt = false;
       this.$refs.baseExpandList.save();
     },
     /**
      * load data with all languages
      */
-    saveEdit(val) {
-      // TODO: we need id instead of manual mapping!!
-      const data = val.map((listEntry) => ({
-        id: listEntry.label.toLowerCase().replace('/', '_'),
-        hidden: listEntry.hidden || false,
-      }));
-      this.$emit('update-list', { prop: 'list', data });
+    async saveEdit(values) {
+      // variable for determining notification message later
+      let success = false;
+      try {
+        // update database entry with relevant data
+        this.listData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
+        // set edit mode false again
+        this.editModeInt = false;
+        success = true;
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.informUser({
+          action: 'save',
+          count: 0,
+          type: 'list',
+          notificationType: success ? 'success' : 'error',
+        });
+      }
     },
   },
 };

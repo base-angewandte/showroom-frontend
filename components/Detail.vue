@@ -81,7 +81,6 @@
         :user-can-edit="userCanEdit"
         :edit-mode="editMode.secondary_details"
         class="base-sr-head__secondary"
-        @update-data="updateEntityData"
         @update:edit-mode="editModeHandler" />
 
       <!-- featured media -->
@@ -130,7 +129,6 @@
       :user-can-edit="userCanEdit"
       :class="['base-sr-row',
                { 'base-sr-edit-active': editMode.list }]"
-      @update-list="updateEntityData"
       @update:edit-mode="editModeHandler" />
 
     <!-- activity showcase -->
@@ -663,22 +661,6 @@ export default {
           type: 'error',
         });
       }
-    },
-
-    /**
-     * EDIT MODE FUNCTIONALITIES
-     */
-
-    /**
-     * function for updating edited entity view data
-     *
-     * @param data
-     * @property {string} data.prop
-     * @property {object} data.requestBody
-     * @returns {Promise<void>}
-     */
-    updateEntityData(data) {
-      this.$emit('update-entity', data);
     },
   },
 };
