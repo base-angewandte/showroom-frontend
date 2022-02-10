@@ -262,35 +262,30 @@ export default {
           };
         });
 
-        this.$emit('update-data', {
-          prop: 'secondary_details',
-          data: [secondaryDetails],
+        // set requestBody
+        const requestBody = {
+          secondary_details: [secondaryDetails],
+        };
+
+        const response = await this.$api.auth.api_v1_entities_edit_partial_update(
+          {
+            id: this.$route.params.id,
+          },
+          {
+            requestBody,
+          },
+        );
+
+        // add notification
+        this.informUser({
+          action: 'save',
+          type: 'text',
+          notificationType: 'success',
         });
 
-        // // set requestBody
-        // const requestBody = {
-        //   secondary_details: [secondaryDetails],
-        // };
-        //
-        // const response = await this.$api.auth.api_v1_entities_edit_partial_update(
-        //   {
-        //     id: this.$route.params.id,
-        //   },
-        //   {
-        //     requestBody,
-        //   },
-        // );
-        //
-        // // add notification
-        // this.informUser({
-        //   action: 'save',
-        //   type: 'text',
-        //   notificationType: 'success',
-        // });
-        //
-        // // update initial data
-        // const obj = JSON.parse(response.data).secondary_details;
-        // this.dataInt = [obj[0][this.$i18n.locale]];
+        // update initial data
+        const obj = JSON.parse(response.data).secondary_details;
+        this.dataInt = [obj[0][this.$i18n.locale]];
 
         // update states
         this.isLoading = false;
