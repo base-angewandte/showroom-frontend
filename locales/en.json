@@ -96,6 +96,14 @@
       "search": "Search all Activities"
     },
     "sortBy": "Sort by",
+    "sortOptions": {
+      "byType": "By Type",
+      "AZ": "A - Z",
+      "ZA": "Z - A",
+      "lastCreated": "Last Created",
+      "firstCreated": "First Created",
+      "lastModified": "Last Modified"
+    },
     "selectCarouselActivities": "Select entries",
     "message": {
       "text": "Drag or Select",

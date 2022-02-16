@@ -97,6 +97,14 @@
       "search": "Alle Aktivitiäten durchsuchen"
     },
     "sortBy": "Sortieren nach",
+    "sortOptions": {
+      "byType": "Nach Typ",
+      "AZ": "A - Z",
+      "ZA": "Z - A",
+      "lastCreated": "Zuletzt erstellt",
+      "firstCreated": "Zuerst erstellt",
+      "lastModified": "Zuletzt geändert"
+    },
     "selectCarouselActivities": "Einträge auswählen",
     "message": {
       "text": "Verschieben oder Auswählen",
