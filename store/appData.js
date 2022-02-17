@@ -44,8 +44,8 @@ const mutations = {
 };
 
 const actions = {
-  init({ dispatch }, api) {
-    dispatch('fetchUser', api.auth.api_v1_user_retrieve);
+  async init({ dispatch }, api) {
+    await dispatch('fetchUser', api.auth.api_v1_user_retrieve);
   },
   async fetchUser({ commit }, request) {
     try {
@@ -56,10 +56,15 @@ const actions = {
     } catch (e) {
       // check if request failed because user is not authenticated and reset user
       if (e.response && e.response.status === 403) {
-        commit('setUser');
+        // check if app is set to only allow authenticated users to view the app
+        if (process.env.authRequired) {
+          // if so bubble an error to triggering nuxtServerInit function
+          throw e;
+        } else {
+          commit('setUser');
+        }
       } else {
         console.error(e);
-        // TODO: further error handling? (at least informing user?)
       }
     }
   },

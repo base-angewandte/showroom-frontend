@@ -68,8 +68,9 @@ export default {
     leaflet: settings.LEAFLET,
     locales: process.env.LOCALES,
     defaultLocale: process.env.DEFAULT_LOCALE,
-    enTitleCasing: process.env.EN_TITLE_CASING,
+    enTitleCasing: JSON.parse(process.env.EN_TITLE_CASING),
     userPreferencesUrl: process.env.USER_PREFERENCES_URL,
+    authRequired: JSON.parse(process.env.AUTH_REQUIRED),
   },
   /*
   ** Plugins to load before mounting the App
