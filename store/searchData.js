@@ -16,7 +16,7 @@ const mutations = {
 };
 
 const actions = {
-  init({ dispatch }, api) {
+  async init({ dispatch }, api) {
     return dispatch('fetchFilterData', api.public.api_v1_filters_list);
   },
   async fetchFilterData({ commit }, request) {

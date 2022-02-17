@@ -34,6 +34,9 @@ export default {
   },
   router: {
     base: `${process.env.APP_PREFIX}/`,
+    middleware: [
+      'auth'
+    ]
   },
   /*
   ** Customize the progress-bar color

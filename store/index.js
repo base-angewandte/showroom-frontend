@@ -3,18 +3,7 @@ const actions = {
   async nuxtServerInit({ dispatch, commit }, {
     $api, app, error, redirect, req, route, store,
   }) {
-    try {
-      await dispatch('appData/init', $api);
-    } catch (e) {
-      // check if app is restricted to logged in users
-      if (process.env.authRequired
-        && e.response && e.response.status === 403) {
-        console.error('access is currently restricted to logged in users - ', e);
-        // redirect to login page
-        redirect(`${process.env.backendBaseUrl}${process.env.backendPrefix}/accounts/login/`);
-      }
-    }
-
+    dispatch('appData/init', $api);
     await dispatch('searchData/init', $api);
     /**
      * handle localisation and language switch

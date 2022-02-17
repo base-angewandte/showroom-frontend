@@ -10,7 +10,7 @@ const getters = {
     return state.user;
   },
   getAuthState(state) {
-    return state.authenticated;
+    return !!state.user;
   },
   getLocales(state) {
     return state.locales;
@@ -35,10 +35,8 @@ const mutations = {
   setUser(state, user) {
     if (user && user.id) {
       state.user = user;
-      state.authenticated = true;
     } else {
       state.user = null;
-      state.authenticated = false;
     }
   },
 };
@@ -56,13 +54,7 @@ const actions = {
     } catch (e) {
       // check if request failed because user is not authenticated and reset user
       if (e.response && e.response.status === 403) {
-        // check if app is set to only allow authenticated users to view the app
-        if (process.env.authRequired) {
-          // if so bubble an error to triggering nuxtServerInit function
-          throw e;
-        } else {
-          commit('setUser');
-        }
+        commit('setUser');
       } else {
         console.error(e);
       }
