@@ -52,10 +52,14 @@ export default async ({ $axios, store }, inject) => {
           try {
             const axiosResponse = await $axios(axiosRequest);
 
-            return new Response(JSON.stringify(axiosResponse.data), {
-              status: axiosResponse.status,
-              headers: axiosResponse.headers,
-            });
+            if (axiosResponse.data) {
+              return new Response(JSON.stringify(axiosResponse.data), {
+                status: axiosResponse.status,
+                headers: axiosResponse.headers,
+              });
+            }
+            // only way to end here is probably if request was cancelled
+            return Promise.reject(new Error(`No data or request ${url} canceled`));
           } catch (e) {
             return Promise.reject(e);
           }

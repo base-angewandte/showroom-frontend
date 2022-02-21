@@ -49,7 +49,7 @@ export default {
     Showcase,
     Search,
   },
-  async asyncData({ $api, query }) {
+  async asyncData({ $api, query, store }) {
     const { filters, page } = query;
     const parsedFilters = filters ? JSON.parse(filters) : [];
     // assume 2 entries and 5 rows initially
@@ -58,8 +58,6 @@ export default {
     // numbers are not rendered with small screensize
     const entryNumber = 2 * 5;
     let results = [];
-    let showcase = [];
-    let initialFilters = [];
     // get initial search results
     if (parsedFilters && parsedFilters.length) {
       try {
@@ -83,43 +81,29 @@ export default {
       }
     } else {
       try {
-        const response = await $api.public.api_v1_initial_retrieve({
-          id: process.env.institutionId,
-        },
-        {
-          requestBody: {
-            limit: entryNumber,
-          },
-        });
-        const initialData = JSON.parse(response.data);
-        showcase = initialData.showcase.map((entry) => ({
-          ...entry,
-          href: entry.id,
-        }));
+        await store.dispatch('appData/fetchInitialData', { limit: entryNumber });
+        const initialResults = store.getters['appData/getInitialData'].results;
         // TODO: this is just a temporary fix working only with one result category!
-        initialFilters = initialData.results[0].filters;
-        // if page is not 1 it needs another request with the proper filter!
-        if (page > 1 && initialData.results && initialData.results.length) {
+        const initialSearchFilters = store.getters['appData/getInitialData'].results[0].filters;
+        if (page > 1 && initialResults && initialResults.length) {
           const paginationResponse = await $api.public.api_v1_search_create({}, {
             requestBody: {
-              filters: initialFilters,
+              filters: initialSearchFilters,
               offset: (page ? (Number(page) - 1) : 0) * entryNumber,
               limit: entryNumber,
             },
           });
           results = [JSON.parse(paginationResponse.data)];
         } else {
-          results = initialData.results;
+          results = initialResults;
         }
       } catch (e) {
         console.error(e);
       }
     }
     return {
-      initialFilters,
       searchResults: results,
       appliedFilters: parsedFilters,
-      carouselData: showcase || [],
       pageNumber: page ? Number(page) : 1,
     };
   },
@@ -129,13 +113,8 @@ export default {
       autocompleteLoaderIndex: -1,
       searchResults: [],
       autocompleteResults: [],
-      // save the filters from initial request in a variable so they are available
-      // when changing pages
-      // TODO: this only works with one result category for now!!
-      initialFilters: null,
       appliedFilters: [],
       pageNumber: 1,
-      carouselData: [],
       /**
        * edit-mode for different edit sections
        * @type {Object}
@@ -146,6 +125,21 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      initialData: 'appData/getInitialData',
+      getInitialData: 'appData/getInitialData',
+      getInitialShowcaseData: 'appData/getInitialShowcaseData',
+    }),
+    carouselData() {
+      return this.getInitialData.showcase;
+    },
+    // save the filters from initial request in a variable so they are available
+    // when changing pages
+    // TODO: this only works with one result category for now!!
+    initialFilters() {
+      // TODO: this is just a temporary fix working only with one result category!
+      return this.getInitialData.results[0].filters;
+    },
     /**
      * determine if landing page mode should be applied (for search results and
      * carousel display)
@@ -220,15 +214,12 @@ export default {
           }
         } else {
           if (requestBody.offset === 0 || !this.initialFilters) {
-            // if not - fetch default data to be displayed for search
-            const { data } = await this.$api.public.api_v1_initial_retrieve({
-              id: process.env.institutionId,
-            });
-            const defaultData = JSON.parse(data);
-            this.carouselData = defaultData.showcase;
-            this.initialFilters = defaultData.results[0].filters;
+            // if not - refetch default data to be displayed for search
+            // data are always refetched here to always have the latest results (also the
+            // ones added newly from the repository) available here
+            await this.$store.dispatch('appData/fetchInitialData', {});
             if (requestBody.offset === 0) {
-              this.searchResults = defaultData.results;
+              this.searchResults = this.getInitialData.results;
             }
           }
           if (requestBody.offset !== 0) {

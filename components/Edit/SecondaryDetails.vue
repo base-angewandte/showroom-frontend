@@ -279,7 +279,6 @@ export default {
           id: this.$route.params.id,
           values,
         }));
-        console.log(this.dataInt);
         // set edit mode false again
         this.editModeInt = false;
         success = true;

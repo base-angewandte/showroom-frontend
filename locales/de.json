@@ -113,7 +113,8 @@
     "optionsButtonText": {
       "show": "Editieren",
       "hide": "Fertig"
-    }
+    },
+    "yourData": "Machen Sie Aktivitäten hier sichtbar!"
   },
   "notify": {
     "errorDownload": "Etwas ist schief gelaufen!",

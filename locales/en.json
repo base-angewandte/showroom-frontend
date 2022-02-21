@@ -112,7 +112,8 @@
     "optionsButtonText": {
       "show": "Edit",
       "hide": "Done"
-    }
+    },
+    "yourData": "Add activities here!"
   },
   "notify": {
     "errorDownload": "Something went wrong!",

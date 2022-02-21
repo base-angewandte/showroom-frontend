@@ -108,7 +108,7 @@
       in front end -->
       <BaseEntrySelector
         ref="entrySelector"
-        :entries="selectorEntries"
+        :entries="filteredSelectorEntries"
         :entries-total="selectorEntriesNumber"
         :entries-per-page="selectorEntriesPerPage"
         :entries-selectable="true"
@@ -177,10 +177,38 @@ Vue.use(BaseResultBoxSection);
  * @property {string} id - an unique id
  * @property {string} title - the title displayed in first line
  * @property {string} href - a reference to redirect to on click
- * @property {string} imageUrl - an url to the image shown in the box
  * @property {string} type - if item is an 'activity' or 'album'
+ * @property {string} [imageUrl] - an url to the image shown in the box
  * @property {string} [additional] - additional information visible on an item in the carousel
  * @property {string} [subtext] - the second line text
+ */
+
+/**
+ * @typedef {Object} ExternalCarouselData
+ * @property {string} id - an unique id
+ * @property {string} title - the title displayed in first line
+ * @property {string} showcase_type - if item is an 'activity' or 'album'
+ * @property {Object} [type] - a type of activity if applicable with 'source' and 'label'
+ *  in different languages
+ * @property {Object[]} [previews] - image urls in different sizes
+ * @property {string} [additional] - additional information visible on an item in the carousel
+ * @property {string} [subtext] - the second line text
+ * @property {string} [image_url] - a separate url for images
+ */
+
+/**
+ * @typedef {Object} EntrySelectorItem
+ * @property {string} id - an unique id
+ * @property {string} title - the title displayed in first line
+ * @property {string} type - if item is an 'activity' or 'album'
+ * @property {string} [subtitle] - alternative text (not displayed in selector)
+ * @property {Object} [source_institution] - the repository the entry is coming from
+ * @property {number} [score] - a search score
+ * @property {string} [image_url] - an url to an image
+ * @property {boolean} [disabled] - added internally to remove items already selected
+ * @property {string} [description] - the second line in the selector item
+ * @property {string[]} [alternative_text] - alternative text to be displayed instead of
+ *  image (not relevant here)
  */
 
 export default {
@@ -193,6 +221,7 @@ export default {
      */
     data: {
       type: Array,
+      // @type {ExternalCarouselData[]}
       default: () => [],
     },
     /**
@@ -251,7 +280,7 @@ export default {
       isSaving: false,
       /**
        * placeholder data in case no data are provided
-       * @type {Object[]}
+       * @type {CarouselData[]}
        */
       placeholderData: [],
       /**
@@ -261,7 +290,7 @@ export default {
       selectedBoxes: [],
       /**
        * entries visible in BaseEntrySelector
-       * @type {Object[]}
+       * @type {EntrySelectorItem[]}
        */
       selectorEntries: [],
       /**
@@ -325,17 +354,27 @@ export default {
   computed: {
     ...mapGetters({
       getEditDataItem: 'editData/getEditDataItem',
+      getShowcaseData: 'appData/getInitialShowcaseData',
+      getInitialData: 'appData/getInitialData',
     }),
+    /**
+     * @returns {ExternalCarouselData[]}
+     */
+    initialShowcaseData() {
+      return this.getShowcaseData(3, true);
+    },
     /**
      * get the data from showcase GET request in the proper format needed for
      * the BaseCarousel component
      */
     editData() {
+      const tempEditData = this.getEditDataItem({
+        type: 'showcase',
+        id: this.$route.params.id,
+      });
       return this.dataInt.map((item) => {
-        const editDataItem = this.getEditDataItem({
-          type: 'showcase',
-          id: this.$route.params.id,
-        }).find((editItem) => editItem.id === item.id);
+        const editDataItem = tempEditData ? tempEditData
+          .find((editItem) => editItem.id === item.id) : {};
         return {
           ...item,
           ...editDataItem,
@@ -356,6 +395,18 @@ export default {
         return this.editInputInt || this.editData || [];
       },
     },
+    /**
+     * set property disabled to already linked entries or which are not type 'activity'
+     * @returns {EntrySelectorItem[]}
+     */
+    filteredSelectorEntries() {
+      const linkedEntries = this.editInput.map((entry) => entry.id);
+      return this.selectorEntries.map((entry) => ({
+        ...entry,
+        disabled: linkedEntries.includes(entry.id)
+          || !['activity', 'album'].includes(entry.type),
+      }));
+    },
   },
   watch: {
     /**
@@ -370,7 +421,7 @@ export default {
     },
     /**
      * watch placeholder data to set carousel options if necessary
-     * @param {Object[]} val
+     * @param {CarouselData[]} val
      */
     placeholderData(val) {
       this.setCarouselOptions(val, true);
@@ -448,7 +499,7 @@ export default {
     /**
      * request to save data to db
      *
-     * @param {Object[]} values - entries
+     * @param {CarouselData[]} values - entries
      * @property {string} data[].id - the entry id
      * @property {string} data[].type - the showcase type of the entry (e.g. 'activity')
      * @param {String} action
@@ -469,7 +520,7 @@ export default {
           values,
         });
         // format/update showcase data
-        this.editInput = this.formatData(responseData);
+        this.editInput = this.formatData(responseData.map((item) => item.details));
         // empty container variables
         this.selectedBoxes = [];
         this.selectorSelectedEntries = [];
@@ -507,41 +558,27 @@ export default {
     /**
      * fetch data for the carousel that are shown in the background if nothing
      * was added yet
-     * TODO: see if this should go to store or similar
      */
     async fetchPlaceholderRequest() {
       // clear placeholderData
       this.placeholderData = [];
       try {
         this.isLoading = true;
-        const response = await this.$api.public.api_v1_initial_retrieve({
-          id: process.env.institutionId,
-        },
-        {
-          requestBody: {
-            limit: 3,
-          },
-        });
-        let showcaseFiltered = [];
-        if (response.data && typeof response.data === 'string') {
-          const { showcase } = JSON.parse(response.data);
-
-          // filter entries with preview image
-          showcaseFiltered = showcase
-            .filter((entry) => !!entry.previews.length)
-            .slice(0, 3)
-            .map((entry) => ({
-              ...entry,
-              href: entry.id,
-            }));
+        // check if initial data was already fetched
+        if (!this.getInitialData) {
+          // if not - fetch them
+          await this.$store.dispatch('appData/fetchInitialData', {});
         }
-        if (response.data && showcaseFiltered.length) {
-          this.placeholderData = showcaseFiltered;
-          // otherwise prefill with empty entries
-        } else {
-          this.placeholderData = Array.from({ length: 3 }, () => ({ title: '', href: '#' }));
-        }
-
+        // check if initialData has actual showcase data - if yes - use them and format
+        // to correct component data structure - if not create mock entries
+        this.placeholderData = this.initialShowcaseData && this.initialShowcaseData.length
+          ? this.formatData(this.initialShowcaseData)
+          : Array.from({ length: 3 }, (index) => ({
+            id: `showcase-item-${index}`,
+            title: this.$t('editView.yourData'),
+            href: '#',
+            type: 'activity',
+          }));
         this.isLoading = false;
       } catch (e) {
         console.error(e);
@@ -580,8 +617,7 @@ export default {
 
         if (results) {
           this.selectorEntriesNumber = results.total;
-          // disable linked entries and adapt format (type!)
-          this.selectorEntries = this.disableEntries(results.data);
+          this.selectorEntries = results.data;
         }
 
         this.isLoading = false;
@@ -599,20 +635,6 @@ export default {
       this.showPopUp = false;
       this.isLoading = false;
       this.isSaving = false;
-    },
-    /**
-     * set property disabled to already linked entries or which are not type 'activity'
-     *
-     * @param {Object[]} entries - showcase entries
-     * @returns {Object[]}
-     */
-    disableEntries(entries) {
-      const linkedEntries = this.dataInt.map((entry) => entry.id);
-      return entries.map((entry) => ({
-        ...entry,
-        disabled: linkedEntries.includes(entry.id)
-          || !['activity', 'album'].includes(entry.type),
-      }));
     },
     // Todo: refactor magic values, maybe with props?
     calcSelectorEntriesPerPage() {
@@ -637,7 +659,7 @@ export default {
      * function for actions to be taken either after event from pop up or
      * BaseResultBoxSection
      * @param {string} action - the action in question (e.g. 'delete')
-     * @param {Object[]} [entries=[]] - the updated data
+     * @param {CarouselData[]} [entries=[]] - the updated data (only relevant for sorting)
      */
     actionHandler(action, entries = []) {
       // determine if action is 'showPopup' and just open pop up and return
@@ -652,12 +674,12 @@ export default {
       // check if action is 'delete'
       if (action === 'delete') {
         // if yes - filter relevant items from dataInt
-        showcase = this.dataInt.filter((entry) => !this.selectedBoxes.includes(entry.id));
+        showcase = this.editInput.filter((entry) => !this.selectedBoxes.includes(entry.id));
         // else check if action 'add'
       } else if (action === 'add') {
         // if yes - merge selected entries with existing data in new variable
         showcase = [
-          ...this.dataInt,
+          ...this.editInput,
           ...this.selectorSelectedEntries,
         ];
         // else check if action is 'sort'
@@ -680,7 +702,7 @@ export default {
     /**
      * set carouselOptions
      *
-     * @param {Array} data - array with carousel objects
+     * @param {CarouselData[]} data - array with carousel objects
      * @param {boolean} [isPlaceholderData=false] - behaviour of carousel needs
      *  to differ if not real data displayed
      */
@@ -717,21 +739,17 @@ export default {
     /**
      * set missing props if needed
      *
-     * @param {Object[]} data - showcase entries
-     * @returns {CarouselData[]}
+     * @param {ExternalCarouselData[]} data - showcase entries
+     * @returns {(ExternalCarouselData&CarouselData)[]}
      */
     formatData(data) {
-      return data.map((entry) => {
-        // entry.detail includes entire entry data (response from /edit route)
-        const item = entry.details || entry;
-        return {
-          ...item,
-          type: item.showcase_type,
-          href: item.id,
-          imageUrl: item.previews && item.previews.length
-            ? Object.values(item.previews[0])[0] : item.image_url || '',
-        };
-      });
+      return data.map((entry) => ({
+        ...entry,
+        type: entry.showcase_type,
+        href: entry.id,
+        imageUrl: entry.previews && entry.previews.length
+          ? Object.values(entry.previews[0])[0] : entry.image_url || '',
+      }));
     },
   },
 };

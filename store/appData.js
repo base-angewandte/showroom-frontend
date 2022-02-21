@@ -3,6 +3,7 @@ const state = () => ({
   locales: process.env.locales,
   locale: '',
   user: null,
+  initialData: null,
 });
 
 const getters = {
@@ -24,6 +25,28 @@ const getters = {
   getUserEditPermissions(state) {
     return state.user ? state.user.entity_editing : null;
   },
+  getInitialData(state) {
+    return state.initialData;
+  },
+  getInitialShowcaseData: (state) => (limit, filterForImage = false) => {
+    if (state.initialData && state.initialData.showcase) {
+      const carouselData = state.initialData.showcase;
+      if (filterForImage) {
+        carouselData.filter((entry) => !!entry.previews.length);
+      }
+      if (limit) {
+        return carouselData.slice(0, limit).map((entry) => ({
+          ...entry,
+          href: entry.id,
+        }));
+      }
+      return carouselData.map((entry) => ({
+        ...entry,
+        href: entry.id,
+      }));
+    }
+    return [];
+  },
 };
 
 const mutations = {
@@ -38,6 +61,9 @@ const mutations = {
     } else {
       state.user = null;
     }
+  },
+  setInitialData(state, data) {
+    state.initialData = data;
   },
 };
 
@@ -58,6 +84,24 @@ const actions = {
       } else {
         console.error(e);
       }
+    }
+  },
+  async fetchInitialData({ commit }, { limit }) {
+    const requestBody = limit ? {
+      limit,
+    } : {};
+    try {
+      const response = await this.$api.public.api_v1_initial_retrieve({
+        id: process.env.institutionId,
+      },
+      {
+        requestBody,
+      });
+      if (response.data) {
+        commit('setInitialData', JSON.parse(response.data));
+      }
+    } catch (e) {
+      console.error(e);
     }
   },
 };
