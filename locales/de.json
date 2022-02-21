@@ -94,7 +94,8 @@
         "show": "Optionen",
         "hide": "Optionen"
       },
-      "search": "Alle Aktivitiäten durchsuchen"
+      "search": "Alle Aktivitiäten durchsuchen",
+      "maxEntries": "Maximale Anzahl überschritten!"
     },
     "sortBy": "Sortieren nach",
     "sortOptions": {
@@ -138,7 +139,9 @@
     "successActionTitle": "{action} von {type} erfolgreich",
     "successActionSubtext": "{type} wurden erfolgreich {action}. | 1 {type} wurde erfolgreich {action}. | {count} {type} wurden erfolgreich {action}.",
     "errorActionTitle": "{action} von {type} fehlgeschlagen",
-    "errorActionSubtext": "Leider konnten die {type} nicht {action} werden. | Leider konnte das {type} nicht {action} werden. | Leider konnten {count} {type} nicht {action} werden."
+    "errorActionSubtext": "Leider konnten die {type} nicht {action} werden. | Leider konnte das {type} nicht {action} werden. | Leider konnten {count} {type} nicht {action} werden.",
+    "maxShowcaseTitle": "Maximale Anzahl erreicht",
+    "maxShowcaseSubtext": "Sie haben bereits die maximale Anzahl an Aktivitäten hinzugefügt. Bitte löschen Sie zuerst Aktivitäten, falls Sie neue hinzufügen möchten."
   },
   "errors": {
     "homepage": "Startseite",

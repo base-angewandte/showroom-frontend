@@ -93,7 +93,8 @@
         "show": "Options",
         "hide": "Options"
       },
-      "search": "Search all Activities"
+      "search": "Search all Activities",
+      "maxEntries": "Maximum Number Exceeded!"
     },
     "sortBy": "Sort by",
     "sortOptions": {
@@ -137,7 +138,10 @@
     "successActionTitle": "{action} of {type} successful",
     "successActionSubtext": "{type} were successfully {action}. | 1 {type} was successfully {action}. | {count} {type} were successfully {action}.",
     "errorActionTitle": "{action} of {type} failed",
-    "errorActionSubtext": "Unfortunately the {type} could not be {action}. | Unfortunately one {type} could not be {action} | Unfortunately {count} {type} could not be {action}."
+    "errorActionSubtext": "Unfortunately the {type} could not be {action}. | Unfortunately one {type} could not be {action} | Unfortunately {count} {type} could not be {action}.",
+    "maxShowcaseTitle": "Maximum number reached",
+    "maxShowcaseSubtext": "You have added the maximum number of activities already. Please delete some first if you want to add more."
+
   },
   "errors": {
     "homepage": "Homepage",

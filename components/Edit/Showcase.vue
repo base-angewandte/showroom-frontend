@@ -77,42 +77,42 @@
         </h2>
       </template>
 
-      <template #optionButtons="scope">
+      <template #optionButtons="{ submitAction }">
         <BaseButton
           :text="$t('editView.addActivities')"
           icon-size="large"
           icon="add-new-object"
           button-style="single"
-          @clicked="scope.submitAction('showPopup')" />
+          @clicked="openPopup(submitAction)" />
         <BaseButton
           :text="$t('editView.delete')"
           :disabled="!selectedBoxes.length"
           icon-size="large"
           icon="waste-bin"
           button-style="single"
-          @clicked="scope.submitAction('delete')" />
+          @clicked="submitAction('delete')" />
       </template>
     </BaseResultBoxSection>
 
     <!-- SELECTOR POP UP -->
     <BasePopUp
       :button-right-text="$t('editView.addActivities')"
-      :button-right-disabled="isSaving || !selectorSelectedEntries.length"
+      :button-right-disabled="isSaving || !selectorSelectedEntries.length
+        || selectorSelectedEntries.length > remainingSelectorEntryNumber"
       :is-loading="isSaving"
-      :title="$t('editView.addActivities')"
+      :title="`${$t('editView.addActivities')} (Max. ${remainingSelectorEntryNumber})`"
       :show="showPopUp"
       class="base-sr-popup"
       @button-left="cancel"
       @button-right="actionHandler('add')"
       @close="cancel">
-      <!-- TODO: fix number of selected boxes as soon as number is available
-      in front end -->
       <BaseEntrySelector
         ref="entrySelector"
         :entries="filteredSelectorEntries"
         :entries-total="selectorEntriesNumber"
         :entries-per-page="selectorEntriesPerPage"
         :entries-selectable="true"
+        :max-selected-entries="remainingSelectorEntryNumber"
         :height="'calc(50vh - 32px)'"
         :is-loading="isLoading"
         :language="$i18n.locale"
@@ -135,6 +135,7 @@
           noEntriesSubtext: $t('editView.selectActivitiesPopUp.noEntriesSubtext'),
           search: $t('editView.selectActivitiesPopUp.search'),
           options: $t('editView.selectActivitiesPopUp.options'),
+          entriesExceeded: $t('editView.selectActivitiesPopUp.maxEntries'),
         }"
         class="base-sr-entry-selector"
         @selected-changed="selectorSelectedEntries = $event"
@@ -350,10 +351,15 @@ export default {
       ],
       /**
        * variable for internal storage of editInput (to use either this or
-       * inital store saved editData)
+       * initial store saved editData)
        * @type {?CarouselData[]}
        */
       editInputInt: null,
+      /**
+       * max number of items a showcase may contain
+       * @type {number}
+       */
+      maxItems: 12,
     };
   },
   computed: {
@@ -362,6 +368,9 @@ export default {
       getShowcaseData: 'appData/getInitialShowcaseData',
       getInitialData: 'appData/getInitialData',
     }),
+    remainingSelectorEntryNumber() {
+      return this.maxItems - this.editInput.length;
+    },
     /**
      * @returns {ExternalCarouselData[]}
      */
@@ -402,7 +411,7 @@ export default {
     },
     /**
      * set property disabled to already linked entries or which are not type 'activity'
-     * @returns {EntrySelectorItem[]}
+     * @returns {(*&EntrySelectorItem)[]}
      */
     filteredSelectorEntries() {
       const linkedEntries = this.editInput.map((entry) => entry.id);
@@ -633,6 +642,26 @@ export default {
 
     /** POP UP FUNCTIONALITIES */
 
+    /**
+     * function called when 'add activities' is clicked to check first if
+     * maximum allowed number was reached
+     * @param {Function} actionFunction - the function provided by the BaseResultBoxSection
+     *  component that should be triggered on button click
+     */
+    openPopup(actionFunction) {
+      // check if entries can still be added
+      if (this.remainingSelectorEntryNumber !== 0) {
+        actionFunction('showPopup');
+        // notify user if not
+      } else {
+        this.$notify({
+          group: 'request-notifications',
+          title: this.$t('notify.maxShowcaseTitle'),
+          text: this.$t('notify.maxShowcaseSubtext'),
+          type: 'error',
+        });
+      }
+    },
     /**
      * cancel and reset popup
      */
