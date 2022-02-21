@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { checkForLabel } from '~/utils/common';
 
 /* eslint-disable no-shadow */
 const state = () => ({
@@ -52,7 +53,7 @@ const actions = {
     });
     if (response.data) {
       const values = JSON.parse(response.data);
-      commit('setEditDataItem', { type, values: values[type] || values, id });
+      commit('setEditDataItem', { type, values: checkForLabel(values[type] || values), id });
       return values[type] || values;
     }
     throw new Error('no data');
@@ -86,7 +87,7 @@ const actions = {
       // if so parse the data
       const updatedData = JSON.parse(response.data);
       // and return them
-      return updatedData[type] || updatedData;
+      return checkForLabel(updatedData[type] || updatedData);
     }
     // if not throw an error
     throw new Error('no data');

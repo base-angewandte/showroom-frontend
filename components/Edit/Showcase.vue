@@ -59,7 +59,8 @@
       :options-button-text="$t('editView.optionsButtonText')"
       :selected-list.sync="selectedBoxes"
       :select-options-text="{
-        ...$t('editView.selectOptionsText'),
+        selectAll: $t('editView.selectOptionsText.selectAll'),
+        selectNone: $t('editView.selectOptionsText.selectNone'),
         entriesSelected: $t('editView.selectOptionsText.entriesSelected',
                             { type: $tc('activity', selectedBoxes.length) }),
       }"
@@ -126,10 +127,14 @@
           valuePropertyName: 'value',
         }"
         :entry-selector-text="{
-          ...$t('editView.selectOptionsText'),
+          selectAll: $t('editView.selectOptionsText.selectAll'),
+          selectNone: $t('editView.selectOptionsText.selectNone'),
           entriesSelected: $t('editView.selectOptionsText.entriesSelected',
                               { type: $tc('activity', selectorSelectedEntries.length || 0) }),
-          ...$t('editView.selectActivitiesPopUp')
+          noEntriesTitle: $t('editView.selectActivitiesPopUp.noEntriesTitle'),
+          noEntriesSubtext: $t('editView.selectActivitiesPopUp.noEntriesSubtext'),
+          search: $t('editView.selectActivitiesPopUp.search'),
+          options: $t('editView.selectActivitiesPopUp.options'),
         }"
         class="base-sr-entry-selector"
         @selected-changed="selectorSelectedEntries = $event"

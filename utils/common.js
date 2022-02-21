@@ -87,11 +87,12 @@ export const toTitleString = (string = '', language) => {
 /**
  * function to check if provided value object has a label and language specific values therein
  *
- * @param {Object} value - the value object to check - in order for a title casing to be applied
- * the object needs to contain the following structure:
+ * @param {Object|Object[]} value - the value object to check - in order for a title casing
+ * to be applied the object needs to contain the following structure:
  *  {
  *    label: 'Label to title case'),
  *  },
+ *  could also be several objects wrapped in an array
  * @returns {Object} - the same object with en label string title cased
  */
 export const checkForLabel = (value) => {

@@ -38,7 +38,7 @@
             :key="index"
             v-model="section.data"
             :show-options="false"
-            :header-text="section.label"
+            :header-text="titleCase(headerText || section.label)"
             :box-breakpoints="[
               [0, 2],
               [450, 3],
@@ -63,7 +63,7 @@
             @update:current-page-number="fetchNewPage">
             <template #header>
               <h4 class="showroom-search__results-header">
-                {{ headerText || section.label }}
+                {{ titleCase(headerText || section.label) }}
                 <span class="showroom-search__results-header-number">
                   {{ `(${section.total})` }}
                 </span>
@@ -125,7 +125,7 @@ import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSec
 import 'base-ui-components/dist/components/BaseLoader/BaseLoader.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapGetters } from 'vuex';
-import { hasData } from '~/utils/common';
+import { hasData, toTitleString } from '~/utils/common';
 
 Vue.use(BaseAdvancedSearch);
 Vue.use(BaseResultBoxSection);
@@ -458,6 +458,9 @@ export default {
         // trigger search to get data from new page
         this.search(this.appliedFiltersInt);
       }
+    },
+    titleCase(string) {
+      return toTitleString(string);
     },
   },
 };
