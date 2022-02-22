@@ -270,7 +270,7 @@
           v-if="data.publisher.length">
           {{ $t('detailView.publisher') }}: {{ data.publisher[0].name }} |
         </template>
-        Showroom Instance: {{ data.source_institution.label }} |
+        {{ data.source_institution.label }} |
         {{ $t('detailView.publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
         {{ $t('detailView.editedDate') }}: {{ createHumanReadableDate(data.date_changed) }}
       </p>

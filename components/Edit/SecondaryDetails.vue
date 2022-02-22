@@ -139,7 +139,7 @@ export default {
     entityType: {
       type: String,
       default: 'activity',
-      validator: (val) => ['activity', 'person'].includes(val),
+      validator: (val) => ['person', 'object'].includes(val),
     },
   },
   data() {
