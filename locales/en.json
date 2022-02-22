@@ -82,6 +82,7 @@
     "save": "Save",
     "edit": "Edit",
     "ready": "Done",
+    "primaryLink": "Click here to go to your user preferences page and edit personal details and image.",
     "selectOptionsText": {
       "selectAll": "select all",
       "selectNone": "select none",

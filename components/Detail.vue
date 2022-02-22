@@ -2,6 +2,15 @@
   <div class="base-sr-detail">
     <div
       class="base-sr-head">
+      <div
+        v-if="type === 'person' && userCanEdit"
+        class="base-sr-head__primary-row-edit">
+        <BaseButton
+          :text="$t('editView.edit')"
+          :description="$t('editView.primaryLink')"
+          icon="edit"
+          @clicked="openUserPreferences" />
+      </div>
       <BaseExpandBox
         :auto-height="true"
         :show-more-text="$t('detailView.showMore')"
@@ -111,7 +120,8 @@
           {{ $t('editView.profileImageLink1', { toTitleCase: false }) }}
           <a
             :href="userPreferencesUrl"
-            :title="$t('editView.profileImageLink2')">
+            :title="$t('editView.profileImageLink2')"
+            target="_newtab">
             <span
               class="base-sr-featured-media__profile-image__link">
               {{ $t('editView.profileImageLink2') }}</span>
@@ -174,9 +184,9 @@
       :expand-text="$t('resultsView.expand')"
       :is-loading="isLoading"
       :jump-to-top="true"
-      :max-rows="2"
+      :max-rows="4"
       :current-page-number="1"
-      :max-show-more-rows="1"
+      :max-show-more-rows="2"
       :show-options="false"
       :use-expand-mode="true"
       :use-pagination="true"
@@ -220,11 +230,11 @@
           :show-options="false"
           :expand-text="$t('resultsView.expand')"
           :total="section.length"
-          :max-show-more-rows="1"
+          :max-show-more-rows="2"
           :current-page-number="1"
           :use-pagination="true"
           :use-expand-mode="true"
-          :max-rows="2"
+          :max-rows="4"
           :use-pagination-link-element="'nuxt-link'"
           class="base-sr-row">
           <template #header>
@@ -663,6 +673,9 @@ export default {
         });
       }
     },
+    openUserPreferences() {
+      window.open(process.env.userPreferencesUrl, '_newtab');
+    },
   },
 };
 </script>
@@ -672,6 +685,13 @@ export default {
   .base-sr-head {
     display: flex;
     flex-wrap: wrap;
+
+    &__primary-row-edit {
+      width: 100%;
+      margin-left: auto;
+      display: flex;
+      justify-content: flex-end;
+    }
 
     &__primary {
       flex-direction: column;
