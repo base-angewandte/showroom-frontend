@@ -69,10 +69,10 @@
     }
   },
   "editView": {
-    "profileImageHeader": "Add User Profile Image",
+    "profileImageHeader": "Add Image",
     "profileImageLink1": "Please visit your ",
     "profileImageLink2": "User Preferences",
-    "profileImageLink3": " to add a profile image to your personal page.",
+    "profileImageLink3": " to add a suitable image to your personal page.",
     "editNow": "Edit now",
     "editTextReminder": "Individual text can be entered here.",
     "addActivities": "Add Activities",

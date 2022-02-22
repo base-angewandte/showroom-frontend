@@ -70,10 +70,10 @@
     }
   },
   "editView": {
-    "profileImageHeader": "Userbild hinzufügen",
+    "profileImageHeader": "Bild hinzufügen",
     "profileImageLink1": "Bitte besuchen Sie ihre ",
-    "profileImageLink2": "Benutzerpräferenzen-Seite",
-    "profileImageLink3": " um ein Userbild zu Ihrer persönlichen Seite hinzuzufügen.",
+    "profileImageLink2": "Einstellungen",
+    "profileImageLink3": ", um Ihrer persönlichen Seite ein Bild hinzuzufügen.",
     "editNow": "Jetzt bearbeiten",
     "editTextReminder": "Hier kann individueller Text eingetragen werden.",
     "addActivities": "Aktivitäten hinzufügen",
