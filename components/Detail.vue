@@ -9,6 +9,7 @@
           :text="$t('editView.edit')"
           :description="$t('editView.primaryLink')"
           icon="edit"
+          class="base-sr-head__primary-row-edit__button"
           @clicked="openUserPreferences" />
       </div>
       <BaseExpandBox
@@ -94,6 +95,16 @@
         @update:edit-mode="editModeHandler" />
 
       <!-- featured media -->
+      <div
+        v-if="isMobile() && type === 'person' && userCanEdit"
+        class="base-sr-head__primary-row-edit">
+        <BaseButton
+          :text="$t('editView.edit')"
+          :description="$t('editView.primaryLink')"
+          icon="edit"
+          class="base-sr-head__primary-row-edit__button"
+          @clicked="openUserPreferences" />
+      </div>
       <div
         v-if="data.featured_media"
         :style="featuredMediaHeight"
@@ -471,6 +482,13 @@ export default {
     editModeIsActive() {
       return Object.values(this.editMode).some((value) => value !== false);
     },
+    isMobileX() {
+      if (!process.client) {
+        return false;
+      }
+
+      return window.innerWidth <= 640;
+    },
   },
   mounted() {
     // only check once with initial data if user actually has entries that can be
@@ -691,6 +709,10 @@ export default {
       margin-left: auto;
       display: flex;
       justify-content: flex-end;
+
+      &__button {
+        padding-right: 0;
+      }
     }
 
     &__primary {
