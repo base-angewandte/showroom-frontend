@@ -95,7 +95,7 @@
         "hide": "Optionen"
       },
       "search": "Alle Aktivitiäten durchsuchen",
-      "maxEntries": "Maximale Anzahl überschritten!"
+      "maxEntries": "Maximale Anzahl erreicht"
     },
     "sortBy": "Sortieren nach",
     "sortOptions": {
@@ -109,7 +109,7 @@
     "selectCarouselActivities": "Einträge auswählen",
     "message": {
       "text": "Verschieben oder Auswählen",
-      "subtext": "Sortieren Sie die Einträge per Drag & Drop oder wähle die Einträge und eine Aktion aus"
+      "subtext": "Sortieren Sie die Aktivitäten per Drag & Drop oder wählen Sie Aktivitäten aus um sie zu löschen.\n Es können momentan keine Aktivitäten mehr hinzügefügt werden. Bitte löschen Sie zuerst Aktivitäten, falls Sie weitere hinzufügen wollen. | Sortieren Sie die Aktivitäten per Drag & Drop oder wählen Sie Aktivitäten aus um sie zu löschen.\n Es kann noch {number} Aktivität hinzugefügt werden. | Sortieren Sie die Aktivitäten per Drag & Drop oder wählen Sie Aktivitäten aus um sie zu löschen.\n Es können noch {number} Aktivitäten hinzugefügt werden."
     },
     "optionsButtonText": {
       "show": "Editieren",
@@ -139,9 +139,7 @@
     "successActionTitle": "{action} von {type} erfolgreich",
     "successActionSubtext": "{type} wurden erfolgreich {action}. | 1 {type} wurde erfolgreich {action}. | {count} {type} wurden erfolgreich {action}.",
     "errorActionTitle": "{action} von {type} fehlgeschlagen",
-    "errorActionSubtext": "Leider konnten die {type} nicht {action} werden. | Leider konnte das {type} nicht {action} werden. | Leider konnten {count} {type} nicht {action} werden.",
-    "maxShowcaseTitle": "Maximale Anzahl erreicht",
-    "maxShowcaseSubtext": "Sie haben bereits die maximale Anzahl an Aktivitäten hinzugefügt. Bitte löschen Sie zuerst Aktivitäten, falls Sie neue hinzufügen möchten."
+    "errorActionSubtext": "Leider konnten die {type} nicht {action} werden. | Leider konnte das {type} nicht {action} werden. | Leider konnten {count} {type} nicht {action} werden."
   },
   "errors": {
     "homepage": "Startseite",

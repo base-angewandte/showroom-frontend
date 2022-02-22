@@ -94,7 +94,7 @@
         "hide": "Options"
       },
       "search": "Search all Activities",
-      "maxEntries": "Maximum Number Exceeded!"
+      "maxEntries": "Maximum Number Reached"
     },
     "sortBy": "Sort by",
     "sortOptions": {
@@ -108,7 +108,7 @@
     "selectCarouselActivities": "Select entries",
     "message": {
       "text": "Drag or Select",
-      "subtext": "Drag'n Drop to reorder or select the relevant items and choose an action."
+      "subtext": "Drag'n Drop to reorder or select the relevant items to delete them.\nCurrently no additional items can be added. Please delete activities to add more. | Drag'n Drop to reorder or select the relevant items to delete them.\nYou may add {number} more item to your Showcase. | Drag'n Drop to reorder or select the relevant items to delete them.\nYou may add {number} more items to your Showcase."
     },
     "optionsButtonText": {
       "show": "Edit",
@@ -138,10 +138,7 @@
     "successActionTitle": "{action} of {type} successful",
     "successActionSubtext": "{type} were successfully {action}. | 1 {type} was successfully {action}. | {count} {type} were successfully {action}.",
     "errorActionTitle": "{action} of {type} failed",
-    "errorActionSubtext": "Unfortunately the {type} could not be {action}. | Unfortunately one {type} could not be {action} | Unfortunately {count} {type} could not be {action}.",
-    "maxShowcaseTitle": "Maximum number reached",
-    "maxShowcaseSubtext": "You have added the maximum number of activities already. Please delete some first if you want to add more."
-
+    "errorActionSubtext": "Unfortunately the {type} could not be {action}. | Unfortunately one {type} could not be {action} | Unfortunately {count} {type} could not be {action}."
   },
   "errors": {
     "homepage": "Homepage",

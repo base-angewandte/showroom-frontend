@@ -55,7 +55,10 @@
       :expand-text="$t('resultsView.expand')"
       :is-loading="false"
       :message-text="$t('editView.message.text')"
-      :message-subtext="$t('editView.message.subtext')"
+      :message-subtext="$tc('editView.message.subtext', remainingSelectorEntryNumber, {
+        count: remainingSelectorEntryNumber,
+        number: remainingSelectorEntryNumber,
+      })"
       :options-button-text="$t('editView.optionsButtonText')"
       :selected-list.sync="selectedBoxes"
       :select-options-text="{
@@ -73,17 +76,18 @@
         v-if="title"
         #header>
         <h2 class="base-sr--mb-0 base-sr--ml-small">
-          {{ title }}
+          {{ `${title} (${editInput.length}/${maxItems})` }}
         </h2>
       </template>
 
       <template #optionButtons="{ submitAction }">
         <BaseButton
           :text="$t('editView.addActivities')"
+          :disabled="remainingSelectorEntryNumber <= 0"
           icon-size="large"
           icon="add-new-object"
           button-style="single"
-          @clicked="openPopup(submitAction)" />
+          @clicked="submitAction('showPopup')" />
         <BaseButton
           :text="$t('editView.delete')"
           :disabled="!selectedBoxes.length"
@@ -135,7 +139,7 @@
           noEntriesSubtext: $t('editView.selectActivitiesPopUp.noEntriesSubtext'),
           search: $t('editView.selectActivitiesPopUp.search'),
           options: $t('editView.selectActivitiesPopUp.options'),
-          entriesExceeded: $t('editView.selectActivitiesPopUp.maxEntries'),
+          maxEntriesReached: $t('editView.selectActivitiesPopUp.maxEntries'),
         }"
         class="base-sr-entry-selector"
         @selected-changed="selectorSelectedEntries = $event"
@@ -415,10 +419,15 @@ export default {
      */
     filteredSelectorEntries() {
       const linkedEntries = this.editInput.map((entry) => entry.id);
+      const selectedEntries = this.selectorSelectedEntries.map((selectedEntry) => selectedEntry.id);
       return this.selectorEntries.map((entry) => ({
         ...entry,
         disabled: linkedEntries.includes(entry.id)
-          || !['activity', 'album'].includes(entry.type),
+          || !['activity', 'album'].includes(entry.type)
+          // if maximum number of addable items is reached disable the remaining
+          // unselected ones
+          || (this.remainingSelectorEntryNumber <= this.selectorSelectedEntries.length
+            && !selectedEntries.includes(entry.id)),
       }));
     },
   },
@@ -642,26 +651,6 @@ export default {
 
     /** POP UP FUNCTIONALITIES */
 
-    /**
-     * function called when 'add activities' is clicked to check first if
-     * maximum allowed number was reached
-     * @param {Function} actionFunction - the function provided by the BaseResultBoxSection
-     *  component that should be triggered on button click
-     */
-    openPopup(actionFunction) {
-      // check if entries can still be added
-      if (this.remainingSelectorEntryNumber !== 0) {
-        actionFunction('showPopup');
-        // notify user if not
-      } else {
-        this.$notify({
-          group: 'request-notifications',
-          title: this.$t('notify.maxShowcaseTitle'),
-          text: this.$t('notify.maxShowcaseSubtext'),
-          type: 'error',
-        });
-      }
-    },
     /**
      * cancel and reset popup
      */
