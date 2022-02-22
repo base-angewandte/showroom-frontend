@@ -78,6 +78,7 @@
           && data.secondary_details[0].data.length)
           || userCanEdit"
         :data="titleCaseLabels(data.secondary_details)"
+        :entity-type="type"
         :user-can-edit="userCanEdit"
         :edit-mode="editMode.secondary_details"
         class="base-sr-head__secondary"

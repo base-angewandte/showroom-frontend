@@ -54,6 +54,23 @@ import 'base-ui-components/dist/components/BaseExpandList/BaseExpandList.css';
 Vue.use(BaseEditControl);
 Vue.use(BaseExpandList);
 
+/**
+ * @typedef {Object} ListDataItem
+ * @property {string} [id] - a unique id for the list item
+ * @property {string} [label] - a label to be displayed for the category
+ * @property {boolean} [hidden] - if category is hidden in view mode
+ * @property {number} [order] - the sort value of the item (array index, starting with 0)
+ * @property {ListDataItem[]|ListDataValuesItem[]|string} [data] - an array either
+ *  containing further data levels or the actual values to be displayed
+ */
+
+/**
+ * @typedef {Object} ListDataValuesItem
+ * @property {string} attributes
+ * @property {string} source
+ * @property {string} value
+ */
+
 export default {
   name: 'List',
   mixins: [userInfo],
@@ -86,37 +103,71 @@ export default {
     entityType: {
       type: String,
       default: 'activity',
+      validator: (val) => ['activity', 'person'].includes(val),
     },
   },
   data() {
     return {
+      /**
+       * internal variable handling edit or view mode
+       * @type {boolean}
+       */
       editModeInt: this.editMode,
+      /**
+       * indicate if loader should be shown
+       * @type {boolean}
+       */
       isLoading: false,
+      /**
+       * internal representation of the display data
+       * @type {ListDataItem[]}
+       */
       dataInt: this.data,
+      /**
+       * a variable to store state of data before editing (in case state
+       * needs to be restored due to cancel action)
+       * @type {ListDataItem[]}
+       */
+      dataBeforeEditing: [],
     };
   },
   computed: {
     ...mapGetters({
       getEditDataItem: 'editData/getEditDataItem',
     }),
+    /**
+     * the actual data used in BaseExpandList component depending on view or edit mode
+     */
     listData: {
       set(val) {
         this.dataInt = val;
       },
+      /**
+       * @returns {ListDataItem[]}
+       */
       get() {
+        // check for edit mode
         return this.editModeInt
+          // if edit mode - use edit data saved in store
           ? this.getEditDataItem({ type: 'list', id: this.$route.params.id })
+          // else use internal data filtered by hidden elements and elements without content
           : this.dataInt.filter((item) => (!item.hidden && !!item.data.length));
       },
     },
   },
   watch: {
+    /**
+     * keep edit mode in sync with parent state
+     */
     editMode: {
       handler(val) {
         this.editModeInt = val;
       },
       immediate: true,
     },
+    /**
+     * keep edit mode in sync with parent state
+     */
     editModeInt(val) {
       if (val !== this.editMode) {
         /**
@@ -142,6 +193,8 @@ export default {
       try {
         // fetch edit data from store
         await this.fetchEditData({ type: 'list', id: this.$route.params.id });
+        // store original edit data in a variable so they can be restored in case of cancel
+        this.dataBeforeEditing = JSON.parse(JSON.stringify(this.listData));
         // if data fetch worked out set edit mode to true
         this.editModeInt = true;
       } catch (e) {
@@ -159,17 +212,18 @@ export default {
      */
     cancel() {
       this.editModeInt = false;
+      // still update list with latest fetched version of data!
+      this.listData = JSON.parse(JSON.stringify(this.dataBeforeEditing));
       this.$refs.baseExpandList.reset();
     },
     /**
-     * load data with all languages
+     * trigger the safe function of the BaseExpandList component
      */
     save() {
-      // this.editModeInt = false;
       this.$refs.baseExpandList.save();
     },
     /**
-     * load data with all languages
+     * save the data
      */
     async saveEdit(values) {
       // variable for determining notification message later
@@ -177,6 +231,9 @@ export default {
       try {
         // update database entry with relevant data
         this.listData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
+        // update before editing data with latest changes (currently not really necessary because
+        // edit mode is closed after save anyway but in case this should change in future)
+        this.dataBeforeEditing = JSON.parse(JSON.stringify(this.listData));
         // set edit mode false again
         this.editModeInt = false;
         success = true;

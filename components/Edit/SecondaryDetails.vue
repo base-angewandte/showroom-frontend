@@ -49,7 +49,7 @@
       <!-- empty data -->
       <template
         v-if="!editModeInt">
-        <h2>{{ $t('detailView.details') }}</h2>
+        <h2>{{ entityType === 'person' ? $t('detailView.cv') : $t('detailView.details') }}</h2>
 
         <div>
           <span>{{ $t('editView.editTextReminder') }}</span>
@@ -68,7 +68,7 @@
         :tabs="locales"
         :tab-labels="tabs"
         :active-tab="activeTab"
-        :label="dataInt[0] && dataInt[0].label ? dataInt[0].label: $t('detailView.details')"
+        :label="dataInt[0] && sectionHeading ? sectionHeading : $t('detailView.details')"
         :placeholder="$t('editView.editTextReminder')" />
     </BaseBox>
   </div>
@@ -94,6 +94,12 @@ import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapActions, mapGetters } from 'vuex';
 import { userInfo } from '@/mixins/userNotifications';
+
+/**
+ * @typedef {Object} SecondaryDetailsDataItem
+ * @property {string} label - a label to be displayed for the category
+ * @property {string} data - the values to be displayed in a specific language
+ */
 
 Vue.use(BaseBox);
 Vue.use(BaseEditControl);
@@ -126,16 +132,37 @@ export default {
       type: Boolean,
       default: false,
     },
+    /**
+     * set type of entity<br>
+     * e.g. 'activity' | 'person'
+     */
+    entityType: {
+      type: String,
+      default: 'activity',
+      validator: (val) => ['activity', 'person'].includes(val),
+    },
   },
   data() {
     return {
-      // internal data array object
+      /**
+       * internal data array object
+       * @type {SecondaryDetailsDataItem[]}
+       */
       dataInt: this.data,
-      // toggle edit-mode
+      /**
+       * toggle edit-mode
+       * @type {boolean}
+       */
       editModeInt: this.editMode,
-      // loading indicator
+      /**
+       * loading indicator
+       * @type {boolean}
+       */
       isLoading: false,
-      // used for BaseMultilineTextInput
+      /**
+       * used for BaseMultilineTextInput - object with lang iso codes for key
+       * @type {?{ [lang: string]: string }}
+       */
       editInputInt: null,
     };
   },
@@ -146,6 +173,7 @@ export default {
     /**
      * get the data from secondaryDetails GET request in the proper format for
      * BaseMultilineTextInput component
+     * @returns {{{ [lang: string]: string }}}
      */
     editData() {
       return this.transformBackendToEditData(this.getEditDataItem({
@@ -161,6 +189,9 @@ export default {
         // assign the value recieved from the input event of the component (or on cancel)
         this.editInputInt = JSON.parse(JSON.stringify(val));
       },
+      /**
+       * @returns {?{ [lang: string]: string }}
+       */
       get() {
         // for get check first if internal variable was set, else use the data fetched
         // from backend else use emtpy object
@@ -190,6 +221,12 @@ export default {
      */
     tabs() {
       return this.locales.map((locale) => this.$t(locale));
+    },
+    /**
+     * the label is needed again later on for updating of data
+     */
+    sectionHeading() {
+      return this.dataInt[0].label;
     },
   },
   watch: {
@@ -234,12 +271,16 @@ export default {
      * cancel edit-mode
      */
     cancel() {
-      this.editModeInt = false;
-      this.isLoading = false;
-      [this.editInput] = this.transformBackendToEditData(this.getEditDataItem({
+      const originalData = this.getEditDataItem({
         type: 'secondary_details',
         id: this.$route.params.id,
-      }));
+      });
+      // reset editInput to original edit data received from backend
+      [this.editInput] = this.transformBackendToEditData(originalData);
+      // also update view data with latest backend fetched data to ensure consistency
+      this.dataInt = this.transformBackendToViewData(originalData);
+      this.editModeInt = false;
+      this.isLoading = false;
     },
     /**
      * load data with all languages
@@ -297,9 +338,9 @@ export default {
     },
     /**
      * function to transform data to view mode data structure
-     * @param {Object[]} newData - the data returned by a update (PATCH) request
-     * @property {Object} [language] - language specific data with the lang iso code as key
-     * @returns {Object[]} - the data structure necessary for BaseTextList
+     * @param {{ [lang: string]: SecondaryDetailsDataItem }[]} newData - the data returned
+     *  by a update (PATCH) request
+     * @returns {SecondaryDetailsDataItem[]} - the data structure necessary for BaseTextList
      */
     transformBackendToViewData(newData) {
       // basically take the correct language from each object in the returned array
@@ -307,10 +348,10 @@ export default {
     },
     /**
      * function to transform data for edit mode data structure
-     * @param {Object[]} newData - the data returned by an edit GET request
-     * @property {string} newData[].label
-     * @property {string} newData[].data
-     * @returns {Object[]} - the data structure necessary for BaseMultiLineTextInput
+     * @param {{ [lang: string]: SecondaryDetailsDataItem }[]} newData - the data returned by an
+     *  edit GET request - iso lang codes as key of the object
+     * @returns {{ [lang: string]: string }[]} - the data structure necessary for
+     *  BaseMultiLineTextInput
      */
     transformBackendToEditData(newData) {
       return newData.map((newDataItem) => Object.entries(newDataItem)
@@ -322,10 +363,10 @@ export default {
     },
     /**
      * function to transform edit mode data to format needed in backend
-     * @param {Object|Object[]} dataToSend - data as they come from BaseMultilineTextInput
-     * @property {string} dataToSend[][language] - an object item of the array with an iso
-     *  lang code as key
-     * @returns {Object[]} - an object array with 'label' and 'data' attributes
+     * @param {{ [lang: string]: string }[]} dataToSend - data as they come from
+     *  BaseMultilineTextInput
+     * @returns {{ [lang: string]: SecondaryDetailsDataItem }[]} - an object array with
+     *  'label' and 'data' attributes
      */
     transformEditToBackendData(dataToSend) {
       return [].concat(dataToSend).map((dataItem) => this.locales
@@ -333,8 +374,8 @@ export default {
           ...prev,
           // use language as key (as it was before)
           [curr]: {
-            // TODO: this is not exactly language specific...
-            label: 'Details',
+            // TODO: use this.sectionHeading as soon as this is fixed in backend
+            label: this.$t('detailView.cv'),
             // move the original string into the data property
             data: dataItem[curr] || '',
           },
