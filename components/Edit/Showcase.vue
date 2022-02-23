@@ -55,7 +55,10 @@
       :expand-text="$t('resultsView.expand')"
       :is-loading="false"
       :message-text="$t('editView.message.text')"
-      :message-subtext="$t('editView.message.subtext')"
+      :message-subtext="$tc('editView.message.subtext', remainingSelectorEntryNumber, {
+        count: remainingSelectorEntryNumber,
+        number: remainingSelectorEntryNumber,
+      })"
       :options-button-text="$t('editView.optionsButtonText')"
       :selected-list.sync="selectedBoxes"
       :select-options-text="{
@@ -73,31 +76,32 @@
         v-if="title"
         #header>
         <h2 class="base-sr--mb-0 base-sr--ml-small">
-          {{ title }}
+          {{ `${title} (${editInput.length}/${maxItems})` }}
         </h2>
       </template>
 
-      <template #optionButtons="scope">
+      <template #optionButtons="{ submitAction }">
         <BaseButton
           :text="$t('editView.addActivities')"
           icon-size="large"
           icon="add-new-object"
           button-style="single"
-          @clicked="scope.submitAction('showPopup')" />
+          @clicked="submitAction('showPopup')" />
         <BaseButton
           :text="$t('editView.delete')"
           :disabled="!selectedBoxes.length"
           icon-size="large"
           icon="waste-bin"
           button-style="single"
-          @clicked="scope.submitAction('delete')" />
+          @clicked="submitAction('delete')" />
       </template>
     </BaseResultBoxSection>
 
     <!-- SELECTOR POP UP -->
     <BasePopUp
       :button-right-text="$t('editView.addActivities')"
-      :button-right-disabled="isSaving || !selectorSelectedEntries.length"
+      :button-right-disabled="isSaving || !selectorSelectedEntries.length
+        || selectorSelectedEntries.length > remainingSelectorEntryNumber"
       :is-loading="isSaving"
       :title="$t('editView.addActivities')"
       :show="showPopUp"
@@ -105,14 +109,13 @@
       @button-left="cancel"
       @button-right="actionHandler('add')"
       @close="cancel">
-      <!-- TODO: fix number of selected boxes as soon as number is available
-      in front end -->
       <BaseEntrySelector
         ref="entrySelector"
         :entries="filteredSelectorEntries"
         :entries-total="selectorEntriesNumber"
         :entries-per-page="selectorEntriesPerPage"
         :entries-selectable="true"
+        :max-selected-entries="remainingSelectorEntryNumber"
         :height="'calc(50vh - 32px)'"
         :is-loading="isLoading"
         :language="$i18n.locale"
@@ -135,6 +138,7 @@
           noEntriesSubtext: $t('editView.selectActivitiesPopUp.noEntriesSubtext'),
           search: $t('editView.selectActivitiesPopUp.search'),
           options: $t('editView.selectActivitiesPopUp.options'),
+          maxEntriesReached: $t('editView.selectActivitiesPopUp.maxEntries'),
         }"
         class="base-sr-entry-selector"
         @selected-changed="selectorSelectedEntries = $event"
@@ -350,10 +354,15 @@ export default {
       ],
       /**
        * variable for internal storage of editInput (to use either this or
-       * inital store saved editData)
+       * initial store saved editData)
        * @type {?CarouselData[]}
        */
       editInputInt: null,
+      /**
+       * max number of items a showcase may contain
+       * @type {number}
+       */
+      maxItems: 24,
     };
   },
   computed: {
@@ -362,6 +371,9 @@ export default {
       getShowcaseData: 'appData/getInitialShowcaseData',
       getInitialData: 'appData/getInitialData',
     }),
+    remainingSelectorEntryNumber() {
+      return this.maxItems - this.editInput.length;
+    },
     /**
      * @returns {ExternalCarouselData[]}
      */
@@ -402,14 +414,19 @@ export default {
     },
     /**
      * set property disabled to already linked entries or which are not type 'activity'
-     * @returns {EntrySelectorItem[]}
+     * @returns {(*&EntrySelectorItem)[]}
      */
     filteredSelectorEntries() {
       const linkedEntries = this.editInput.map((entry) => entry.id);
+      const selectedEntries = this.selectorSelectedEntries.map((selectedEntry) => selectedEntry.id);
       return this.selectorEntries.map((entry) => ({
         ...entry,
         disabled: linkedEntries.includes(entry.id)
-          || !['activity', 'album'].includes(entry.type),
+          || !['activity', 'album'].includes(entry.type)
+          // if maximum number of addable items is reached disable the remaining
+          // unselected ones
+          || (this.remainingSelectorEntryNumber <= this.selectorSelectedEntries.length
+            && !selectedEntries.includes(entry.id)),
       }));
     },
   },

@@ -95,7 +95,8 @@
         "show": "Options",
         "hide": "Options"
       },
-      "search": "Search all Activities"
+      "search": "Search all Activities",
+      "maxEntries": "Maximum Number Reached"
     },
     "sortBy": "Sort by",
     "sortOptions": {
@@ -109,7 +110,7 @@
     "selectCarouselActivities": "Select entries",
     "message": {
       "text": "Drag or Select",
-      "subtext": "Drag'n Drop to reorder or select the relevant items and choose an action."
+      "subtext": "Drag'n Drop to reorder or select the relevant items to delete them.\nCurrently no additional items can be added. Please delete activities to add more. | Drag'n Drop to reorder or select the relevant items to delete them.\nYou may add {number} more item to your Showcase. | Drag'n Drop to reorder or select the relevant items to delete them.\nYou may add {number} more items to your Showcase."
     },
     "optionsButtonText": {
       "show": "Edit",

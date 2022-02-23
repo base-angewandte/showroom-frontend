@@ -96,7 +96,8 @@
         "show": "Optionen",
         "hide": "Optionen"
       },
-      "search": "Alle Aktivitiäten durchsuchen"
+      "search": "Alle Aktivitiäten durchsuchen",
+      "maxEntries": "Maximale Anzahl erreicht"
     },
     "sortBy": "Sortieren nach",
     "sortOptions": {
@@ -110,7 +111,7 @@
     "selectCarouselActivities": "Einträge auswählen",
     "message": {
       "text": "Verschieben oder Auswählen",
-      "subtext": "Sortieren Sie die Einträge per Drag & Drop oder wähle die Einträge und eine Aktion aus"
+      "subtext": "Sortieren Sie die Aktivitäten per Drag & Drop oder wählen Sie Aktivitäten aus um sie zu löschen.\n Es können momentan keine Aktivitäten mehr hinzügefügt werden. Bitte löschen Sie zuerst Aktivitäten, falls Sie weitere hinzufügen wollen. | Sortieren Sie die Aktivitäten per Drag & Drop oder wählen Sie Aktivitäten aus um sie zu löschen.\n Es kann noch {number} Aktivität hinzugefügt werden. | Sortieren Sie die Aktivitäten per Drag & Drop oder wählen Sie Aktivitäten aus um sie zu löschen.\n Es können noch {number} Aktivitäten hinzugefügt werden."
     },
     "optionsButtonText": {
       "show": "Editieren",
