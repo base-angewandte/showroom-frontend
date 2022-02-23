@@ -83,7 +83,6 @@
       <template #optionButtons="{ submitAction }">
         <BaseButton
           :text="$t('editView.addActivities')"
-          :disabled="remainingSelectorEntryNumber <= 0"
           icon-size="large"
           icon="add-new-object"
           button-style="single"
@@ -104,7 +103,7 @@
       :button-right-disabled="isSaving || !selectorSelectedEntries.length
         || selectorSelectedEntries.length > remainingSelectorEntryNumber"
       :is-loading="isSaving"
-      :title="`${$t('editView.addActivities')} (Max. ${remainingSelectorEntryNumber})`"
+      :title="$t('editView.addActivities')"
       :show="showPopUp"
       class="base-sr-popup"
       @button-left="cancel"
@@ -363,7 +362,7 @@ export default {
        * max number of items a showcase may contain
        * @type {number}
        */
-      maxItems: 12,
+      maxItems: 24,
     };
   },
   computed: {
