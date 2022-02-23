@@ -16,7 +16,7 @@
         :auto-height="true"
         :show-more-text="$t('detailView.showMore')"
         :show-less-text="$t('detailView.showLess')"
-        :max-collapsed-height="!isMobile()
+        :max-collapsed-height="!isMobile
           ? 445 - 4 * 16 // box height - 2 * $spacing-large
           : 300"
         padding="large"
@@ -96,7 +96,7 @@
 
       <!-- featured media -->
       <div
-        v-if="isMobile() && type === 'person' && userCanEdit"
+        v-if="isMobile && type === 'person' && userCanEdit"
         class="base-sr-head__primary-row-edit">
         <BaseButton
           :text="$t('editView.edit')"
@@ -453,6 +453,7 @@ export default {
        * @type {boolean}
        */
       userHasShowroomEntries: false,
+      isMobile: false,
     };
   },
   computed: {
@@ -482,13 +483,6 @@ export default {
     editModeIsActive() {
       return Object.values(this.editMode).some((value) => value !== false);
     },
-    isMobileX() {
-      if (!process.client) {
-        return false;
-      }
-
-      return window.innerWidth <= 640;
-    },
   },
   mounted() {
     // only check once with initial data if user actually has entries that can be
@@ -498,6 +492,11 @@ export default {
     // TODO: disabled due 500 on activities
     // this.userHasShowroomEntries = !!this.searchResults.length
     //   && !!this.searchResults[0].data && !!this.searchResults[0].data.length;
+    this.checkWindowWidth();
+    window.addEventListener('resize', this.checkWindowWidth);
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.checkWindowWidth);
   },
   methods: {
     /**
@@ -638,19 +637,13 @@ export default {
      * @param {String} value
      */
     setFeaturedMediaHeight(value) {
-      this.featuredMediaHeight = !this.isMobile() ? { height: `${value}px` } : null;
+      this.featuredMediaHeight = !this.isMobile ? { height: `${value}px` } : null;
     },
-    /**
-     * check if viewport <= 640
-     *
-     * @returns {Boolean}
-     */
-    isMobile() {
+    checkWindowWidth() {
       if (!process.client) {
-        return false;
+        return;
       }
-
-      return window.innerWidth <= 640;
+      this.isMobile = window.innerWidth <= 640;
     },
     /* MEDIA PREVIEW */
     /**
