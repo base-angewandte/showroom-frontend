@@ -8,7 +8,7 @@
       :cancel-button-text="$i18n.t('editView.cancel')"
       :save-button-text="$i18n.t('editView.save')"
       :is-loading="isLoading"
-      :subtitle="'(' + listData.length + ')'"
+      :subtitle="'(' + getItemCount(listData) + ')'"
       :title="entityType !== 'person' ? $t('detailView.lists') : $t('detailView.activityLists')"
       class="base-sr--ml-small"
       @activated="enableEdit"
@@ -59,6 +59,7 @@ Vue.use(BaseExpandList);
  * @property {string} [id] - a unique id for the list item
  * @property {string} [label] - a label to be displayed for the category
  * @property {boolean} [hidden] - if category is hidden in view mode
+ * @property {number} [count] - number of subitems in 'data' property
  * @property {number} [order] - the sort value of the item (array index, starting with 0)
  * @property {ListDataItem[]|ListDataValuesItem[]|string} [data] - an array either
  *  containing further data levels or the actual values to be displayed
@@ -69,6 +70,7 @@ Vue.use(BaseExpandList);
  * @property {string} attributes
  * @property {string} source
  * @property {string} value
+ * @property {string} url
  */
 
 export default {
@@ -147,11 +149,13 @@ export default {
        */
       get() {
         // check for edit mode
-        return this.editModeInt
+        const data = this.editModeInt
           // if edit mode - use edit data saved in store
           ? this.getEditDataItem({ type: 'list', id: this.$route.params.id })
           // else use internal data filtered by hidden elements and elements without content
           : this.dataInt.filter((item) => (!item.hidden && !!item.data.length));
+        // add count property for correct bracket number
+        return this.addItemCount(data);
       },
     },
   },
@@ -247,6 +251,35 @@ export default {
           notificationType: success ? 'success' : 'error',
         });
       }
+    },
+    /**
+     * get the total of all items at the bottom level of the list
+     * @param {ListDataItem[]} listItem - an array with objects with either data attribute
+     *  or values (indicating the bottom level of the nested objects)
+     * @returns {number}
+     */
+    getItemCount(listItem) {
+      // check if list has objects with 'data' property
+      if (listItem && listItem.length && listItem[0] && listItem[0].data) {
+        // if yes call the function again for every item and add up the returned numbers
+        return listItem.reduce((prev, curr) => this.getItemCount(curr.data) + prev, 0);
+      }
+      // if there is not 'data' attribute - indicating that there is no further sublevel
+      // in the nested object just return the current array length
+      return listItem.length;
+    },
+    addItemCount(list) {
+      return list.map((listItem) => {
+        // check if list has objects with 'data' property
+        if (listItem.data && listItem.data.length) {
+          return ({
+            ...listItem,
+            data: this.addItemCount(listItem.data),
+            count: this.getItemCount(listItem.data),
+          });
+        }
+        return listItem;
+      });
     },
   },
 };
