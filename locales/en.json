@@ -83,6 +83,16 @@
     "edit": "Edit",
     "ready": "Done",
     "primaryLink": "Click here to go to your user preferences page and edit personal details and image.",
+    "listText": {
+      "activate": "Click Spacebar to select item. Item is currently {state}",
+      "activated": "Item selected. Use arrow keys to order item.",
+      "description": "Use Tab key to navigate to item an order item.",
+      "moved": "Item moved: {pos} of {total}",
+      "visible": "visible",
+      "hidden": "hidden"
+    },
+    "listItemShow": "Show",
+    "listItemHide": "Hide",
     "selectOptionsText": {
       "selectAll": "select all",
       "selectNone": "select none",
@@ -110,7 +120,7 @@
     "selectCarouselActivities": "Select entries",
     "message": {
       "text": "Drag or Select",
-      "subtext": "Drag'n Drop to reorder or select the relevant items to delete them.\nCurrently no additional items can be added. Please delete activities to add more. | Drag'n Drop to reorder or select the relevant items to delete them.\nYou may add {number} more item to your Showcase. | Drag'n Drop to reorder or select the relevant items to delete them.\nYou may add {number} more items to your Showcase."
+      "subtext": "Dragn Drop to reorder or select the relevant items to delete them.\nCurrently no additional items can be added. Please delete activities to add more. | Drag'n Drop to reorder or select the relevant items to delete them.\nYou may add {number} more item to your Showcase. | Drag'n Drop to reorder or select the relevant items to delete them.\nYou may add {number} more items to your Showcase."
     },
     "optionsButtonText": {
       "show": "Edit",

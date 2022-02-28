@@ -21,6 +21,10 @@
       :data="listData"
       :show-more-text="$t('detailView.showAll')"
       :show-less-text="$t('detailView.showLess')"
+      :supportive-text="$t('editView.listText')"
+      :edit-hide-text="$t('editView.listItemHide')"
+      :edit-show-text="$t('editView.listItemShow')"
+      control-type="toggle"
       @saved="saveEdit">
       <template #content="{ data: slotListData }">
         <BaseLink

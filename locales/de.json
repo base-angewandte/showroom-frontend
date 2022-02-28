@@ -84,6 +84,16 @@
     "edit": "Editieren",
     "ready": "Fertig",
     "primaryLink": "Hier klicken um zu den Einstellungen zu gelangen um persönliche Details und Profilbild zu ändern.",
+    "listText": {
+      "activate": "Bitte verwenden Sie die Leertaste um eine Kategorie auszuwählen. Die Kategorie wird ist im Moment {state}",
+      "activated": "Kategorie ausgewählt. Verwenden Sie die Pfeiltasten um die Reihenfolge zu ändern.",
+      "description": "Verwenden Sie die Tabulator Taste um zu Kategorien zu navigieren und die Sortierung der Kategorien zu ändern.",
+      "moved": "Position der Kategorie geändert auf {pos} von {total}",
+      "visible": "sichtbar",
+      "hidden": "versteckt"
+    },
+  "listItemShow": "Anzeigen",
+  "listItemHide": "Verstecken",
     "selectOptionsText": {
       "selectAll": "Alle auswählen",
       "selectNone": "Keine auswählen",
