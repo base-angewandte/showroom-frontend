@@ -3,8 +3,6 @@ const actions = {
   async nuxtServerInit({ dispatch, commit }, {
     $api, app, error, redirect, req, route, store,
   }) {
-    dispatch('appData/init', $api);
-    await dispatch('searchData/init', $api);
     /**
      * handle localisation and language switch
      */
@@ -51,6 +49,10 @@ const actions = {
       // else throw 404
       return error({ message: 'This language is not available.', statusCode: 404 });
     }
+
+    // do initial requests AFTER language setting
+    dispatch('appData/init', $api);
+    await dispatch('searchData/init', $api);
   },
 };
 
