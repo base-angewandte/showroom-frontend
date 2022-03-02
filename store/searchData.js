@@ -11,7 +11,7 @@ const getters = {
 
 const mutations = {
   setFilters(state, filters) {
-    state.filters = filters.filter((filter) => !filter.hidden);
+    state.filters = filters;
   },
 };
 

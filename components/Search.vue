@@ -2,14 +2,9 @@
   <div class="showroom-search">
     <client-only>
       <BaseAdvancedSearch
-        :filter-list="filterList"
+        :filter-list="displayFilterList"
         :applied-filters.sync="appliedFiltersInt"
-        :default-filter="{
-          label: $t('searchView.fulltext'),
-          id: 'default',
-          filter_values: [],
-          type: 'text',
-        }"
+        :default-filter="defaultFilter"
         :autocomplete-results="autocompleteResults"
         :advanced-search-text="$t('searchView.advancedSearchText')"
         :drop-down-info-texts="$t('searchView.dropDownInfoTexts')"
@@ -113,6 +108,23 @@
  * @property {string[]} subtext - additional text displayed after title
  * @property {string} source - the source of the autocomplete item
  */
+
+/**
+ * @typedef Filter
+ * @property {string} label|* - property 'label' indicating the label or an equivalent
+ *  custom property defined in prop labelPropertyName.filter
+ * @property {string} id|* - property 'id' used as unique identifier or an equivalent
+ *  custom property defined in prop identifierPropertyName.filter
+ * @property {string} type - a filter type defining the type of search element shown
+ *  @values text, chips, date, daterange
+ * @property {boolean} [hidden] - exclude filters that have this attribute true from display
+ * @property {boolean} [freetext_allowed] - property specifc for type: chips determining
+ *  if options are autocompleted (true) or used from the options property (false)
+ * @property {Object[]} [options] - the options used for chips filter types with
+ *  freetext_allowed false
+ * @property {Object[]|string[]|string|Object} [filter_values] - the values a filter contains - only
+ *  relevant for applied filters, not for filters coming from backend presented in the drop down
+ */
 import Vue from 'vue';
 import {
   BaseAdvancedSearch,
@@ -146,6 +158,11 @@ export default {
       type: Array,
       default: () => [],
     },
+    /**
+     * array of currently applied filters (might be set by parent if filters were
+     * parsed from url on page load)
+     * @type {Filter[]}
+     */
     appliedFilters: {
       type: Array,
       default: () => [],
@@ -236,12 +253,40 @@ export default {
       filterList: 'searchData/getFilters',
     }),
     /**
+     * remove hidden filters from the filter list supplied to the component
+     * (done here because hidden filters are needed to get default filter)
+     * @returns {Filter[]}
+     */
+    displayFilterList() {
+      return this.filterList.filter((filter) => !filter.hidden);
+    },
+    /**
+     * get the default filter from the list provided by backend
+     * @returns {Filter}
+     */
+    defaultFilter() {
+      const filteredDefaultFilter = this.filterList.find((filter) => filter.id === 'default');
+      // either get default filter from backend provided filter list or on last resort take
+      // this hardcoded default filter
+      return filteredDefaultFilter ? ({
+        ...filteredDefaultFilter,
+        // replace label since quite a long string atm
+        label: this.$t('searchView.fulltext'),
+        filter_values: [],
+      }) : ({
+        label: this.$t('searchView.fulltext'),
+        id: 'default',
+        filter_values: [],
+        type: 'text',
+      });
+    },
+    /**
      * the filters currently applied
      */
     appliedFiltersInt: {
       /**
        * get by triggering the store getter function
-       * @returns {Object[]}
+       * @returns {Filter[]}
        */
       get() {
         return this.appliedFilters;
@@ -287,6 +332,10 @@ export default {
         return this.pageNumber;
       },
     },
+    /**
+     * determine if filters are currently applied to determine results section heading
+     * @returns {boolean}
+     */
     filtersApplied() {
       return (this.appliedFiltersInt && this.appliedFiltersInt.length > 1)
       || (this.appliedFiltersInt.length === 1 && hasData(this.appliedFiltersInt[0].filter_values));
@@ -358,7 +407,7 @@ export default {
      *
      * @param {Object} requestData - the data needed for autocomplete functionality to work
      *  @property {string} requestData.searchString - the string to autocomplete
-     *  @property {Object} requestData.filter - the filter that triggered the event
+     *  @property {Filter} requestData.filter - the filter that triggered the event
      *  @property {number} requestData.index - the index of the filter in the appliedFilters array
      */
     async fetchAutocomplete(requestData) {
@@ -376,7 +425,7 @@ export default {
      * function triggered when filters change in BaseAdvancedSearch, responsible for adjusting
      * url query params and triggering actual search (bzw. search event to parent respectively)
      *
-     * @param {Object[]} filters - the filters applied as determined by BaseAdvancedSearch component
+     * @param {Filter[]} filters - the filters applied as determined by BaseAdvancedSearch component
      */
     async fetchSearchResults(filters) {
       // get filters that should be added to route = only the ones which have filter values
@@ -409,15 +458,17 @@ export default {
      * triggered either by modifying filters in BaseAdvancedSearch,
      * a page change or a window resize and the number of items displayed changes the correct offset
      *
-     * @param {Object[]} filters - the filters to be applied in search
+     * @param {Filter[]} filters - the filters to be applied in search
      */
     async search(filters) {
+      console.log('search', filters);
       // TODO: temporary data mapping for text filter so values are only string
       const filterRequestData = filters
         .map((filter) => ({
           ...filter,
           // filter_values ALWAYS needs to be array
-          filter_values: [].concat(filter.type === 'text' ? filter.filter_values.map((value) => value.title || value)
+          filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
+            ? filter.filter_values.map((value) => value.title)
             : filter.filter_values),
         }));
       /**
@@ -426,7 +477,7 @@ export default {
        *
        * @event search
        * @type {Object} - an object already containing al the necessary request data
-       *  @property {Object} filters - the filters to be applied
+       *  @property {Filter[]} filters - the filters to be applied
        *  @property {number} offset - the request offset
        *  @property {number} limit - the number of items to be returned
        */
@@ -459,6 +510,11 @@ export default {
         this.search(this.appliedFiltersInt);
       }
     },
+    /**
+     * method to trigger en lang title casing
+     * @param {string} string - the original string
+     * @returns {string} - the title cased string
+     */
     titleCase(string) {
       return toTitleString(string);
     },

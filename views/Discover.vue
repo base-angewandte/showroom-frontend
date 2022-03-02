@@ -68,8 +68,9 @@ export default {
               .map((filter) => ({
                 ...filter,
                 // filter_values ALWAYS needs to be array
-                filter_values: [].concat(filter.type === 'text' ? filter.filter_values
-                  .map((value) => value.title || value) : filter.filter_values),
+                filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
+                  ? filter.filter_values.map((value) => value.title || value)
+                  : filter.filter_values),
               })),
             offset: (page ? (Number(page) - 1) : 0) * entryNumber,
             limit: entryNumber,
@@ -147,7 +148,8 @@ export default {
      */
     initialDataMode() {
       return !this.appliedFilters || !this.appliedFilters.length
-        || (this.appliedFilters.length === 1 && !hasData(this.appliedFilters[0].filter_values));
+        || (this.appliedFilters.length === 1 && this.appliedFilters[0].id === 'default'
+        && !hasData(this.appliedFilters[0].filter_values));
     },
     /**
      * get the data that only need fetching once for all search components from
@@ -168,7 +170,7 @@ export default {
     userCanEdit() {
       // get the id without name prefix
       const institutionId = process.env.institutionId.split('-').pop();
-      return this.userEditPermissions && this.userEditPermissions.length
+      return !!this.userEditPermissions && !!this.userEditPermissions.length
         && this.userEditPermissions.includes(institutionId);
     },
     /**

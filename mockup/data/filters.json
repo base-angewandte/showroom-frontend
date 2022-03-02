@@ -1,24 +1,36 @@
 [
   {
+    "id": "default",
+    "type": "text",
+    "label": {
+      "en": "Default filter for generic text search",
+      "de": "Standardfilter für generische Textsuche"
+    },
+    "hidden": true
+  },
+  {
     "label": "Activities",
     "id": "activities",
-    "type": "text"
+    "type": "chips",
+    "freetext_allowed": true
   },
   {
     "label": "Persons",
     "id": "persons",
-    "type": "text"
+    "type": "chips",
+    "freetext_allowed": true
   },
   {
     "label": "Albums",
     "id": "albums",
-    "type": "text",
-    "hidden": true
+    "type": "chips",
+    "freetext_allowed": true
   },
   {
     "label": "Locations",
     "id": "locations",
-    "type": "text"
+    "type": "chips",
+    "freetext_allowed": true
   },
   {
     "label": "Keywords",
