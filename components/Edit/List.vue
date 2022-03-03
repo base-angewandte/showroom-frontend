@@ -5,14 +5,13 @@
       :controls="true"
       :edit="editModeInt"
       :edit-button-text="$i18n.t('editView.edit')"
-      :cancel-button-text="$i18n.t('editView.cancel')"
-      :save-button-text="$i18n.t('editView.save')"
+      :save-button-text="$i18n.t('editView.ready')"
       :is-loading="isLoading"
       :subtitle="'(' + getItemCount(listData) + ')'"
       :title="entityType !== 'person' ? $t('detailView.lists') : $t('detailView.activityLists')"
+      edit-mode="done"
       class="base-sr--ml-small"
       @activated="enableEdit"
-      @canceled="cancel"
       @saved="save" />
 
     <BaseExpandList
@@ -25,7 +24,7 @@
       :edit-hide-text="$t('editView.listItemHide')"
       :edit-show-text="$t('editView.listItemShow')"
       control-type="toggle"
-      @saved="saveEdit">
+      @update:data="saveEdit">
       <template #content="{ data: slotListData }">
         <BaseLink
           :render-link-as="'nuxt-link'"
@@ -44,7 +43,7 @@
 <script>
 import Vue from 'vue';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 import {
   BaseEditControl,
   BaseExpandList,
@@ -129,22 +128,17 @@ export default {
        * @type {ListDataItem[]}
        */
       dataInt: this.data,
-      /**
-       * a variable to store state of data before editing (in case state
-       * needs to be restored due to cancel action)
-       * @type {ListDataItem[]}
-       */
-      dataBeforeEditing: [],
     };
   },
   computed: {
-    ...mapGetters({
-      getEditDataItem: 'editData/getEditDataItem',
-    }),
     /**
      * the actual data used in BaseExpandList component depending on view or edit mode
      */
     listData: {
+      /**
+       * set internal variable dataInt with new data
+       * @param {ListDataItem[]} val - updated data
+       */
       set(val) {
         this.dataInt = val;
       },
@@ -152,10 +146,8 @@ export default {
        * @returns {ListDataItem[]}
        */
       get() {
-        // check for edit mode
-        const data = this.editModeInt
-          // if edit mode - use edit data saved in store
-          ? this.getEditDataItem({ type: 'list', id: this.$route.params.id })
+        // check for edit mode - if edit mode - use edit data saved in store
+        const data = this.editModeInt ? this.dataInt
           // else use internal data filtered by hidden elements and elements without content
           : this.dataInt.filter((item) => (!item.hidden && !!item.data.length));
         // add count property for correct bracket number
@@ -200,7 +192,7 @@ export default {
     async enableEdit() {
       try {
         // fetch edit data from store
-        await this.fetchEditData({ type: 'list', id: this.$route.params.id });
+        this.listData = await this.fetchEditData({ type: 'list', id: this.$route.params.id });
         // store original edit data in a variable so they can be restored in case of cancel
         this.dataBeforeEditing = JSON.parse(JSON.stringify(this.listData));
         // if data fetch worked out set edit mode to true
@@ -216,43 +208,27 @@ export default {
       }
     },
     /**
-     * cancel edit-mode
-     */
-    cancel() {
-      this.editModeInt = false;
-      // still update list with latest fetched version of data!
-      this.listData = JSON.parse(JSON.stringify(this.dataBeforeEditing));
-      this.$refs.baseExpandList.reset();
-    },
-    /**
      * trigger the safe function of the BaseExpandList component
      */
     save() {
+      this.editModeInt = false;
       this.$refs.baseExpandList.save();
     },
     /**
      * save the data
      */
     async saveEdit(values) {
-      // variable for determining notification message later
-      let success = false;
       try {
         // update database entry with relevant data
         this.listData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
-        // update before editing data with latest changes (currently not really necessary because
-        // edit mode is closed after save anyway but in case this should change in future)
-        this.dataBeforeEditing = JSON.parse(JSON.stringify(this.listData));
-        // set edit mode false again
-        this.editModeInt = false;
-        success = true;
       } catch (e) {
         console.error(e);
-      } finally {
+        // only inform user when operation failed
         this.informUser({
           action: 'save',
           count: 0,
           type: 'list',
-          notificationType: success ? 'success' : 'error',
+          notificationType: 'error',
         });
       }
     },

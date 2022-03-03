@@ -60,6 +60,10 @@
         number: remainingSelectorEntryNumber,
       })"
       :options-button-text="$t('editView.optionsButtonText')"
+      :options-button-icon="{
+        show: 'edit',
+        hide: 'check-mark',
+      }"
       :selected-list.sync="selectedBoxes"
       :select-options-text="{
         selectAll: $t('editView.selectOptionsText.selectAll'),
