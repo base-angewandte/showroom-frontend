@@ -3,6 +3,7 @@
     type="person"
     :data="data"
     :is-user-profile="isUserProfile"
+    :applied-filters="filters"
     :user-can-edit="userCanEdit" />
 </template>
 
@@ -22,19 +23,12 @@ export default {
     $api, params, query,
   }) {
     let entryData = {};
+    let parsedFilters = [];
     try {
       // get relevant query params
       const { page, filters } = query;
       // parse the filters from query params
-      // TODO: remove default filter (only here because route does not work
-      // currently without filters
-      const parsedFilters = filters ? JSON.parse(filters) : [{
-        id: 'default',
-        label: 'Fulltext',
-        filter_values: [
-          'a',
-        ],
-      }];
+      parsedFilters = filters ? JSON.parse(filters) : [];
       // assume 6 result boxes per row to start with
       const entryNumber = 6 * 5;
       const results = [];
@@ -43,7 +37,16 @@ export default {
       ['entities_retrieve', 'search_create'].forEach((operation) => {
         // add a request body only for search request
         const requestBody = operation === 'search_create' ? {
-          filters: parsedFilters,
+          // TODO: remove default filter (only here because route does not work
+          // currently without filters (moved here so it is not displayed in search)
+          filters: parsedFilters.length ? parsedFilters : {
+            id: 'default',
+            label: 'Fulltext',
+            type: 'text',
+            filter_values: [
+              'a',
+            ],
+          },
           offset: (page ? (Number(page) - 1) : 0) * entryNumber,
           limit: entryNumber,
         } : {};
@@ -73,11 +76,13 @@ export default {
       console.error(e);
       // TODO: error handling;
     }
-    return { data: entryData };
+    console.log('async data', parsedFilters);
+    return { data: entryData, filters: parsedFilters };
   },
   data() {
     return {
       data: {},
+      filters: [],
     };
   },
   head() {

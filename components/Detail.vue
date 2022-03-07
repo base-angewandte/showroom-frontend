@@ -273,7 +273,7 @@
         || userHasShowroomEntries)"
       :header-text="$t('resultsView.headerText.entityResults', { entity: data.title })"
       :result-list.sync="searchResults"
-      :applied-filters.sync="appliedFilters"
+      :applied-filters="appliedFilters"
       :autocomplete-results="autocompleteResults"
       :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
@@ -401,6 +401,13 @@ export default {
       type: Boolean,
       default: false,
     },
+    /**
+     * provide filters (from url) for entity view initial load
+     */
+    appliedFilters: {
+      type: Array,
+      default: () => ([]),
+    },
   },
   data() {
     return {
@@ -443,11 +450,6 @@ export default {
        * @type {Object[]}
        */
       autocompleteResults: [],
-      /**
-       * also have applied filters available here
-       * @type {Object[]}
-       */
-      appliedFilters: [],
       /**
        * store if user actually has entries that can be displayed in search
        * @type {boolean}
