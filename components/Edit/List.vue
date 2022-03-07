@@ -12,6 +12,7 @@
       edit-mode="done"
       class="base-sr--ml-small"
       @activated="enableEdit"
+      @canceled="editModeInt = false"
       @saved="save" />
 
     <BaseExpandList

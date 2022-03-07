@@ -204,15 +204,7 @@ const api = new OpenAPIBackend({
         res.status(200).json(response);
       }, 1000);
     },
-    swagger: async (c, req, res) => {
-      // remove schema 'CommonList', due problems with converting circular structures to JSON
-      // - not needed for further frontend processing
-      // "oneOf": [{ "$ref": "#/components/schemas/CommonList" },
-      //           { "$ref": "#/components/schemas/CommonListItem" }]
-      apiSpec.components.schemas.CommonList.properties.data.items.oneOf.shift();
-
-      return res.status(200).json(apiSpec);
-    },
+    swagger: async (c, req, res) => res.status(200).json(apiSpec),
     notFound: async (c, req, res) => res.status(404).json({ err: 'not found' }),
     notImplemented: async (c, req, res) => {
       const { status, mock } = c.api.mockResponseForOperation(c.operation.operationId);
