@@ -1153,24 +1153,134 @@
           }
         ],
         "tags": [
-          "public"
-        ],
-        "security": [
-          {
-            "cookieAuth": []
-          },
-          {}
+          "auth"
         ],
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CommonList"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommonListEdit"
+                  }
                 }
               }
             },
-            "description": "a list of things"
+            "description": ""
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Not found."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "api_v1_entities_list_partial_update",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this entity.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/EntityListEdit"
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/EntityListEdit"
+                }
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/EntityListEdit"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommonListEdit"
+                  }
+                }
+              }
+            },
+            "description": ""
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Authentication credentials were not provided."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Forbidden"
           },
           "404": {
             "content": {
@@ -1975,9 +2085,6 @@
             "type": "object",
             "additionalProperties": {},
             "nullable": true
-          },
-          "source_repo_data_text": {
-            "type": "string"
           }
         },
         "required": [
@@ -2116,17 +2223,11 @@
           "label"
         ]
       },
-      "CommonList": {
+      "CommonListEdit": {
         "type": "object",
         "properties": {
-          "id": {
+          "label": {
             "type": "string"
-          },
-          "labels": {
-            "type": "string"
-          },
-          "hidden": {
-            "type": "boolean"
           },
           "data": {
             "type": "array",
@@ -2134,34 +2235,81 @@
               "oneOf": [
                 {
                   "type": "object",
-                  "description": "a recursive CommonList entry"
+                  "description": "A recursive (non-editable) CommonList",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Again, either a recursive CommonList or a CommonListItem"
+                      }
+                    }
+                  }
                 },
                 {
                   "type": "object",
-                  "description": "a CommonListItem without any further recursion",
+                  "description": "A CommonListItem without any further recursion",
                   "properties": {
+                    "value": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "type": "string",
+                      "description": "An internal identifier (e.g. ShortUUID) to link to a showroom object"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "An external link. Mutually exclusive with source"
+                    },
                     "attributes": {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "List of strings, added after the list items value, (e.g. author names if list item is a publication)"
                     },
-                    "value": {
-                      "type": "string"
-                    },
-                    "id": {
-                      "type": "string"
+                    "additional": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "label": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        }
+                      },
+                      "description": "List of additional (linkable) label/value pairs extending the list entry (e.g. by display in a tooltip)"
                     }
-                  }
+                  },
+                  "required": [
+                    "value"
+                  ]
                 }
               ]
             }
+          },
+          "id": {
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
           }
         },
         "required": [
           "data",
           "id",
-          "labels"
+          "label"
         ]
       },
       "CommonText": {
@@ -2271,8 +2419,7 @@
           },
           "list": {
             "type": "object",
-            "additionalProperties": {},
-            "nullable": true
+            "additionalProperties": {}
           },
           "primary_details": {
             "type": "object",
@@ -2343,6 +2490,21 @@
             }
           }
         }
+      },
+      "EntityListEdit": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "id"
+        ]
       },
       "EntitySecondaryDetailsEdit": {
         "type": "object",
@@ -2657,8 +2819,7 @@
           },
           "list": {
             "type": "object",
-            "additionalProperties": {},
-            "nullable": true
+            "additionalProperties": {}
           },
           "primary_details": {
             "type": "object",
