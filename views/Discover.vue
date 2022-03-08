@@ -83,20 +83,25 @@ export default {
     } else {
       try {
         await store.dispatch('appData/fetchInitialData', { limit: entryNumber });
-        const initialResults = store.getters['appData/getInitialData'].results;
-        // TODO: this is just a temporary fix working only with one result category!
-        const initialSearchFilters = store.getters['appData/getInitialData'].results[0].filters;
-        if (page > 1 && initialResults && initialResults.length) {
-          const paginationResponse = await $api.public.api_v1_search_create({}, {
-            requestBody: {
-              filters: initialSearchFilters,
-              offset: (page ? (Number(page) - 1) : 0) * entryNumber,
-              limit: entryNumber,
-            },
-          });
-          results = [JSON.parse(paginationResponse.data)];
+        const initialData = store.getters['appData/getInitialData'];
+        if (initialData) {
+          const initialResults = initialData.results;
+          // TODO: this is just a temporary fix working only with one result category!
+          const initialSearchFilters = store.getters['appData/getInitialData'].results[0].filters;
+          if (page > 1 && initialResults && initialResults.length) {
+            const paginationResponse = await $api.public.api_v1_search_create({}, {
+              requestBody: {
+                filters: initialSearchFilters,
+                offset: (page ? (Number(page) - 1) : 0) * entryNumber,
+                limit: entryNumber,
+              },
+            });
+            results = [JSON.parse(paginationResponse.data)];
+          } else {
+            results = initialResults;
+          }
         } else {
-          results = initialResults;
+          results = [];
         }
       } catch (e) {
         console.error(e);
