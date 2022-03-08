@@ -461,7 +461,6 @@ export default {
      * @param {Filter[]} filters - the filters to be applied in search
      */
     async search(filters) {
-      console.log('search', filters);
       // TODO: temporary data mapping for text filter so values are only string
       const filterRequestData = filters
         .map((filter) => ({
