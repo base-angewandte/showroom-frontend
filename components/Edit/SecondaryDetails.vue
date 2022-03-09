@@ -49,7 +49,7 @@
       <!-- empty data -->
       <template
         v-if="!editModeInt">
-        <h2>{{ entityType === 'person' ? $t('detailView.cv') : $t('detailView.details') }}</h2>
+        <h2>{{ sectionHeading }}</h2>
 
         <div>
           <span>{{ $t('editView.editTextReminder') }}</span>
@@ -68,7 +68,7 @@
         :tabs="locales"
         :tab-labels="tabs"
         :active-tab="activeTab"
-        :label="dataInt[0] && sectionHeading ? sectionHeading : $t('detailView.details')"
+        :label="sectionHeading"
         :placeholder="$t('editView.editTextReminder')" />
     </BaseBox>
   </div>
@@ -176,10 +176,10 @@ export default {
      * @returns {{{ [lang: string]: string }}}
      */
     editData() {
-      return this.transformBackendToEditData(this.getEditDataItem({
+      return this.getEditDataItem({
         type: 'secondary_details',
         id: this.$route.params.id,
-      }))[0];
+      });
     },
     /**
      * variable actually used for the BaseMultilineTextInput component (v-model)
@@ -195,7 +195,7 @@ export default {
       get() {
         // for get check first if internal variable was set, else use the data fetched
         // from backend else use emtpy object
-        return this.editInputInt || this.editData || {};
+        return this.editInputInt || this.transformBackendToEditData(this.editData)[0] || {};
       },
     },
     /**
@@ -226,7 +226,9 @@ export default {
      * the label is needed again later on for updating of data
      */
     sectionHeading() {
-      return this.dataInt[0].label;
+      const providedLabel = this.dataInt[0] && this.dataInt[0].label ? this.dataInt[0].label : '';
+      return providedLabel || this.entityType === 'person'
+        ? this.$t('detailView.cv') : this.$t('detailView.details');
     },
   },
   watch: {
@@ -315,11 +317,15 @@ export default {
       let success = false;
       try {
         // update database entry with relevant data
-        this.dataInt = this.transformBackendToViewData(await this.saveEditData({
+        const updatedData = await this.saveEditData({
           type: 'secondary_details',
           id: this.$route.params.id,
           values,
-        }));
+        });
+        // update data int
+        this.dataInt = this.transformBackendToViewData(updatedData);
+        // also update edit data
+        [this.editInput] = this.transformBackendToEditData(updatedData);
         // set edit mode false again
         this.editModeInt = false;
         success = true;
@@ -369,15 +375,18 @@ export default {
      *  'label' and 'data' attributes
      */
     transformEditToBackendData(dataToSend) {
+      // get original edit data since these are the only ones with have all
+      // the necessary labels
+      const [originalEditDataWithLabel] = this.editData;
       return [].concat(dataToSend).map((dataItem) => this.locales
         .reduce((prev, curr) => ({
           ...prev,
           // use language as key (as it was before)
           [curr]: {
-            // TODO: use this.sectionHeading as soon as this is fixed in backend
-            label: this.$t('detailView.cv'),
+            label: originalEditDataWithLabel[curr].label,
             // move the original string into the data property
-            data: dataItem[curr] || '',
+            // also: remove whitespace from data string
+            data: dataItem[curr].trim() || '',
           },
         }), {}));
     },
