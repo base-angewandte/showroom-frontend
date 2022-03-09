@@ -47,7 +47,7 @@
               <span
                 v-for="item in data.expertise"
                 :key="item"
-                class="base-sr-chips__item">{{ item }}</span>
+                class="base-sr-chips__item">{{ toTitleString(item, $i18n.locale) }}</span>
             </template>
             <!-- otherwise we assume it's an activity and display the type -->
             <template v-else>
@@ -771,7 +771,6 @@ export default {
       padding: 0 $spacing-small;
       margin-right: $spacing-small;
       background-color: $background-color;
-      text-transform: capitalize;
       white-space: nowrap;
     }
 
