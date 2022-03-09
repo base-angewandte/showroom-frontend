@@ -137,7 +137,7 @@ export default {
       getInitialShowcaseData: 'appData/getInitialShowcaseData',
     }),
     carouselData() {
-      return this.getInitialData.showcase;
+      return this.getInitialShowcaseData(0, false);
     },
     // save the filters from initial request in a variable so they are available
     // when changing pages

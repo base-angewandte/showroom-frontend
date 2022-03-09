@@ -87,6 +87,7 @@
           && data.secondary_details[0].data
           && data.secondary_details[0].data.length)
           || userCanEdit"
+        ref="secondary_details"
         :data="titleCaseLabels(data.secondary_details)"
         :entity-type="type"
         :user-can-edit="userCanEdit"
@@ -145,6 +146,7 @@
     <!-- lists -->
     <List
       v-if="data.list && data.list.length"
+      ref="list"
       :data="titleCaseLabels(data.list)"
       :edit-mode="editMode.list"
       :entity-type="type"
@@ -158,6 +160,7 @@
       v-if="type === 'person'
         && ((data.showcase && data.showcase.length)
           || userCanEdit)"
+      ref="showcase"
       :data="data.showcase"
       :title="$t('detailView.activityShowcase')"
       :user-can-edit="userCanEdit"
@@ -483,7 +486,23 @@ export default {
      * @returns {boolean}
      */
     editModeIsActive() {
-      return Object.values(this.editMode).some((value) => value !== false);
+      return Object.values(this.editMode).some((value) => value);
+    },
+  },
+  watch: {
+    editModeIsActive: {
+      handler(val) {
+        if (val) {
+          const windowPosition = window.scrollY;
+          const editElementName = Object.entries(this.editMode).find(([, value]) => value)[0];
+          const editElementPosition = this.$refs[editElementName].$el.getBoundingClientRect().y;
+          const headerElements = document.getElementById('header').children;
+          const headerElementHeight = headerElements && headerElements.length
+            ? headerElements[0].clientHeight : 0;
+          window.scrollTo(0, windowPosition + editElementPosition - headerElementHeight);
+        }
+      },
+      deep: true,
     },
   },
   mounted() {

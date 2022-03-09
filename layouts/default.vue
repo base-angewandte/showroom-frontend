@@ -2,6 +2,7 @@
   <div class="wrapper">
     <component
       :is="`${headerName}-header`"
+      id="header"
       :lang="lang"
       :active="'showroom'"
       :profile.prop="profile"
