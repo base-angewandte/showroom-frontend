@@ -215,6 +215,7 @@
         <MediaItem
           :key="props.item.id"
           :data="props.item"
+          :additional="`#${props.index + 1}`"
           @clicked="previewMedia(data.entries.media, props.item.id)" />
       </template>
     </BaseResultBoxSection>
