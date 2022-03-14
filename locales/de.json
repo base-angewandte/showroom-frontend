@@ -24,8 +24,14 @@
     "showAll": "Alle anzeigen",
     "license": "Lizenz",
     "print": "Drucken",
-    "noResultsTextInitial": "Sie haben noch keine Einträge die angezeigt werden können.\nPublizieren Sie Einträge in Portfolio um sie hier sichtbar zu machen!"
-
+    "noResultsTextInitial": "Sie haben noch keine Einträge die angezeigt werden können.\nPublizieren Sie Einträge in Portfolio um sie hier sichtbar zu machen!",
+    "mediaTypes": {
+      "a": "Audio",
+      "d": "Dokument",
+      "i": "Bild",
+      "v": "Video",
+      "x": "Datei"
+    }
   },
   "discoverView": {
     "title": "Showroom durchsuchen und entdecken",

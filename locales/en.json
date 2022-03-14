@@ -24,7 +24,14 @@
     "showAll": "Show all",
     "license": "License",
     "print": "Print",
-    "noResultsTextInitial": "You don't have any entries yet that can be displayed.\nPublish entries in Portfolio to make them visible here!"
+    "noResultsTextInitial": "You don't have any entries yet that can be displayed.\nPublish entries in Portfolio to make them visible here!",
+    "mediaTypes": {
+      "a": "Audio",
+      "d": "Document",
+      "i": "Image",
+      "v": "Video",
+      "x": "File"
+    }
   },
   "discoverView": {
     "title": "Search and Discover Showroom",
