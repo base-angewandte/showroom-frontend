@@ -11,6 +11,9 @@
         :placeholder="$t('searchView.placeholders')"
         :autocomplete-property-names="{ id: 'source', label: 'label', data: 'data' }"
         :is-loading-index="autocompleteLoaderIndex"
+        :assistive-text="{
+          selectedOption: 'Change the text of this selected option',
+        }"
         class="showroom-search__search"
         @fetch-autocomplete="fetchAutocomplete"
         @search="fetchSearchResults" />
@@ -272,11 +275,9 @@ export default {
         ...filteredDefaultFilter,
         // replace label since quite a long string atm
         label: this.$t('searchView.fulltext'),
-        filter_values: [],
       }) : ({
         label: this.$t('searchView.fulltext'),
         id: 'default',
-        filter_values: [],
         type: 'text',
       });
     },

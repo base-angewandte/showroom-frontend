@@ -63,7 +63,8 @@
     },
     "noResultsHeading": "Keine Ergebnisse gefunden.",
     "noResultsText": "Es wurden keine Suchergebnisse mit den angewandten Kriterien gefunden.\nBitte passen Sie Ihre Suche an.",
-    "noResultsInitial": "Keine Daten zum Anzeigen vorhanden."
+    "noResultsInitial": "Keine Daten zum Anzeigen vorhanden.",
+    "changeChipsText": "Ändern Sie den Text der Option"
   },
   "resultsView": {
     "expand": {
