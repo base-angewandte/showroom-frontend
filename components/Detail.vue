@@ -643,11 +643,23 @@ export default {
           id: item.id,
           title: !obj.title && item.alternative
             ? item.alternative.join(', ')
-            : '',
-          additionalInfo: [`${this.$t('detailView.license')}: ${item.license.label}`],
+            : this.$t(`detailView.mediaTypes.${item.type}`),
+          additionalInfo: [
+            `${this.$t('detailView.license')}: ${this.getMediaLicence(item)}`],
           ...obj,
         };
       });
+    },
+    /**
+     * get media license depending on resolution
+     *
+     * @param {object} data - license object
+     * @returns {string} - license
+     */
+    getMediaLicence(data) {
+      return this.isMobile
+        ? data.license.source.split('/').pop()
+        : data.license.label;
     },
     createHumanReadableDate(val) {
       const date = new Date(val);
