@@ -129,6 +129,11 @@ export default {
        * @type {ListDataItem[]}
        */
       dataInt: this.data,
+      /**
+       * add a timeout before saving a list (especially for keyboard
+       * list reordering)
+       */
+      saveTimeout: null,
     };
   },
   computed: {
@@ -218,20 +223,28 @@ export default {
     /**
      * save the data
      */
-    async saveEdit(values) {
-      try {
-        // update database entry with relevant data
-        this.listData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
-      } catch (e) {
-        console.error(e);
-        // only inform user when operation failed
-        this.informUser({
-          action: 'save',
-          count: 0,
-          type: 'list',
-          notificationType: 'error',
-        });
+    saveEdit(values) {
+      if (this.saveTimeout) {
+        clearTimeout(this.saveTimeout);
+        this.saveTimeout = null;
       }
+      // set a timeout that expecially keeps save from being triggered every time
+      // the keyboard user triggers arrow key
+      this.saveTimeout = setTimeout(async () => {
+        try {
+          // update database entry with relevant data
+          this.listData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
+        } catch (e) {
+          console.error(e);
+          // only inform user when operation failed
+          this.informUser({
+            action: 'save',
+            count: 0,
+            type: 'list',
+            notificationType: 'error',
+          });
+        }
+      }, 500);
     },
     /**
      * get the total of all items at the bottom level of the list
