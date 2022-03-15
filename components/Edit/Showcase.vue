@@ -382,7 +382,14 @@ export default {
      * @returns {ExternalCarouselData[]}
      */
     initialShowcaseData() {
-      return this.getShowcaseData(3, true);
+      return this.getShowcaseData(3, true).map((item) => ({
+        ...item,
+        // modify initial showcase data text so it is less confusing for
+        // the user and he gets a hint that this is not visible on his page
+        title: this.$t('editView.placeholderTitle'),
+        subtext: this.$t('editView.placeholderSubtext'),
+        additional: '',
+      }));
     },
     /**
      * get the data from showcase GET request in the proper format needed for
@@ -601,7 +608,8 @@ export default {
           ? this.formatData(this.initialShowcaseData)
           : Array.from({ length: 3 }, (index) => ({
             id: `showcase-item-${index}`,
-            title: this.$t('editView.yourData'),
+            title: this.$t('editView.placeholderTitle'),
+            subtext: this.$t('editView.placeholderSubtext'),
             href: '#',
             type: 'activity',
           }));

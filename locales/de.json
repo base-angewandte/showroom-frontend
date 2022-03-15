@@ -134,7 +134,8 @@
       "show": "Editieren",
       "hide": "Fertig"
     },
-    "yourData": "Machen Sie Aktivitäten hier sichtbar!"
+    "placeholderTitle": "Ihr Eintrag hier",
+    "placeholderSubtext": "Fügen Sie Aktivitäten hinzu um zu beginnen."
   },
   "notify": {
     "errorDownload": "Etwas ist schief gelaufen!",

@@ -134,7 +134,8 @@
       "show": "Edit",
       "hide": "Done"
     },
-    "yourData": "Add activities here!"
+    "placeholderTitle": "This could be your entry",
+    "placeholderSubtext": "Add activities to start."
   },
   "notify": {
     "errorDownload": "Something went wrong!",
