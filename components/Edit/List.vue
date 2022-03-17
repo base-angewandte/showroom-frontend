@@ -27,14 +27,22 @@
       control-type="toggle"
       @update:data="saveEdit">
       <template #content="{ data: slotListData }">
-        <BaseLink
-          :render-link-as="'nuxt-link'"
-          :source="slotListData.source"
-          :url="slotListData.url"
-          :value="slotListData.value"
-          class="base-sr-link--mr" />
-        <template v-if="slotListData.attributes">
-          - {{ slotListData.attributes.join(', ') }}
+        <!-- if entry has a link use baseLink -->
+        <template
+          v-if="slotListData.source || slotListData.url">
+          <BaseLink
+            :render-link-as="'nuxt-link'"
+            :source="slotListData.source"
+            :url="slotListData.url"
+            :value="slotListData.value"
+            class="base-sr-link--mr" />
+          {{ slotListData.attributes ? ' - ' + slotListData.attributes.join(', ') : '' }}
+        </template>
+        <!-- else render plain text -->
+        <template v-else>
+          {{ slotListData.value }} {{ slotListData.attributes
+            ? '- ' + slotListData.attributes.join(', ')
+            : '' }}
         </template>
       </template>
     </BaseExpandList>

@@ -56,7 +56,7 @@
   },
   "nodemonConfig": {
     "watch": [
-      "mockup"
+      "mockAPI"
     ]
   }
 }

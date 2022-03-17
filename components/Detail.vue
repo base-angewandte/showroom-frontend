@@ -624,6 +624,10 @@ export default {
           obj = {
             mediaUrl: this.original,
             previews: item.previews,
+            displaySize: {
+              // use largest preview image size and set to max-width to respect intrinsic size
+              'max-width': `${parseInt(Object.keys(item.previews.slice(-1)[0]), 10)}px`,
+            },
           };
         }
 
