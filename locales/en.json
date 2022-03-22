@@ -41,7 +41,11 @@
     "fulltext": "Fulltext",
     "placeholders": {
       "main":  "Search and Discover Showroom",
-      "filterRow": "Add Values to Your Filter"
+      "entity": "Search and Discover {entity} Activities",
+      "filterRow": "Add Values to Your Filter",
+      "own": "your",
+      "person": "{entity}",
+      "persons": "{entity}'s"
     },
     "advancedSearchText": {
       "title": "Advanced Search",
@@ -74,7 +78,7 @@
     "headerText": {
       "latestActivities": "Latest Activities",
       "results": "Search results",
-      "entityResults": "{entity}'s Activities"
+      "entityResults": "{entity} Activities"
     }
   },
   "editView": {

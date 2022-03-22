@@ -275,12 +275,15 @@
     <Search
       v-if="type === 'person' && (userCanEdit
         || userHasShowroomEntries)"
-      :header-text="$t('resultsView.headerText.entityResults', { entity: data.title })"
+      :header-text="$t('resultsView.headerText.entityResults', {
+        entity: getEntityString })"
       :result-list.sync="searchResults"
-      :applied-filters="appliedFilters"
+      :applied-filters.sync="appliedFiltersInt"
       :autocomplete-results="autocompleteResults"
       :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
+      :placeholder-text="$t('searchView.placeholders.entity', {
+        entity: getEntityString })"
       :page-number="1"
       :no-results-text-initial="$t('detailView.noResultsTextInitial')"
       @autocomplete="fetchAutocomplete"
@@ -314,6 +317,8 @@
 
 <script>
 import Vue from 'vue';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { mapGetters } from 'vuex';
 
 import {
   BaseButton,
@@ -347,6 +352,7 @@ import Search from '~/components/Search';
 import {
   toTitleString,
   titleCaseLabels,
+  hasData,
 } from '~/utils/common';
 
 Vue.use(BaseButton);
@@ -459,17 +465,22 @@ export default {
        */
       autocompleteResults: [],
       /**
-       * store if user actually has entries that can be displayed in search
+       * stores if window inner width <640px
        * @type {boolean}
        */
-      userHasShowroomEntries: false,
       isMobile: false,
+      /**
+       * variable needed because search component does not store internally but
+       * just emit to parent
+       * @type {Filter[]}
+       */
+      appliedFiltersInt: [],
     };
   },
   computed: {
-    lang() {
-      return this.$store.state.appData.locale;
-    },
+    ...mapGetters({
+      lang: 'appData/getLocale',
+    }),
     /**
      * compute search results from data prop to be able to use
      * .sync modifier from search component
@@ -482,6 +493,14 @@ export default {
         return this.data.activities;
       },
     },
+    getEntityString() {
+      const name = this.data.title;
+      const lastLetter = name.slice(-1);
+      const useS = this.lang === 'en'
+        || (this.lang === 'de' && !['s', 'x', 'z', 'ß'].includes(lastLetter));
+      return this.isUserProfile ? this.$t('searchView.placeholders.own')
+        : `${this.$t(`searchView.placeholders.person${useS ? 's' : ''}`, { entity: name })}`;
+    },
     userPreferencesUrl() {
       return process.env.userPreferencesUrl;
     },
@@ -492,6 +511,10 @@ export default {
      */
     editModeIsActive() {
       return Object.values(this.editMode).some((value) => value);
+    },
+    userHasShowroomEntries() {
+      return this.searchResults && !!this.searchResults.length
+        && this.searchResults.some((item) => hasData(item.data));
     },
   },
   watch: {
@@ -511,13 +534,9 @@ export default {
     },
   },
   mounted() {
-    // only check once with initial data if user actually has entries that can be
-    // displayed in search
-    // TODO: remove check for this.searchResults[0].data again? (could break with real data
-    // only here because entities_search_create not implemented yet)
-    // TODO: disabled due 500 on activities
-    // this.userHasShowroomEntries = !!this.searchResults.length
-    //   && !!this.searchResults[0].data && !!this.searchResults[0].data.length;
+    // get filters if any were encoded in url then they will be provided
+    // in props on page load
+    this.appliedFiltersInt = JSON.parse(JSON.stringify(this.appliedFilters));
     this.checkWindowWidth();
     window.addEventListener('resize', this.checkWindowWidth);
   },

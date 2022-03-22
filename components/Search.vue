@@ -8,7 +8,10 @@
         :autocomplete-results="autocompleteResults"
         :advanced-search-text="$t('searchView.advancedSearchText')"
         :drop-down-info-texts="$t('searchView.dropDownInfoTexts')"
-        :placeholder="$t('searchView.placeholders')"
+        :placeholder="{
+          main: placeholderText || $t('searchView.placeholders.main'),
+          filterRow: $t('searchView.placeholders.filterRow'),
+        }"
         :autocomplete-property-names="{ id: 'source', label: 'label', data: 'data' }"
         :is-loading-index="autocompleteLoaderIndex"
         :assistive-text="{
@@ -210,6 +213,13 @@ export default {
       type: Number,
       required: true,
       default: 1,
+    },
+    /**
+     * placeholder for search input field to customize for entity page
+     */
+    placeholderText: {
+      type: String,
+      default: 'Search and Discover Showroom',
     },
   },
   data() {
