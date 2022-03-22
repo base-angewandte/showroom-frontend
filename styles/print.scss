@@ -1,0 +1,135 @@
+@media only print {
+  .no-print, .no-print *
+  {
+    display: none !important;
+  }
+
+  img {
+    page-break-inside: avoid !important;
+  }
+
+  /**
+    * showroom
+   **/
+  .base-sr-row {
+    padding: 0 !important;
+    margin: 0 0 $spacing-large;
+  }
+
+  .base-sr-head__secondary {
+    order: 3;
+  }
+
+  .base-sr--ml-small {
+    margin: 0 0 0 0 !important;
+  }
+
+  .base-sr-showcase__placeholder,
+  .base-sr-featured-media,
+  .base-sr-head__primary-row-edit,
+  .showroom-search__no-results-area {
+    display: none !important;
+  }
+
+  .base-sr-chips__item {
+    border: 1px solid $font-color-second !important;
+  }
+
+  .base-result-box-section__box-item {
+    page-break-inside: avoid !important;
+  }
+
+  /**
+    * Components
+   **/
+  // baseBox
+  .base-box {
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  // baseBoxImage
+  .base-image-box-inner-shadow-bottom {
+    &:after {
+      display: none !important;
+    }
+  }
+
+  // baseExpandBox
+  .base-expand-box-button {
+    display: none !important;
+  }
+
+  .base-expand-box-content {
+    max-height: inherit !important;
+  }
+
+  .base-expand-box-content-fade-out::after {
+    display: none !important;
+  }
+
+  // baseTextList
+  .base-text-list {
+    .base-text-list-label-mb {
+      margin: 0 0 0 0 !important;
+    }
+
+    .base-text-list-content {
+      columns: 1 !important;
+    }
+  }
+
+  // baseExpandList
+  .base-expand-list {
+
+    ul > li:last-child {
+      margin-bottom: $spacing;
+    }
+
+    > .base-button {
+      display: none;
+    }
+
+    .base-expand {
+      display: block !important;
+
+      .base-expand-item {
+        border: none !important;
+        padding-left: 0 !important;
+        outline: none !important;
+      }
+
+      .base-expand-item__col {
+        min-height: inherit !important;
+      }
+
+      :not(button) .base-expand-item__label {
+        color: var(--font-color-second);
+        display: block !important;
+        white-space: inherit !important;
+        text-align: left !important;
+      }
+
+      .base-expand__body {
+        display: block !important;
+
+        .base-expand__head__label {
+          font-weight: bold !important;
+        }
+      }
+
+      .base-expand__head__icon {
+        display: none !important;
+      }
+    }
+
+    .base-box-shadow {
+      box-shadow: none !important;
+    }
+  }
+
+  // BaseEditControl
+  .base-edit-control {
+    display: none !important;
+  }
+}
