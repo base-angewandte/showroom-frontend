@@ -20,7 +20,7 @@ export default {
   },
   mixins: [userInfo],
   async asyncData({
-    $api, params, query,
+    $api, params, query, isDev, error,
   }) {
     let entryData = {};
     let parsedFilters = [];
@@ -79,8 +79,18 @@ export default {
         }));
       }
     } catch (e) {
-      console.error(e);
-      // TODO: error handling;
+      if (!isDev) {
+        console.error(e);
+      } else {
+        // --> this is vital information so the page should not even be rendered
+        // 404 is already caught in axios.js
+        return error({
+          // currently only error messages for 404 and 500 are defined
+          // TODO: expand if necessary
+          statusCode: e && e.statusCode && [404, 500].includes(e.statusCode)
+            ? e.statusCode : 500,
+        });
+      }
     }
     return { data: entryData, filters: parsedFilters };
   },

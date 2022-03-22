@@ -47,7 +47,7 @@ const actions = {
         return redirect(path);
       }
       // else throw 404
-      return error({ message: 'This language is not available.', statusCode: 404 });
+      return error({ message: app.i18n.t('errors.language'), statusCode: 404 });
     }
 
     // do initial requests AFTER language setting

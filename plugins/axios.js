@@ -1,20 +1,37 @@
-// TODO: this is just example content - check if this can be filled with
-
-export default function request({ $axios, error }) {
+export default function request({ $axios, error, isDev }) {
   $axios.onRequest((config) => {
     console.log(`Making request to ${config.url}`);
   });
 
   // eslint-disable-next-line consistent-return
   $axios.onError((e) => {
+    // not sure what that is doing since this is an int already anyways
+    // but doesnt break if e.response does not exist so still useful
     const code = parseInt(e.response && e.response.status, 10);
+    // check if this was a BAD REQUEST (400)
     if (code === 400) {
-      // Todo: redirect to error page or inform the user in notifications?
-      console.error(e);
+      // check if the response provided some information to display
+      if (e.response && e.response.data) {
+        console.error(e.message, JSON.stringify(e.response.data));
+        // otherwise just display complete error
+      } else {
+        console.error(e);
+      }
     }
 
-    if (e.response && e.response.status === 404) {
-      error({ statusCode: e.response.status });
+    if (code === 404) {
+      // if env is dev just put the error in the console and return
+      // to calling function
+      if (!isDev) {
+        console.error(e);
+        return Promise.resolve(e);
+      }
+      // in production redirect to the error.vue layout page
+      error({
+        statusCode: code,
+      });
+      // prevent error from propagating
+      return Promise.resolve(e);
     }
 
     if ($axios.isCancel(e)) {

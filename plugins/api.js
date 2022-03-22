@@ -4,19 +4,24 @@ import SwaggerClient from 'swagger-client';
 
 const cancelRequest = [];
 
-export default async ({ $axios, store }, inject) => {
+export default async ({
+  $axios, store, isDev, redirect,
+}, inject) => {
   const ApiSpecUrl = process.env.apiSpecUrl;
   let ApiSpec;
 
   try {
     ApiSpec = await $axios(ApiSpecUrl)
       .then((response) => response.data);
-  } catch (error) {
-    console.error(error);
-    if (process.env.NODE_ENV !== 'production') {
+  } catch (e) {
+    console.error(e);
+    if (isDev) {
       throw new Error(`Open Api Specification could not be fetched from ${ApiSpecUrl}`);
+    } else {
+      // if the api specification can not be fetched the whole app will not work so
+      // redirect to server base url (on server: basedev or base)
+      redirect(`${process.env.appBaseUrl}/500`);
     }
-    // redirect(`${process.env.backendBaseUrl}/500`);
   }
 
   const { CancelToken } = $axios;
@@ -58,8 +63,9 @@ export default async ({ $axios, store }, inject) => {
                 headers: axiosResponse.headers,
               });
             }
-            // only way to end here is probably if request was cancelled
-            return Promise.reject(new Error(`No data or request ${url} canceled`));
+            // ending up here when 404 or request was cancelled - both does not
+            // need to be propagated as error (404 already handled in axios.js)
+            return new Response(false);
           } catch (e) {
             return Promise.reject(e);
           }

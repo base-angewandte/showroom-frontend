@@ -162,14 +162,16 @@
     "errorActionSubtext": "Leider konnten die {type} nicht {action} werden. | Leider konnte das {type} nicht {action} werden. | Leider konnten {count} {type} nicht {action} werden."
   },
   "errors": {
-    "homepage": "Startseite",
+    "homepage": "Zurück zur Startseite",
+    "refresh": "Nochmal versuchen",
     "404": {
-      "title": "Error 404",
+      "title": "Seite nicht gefunden",
       "description": "Die angeforderte URL wurde auf diesem Server nicht gefunden."
     },
     "500": {
-      "title": "Error 500 - Interner Serverfehler",
-      "description": "Sorry, ein Fehler ist aufgetreten."
-    }
+      "title": "Serverfehler - Anwendung im Moment nicht verfügbar",
+      "description": "Bitte versuchen Sie es später nocheinmal."
+    },
+    "language": "Sprache nicht verfügbar"
   }
 }

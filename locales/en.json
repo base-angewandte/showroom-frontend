@@ -162,14 +162,16 @@
     "errorActionSubtext": "Unfortunately the {type} could not be {action}. | Unfortunately one {type} could not be {action} | Unfortunately {count} {type} could not be {action}."
   },
   "errors": {
-    "homepage": "Homepage",
+    "homepage": "Return To Start Page",
+    "refresh": "Try again",
     "404": {
-      "title": "Error 404",
+      "title": "Site not found",
       "description": "The requested URL was not found on this server."
     },
     "500": {
-      "title": "Error 500 - Internal Server Error",
-      "description": "Sorry, an error has occurred."
-    }
+      "title": "Server Error - Application currently not available",
+      "description": "Please try again later."
+    },
+    "language": "Language not available"
   }
 }
