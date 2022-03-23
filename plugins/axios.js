@@ -2,8 +2,6 @@ export default function request({ $axios, error, isDev }) {
   $axios.onRequest((config) => {
     console.log(`Making request to ${config.url}`);
   });
-
-  // eslint-disable-next-line consistent-return
   $axios.onError((e) => {
     // not sure what that is doing since this is an int already anyways
     // but doesnt break if e.response does not exist so still useful
@@ -17,6 +15,8 @@ export default function request({ $axios, error, isDev }) {
       } else {
         console.error(e);
       }
+      // TODO: check if this is ok
+      return Promise.reject(e);
     }
 
     if (code === 404) {
@@ -39,5 +39,7 @@ export default function request({ $axios, error, isDev }) {
       // prevent the error from propagating
       return Promise.resolve(false);
     }
+
+    return Promise.reject(e);
   });
 }

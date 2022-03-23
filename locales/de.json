@@ -142,6 +142,10 @@
     "placeholderSubtext": "Fügen Sie Aktivitäten hinzu um zu beginnen."
   },
   "notify": {
+    "searchError": "Suche fehlgeschlagen",
+    "searchErrorSubtext": "Leider konnte Ihre Suche nicht durchgeführt werden. Bitte versuchen Sie es später noch einmal.",
+    "autocompleteError": "Textvervollständigung fehlgeschlagen",
+    "autocompleteErrorSubtext": "Leider konnten keine Vorschläge für Ihren Suchtext abgerufen werden. Bitte versuchen Sie es später noch einmal.",
     "errorDownload": "Etwas ist schief gelaufen!",
     "errorDownloadSubtext": "Beim Herunterladen der Datei {fileName} ist ein Fehler aufgetreten ",
     "secondary_detailsItem": "Text Elemente | Text Element | Text Elemente",

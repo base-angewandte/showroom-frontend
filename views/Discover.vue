@@ -198,11 +198,12 @@ export default {
           // TODO: dont need to send options to backend --> get rid of this somehow?
           // or do this in BaseAdvancedSearch even
           const { data } = await this.$api.public.api_v1_search_create({}, { requestBody });
-          if (data) {
+          const parsedResults = JSON.parse(data);
+          // check if there are data (this would e.g. be false if request was cancelled)
+          if (parsedResults && parsedResults.data) {
             // TODO: this is a temporary fix to not have duplicates in the search
             // results - REMOVE AGAIN!!
             // assign search results
-            const parsedResults = JSON.parse(data);
             const dedupedResults = {
               ...parsedResults,
               data: parsedResults.data
@@ -213,6 +214,8 @@ export default {
                   return prev;
                 }, []),
             };
+            // TODO: this calculation looks just wrong...however currently total numbers
+            // are futile anyway - might be obsolete as soon as no duplicates are sent anymore
             this.searchResults = [{
               ...dedupedResults,
               total: parsedResults.total
@@ -240,8 +243,15 @@ export default {
           }
         }
       } catch (e) {
+        // TODO: error handling (unify at one place??)
+        // TODO: restore previous state of search?
         console.error(e);
-        // TODO: error handling
+        this.$notify({
+          group: 'request-notifications',
+          title: this.$t('notify.searchError'),
+          text: this.$t('notify.searchErrorSubtext'),
+          type: 'error',
+        });
       }
       this.searchOngoing = false;
     },
@@ -269,6 +279,15 @@ export default {
           this.autocompleteResults = [];
           console.error(e);
           // TODO: error handling
+          // TODO: show this information in autocomplete drop down as well?
+          // TODO: reset autocompleteResults??
+          console.error(e);
+          this.$notify({
+            group: 'request-notifications',
+            title: this.$t('notify.autocompleteError'),
+            text: this.$t('notify.autocompleteErrorSubtext'),
+            type: 'error',
+          });
         }
         this.autocompleteLoaderIndex = -1;
       } else {

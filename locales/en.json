@@ -142,6 +142,10 @@
     "placeholderSubtext": "Add activities to start."
   },
   "notify": {
+    "searchError": "Search failed",
+    "searchErrorSubtext": "Unfortunately the search could not be executed. Please try again later.",
+    "autocompleteError": "Autocomplete failed",
+    "autocompleteErrorSubtext": "Unfortunately autocomplete results for your search string could not be fetched. Please try again later.",
     "errorDownload": "Something went wrong!",
     "errorDownloadSubtext": "An error occurred during the download of file {fileName}.",
     "secondary_detailsItem": "details",

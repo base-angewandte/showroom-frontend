@@ -589,7 +589,15 @@ export default {
       } catch (e) {
         // TODO: error handling
         console.error(e);
-        this.searchResults = [];
+        // TODO: error handling (unify at one place??)
+        // TODO: restore previous state of search?
+        console.error(e);
+        this.$notify({
+          group: 'request-notifications',
+          title: this.$t('notify.searchError'),
+          text: this.$t('notify.searchErrorSubtext'),
+          type: 'error',
+        });
       }
       this.searchOngoing = false;
     },
@@ -616,6 +624,15 @@ export default {
           this.autocompleteLoaderIndex = -1;
           console.error(e);
           // TODO: error handling
+          // TODO: show this information in autocomplete drop down as well?
+          // TODO: reset autocompleteResults??
+          console.error(e);
+          this.$notify({
+            group: 'request-notifications',
+            title: this.$t('notify.autocompleteError'),
+            text: this.$t('notify.autocompleteErrorSubtext'),
+            type: 'error',
+          });
         }
         this.autocompleteLoaderIndex = -1;
       } else {
