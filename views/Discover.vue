@@ -26,6 +26,7 @@
       :use-collapsed-mode="false"
       :page-number.sync="pageNumber"
       :no-results-text-initial="$t('discoverView.noResultsTextInitial')"
+      :placeholder-text="$t('searchView.placeholders.main')"
       class="discover-search"
       @autocomplete="fetchAutocomplete"
       @search="search" />
