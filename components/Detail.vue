@@ -679,15 +679,12 @@ export default {
         if (item.type === 'd' || item.type === 'x') {
           obj = {
             mediaUrl: item.original,
-            title: item.original.match(/[^\\/]+$/)[0],
           };
         }
 
         return {
           id: item.id,
-          title: !obj.title && item.alternative
-            ? item.alternative.join(', ')
-            : this.$t(`detailView.mediaTypes.${item.type}`),
+          title: this.$t(`detailView.mediaTypes.${item.type}`),
           additionalInfo: [
             `${this.$t('detailView.license')}: ${this.getMediaLicence(item)}`],
           ...obj,
