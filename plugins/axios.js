@@ -22,7 +22,7 @@ export default function request({ $axios, error, isDev }) {
     if (code === 404) {
       // if env is dev just put the error in the console and return
       // to calling function
-      if (!isDev) {
+      if (isDev) {
         console.error(e);
         return Promise.resolve(e);
       }
