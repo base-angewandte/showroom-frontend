@@ -79,6 +79,7 @@
                 :image-url="item.image_url"
                 :link-to="item.id"
                 :box-text="item.alternative_text"
+                :lazyload="true"
                 render-element-as="nuxt-link" />
             </template>
           </BaseResultBoxSection>
