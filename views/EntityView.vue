@@ -20,10 +20,11 @@ export default {
   },
   mixins: [userInfo],
   async asyncData({
-    $api, params, query, isDev, error,
+    $api, params, query, isDev, error, store,
   }) {
     let entryData = {};
     let parsedFilters = [];
+    let completeFilters = [];
     try {
       // get relevant query params
       const { page, filters } = query;
@@ -32,6 +33,18 @@ export default {
       // assume 6 result boxes per row to start with
       const entryNumber = 6 * 5;
       const results = [];
+      // if filters were part of url - get all the data for these filters
+      const filterList = store.getters['searchData/getFilters'];
+      if (parsedFilters && parsedFilters.length) {
+        completeFilters = parsedFilters.map((filter) => {
+          const filterMatch = filterList.find((f) => f.id === filter.id);
+          return ({
+            ...filterMatch,
+            filter_values: filter.filter_values,
+          });
+        });
+      }
+
       // TODO: use 'entities_search_create' instead of main search!!
       // create requests for all the relevant data
       ['entities_retrieve', 'search_create'].forEach((operation) => {
@@ -39,7 +52,7 @@ export default {
         const requestBody = operation === 'search_create' ? {
           // TODO: remove default filter (only here because route does not work
           // currently without filters (moved here so it is not displayed in search)
-          filters: parsedFilters.length ? parsedFilters.map((filter) => ({
+          filters: completeFilters.length ? completeFilters.map((filter) => ({
             ...filter,
             // TODO: 'chips' with freetext currently only taking string --> remove
             // again should this work at some point
@@ -92,7 +105,7 @@ export default {
         });
       }
     }
-    return { data: entryData, filters: parsedFilters };
+    return { data: entryData, filters: completeFilters };
   },
   data() {
     return {

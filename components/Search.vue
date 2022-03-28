@@ -442,6 +442,12 @@ export default {
     async fetchSearchResults(filters) {
       // get filters that should be added to route = only the ones which have filter values
       const pathFilters = filters.filter((filter) => hasData(filter.filter_values));
+      // additionally strip everything unnecessary from the filter to keep url from getting
+      // to long
+      const minimizedPathFilters = pathFilters.map((filter) => ({
+        id: filter.id,
+        filter_values: filter.filter_values,
+      }));
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
       // in asyncData and search does not need to be triggered here anymore
@@ -457,8 +463,8 @@ export default {
             // via event to parent and the prop will only be updated after this function
             // went through
             page: this.currentPageNumberInt,
-            filters: pathFilters && pathFilters.length
-              ? JSON.stringify(pathFilters) : undefined,
+            filters: minimizedPathFilters.length
+              ? JSON.stringify(minimizedPathFilters) : undefined,
           },
         });
         await this.search(pathFilters);

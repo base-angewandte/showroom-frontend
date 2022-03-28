@@ -54,6 +54,8 @@ export default {
   async asyncData({ $api, query, store }) {
     const { filters, page } = query;
     const parsedFilters = filters ? JSON.parse(filters) : [];
+    // define completed filters here so they can be passed on to component in the end
+    let completeFilters = [];
     // assume 2 entries and 5 rows initially
     // TODO: make configurable??
     // this is starting with the smallest number because otherwise higher page
@@ -62,11 +64,20 @@ export default {
     let results = [];
     // get initial search results
     if (parsedFilters && parsedFilters.length) {
+      // if filters were part of url - get all the data for these filters
+      const filterList = store.getters['searchData/getFilters'];
+      completeFilters = parsedFilters.map((filter) => {
+        const filterMatch = filterList.find((f) => f.id === filter.id);
+        return ({
+          ...filterMatch,
+          filter_values: filter.filter_values,
+        });
+      });
       try {
         const response = await $api.public.api_v1_search_create({}, {
           requestBody: {
             // TODO: temporary fix for text filters just being strings
-            filters: parsedFilters.filter((filter) => hasData(filter.filter_values))
+            filters: completeFilters.filter((filter) => hasData(filter.filter_values))
               .map((filter) => ({
                 ...filter,
                 // filter_values ALWAYS needs to be array
@@ -111,7 +122,7 @@ export default {
     }
     return {
       searchResults: results,
-      appliedFilters: parsedFilters,
+      appliedFilters: completeFilters,
       pageNumber: page ? Number(page) : 1,
     };
   },
