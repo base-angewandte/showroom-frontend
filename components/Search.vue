@@ -459,7 +459,7 @@ export default {
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
       // in asyncData and search does not need to be triggered here anymore
-      if (JSON.stringify(pathFilters) !== this.$route.query.filters
+      if (JSON.stringify(minimizedPathFilters) !== this.$route.query.filters
         && !(this.$route.query.filters === undefined && !pathFilters.length)) {
         // whenever a new search is triggered reset the page number to 1
         this.currentPageNumber = 1;
