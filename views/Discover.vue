@@ -1,5 +1,5 @@
 <template>
-  <div class="discover__container">
+  <div class="base-sr-discover">
     <h1 class="hide">
       {{ $t('discoverView.title') }}
     </h1>
@@ -7,7 +7,8 @@
     <client-only>
       <!-- TODO: improve transition -->
       <transition
-        name="fade">
+        name="fade"
+        @after-leave="fadeAfterLeave">
         <Showcase
           v-if="initialDataMode && (userCanEdit || carouselData && carouselData.length)"
           :user-can-edit="userCanEdit"
@@ -27,7 +28,7 @@
       :page-number.sync="pageNumber"
       :no-results-text-initial="$t('discoverView.noResultsTextInitial')"
       :placeholder-text="$t('searchView.placeholders.main')"
-      class="discover-search"
+      :class="['base-sr-discover__search', { 'base-sr-discover__search--mt-0': !initialDataMode }]"
       @autocomplete="fetchAutocomplete"
       @search="search" />
 
@@ -306,20 +307,34 @@ export default {
       // set edit-mode for current object
       this.editMode[component.name] = component.editMode;
     },
+    /**
+     * animation fade after leave
+     */
+    fadeAfterLeave() {
+      // scroll to top, when showcase is hidden
+      if (!this.initialDataMode) {
+        window.scroll(0, 0);
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.discover__container {
+.base-sr-discover {
   min-height: 100vh;
-  .discover-search {
+
+  .base-sr-discover__search {
     margin-top: $spacing;
+
+    &.base-sr-discover__search--mt-0 {
+      margin-top: 0;
+    }
   }
 }
 
 .fade-enter-active, .fade-move, .fade-leave-active {
-  transition: all 0.5s ease;
+  transition: all 250ms ease;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;
