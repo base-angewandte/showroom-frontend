@@ -45,7 +45,9 @@
       "filterRow": "Weitere Optionen zum Filter hinzufügen",
       "own": "Ihre",
       "person": "{entity}'",
-      "persons": "{entity}s"
+      "persons": "{entity}s",
+      "chips": "Wählen Sie eine Option oder geben Sie Text ein",
+      "date": "DD.MM.YYYY"
     },
     "advancedSearchText": {
       "title": "Erweiterte Suche",

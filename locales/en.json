@@ -45,7 +45,9 @@
       "filterRow": "Add Values to Your Filter",
       "own": "your",
       "person": "{entity}",
-      "persons": "{entity}'s"
+      "persons": "{entity}'s",
+      "chips": "Select an option or enter text",
+      "date": "DD.MM.YYYY"
     },
     "advancedSearchText": {
       "title": "Advanced Search",

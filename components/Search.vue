@@ -9,8 +9,16 @@
         :advanced-search-text="$t('searchView.advancedSearchText')"
         :drop-down-info-texts="$t('searchView.dropDownInfoTexts')"
         :placeholder="{
-          main: placeholderText || $t('searchView.placeholders.main'),
-          filterRow: $t('searchView.placeholders.filterRow'),
+          main: {
+            text: placeholderText || $t('searchView.placeholders.main'),
+            chips: $t('searchView.placeholders.chips'),
+            date: $t('searchView.placeholders.date'),
+          },
+          filterRow: {
+            text: $t('searchView.placeholders.filterRow'),
+            chips: $t('searchView.placeholders.chips'),
+            date: $t('searchView.placeholders.date'),
+          },
         }"
         :autocomplete-property-names="{ id: 'source', label: 'label', data: 'data' }"
         :is-loading-index="autocompleteLoaderIndex"
