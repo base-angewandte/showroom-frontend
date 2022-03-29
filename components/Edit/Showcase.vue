@@ -87,6 +87,7 @@
       <template #optionButtons="{ submitAction }">
         <BaseButton
           :text="$t('editView.addActivities')"
+          :disabled="remainingSelectorEntryNumber <= 0"
           icon-size="large"
           icon="add-new-object"
           button-style="single"
