@@ -109,6 +109,7 @@
       :is-loading="isSaving"
       :title="$t('editView.addActivities')"
       :show="showPopUp"
+      :fullscreen-on-mobile="true"
       class="base-sr-popup"
       @button-left="cancel"
       @button-right="actionHandler('add')"
@@ -120,7 +121,7 @@
         :entries-per-page="selectorEntriesPerPage"
         :entries-selectable="true"
         :max-selected-entries="remainingSelectorEntryNumber"
-        :height="'calc(50vh - 32px)'"
+        :height="'calc(60vh - 32px)'"
         :is-loading="isLoading"
         :language="$i18n.locale"
         :options-hidden="true"
@@ -845,6 +846,7 @@ export default {
 }
 
 .base-sr-entry-selector {
+  flex: auto;
   padding: 0 $spacing $spacing;
   background-color: $background-color;
 }
@@ -872,5 +874,4 @@ export default {
     }
   }
 }
-
 </style>
