@@ -14,6 +14,7 @@
           :user-can-edit="userCanEdit"
           :data="carouselData"
           :edit-mode.sync="editMode.showcase"
+          :title="editMode.showcase ? $t('detailView.activityShowcase') : ''"
           @update:edit-mode="editModeHandler" />
       </transition>
     </client-only>
