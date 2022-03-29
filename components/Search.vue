@@ -56,7 +56,7 @@
               [1150, 6],
             ]"
             :expanded="!useCollapsedMode"
-            :current-page-number="currentPageNumber"
+            :current-page-number="currentPageNumberInt"
             :expand-text="$t('resultsView.expand')"
             :total="section.total"
             :max-show-more-rows="resultListInt.length > 1 ? 2 : 3"
@@ -68,8 +68,7 @@
             :use-pagination-link-element="'nuxt-link'"
             :scroll-to-offset="55 + 16"
             class="showroom-search__results"
-            @items-per-row-changed="itemsPerRow = $event"
-            @update:current-page-number="fetchNewPage">
+            @items-per-row-changed="itemsPerRow = $event">
             <template #header>
               <h4 class="showroom-search__results-header">
                 {{ titleCase(headerText || section.label) }}
@@ -362,6 +361,39 @@ export default {
     },
   },
   watch: {
+    $route(to, from) {
+      let triggerSearch = false;
+      // check if page is different (this is here for browser navigation as well
+      // as url set by pagination component directly)
+      if (from.query.page !== to.query.page) {
+        if (this.currentPageNumberInt !== to.query.page) {
+          this.currentPageNumberInt = Number(to.query.page);
+          triggerSearch = true;
+        }
+        // if not - check the more complicated filters param
+      } else if (from.query.filters !== to.query.filters) {
+        // then first check if filters themselves differ from current applied Filters
+        const routeFilters = JSON.parse(to.query.filters);
+        const appliedFiltersMinimized = this.appliedFiltersInt.map((filter) => ({
+          id: filter.id,
+          filter_values: filter.filter_values,
+        }));
+        if (JSON.stringify(routeFilters)
+          !== JSON.stringify(appliedFiltersMinimized)) {
+          this.appliedFiltersInt = routeFilters.map((filter) => {
+            const filterMatch = this.filterList.find((f) => f.id === filter.id);
+            return ({
+              ...filterMatch,
+              filter_values: filter.filter_values,
+            });
+          });
+          triggerSearch = true;
+        }
+      }
+      if (triggerSearch) {
+        this.search(this.appliedFiltersInt);
+      }
+    },
     appliedFiltersInt: {
       handler(val) {
         if (JSON.stringify(val) !== JSON.stringify(this.appliedFilters)) {
@@ -512,28 +544,6 @@ export default {
         offset: (this.currentPageNumberInt - 1) * this.numberOfEntriesOnPage,
         limit: this.numberOfEntriesOnPage,
       });
-    },
-    /**
-     * function triggered when pagination in BaseResultBoxSection is used
-      * @param {number} page
-     */
-    fetchNewPage(page) {
-      // check if page number actually changed
-      if (this.currentPageNumber !== page) {
-        // if yes set it correctly for this component
-        this.currentPageNumber = page;
-        // need to check query page here to prevent double navigation
-        if (Number(this.$route.query.page) !== page) {
-          this.$router.push({
-            path: this.$route.fullPath,
-            query: {
-              page,
-            },
-          });
-        }
-        // trigger search to get data from new page
-        this.search(this.appliedFiltersInt);
-      }
     },
     /**
      * method to trigger en lang title casing
