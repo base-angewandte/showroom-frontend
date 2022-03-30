@@ -373,7 +373,7 @@ export default {
         // if not - check the more complicated filters param
       } else if (from.query.filters !== to.query.filters) {
         // then first check if filters themselves differ from current applied Filters
-        const routeFilters = JSON.parse(to.query.filters);
+        const routeFilters = to.query.filters ? JSON.parse(to.query.filters) : [];
         const appliedFiltersMinimized = this.appliedFiltersInt.map((filter) => ({
           id: filter.id,
           filter_values: filter.filter_values,
@@ -480,19 +480,18 @@ export default {
      * @param {Filter[]} filters - the filters applied as determined by BaseAdvancedSearch component
      */
     async fetchSearchResults(filters) {
-      // get filters that should be added to route = only the ones which have filter values
-      const pathFilters = filters.filter((filter) => hasData(filter.filter_values));
-      // additionally strip everything unnecessary from the filter to keep url from getting
-      // to long
-      const minimizedPathFilters = pathFilters.map((filter) => ({
+      // to keep url as tiny as possible strip everything unnecessary from the filter
+      const minimizedPathFilters = filters.map((filter) => ({
         id: filter.id,
         filter_values: filter.filter_values,
       }));
+      // get filters that should be added to search request (=only filter that have data)
+      const requestFilters = filters.filter((filter) => hasData(filter.filter_values));
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
       // in asyncData and search does not need to be triggered here anymore
       if (JSON.stringify(minimizedPathFilters) !== this.$route.query.filters
-        && !(this.$route.query.filters === undefined && !pathFilters.length)) {
+        && !(this.$route.query.filters === undefined && !requestFilters.length)) {
         // whenever a new search is triggered reset the page number to 1
         this.currentPageNumber = 1;
         // push the filters into the route
@@ -507,7 +506,7 @@ export default {
               ? JSON.stringify(minimizedPathFilters) : undefined,
           },
         });
-        await this.search(pathFilters);
+        await this.search(requestFilters);
       }
     },
     /**
