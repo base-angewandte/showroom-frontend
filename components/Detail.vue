@@ -194,7 +194,7 @@
     <!-- media files -->
     <BaseResultBoxSection
       v-if="data.entries && data.entries.media && data.entries.media.length"
-      :entry-list="data.entries.media"
+      :entry-list="orderedMedia"
       :expand-text="$t('resultsView.expand')"
       :is-loading="isLoading"
       :jump-to-top="true"
@@ -215,7 +215,7 @@
         <MediaItem
           :key="props.item.id"
           :data="props.item"
-          :additional="`#${props.index + 1}`"
+          :additional="`#${props.item.order}`"
           @clicked="previewMedia(data.entries.media, props.item.id)" />
       </template>
     </BaseResultBoxSection>
@@ -515,6 +515,14 @@ export default {
     userHasShowroomEntries() {
       return this.searchResults && !!this.searchResults.length
         && this.searchResults.some((item) => hasData(item.data));
+    },
+    /**
+     * add order property to media files
+     *
+     * @returns {Array}
+     */
+    orderedMedia() {
+      return this.data.entries.media.map((media, index) => ({ ...media, order: index + 1 }));
     },
   },
   watch: {
