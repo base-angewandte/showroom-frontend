@@ -63,6 +63,7 @@ Following variables in the `.env` file contained in project folder can be define
 | BACKEND_BASE_URL            | url where the backend is located (e.g for login/logout)                             |
 | BACKEND_PREFIX              | prefix for the backend                                                              |
 | HEADER_JSON                 | url where the latest header version is specified                                    |
+| HEADER_LOGOUT_REDIRECT_URL  | url to redirect after logout                                                        |
 | HEADER_URL_TERMS            | link to terms and conditions                                                        |
 | HEADER_URL_NOTICE           | link to site legal notice                                                           |
 | LOCALES                     | available locales                                                                   |

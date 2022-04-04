@@ -65,6 +65,7 @@ export default {
     backendPrefix: process.env.BACKEND_PREFIX,
     apiSpecUrl: process.env.API_SPEC_URL,
     headerJson: process.env.HEADER_JSON,
+    headerLogoutRedirectUrl: process.env.HEADER_LOGOUT_REDIRECT_URL,
     header: process.env.HEADER,
     headerUrlsTerms: process.env.HEADER_URLS_TERMS,
     headerUrlsNotice: process.env.HEADER_URLS_NOTICE,
