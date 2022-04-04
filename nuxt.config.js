@@ -82,6 +82,7 @@ export default {
     '~/plugins/api.js',
     '~/plugins/axios.js',
     '~/plugins/i18n.js',
+    '~/plugins/router.js',
     {
       src: '~/plugins/localstorage.js',
       mode: 'client',
@@ -133,8 +134,5 @@ export default {
   pageTransition: {
     name: 'page',
     mode: 'out-in',
-    afterLeave() {
-      window.scrollTo(0, 0);
-    },
   },
 };
