@@ -52,20 +52,7 @@ export default {
         const requestBody = operation === 'search_create' ? {
           // TODO: remove default filter (only here because route does not work
           // currently without filters (moved here so it is not displayed in search)
-          filters: completeFilters.length ? completeFilters.map((filter) => ({
-            ...filter,
-            // TODO: 'chips' with freetext currently only taking string --> remove
-            // again should this work at some point
-            filter_values: filter.type === 'chips' && filter.freetext_allowed ? filter.filter_values
-              .map((filterValue) => filterValue.title || filterValue) : filter.filter_values,
-          })) : [{
-            id: 'default',
-            label: 'Fulltext',
-            type: 'text',
-            filter_values: [
-              'a',
-            ],
-          }],
+          filters: completeFilters.length ? completeFilters : [],
           offset: (page ? (Number(page) - 1) : 0) * entryNumber,
           limit: entryNumber,
         } : {};
@@ -143,7 +130,7 @@ export default {
      * @returns {boolean}
      */
     userCanEdit() {
-      return this.entryId.includes(this.userId)
+      return !!this.entryId.includes(this.userId)
         || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId))
         || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId.split('-').pop()));
     },

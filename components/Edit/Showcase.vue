@@ -634,7 +634,7 @@ export default {
         const filters = [
           {
             label: 'Fulltext',
-            id: 'default',
+            id: 'fulltext',
             // TODO: check how to fetch all entries without setting filter_value to ['a']
             filter_values: requestObject.query.length ? requestObject.query.split(' ') : ['a'],
             type: 'activity',

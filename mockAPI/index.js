@@ -115,7 +115,7 @@ const api = new OpenAPIBackend({
       const filterId = c.request.body.filter_id;
       let matchingData = [];
       let dataSubset = apiV1SearchResultsRead;
-      if (filterId !== 'default') {
+      if (filterId !== 'fulltext') {
         dataSubset = dataSubset.filter((entry) => entry.type === filterId);
       }
       if (searchString) {

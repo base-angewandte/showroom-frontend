@@ -167,7 +167,7 @@ export default {
      */
     initialDataMode() {
       return !this.appliedFilters || !this.appliedFilters.length
-        || (this.appliedFilters.length === 1 && this.appliedFilters[0].id === 'default'
+        || (this.appliedFilters.length === 1 && this.appliedFilters[0].id === 'fulltext'
         && !hasData(this.appliedFilters[0].filter_values));
     },
     /**
@@ -277,7 +277,7 @@ export default {
           const response = await this.$api.public.api_v1_autocomplete_create({}, {
             requestBody: {
               q: searchString,
-              filter_id: filter.label === this.$t('searchView.fulltext') ? 'default' : filter.id,
+              filter_id: filter.label === this.$t('searchView.fulltext') ? 'fulltext' : filter.id,
             },
           });
 
