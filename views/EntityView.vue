@@ -22,6 +22,7 @@ export default {
   async asyncData({
     $api, params, query, isDev, error, store,
   }) {
+    const { id } = params;
     let entryData = {};
     let parsedFilters = [];
     let completeFilters = [];
@@ -30,11 +31,14 @@ export default {
       const { page, filters } = query;
       // parse the filters from query params
       parsedFilters = filters ? JSON.parse(filters) : [];
-      // assume 6 result boxes per row to start with
-      const entryNumber = 6 * 5;
+      // assume 2 entries and 5 rows initially
+      // TODO: make configurable??
+      // this is starting with the smallest number because otherwise higher page
+      // numbers are not rendered with small screensize
+      const entryNumber = 2 * 5;
       const results = [];
-      // if filters were part of url - get all the data for these filters
-      const filterList = store.getters['searchData/getFilters'];
+      // if filters were part of url - get all the data for these filters for this entity
+      const filterList = await store.dispatch('searchData/fetchEntityFilterData', id);
       if (parsedFilters && parsedFilters.length) {
         completeFilters = parsedFilters.map((filter) => {
           const filterMatch = filterList.find((f) => f.id === filter.id);
@@ -44,15 +48,19 @@ export default {
           });
         });
       }
-
-      // TODO: use 'entities_search_create' instead of main search!!
       // create requests for all the relevant data
-      ['entities_retrieve', 'search_create'].forEach((operation) => {
+      ['entities_retrieve', 'entities_search_create'].forEach((operation) => {
         // add a request body only for search request
-        const requestBody = operation === 'search_create' ? {
-          // TODO: remove default filter (only here because route does not work
-          // currently without filters (moved here so it is not displayed in search)
-          filters: completeFilters.length ? completeFilters : [],
+        const requestBody = operation === 'entities_search_create' ? {
+          filters: completeFilters.length ? completeFilters.map((filter) => ({
+            ...filter,
+            // TODO: 'chips' with freetext currently only taking string --> remove
+            // again should this work at some point
+            filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
+              ? filter.filter_values.map((value) => ((!value.id && value.title)
+                ? value.title : value))
+              : filter.filter_values),
+          })) : [],
           offset: (page ? (Number(page) - 1) : 0) * entryNumber,
           limit: entryNumber,
         } : {};
@@ -79,7 +87,7 @@ export default {
         }));
       }
     } catch (e) {
-      if (!isDev) {
+      if (isDev) {
         console.error(e);
       } else {
         // --> this is vital information so the page should not even be rendered

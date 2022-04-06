@@ -23,6 +23,7 @@
       :result-list.sync="searchResults"
       :autocomplete-results="autocompleteResults"
       :applied-filters.sync="appliedFilters"
+      :filter-list="filterList"
       :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :use-collapsed-mode="false"
@@ -83,7 +84,8 @@ export default {
                 ...filter,
                 // filter_values ALWAYS needs to be array
                 filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
-                  ? filter.filter_values.map((value) => value.title || value)
+                  ? filter.filter_values.map((value) => ((!value.id && value.title)
+                    ? value.title : value))
                   : filter.filter_values),
               })),
             offset: (page ? (Number(page) - 1) : 0) * entryNumber,
@@ -149,6 +151,7 @@ export default {
       initialData: 'appData/getInitialData',
       getInitialData: 'appData/getInitialData',
       getInitialShowcaseData: 'appData/getInitialShowcaseData',
+      filterList: 'searchData/getFilters',
     }),
     carouselData() {
       return this.getInitialShowcaseData(0, false);

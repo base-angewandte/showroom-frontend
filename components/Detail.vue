@@ -279,6 +279,7 @@
         entity: getEntityString })"
       :result-list.sync="searchResults"
       :applied-filters.sync="appliedFiltersInt"
+      :filter-list="filterList"
       :autocomplete-results="autocompleteResults"
       :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
@@ -475,11 +476,18 @@ export default {
        * @type {Filter[]}
        */
       appliedFiltersInt: [],
+      /**
+       * get the individualized filter list for each entity (only showing
+       * e.g. keywords that actually exist in the entity's activities)
+       * @type {Filter[]}
+       */
+      filterList: [],
     };
   },
   computed: {
     ...mapGetters({
       lang: 'appData/getLocale',
+      getFilterList: 'searchData/getEntityFilters',
     }),
     /**
      * compute search results from data prop to be able to use
@@ -494,12 +502,15 @@ export default {
       },
     },
     getEntityString() {
-      const name = this.data.title;
-      const lastLetter = name.slice(-1);
-      const useS = this.lang === 'en'
-        || (this.lang === 'de' && !['s', 'x', 'z', 'ß'].includes(lastLetter));
-      return this.isUserProfile ? this.$t('searchView.placeholders.own')
-        : `${this.$t(`searchView.placeholders.person${useS ? 's' : ''}`, { entity: name })}`;
+      const { title } = this.data;
+      if (title) {
+        const lastLetter = title.slice(-1);
+        const useS = this.lang === 'en'
+          || (this.lang === 'de' && !['s', 'x', 'z', 'ß'].includes(lastLetter));
+        return this.isUserProfile ? this.$t('searchView.placeholders.own')
+          : `${this.$t(`searchView.placeholders.person${useS ? 's' : ''}`, { entity: title })}`;
+      }
+      return '';
     },
     userPreferencesUrl() {
       return process.env.userPreferencesUrl;
@@ -541,6 +552,12 @@ export default {
       deep: true,
     },
   },
+  async created() {
+    // if type is person an individual filer list is needed which should be fetched here
+    if (this.type === 'person') {
+      this.filterList = await this.$store.dispatch('searchData/fetchEntityFilterData', this.$route.params.id);
+    }
+  },
   mounted() {
     // get filters if any were encoded in url then they will be provided
     // in props on page load
@@ -576,21 +593,23 @@ export default {
           // results - REMOVE AGAIN!!
           // assign search results
           const parsedResults = JSON.parse(data);
-          const dedupedResults = {
-            ...parsedResults,
-            data: parsedResults.data
-              .reduce((prev, curr) => {
-                if (!prev.map((res) => res.id).includes(curr.id)) {
-                  prev.push(curr);
-                }
-                return prev;
-              }, []),
-          };
-          this.searchResults = [{
-            ...dedupedResults,
-            total: parsedResults.total
-              - (parsedResults.data.length - dedupedResults.data.length),
-          }];
+          if (parsedResults && parsedResults.data) {
+            const dedupedResults = {
+              ...parsedResults,
+              data: parsedResults.data
+                .reduce((prev, curr) => {
+                  if (!prev.map((res) => res.id).includes(curr.id)) {
+                    prev.push(curr);
+                  }
+                  return prev;
+                }, []),
+            };
+            this.searchResults = [{
+              ...dedupedResults,
+              total: parsedResults.total
+                - (parsedResults.data.length - dedupedResults.data.length),
+            }];
+          }
         } else {
           this.searchResults = [];
         }
@@ -617,7 +636,7 @@ export default {
           const response = await this.$api.public.api_v1_autocomplete_create({}, {
             requestBody: {
               q: searchString,
-              filter_id: filter.label === this.$t('searchView.fulltext') ? 'default' : filter.id,
+              filter_id: filter.label === this.$t('searchView.fulltext') ? 'fulltext' : filter.id,
             },
           });
 

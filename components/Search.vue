@@ -149,8 +149,6 @@ import {
 import 'base-ui-components/dist/components/BaseAdvancedSearch/BaseAdvancedSearch.css';
 import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSection.css';
 import 'base-ui-components/dist/components/BaseLoader/BaseLoader.css';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { mapGetters } from 'vuex';
 import { hasData, toTitleString } from '~/utils/common';
 
 Vue.use(BaseAdvancedSearch);
@@ -169,6 +167,14 @@ export default {
      * // TODO: there seem to be some inconsistencies between API spec mock data --> clarify!
      */
     resultList: {
+      type: Array,
+      default: () => [],
+    },
+    /**
+     * the list of filters to be displayed in the drop down allowing the user to choose
+     * @type {Filter[]}
+     */
+    filterList: {
       type: Array,
       default: () => [],
     },
@@ -263,16 +269,6 @@ export default {
     entityId() {
       return this.$route.params.id || 'main';
     },
-    /**
-     * get the data that only need fetching once for all search components from
-     * the searchData store module
-     */
-    ...mapGetters({
-      /**
-       * a list of all filters defined in the backend and available to the user
-       */
-      filterList: 'searchData/getFilters',
-    }),
     /**
      * remove hidden filters from the filter list supplied to the component
      * (done here because hidden filters are needed to get default filter)
@@ -524,7 +520,8 @@ export default {
           ...filter,
           // filter_values ALWAYS needs to be array
           filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
-            ? filter.filter_values.map((value) => value.title)
+            ? filter.filter_values.map((value) => ((!value.id && value.title)
+              ? value.title : value))
             : filter.filter_values),
         }));
       /**
@@ -539,7 +536,7 @@ export default {
        */
       this.$emit('search', {
         // filter filters that dont contain any values
-        filters: filterRequestData.filter((filter) => hasData(filter.filter_values)),
+        filters: filterRequestData.filter((filter) => hasData(filter.filter_values)) || [],
         offset: (this.currentPageNumberInt - 1) * this.numberOfEntriesOnPage,
         limit: this.numberOfEntriesOnPage,
       });
