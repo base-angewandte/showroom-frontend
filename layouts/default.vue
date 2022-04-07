@@ -57,7 +57,7 @@ export default {
         de: `${process.env.appPrefix}/de${this.$route.path}`,
         en: `${process.env.appPrefix}/en${this.$route.path}`,
         login: `${backendUrl}/accounts/login/?next=${process.env.appPrefix}${this.$route.path}`,
-        logout: `${backendUrl}/accounts/logout/?next=/`,
+        logout: `${backendUrl}/accounts/logout/?next=${process.env.headerLogoutRedirectUrl}`,
         terms: process.env.headerUrlsTerms,
         siteNotice: process.env.headerUrlsNotice,
         showroom: `${process.env.appPrefix}/`,
