@@ -83,7 +83,10 @@ export default {
     '~/plugins/api.js',
     '~/plugins/axios.js',
     '~/plugins/i18n.js',
-    '~/plugins/router.js',
+    {
+      src:  '~/plugins/router.js',
+      mode: 'client',
+    },
     {
       src: '~/plugins/localstorage.js',
       mode: 'client',

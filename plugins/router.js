@@ -3,7 +3,7 @@ let previousPage = '';
 export default ({ app }) => {
   app.router.beforeEach((to, from) => {
     // if ssr, do nothing
-    if (!process.browser) return;
+    if (!process.client) return;
 
     const key = from.path;
     const history = JSON.parse(window.localStorage.getItem('history')) || {};
@@ -20,6 +20,7 @@ export default ({ app }) => {
   });
 
   app.router.afterEach((to, from) => {
+    console.log('here now');
     // if ssr, do nothing
     if (!process.browser) return;
 
