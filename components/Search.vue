@@ -259,6 +259,7 @@ export default {
       initialRenderDone: false,
       autocompleteTimeout: null,
       currentPageNumberInt: 1,
+      appliedFiltersInt: [],
     };
   },
   computed: {
@@ -295,21 +296,6 @@ export default {
         type: 'text',
       });
     },
-    /**
-     * the filters currently applied
-     */
-    appliedFiltersInt: {
-      /**
-       * get by triggering the store getter function
-       * @returns {Filter[]}
-       */
-      get() {
-        return this.appliedFilters;
-      },
-      set(val) {
-        this.$emit('update:appliedFilters', val);
-      },
-    },
     maxRows() {
       // TODO: put in config? and check if different for different searches -->
       // then it should be prop
@@ -340,7 +326,7 @@ export default {
     currentPageNumber: {
       set(val) {
         // need internal representation that is immediately updated as well for search request
-        this.currentPageNumberInt = val;
+        this.currentPageNumberInt = val || 1;
         this.$emit('update:page-number', val);
       },
       get() {
@@ -363,11 +349,11 @@ export default {
       // as url set by pagination component directly)
       if (from.query.page !== to.query.page) {
         if (this.currentPageNumberInt !== to.query.page) {
-          this.currentPageNumberInt = Number(to.query.page);
+          this.currentPageNumberInt = Number(to.query.page || 1);
           triggerSearch = true;
         }
-        // if not - check the more complicated filters param
-      } else if (from.query.filters !== to.query.filters) {
+        // check the more complicated filters param
+      } if (from.query.filters !== to.query.filters) {
         // then first check if filters themselves differ from current applied Filters
         const routeFilters = to.query.filters ? JSON.parse(to.query.filters) : [];
         const appliedFiltersMinimized = this.appliedFiltersInt.map((filter) => ({
@@ -401,7 +387,7 @@ export default {
     appliedFilters: {
       handler(val) {
         if (JSON.stringify(val) !== JSON.stringify(this.appliedFiltersInt)) {
-          this.appliedFiltersInt = { ...val };
+          this.appliedFiltersInt = JSON.parse(JSON.stringify(val));
         }
       },
       immediate: true,
