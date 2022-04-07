@@ -24,9 +24,7 @@
       :supportive-text="$t('editView.listText')"
       :edit-hide-text="$t('editView.listItemHide')"
       :edit-show-text="$t('editView.listItemShow')"
-      :expanded="expandedListItems"
       control-type="toggle"
-      @expanded-state="setExpandedState"
       @update:data="saveEdit">
       <template #content="{ data: slotListData }">
         <!-- if entry has a link use baseLink -->
@@ -144,10 +142,6 @@ export default {
        * list reordering)
        */
       saveTimeout: null,
-      /**
-       * expanded state of list
-       */
-      expandedListItems: [],
     };
   },
   computed: {
@@ -200,11 +194,6 @@ export default {
         this.$emit('update:edit-mode', { name: 'list', editMode: val });
       }
     },
-  },
-  mounted() {
-    if (process.browser) {
-      this.expandedListItems = this.getExpandedState();
-    }
   },
   methods: {
     ...mapActions({
@@ -293,43 +282,6 @@ export default {
         }
         return listItem;
       });
-    },
-    /**
-     * get expanded list state of current page from localStorage
-     */
-    getExpandedState() {
-      const key = this.$route.path;
-      const history = JSON.parse(window.localStorage.getItem('history'));
-      return history
-        && history[key]
-        && history[key].list ? history[key].list : [];
-    },
-    /**
-     * set expanded list state to local storage
-     * @param {Array} state - expanded level, comma separated
-     */
-    setExpandedState(state) {
-      const key = this.$route.path;
-
-      // get current history from localStorage
-      const history = JSON.parse(window.localStorage.getItem('history')) || {};
-
-      // if state is set, store it to object
-      if (state.length) {
-        // if object does not exist, create it
-        if (!history[key]) {
-          history[key] = {};
-        }
-        // set value
-        history[key].list = state;
-      }
-      // otherwise remove it
-      if (!state.length && history[key]) {
-        delete history[key];
-      }
-
-      // set new history to localStorage
-      window.localStorage.setItem('history', JSON.stringify(history));
     },
   },
 };
