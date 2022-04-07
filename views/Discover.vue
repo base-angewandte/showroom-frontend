@@ -103,11 +103,11 @@ export default {
         if (initialData) {
           const initialResults = initialData.results;
           // TODO: this is just a temporary fix working only with one result category!
-          const initialSearchFilters = store.getters['appData/getInitialData'].results[0].filters;
+          const initialSearchData = store.getters['appData/getInitialData'].results[0].search;
           if (page > 1 && initialResults && initialResults.length) {
             const paginationResponse = await $api.public.api_v1_search_create({}, {
               requestBody: {
-                filters: initialSearchFilters,
+                ...initialSearchData,
                 offset: (page ? (Number(page) - 1) : 0) * entryNumber,
                 limit: entryNumber,
               },
@@ -159,9 +159,9 @@ export default {
     // save the filters from initial request in a variable so they are available
     // when changing pages
     // TODO: this only works with one result category for now!!
-    initialFilters() {
+    initialSearchData() {
       // TODO: this is just a temporary fix working only with one result category!
-      return this.getInitialData.results[0].filters;
+      return this.getInitialData.results[0].search;
     },
     /**
      * determine if landing page mode should be applied (for search results and
@@ -240,7 +240,8 @@ export default {
             }];
           }
         } else {
-          if (requestBody.offset === 0 || !this.initialFilters) {
+          console.log(this.initialSearchData);
+          if (requestBody.offset === 0 || !this.initialSearchData) {
             // if not - refetch default data to be displayed for search
             // data are always refetched here to always have the latest results (also the
             // ones added newly from the repository) available here
@@ -253,7 +254,7 @@ export default {
             const filterRequest = await this.$api.public.api_v1_search_create({}, {
               requestBody: {
                 ...requestBody,
-                filters: this.initialFilters,
+                ...this.initialSearchData,
               },
             });
             this.searchResults = [JSON.parse(filterRequest.data)];
