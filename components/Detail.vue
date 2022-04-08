@@ -355,7 +355,6 @@ import Search from '~/components/Search';
 import {
   toTitleString,
   titleCaseLabels,
-  hasData,
 } from '~/utils/common';
 
 Vue.use(BaseButton);
@@ -484,6 +483,10 @@ export default {
        * @type {Filter[]}
        */
       filterList: [],
+      /**
+       * variable to determine display of search element
+       */
+      userHasShowroomEntries: false,
     };
   },
   computed: {
@@ -525,10 +528,6 @@ export default {
     editModeIsActive() {
       return Object.values(this.editMode).some((value) => value);
     },
-    userHasShowroomEntries() {
-      return this.searchResults && !!this.searchResults.length
-        && this.searchResults.some((item) => hasData(item.data));
-    },
     /**
      * add order property to media files
      *
@@ -558,6 +557,24 @@ export default {
     // if type is person an individual filer list is needed which should be fetched here
     if (this.type === 'person') {
       this.filterList = await this.$store.dispatch('searchData/fetchEntityFilterData', this.$route.params.id);
+      // // check if entity actually has showroom entries with a generic search request
+      try {
+        const requestBody = {
+          offset: 0,
+          limit: 10,
+          filters: [],
+        };
+        const { data } = await this.$api.public.api_v1_entities_search_create({
+          id: this.$route.params.id,
+        }, {
+          requestBody,
+        });
+        const searchData = JSON.parse(data);
+        this.userHasShowroomEntries = searchData && searchData.data && searchData.data.length;
+      } catch (e) {
+        // if request fails there is something wrong anyway so set false
+        this.userHasShowroomEntries = false;
+      }
     }
   },
   mounted() {
