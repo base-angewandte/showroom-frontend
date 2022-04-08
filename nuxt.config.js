@@ -75,6 +75,7 @@ export default {
     enTitleCasing: JSON.parse(process.env.EN_TITLE_CASING),
     userPreferencesUrl: process.env.USER_PREFERENCES_URL,
     authRequired: JSON.parse(process.env.AUTH_REQUIRED),
+    searchResultRows: JSON.parse(process.env.SEARCH_RESULT_ROWS),
   },
   /*
   ** Plugins to load before mounting the App

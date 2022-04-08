@@ -53,16 +53,18 @@ export default {
     Showcase,
     Search,
   },
-  async asyncData({ $api, query, store }) {
+  async asyncData({
+    $api, query, store, env,
+  }) {
     const { filters, page } = query;
     const parsedFilters = filters ? JSON.parse(filters) : [];
     // define completed filters here so they can be passed on to component in the end
     let completeFilters = [];
-    // assume 2 entries and 5 rows initially
+    // assume 2 entries and configered number of rows or 5 initially
     // TODO: make configurable??
     // this is starting with the smallest number because otherwise higher page
     // numbers are not rendered with small screensize
-    const entryNumber = 2 * 5;
+    const entryNumber = 2 * env.searchResultRows || 5;
     let results = [];
     // get initial search results
     if (parsedFilters && parsedFilters.length) {

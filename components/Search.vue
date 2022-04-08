@@ -296,7 +296,7 @@ export default {
     maxRows() {
       // TODO: put in config? and check if different for different searches -->
       // then it should be prop
-      return this.resultListInt.length > 1 ? 2 : 5;
+      return this.resultListInt.length > 1 ? 2 : process.env.searchResultRows;
     },
     /**
      * calculate the number of entries that should be on one page - needed for limit

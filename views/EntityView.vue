@@ -20,7 +20,7 @@ export default {
   },
   mixins: [userInfo],
   async asyncData({
-    $api, params, query, isDev, error, store,
+    $api, params, query, isDev, error, store, env,
   }) {
     const { id } = params;
     let entryData = {};
@@ -31,11 +31,11 @@ export default {
       const { page, filters } = query;
       // parse the filters from query params
       parsedFilters = filters ? JSON.parse(filters) : [];
-      // assume 2 entries and 5 rows initially
+      // assume 2 entries and configured number of rows or 5 rows initially
       // TODO: make configurable??
       // this is starting with the smallest number because otherwise higher page
       // numbers are not rendered with small screensize
-      const entryNumber = 2 * 5;
+      const entryNumber = 2 * env.searchResultRows;
       const results = [];
       // if filters were part of url - get all the data for these filters for this entity
       const filterList = await store.dispatch('searchData/fetchEntityFilterData', id);
