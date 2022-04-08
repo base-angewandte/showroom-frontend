@@ -20,7 +20,7 @@
             date: $t('searchView.placeholders.date'),
           },
         }"
-        :autocomplete-property-names="{ id: 'source', label: 'label', data: 'data' }"
+        :autocomplete-property-names="{ id: 'filter_id', label: 'label', data: 'data' }"
         :is-loading-index="autocompleteLoaderIndex"
         :assistive-text="{
           selectedOption: 'Change the text of this selected option',
