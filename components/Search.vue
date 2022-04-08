@@ -287,11 +287,7 @@ export default {
       const filteredDefaultFilter = this.filterList.find((filter) => filter.id === 'fulltext');
       // either get default filter from backend provided filter list or on last resort take
       // this hardcoded default filter
-      return filteredDefaultFilter ? ({
-        ...filteredDefaultFilter,
-        // replace label since quite a long string atm
-        label: this.$t('searchView.fulltext'),
-      }) : ({
+      return filteredDefaultFilter || ({
         label: this.$t('searchView.fulltext'),
         id: 'fulltext',
         type: 'text',
