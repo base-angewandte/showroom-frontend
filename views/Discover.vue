@@ -250,7 +250,7 @@ export default {
             // if not - refetch default data to be displayed for search
             // data are always refetched here to always have the latest results (also the
             // ones added newly from the repository) available here
-            await this.$store.dispatch('appData/fetchInitialData', {});
+            await this.$store.dispatch('appData/fetchInitialData', { limit: requestBody.limit });
             if (requestBody.offset === 0) {
               this.searchResults = this.getInitialData.results;
             }

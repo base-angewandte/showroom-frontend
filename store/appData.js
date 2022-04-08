@@ -93,9 +93,7 @@ const actions = {
     try {
       const response = await this.$api.public.api_v1_initial_retrieve({
         id: process.env.institutionId,
-      },
-      {
-        requestBody,
+        ...requestBody,
       });
       if (response.data) {
         commit('setInitialData', JSON.parse(response.data));
