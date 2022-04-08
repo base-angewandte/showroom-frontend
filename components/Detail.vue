@@ -33,8 +33,10 @@
           :data="[{ data: data.subtext }]" />
 
         <!-- expertise / type -->
+        <!-- TODO: this conditional might need adaptions when more types available -->
         <template
-          v-if="data.expertise || data.type">
+          v-if="(type === 'person' && data.expertise && data.expertise.length)
+            || (type === 'object' && data.type)">
           <div
             class="base-sr-chips">
             <h2
