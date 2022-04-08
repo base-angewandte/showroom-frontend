@@ -161,7 +161,11 @@ export default {
     // TODO: this only works with one result category for now!!
     initialSearchData() {
       // TODO: this is just a temporary fix working only with one result category!
-      return this.getInitialData.results[0].search;
+      const data = this.getInitialData;
+      if (data && data.results && data.results[0] && data.results[0].search) {
+        return data.results[0].search;
+      }
+      return null;
     },
     /**
      * determine if landing page mode should be applied (for search results and
@@ -240,7 +244,6 @@ export default {
             }];
           }
         } else {
-          console.log(this.initialSearchData);
           if (requestBody.offset === 0 || !this.initialSearchData) {
             // if not - refetch default data to be displayed for search
             // data are always refetched here to always have the latest results (also the

@@ -64,6 +64,7 @@
             :jump-to-top="true"
             :fetch-data-externally="true"
             :use-expand-mode="useCollapsedMode"
+            :initial-items-per-row="2"
             :max-rows="maxRows"
             :use-pagination-link-element="'nuxt-link'"
             :scroll-to-offset="55 + 16"
