@@ -537,7 +537,9 @@ export default {
      * @returns {Array}
      */
     orderedMedia() {
-      return this.data.entries.media.map((media, index) => ({ ...media, order: index + 1 }));
+      return this.data.entries && this.data.entries.media
+        ? this.data.entries.media.map((media, index) => ({ ...media, order: index + 1 }))
+        : [];
     },
   },
   watch: {
