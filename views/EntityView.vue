@@ -4,6 +4,7 @@
     :data="data"
     :is-user-profile="isUserProfile"
     :applied-filters="filters"
+    :filter-list="filterList"
     :user-can-edit="userCanEdit" />
 </template>
 
@@ -26,6 +27,7 @@ export default {
     let entryData = {};
     let parsedFilters = [];
     let completeFilters = [];
+    let filterList = [];
     try {
       // get relevant query params
       const { page, filters } = query;
@@ -38,7 +40,7 @@ export default {
       const entryNumber = 2 * env.searchResultRows;
       const results = [];
       // if filters were part of url - get all the data for these filters for this entity
-      const filterList = await store.dispatch('searchData/fetchEntityFilterData', id);
+      filterList = await store.dispatch('searchData/fetchEntityFilterData', id);
       if (parsedFilters && parsedFilters.length) {
         completeFilters = parsedFilters.map((filter) => {
           const filterMatch = filterList.find((f) => f.id === filter.id);
@@ -100,12 +102,18 @@ export default {
         });
       }
     }
-    return { data: entryData, filters: completeFilters };
+    return { data: entryData, filters: completeFilters, filterList };
   },
   data() {
     return {
       data: {},
       filters: [],
+      /**
+       * get the individualized filter list for each entity (only showing
+       * e.g. keywords that actually exist in the entity's activities)
+       * @type {Filter[]}
+       */
+      filterList: [],
     };
   },
   head() {

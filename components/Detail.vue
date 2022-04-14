@@ -275,8 +275,7 @@
     </template>
 
     <Search
-      v-if="type === 'person' && (userCanEdit
-        || userHasShowroomEntries)"
+      v-if="type === 'person' && (userCanEdit || userHasShowroomEntries)"
       :header-text="$t('resultsView.headerText.entityResults', {
         entity: getEntityString })"
       :result-list.sync="searchResults"
@@ -424,6 +423,15 @@ export default {
       type: Array,
       default: () => ([]),
     },
+    /**
+     * get the individualized filter list for each entity (only showing
+     * e.g. keywords that actually exist in the entity's activities)
+     * @type {Filter[]}
+     */
+    filterList: {
+      type: Array,
+      default: () => ([]),
+    },
   },
   data() {
     return {
@@ -477,22 +485,11 @@ export default {
        * @type {Filter[]}
        */
       appliedFiltersInt: [],
-      /**
-       * get the individualized filter list for each entity (only showing
-       * e.g. keywords that actually exist in the entity's activities)
-       * @type {Filter[]}
-       */
-      filterList: [],
-      /**
-       * variable to determine display of search element
-       */
-      userHasShowroomEntries: false,
     };
   },
   computed: {
     ...mapGetters({
       lang: 'appData/getLocale',
-      getFilterList: 'searchData/getEntityFilters',
     }),
     /**
      * compute search results from data prop to be able to use
@@ -519,6 +516,12 @@ export default {
     },
     userPreferencesUrl() {
       return process.env.userPreferencesUrl;
+    },
+    /**
+     * variable to determine display of search element
+     */
+    userHasShowroomEntries() {
+      return !!this.data.activities[0].total;
     },
     /**
      * check if some edit-mode is active
@@ -552,30 +555,6 @@ export default {
       },
       deep: true,
     },
-  },
-  async created() {
-    // if type is person an individual filer list is needed which should be fetched here
-    if (this.type === 'person') {
-      this.filterList = await this.$store.dispatch('searchData/fetchEntityFilterData', this.$route.params.id);
-      // // check if entity actually has showroom entries with a generic search request
-      try {
-        const requestBody = {
-          offset: 0,
-          limit: 10,
-          filters: [],
-        };
-        const { data } = await this.$api.public.api_v1_entities_search_create({
-          id: this.$route.params.id,
-        }, {
-          requestBody,
-        });
-        const searchData = JSON.parse(data);
-        this.userHasShowroomEntries = searchData && searchData.data && searchData.data.length;
-      } catch (e) {
-        // if request fails there is something wrong anyway so set false
-        this.userHasShowroomEntries = false;
-      }
-    }
   },
   mounted() {
     // get filters if any were encoded in url then they will be provided
