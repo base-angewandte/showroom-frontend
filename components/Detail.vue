@@ -598,8 +598,6 @@ export default {
           this.searchResults = [];
         }
       } catch (e) {
-        // TODO: error handling
-        console.error(e);
         // TODO: error handling (unify at one place??)
         // TODO: restore previous state of search?
         console.error(e);
