@@ -589,26 +589,10 @@ export default {
           requestBody,
         });
         if (data) {
-          // TODO: this is a temporary fix to not have duplicates in the search
-          // results - REMOVE AGAIN!!
           // assign search results
           const parsedResults = JSON.parse(data);
           if (parsedResults && parsedResults.data) {
-            const dedupedResults = {
-              ...parsedResults,
-              data: parsedResults.data
-                .reduce((prev, curr) => {
-                  if (!prev.map((res) => res.id).includes(curr.id)) {
-                    prev.push(curr);
-                  }
-                  return prev;
-                }, []),
-            };
-            this.searchResults = [{
-              ...dedupedResults,
-              total: parsedResults.total
-                - (parsedResults.data.length - dedupedResults.data.length),
-            }];
+            this.searchResults = [].concat(parsedResults);
           }
         } else {
           this.searchResults = [];
