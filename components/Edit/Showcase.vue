@@ -177,6 +177,7 @@ import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSec
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapActions, mapGetters } from 'vuex';
 import { userInfo } from '@/mixins/userNotifications';
+import { getLangLabel } from '@/utils/common';
 
 Vue.use(BaseButton);
 Vue.use(BaseBoxButton);
@@ -785,8 +786,14 @@ export default {
     formatData(data) {
       return data.map((entry) => ({
         ...entry,
+        // adding a description which should be the entry type
+        description: entry.type && entry.type.label
+          ? getLangLabel(entry.type.label, this.$i18n.locale, true) : '',
+        // needed for correct saving to db
         type: entry.showcase_type,
+        // needed for the correct link
         href: entry.id,
+        // needed for correct image display
         imageUrl: entry.previews && entry.previews.length
           ? Object.values(entry.previews[0])[0] : entry.image_url || '',
       }));
