@@ -831,21 +831,24 @@ export default {
     }
 
     &__item {
+      display: inline-block;
+      margin-bottom: $spacing-small;
       padding: 0 $spacing-small;
       margin-right: $spacing-small;
       background-color: $background-color;
       white-space: nowrap;
     }
 
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-      width: 50px;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0) , rgba(255, 255, 255, 1));
-    }
+    // TODO: commenting this out for now since chips hiding not working anyway - FIX IT!!
+    //&::after {
+    //  content: '';
+    //  position: absolute;
+    //  top: 0;
+    //  right: 0;
+    //  height: 100%;
+    //  width: 50px;
+    //  background: linear-gradient(to right, rgba(255, 255, 255, 0) , rgba(255, 255, 255, 1));
+    //}
   }
 
   /* chips if baseBoxExpand is expanded */
