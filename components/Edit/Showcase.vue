@@ -131,7 +131,7 @@
           label: $t('editView.sortBy'),
           default: {
             label: $t('editView.sortOptions.lastModified'),
-            value: 'date_modified',
+            value: 'date_changed',
           },
           valuePropertyName: 'value',
         }"
@@ -335,10 +335,6 @@ export default {
        */
       sortOptions: [
         {
-          label: this.$t('editView.sortOptions.byType'),
-          value: 'type_en',
-        },
-        {
           label: this.$t('editView.sortOptions.AZ'),
           value: 'title',
         },
@@ -347,16 +343,8 @@ export default {
           value: '-title',
         },
         {
-          label: this.$t('editView.sortOptions.lastCreated'),
-          value: '-date_created',
-        },
-        {
-          label: this.$t('editView.sortOptions.firstCreated'),
-          value: 'date_created',
-        },
-        {
           label: this.$t('editView.sortOptions.lastModified'),
-          value: 'date_modified',
+          value: 'date_changed',
         },
       ],
       /**
@@ -632,21 +620,29 @@ export default {
         this.isLoading = true;
         this.selectorEntriesPerPage = this.calcSelectorEntriesPerPage();
 
-        const filters = [
-          {
-            label: 'Fulltext',
-            id: 'fulltext',
-            // TODO: check how to fetch all entries without setting filter_value to ['a']
-            filter_values: requestObject.query.length ? requestObject.query.split(' ') : ['a'],
-            type: 'activity',
-          },
-        ];
+        const excludedEntries = this.editInputInt && this.editInputInt.length ? this.editInputInt
+          .map((selectedEntry) => selectedEntry.id) : [];
 
-        const response = await this.$api.public.api_v1_search_create({}, {
+        const queryString = requestObject.query;
+
+        const requestBodyDefaults = {
+          exclude: excludedEntries,
+          sort: requestObject.sort.value,
+          offset: (requestObject.page - 1) * this.selectorEntriesPerPage,
+          limit: this.selectorEntriesPerPage,
+          entity_id: this.$route.params.id.split('-').pop(),
+        };
+        const optionalParams = {};
+        if (queryString) {
+          this.$set(optionalParams, 'q', queryString);
+        } else {
+          this.$set(optionalParams, 'entity_id', this.$route.params.id.split('-').pop());
+        }
+
+        const response = await this.$api.public.api_v1_showcase_search_create({}, {
           requestBody: {
-            filters,
-            offset: (requestObject.page - 1) * this.selectorEntriesPerPage,
-            limit: this.selectorEntriesPerPage,
+            ...requestBodyDefaults,
+            ...optionalParams,
           },
         });
 
