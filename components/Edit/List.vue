@@ -241,7 +241,11 @@ export default {
       this.saveTimeout = setTimeout(async () => {
         try {
           // update database entry with relevant data
-          this.listData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
+          const newData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
+          // necessary because if request was cancelled store function returns false
+          if (newData) {
+            this.listData = newData;
+          }
         } catch (e) {
           console.error(e);
           // only inform user when operation failed
