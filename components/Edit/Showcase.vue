@@ -619,18 +619,15 @@ export default {
       try {
         this.isLoading = true;
         this.selectorEntriesPerPage = this.calcSelectorEntriesPerPage();
-
-        const excludedEntries = this.editInputInt && this.editInputInt.length ? this.editInputInt
+        const excludedEntries = this.editInput && this.editInput.length ? this.editInput
           .map((selectedEntry) => selectedEntry.id) : [];
 
         const queryString = requestObject.query;
-
         const requestBodyDefaults = {
           exclude: excludedEntries,
           sort: requestObject.sort.value,
           offset: (requestObject.page - 1) * this.selectorEntriesPerPage,
           limit: this.selectorEntriesPerPage,
-          entity_id: this.$route.params.id.split('-').pop(),
         };
         const optionalParams = {};
         if (queryString) {
