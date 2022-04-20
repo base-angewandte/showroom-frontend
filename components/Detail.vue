@@ -829,7 +829,7 @@ export default {
 
     &__item {
       display: inline-block;
-      margin-bottom: $spacing-small;
+      margin-top: $spacing-small;
       padding: 0 $spacing-small;
       margin-right: $spacing-small;
       background-color: $background-color;
