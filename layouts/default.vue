@@ -54,9 +54,9 @@ export default {
     urls() {
       const backendUrl = `${process.env.backendBaseUrl}${process.env.backendPrefix}`;
       return {
-        de: `${process.env.appPrefix}/de${this.$route.path}`,
-        en: `${process.env.appPrefix}/en${this.$route.path}`,
-        login: `${backendUrl}/accounts/login/?next=${process.env.appPrefix}${this.$route.path}`,
+        de: `${process.env.appPrefix}/de${this.$route.fullPath}`,
+        en: `${process.env.appPrefix}/en${this.$route.fullPath}`,
+        login: `${backendUrl}/accounts/login/?next=${process.env.appPrefix}${this.$route.fullPath}`,
         logout: `${backendUrl}/accounts/logout/?next=${process.env.headerLogoutRedirectUrl}`,
         terms: process.env.headerUrlsTerms,
         siteNotice: process.env.headerUrlsNotice,

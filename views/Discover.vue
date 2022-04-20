@@ -224,26 +224,8 @@ export default {
           const parsedResults = JSON.parse(data);
           // check if there are data (this would e.g. be false if request was cancelled)
           if (parsedResults && parsedResults.data) {
-            // TODO: this is a temporary fix to not have duplicates in the search
-            // results - REMOVE AGAIN!!
             // assign search results
-            const dedupedResults = {
-              ...parsedResults,
-              data: parsedResults.data
-                .reduce((prev, curr) => {
-                  if (!prev.map((res) => res.id).includes(curr.id)) {
-                    prev.push(curr);
-                  }
-                  return prev;
-                }, []),
-            };
-            // TODO: this calculation looks just wrong...however currently total numbers
-            // are futile anyway - might be obsolete as soon as no duplicates are sent anymore
-            this.searchResults = [{
-              ...dedupedResults,
-              total: parsedResults.total
-                - (parsedResults.data.length - dedupedResults.data.length),
-            }];
+            this.searchResults = [].concat(parsedResults);
           }
         } else {
           if (requestBody.offset === 0 || !this.initialSearchData) {

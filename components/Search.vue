@@ -294,7 +294,7 @@ export default {
       });
     },
     maxRows() {
-      // TODO: put in config? and check if different for different searches -->
+      // TODO: check if different for different searches -->
       // then it should be prop
       return this.resultListInt.length > 1 ? 2 : process.env.searchResultRows;
     },
@@ -407,9 +407,29 @@ export default {
      * displayed items should change --> retrigger search
      */
     itemsPerRow(val, old) {
-      // only retrigger search if page is other than 1
-      // or page is 1 and more items need to be shown than before
-      if (this.currentPageNumber !== 1 || val > old) {
+      // get new offset
+      const proposedOffset = (this.currentPageNumberInt - 1) * this.numberOfEntriesOnPage;
+      // check if current page number is not covered anymore if more items fit on one page than
+      // before - if so set page to keep previous offset item in view
+      if (this.currentPageNumberInt > 1 && old < val
+        && proposedOffset > this.resultListInt[0].total) {
+        // get first previous item number
+        const firstPreviousItem = (old * this.maxRows * (this.currentPageNumberInt - 1)) + 1;
+        // set current page number to the page the first previous item should be on now
+        this.currentPageNumberInt = Math.ceil(firstPreviousItem / this.numberOfEntriesOnPage) || 1;
+        // set router accordingly (this will trigger search as well)
+        this.$router.push({
+          path: this.$route.fullPath,
+          query: {
+            // need to user currentpagenumberint here because currentpagenumber is updated
+            // via event to parent and the prop will only be updated after this function
+            // went through
+            page: this.currentPageNumberInt,
+          },
+        });
+        // only retrigger search if page is other than 1
+        // or page is 1 and more items need to be shown than before
+      } else if (this.currentPageNumber !== 1 || val > old) {
         this.search(this.appliedFiltersInt);
       }
     },

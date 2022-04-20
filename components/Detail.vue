@@ -223,17 +223,14 @@
     </BaseResultBoxSection>
 
     <!-- media preview -->
-    <template
-      v-if="type === 'object'">
-      <BaseMediaCarousel
-        :show-preview="showPreview"
-        :initial-slide="initialPreviewSlide"
-        :items="mediaPreviewData"
-        :autoplay-media="true"
-        :allow-download="false"
-        @hide="showPreview = false"
-        @download="downloadFile" />
-    </template>
+    <BaseMediaCarousel
+      :show-preview="showPreview"
+      :initial-slide="initialPreviewSlide"
+      :items="mediaPreviewData"
+      :autoplay-media="true"
+      :allow-download="false"
+      @hide="showPreview = false"
+      @download="downloadFile" />
 
     <!-- linked / parent -->
     <template
@@ -589,33 +586,15 @@ export default {
           requestBody,
         });
         if (data) {
-          // TODO: this is a temporary fix to not have duplicates in the search
-          // results - REMOVE AGAIN!!
           // assign search results
           const parsedResults = JSON.parse(data);
           if (parsedResults && parsedResults.data) {
-            const dedupedResults = {
-              ...parsedResults,
-              data: parsedResults.data
-                .reduce((prev, curr) => {
-                  if (!prev.map((res) => res.id).includes(curr.id)) {
-                    prev.push(curr);
-                  }
-                  return prev;
-                }, []),
-            };
-            this.searchResults = [{
-              ...dedupedResults,
-              total: parsedResults.total
-                - (parsedResults.data.length - dedupedResults.data.length),
-            }];
+            this.searchResults = [].concat(parsedResults);
           }
         } else {
           this.searchResults = [];
         }
       } catch (e) {
-        // TODO: error handling
-        console.error(e);
         // TODO: error handling (unify at one place??)
         // TODO: restore previous state of search?
         console.error(e);
@@ -849,21 +828,24 @@ export default {
     }
 
     &__item {
+      display: inline-block;
+      margin-top: $spacing-small;
       padding: 0 $spacing-small;
       margin-right: $spacing-small;
       background-color: $background-color;
       white-space: nowrap;
     }
 
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-      width: 50px;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0) , rgba(255, 255, 255, 1));
-    }
+    // TODO: commenting this out for now since chips hiding not working anyway - FIX IT!!
+    //&::after {
+    //  content: '';
+    //  position: absolute;
+    //  top: 0;
+    //  right: 0;
+    //  height: 100%;
+    //  width: 50px;
+    //  background: linear-gradient(to right, rgba(255, 255, 255, 0) , rgba(255, 255, 255, 1));
+    //}
   }
 
   /* chips if baseBoxExpand is expanded */

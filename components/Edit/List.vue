@@ -24,6 +24,7 @@
       :supportive-text="$t('editView.listText')"
       :edit-hide-text="$t('editView.listItemHide')"
       :edit-show-text="$t('editView.listItemShow')"
+      :disabled="saveRequestOngoing"
       control-type="toggle"
       @update:data="saveEdit">
       <template #content="{ data: slotListData }">
@@ -142,6 +143,11 @@ export default {
        * list reordering)
        */
       saveTimeout: null,
+      /**
+       * variable to store if a save request is ongoing
+       * @type {boolean}
+       */
+      saveRequestOngoing: false,
     };
   },
   computed: {
@@ -232,6 +238,9 @@ export default {
      * save the data
      */
     saveEdit(values) {
+      // TODO: disabling everything with setting this variable true is just an emergency fix
+      // --> find real problem and fix!!
+      this.saveRequestOngoing = true;
       if (this.saveTimeout) {
         clearTimeout(this.saveTimeout);
         this.saveTimeout = null;
@@ -241,7 +250,11 @@ export default {
       this.saveTimeout = setTimeout(async () => {
         try {
           // update database entry with relevant data
-          this.listData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
+          const newData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
+          // necessary because if request was cancelled store function returns false
+          if (newData) {
+            this.listData = newData;
+          }
         } catch (e) {
           console.error(e);
           // only inform user when operation failed
@@ -251,6 +264,8 @@ export default {
             type: 'list',
             notificationType: 'error',
           });
+        } finally {
+          this.saveRequestOngoing = false;
         }
       }, 500);
     },
