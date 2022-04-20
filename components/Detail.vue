@@ -223,17 +223,14 @@
     </BaseResultBoxSection>
 
     <!-- media preview -->
-    <template
-      v-if="type === 'object'">
-      <BaseMediaCarousel
-        :show-preview="showPreview"
-        :initial-slide="initialPreviewSlide"
-        :items="mediaPreviewData"
-        :autoplay-media="true"
-        :allow-download="false"
-        @hide="showPreview = false"
-        @download="downloadFile" />
-    </template>
+    <BaseMediaCarousel
+      :show-preview="showPreview"
+      :initial-slide="initialPreviewSlide"
+      :items="mediaPreviewData"
+      :autoplay-media="true"
+      :allow-download="false"
+      @hide="showPreview = false"
+      @download="downloadFile" />
 
     <!-- linked / parent -->
     <template
