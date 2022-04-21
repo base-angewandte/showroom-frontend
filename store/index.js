@@ -52,6 +52,7 @@ const actions = {
 
     // do initial requests AFTER language setting
     dispatch('appData/init', $api);
+    await dispatch('searchData/init', $api);
   },
 };
 
