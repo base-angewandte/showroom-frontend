@@ -148,12 +148,25 @@ export default {
       },
     };
   },
+  head() {
+    return {
+      title: `${process.env.appTitle}`,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: process.env.meta.description[this.lang],
+        },
+      ],
+    };
+  },
   computed: {
     ...mapGetters({
       initialData: 'appData/getInitialData',
       getInitialData: 'appData/getInitialData',
       getInitialShowcaseData: 'appData/getInitialShowcaseData',
       filterList: 'searchData/getFilters',
+      lang: 'appData/getLocale',
     }),
     carouselData() {
       return this.getInitialShowcaseData(0, false);
