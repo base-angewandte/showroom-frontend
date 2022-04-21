@@ -283,7 +283,7 @@
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :placeholder-text="$t('searchView.placeholders.entity', {
         entity: getEntityString })"
-      :page-number="1"
+      :page-number.sync="pageNumber"
       :no-results-text-initial="$t('detailView.noResultsTextInitial')"
       @autocomplete="fetchAutocomplete"
       @search="search" />
@@ -429,6 +429,14 @@ export default {
       type: Array,
       default: () => ([]),
     },
+    /**
+     * set page number from outside
+     */
+    initialPageNumber: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
   },
   data() {
     return {
@@ -482,6 +490,7 @@ export default {
        * @type {Filter[]}
        */
       appliedFiltersInt: [],
+      pageNumber: this.initialPageNumber,
     };
   },
   computed: {

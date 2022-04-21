@@ -5,6 +5,7 @@
     :is-user-profile="isUserProfile"
     :applied-filters="filters"
     :filter-list="filterList"
+    :initial-page-number="pageNumber"
     :user-can-edit="userCanEdit" />
 </template>
 
@@ -28,11 +29,11 @@ export default {
     let parsedFilters = [];
     let completeFilters = [];
     let filterList = [];
+    // get relevant query params
+    const { page, filters } = query;
+    // parse the filters from query params
+    parsedFilters = filters ? JSON.parse(filters) : [];
     try {
-      // get relevant query params
-      const { page, filters } = query;
-      // parse the filters from query params
-      parsedFilters = filters ? JSON.parse(filters) : [];
       // assume 2 entries and configured number of rows or 5 rows initially
       // TODO: make configurable??
       // this is starting with the smallest number because otherwise higher page
@@ -95,7 +96,12 @@ export default {
         });
       }
     }
-    return { data: entryData, filters: completeFilters, filterList };
+    return {
+      data: entryData,
+      filters: completeFilters,
+      filterList,
+      pageNumber: page ? Number(page) : 1,
+    };
   },
   data() {
     return {
@@ -107,6 +113,7 @@ export default {
        * @type {Filter[]}
        */
       filterList: [],
+      pageNumber: null,
     };
   },
   head() {

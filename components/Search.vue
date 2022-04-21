@@ -334,7 +334,7 @@ export default {
         this.$emit('update:page-number', this.currentPageNumberInt);
       },
       get() {
-        return this.pageNumber;
+        return this.currentPageNumberInt;
       },
     },
     /**
