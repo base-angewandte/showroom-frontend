@@ -28,6 +28,9 @@
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :use-collapsed-mode="false"
       :page-number.sync="pageNumber"
+      :header-text="filtersHaveValues
+        ? $t('resultsView.headerText.results')
+        : $t('resultsView.headerText.latestActivities')"
       :no-results-text-initial="$t('discoverView.noResultsTextInitial')"
       :placeholder-text="$t('searchView.placeholders.main')"
       :class="['base-sr-discover__search', { 'base-sr-discover__search--mt-0': !initialDataMode }]"
@@ -183,6 +186,12 @@ export default {
       return !this.appliedFilters || !this.appliedFilters.length
         || (this.appliedFilters.length === 1 && this.appliedFilters[0].id === 'fulltext'
         && !hasData(this.appliedFilters[0].filter_values));
+    },
+    // TODO: this is a temporary fix since hard in backend to distinguish initial heading and
+    // search result heading and should be obsolete once there is more than one category
+    // (bzw. a solution for more than one category)
+    filtersHaveValues() {
+      return this.appliedFilters.some((filter) => hasData(filter.filter_values));
     },
     /**
      * check if user is allowed to edit page elements
