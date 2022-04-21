@@ -21,12 +21,9 @@ const mutations = {
 };
 
 const actions = {
-  async init({ dispatch }, api) {
-    return dispatch('fetchFilterData', api.public.api_v1_filters_list);
-  },
-  async fetchFilterData({ commit }, request) {
+  async fetchFilterData({ commit }) {
     try {
-      const { data } = await request();
+      const { data } = await this.$api.public.api_v1_filters_list();
       if (data) {
         commit('setFilters', JSON.parse(data));
         return JSON.parse(data);

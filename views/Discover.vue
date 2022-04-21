@@ -66,10 +66,10 @@ export default {
     // numbers are not rendered with small screensize
     const entryNumber = 2 * env.searchResultRows || 5;
     let results = [];
+    // get complete filterList from backend
+    const filterList = await store.dispatch('searchData/fetchFilterData');
     // get initial search results
     if (parsedFilters && parsedFilters.length) {
-      // if filters were part of url - get all the data for these filters
-      const filterList = store.getters['searchData/getFilters'];
       completeFilters = parsedFilters.map((filter) => {
         const filterMatch = filterList.find((f) => f.id === filter.id);
         return ({
@@ -129,6 +129,7 @@ export default {
       searchResults: results,
       appliedFilters: completeFilters,
       pageNumber: page ? Number(page) : 1,
+      filterList,
     };
   },
   data() {
@@ -146,14 +147,18 @@ export default {
       editMode: {
         showcase: false,
       },
+      filterList: [],
     };
   },
   computed: {
+    /**
+     * get the data that only need fetching once for all search components from
+     * the searchData store module
+     */
     ...mapGetters({
-      initialData: 'appData/getInitialData',
       getInitialData: 'appData/getInitialData',
       getInitialShowcaseData: 'appData/getInitialShowcaseData',
-      filterList: 'searchData/getFilters',
+      userEditPermissions: 'appData/getUserEditPermissions',
     }),
     carouselData() {
       return this.getInitialShowcaseData(0, false);
@@ -179,17 +184,6 @@ export default {
         || (this.appliedFilters.length === 1 && this.appliedFilters[0].id === 'fulltext'
         && !hasData(this.appliedFilters[0].filter_values));
     },
-    /**
-     * get the data that only need fetching once for all search components from
-     * the searchData store module
-     */
-    ...mapGetters({
-      /**
-       * a list of all filters defined in the backend and available to the user
-       */
-      filterList: 'searchData/getFilters',
-      userEditPermissions: 'appData/getUserEditPermissions',
-    }),
     /**
      * check if user is allowed to edit page elements
      *
