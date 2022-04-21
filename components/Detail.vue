@@ -434,7 +434,6 @@ export default {
      */
     initialPageNumber: {
       type: Number,
-      required: true,
       default: 1,
     },
   },
