@@ -262,7 +262,7 @@ export default {
           const response = await this.$api.public.api_v1_autocomplete_create({}, {
             requestBody: {
               q: searchString,
-              filter_id: filter.label === this.$t('searchView.fulltext') ? 'fulltext' : filter.id,
+              filter_id: filter.id,
             },
           });
 
