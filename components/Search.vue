@@ -25,6 +25,7 @@
         :assistive-text="{
           selectedOption: 'Change the text of this selected option',
         }"
+        :date-field-delay="dateFieldDelay"
         class="showroom-search__search"
         @fetch-autocomplete="fetchAutocomplete"
         @search="fetchSearchResults" />
@@ -235,6 +236,13 @@ export default {
     placeholderText: {
       type: String,
       default: 'Search and Discover Showroom',
+    },
+    /**
+     * use this prop to set a delay in ms before date input calender is displayed
+     */
+    dateFieldDelay: {
+      type: Number,
+      default: 0,
     },
   },
   data() {

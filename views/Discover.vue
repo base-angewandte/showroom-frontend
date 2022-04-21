@@ -1,5 +1,7 @@
 <template>
-  <div class="base-sr-discover">
+  <div
+    class="base-sr-discover"
+    :style="{ '--fade-duration': fadeDuration + 'ms' }">
     <h1 class="hide">
       {{ $t('discoverView.title') }}
     </h1>
@@ -34,6 +36,7 @@
       :no-results-text-initial="$t('discoverView.noResultsTextInitial')"
       :placeholder-text="$t('searchView.placeholders.main')"
       :class="['base-sr-discover__search', { 'base-sr-discover__search--mt-0': !initialDataMode }]"
+      :date-field-delay="dateFieldDelay"
       @autocomplete="fetchAutocomplete"
       @search="search" />
 
@@ -151,6 +154,8 @@ export default {
         showcase: false,
       },
       filterList: [],
+      fadeDuration: 250,
+      dateFieldDelay: 0,
     };
   },
   computed: {
@@ -211,6 +216,27 @@ export default {
      */
     editModeIsActive() {
       return Object.values(this.editMode).some((value) => value !== false);
+    },
+  },
+  watch: {
+    initialDataMode: {
+      handler(val) {
+        // some puffer for the delay
+        const threshold = 50;
+
+        // if showcase is visible, wait until fade-transition duration is done to open calendar
+        const delay = this.fadeDuration + threshold;
+        if (val) {
+          this.dateFieldDelay = delay;
+          return;
+        }
+
+        // if fade-transition is done, date calender should open immediately
+        setTimeout(() => {
+          this.dateFieldDelay = 0;
+        }, delay);
+      },
+      immediate: true,
     },
   },
   methods: {
@@ -340,7 +366,7 @@ export default {
 }
 
 .fade-enter-active, .fade-move, .fade-leave-active {
-  transition: all 250ms ease;
+  transition: all var(--fade-duration) ease;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;
