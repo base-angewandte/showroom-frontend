@@ -277,21 +277,28 @@ export default {
      * @returns {Filter[]}
      */
     displayFilterList() {
-      return this.filterList.filter((filter) => !filter.hidden);
+      return this.filterList && this.filterList.length
+        ? this.filterList.filter((filter) => !filter.hidden) : [];
     },
     /**
      * get the default filter from the list provided by backend
      * @returns {Filter}
      */
     defaultFilter() {
-      const filteredDefaultFilter = this.filterList.find((filter) => filter.id === 'fulltext');
-      // either get default filter from backend provided filter list or on last resort take
-      // this hardcoded default filter
-      return filteredDefaultFilter || ({
+      // define fallbackfilter
+      const fallbackFilter = {
         label: this.$t('searchView.fulltext'),
         id: 'fulltext',
         type: 'text',
-      });
+      };
+      // check if filterList is present
+      if (this.filterList && this.filterList.length) {
+        // either get default filter from backend provided filter list or on last resort take
+        // this hardcoded default filter
+        return this.filterList.find((filter) => filter.id === 'fulltext') || fallbackFilter;
+      }
+      // else just return fallback filter
+      return fallbackFilter;
     },
     maxRows() {
       // TODO: check if different for different searches -->
