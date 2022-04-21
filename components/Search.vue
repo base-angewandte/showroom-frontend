@@ -331,7 +331,7 @@ export default {
       set(val) {
         // need internal representation that is immediately updated as well for search request
         this.currentPageNumberInt = val || 1;
-        this.$emit('update:page-number', val);
+        this.$emit('update:page-number', this.currentPageNumberInt);
       },
       get() {
         return this.pageNumber;
