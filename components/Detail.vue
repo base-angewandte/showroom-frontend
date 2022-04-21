@@ -172,7 +172,7 @@
 
     <!-- locations -->
     <div
-      v-if="data.locations && data.locations.length"
+      v-if="hasLocations"
       class="base-sr-row">
       <h2 class="base-sr--ml-small">
         {{ $tc('detailView.location', data.locations.length) }}
@@ -186,7 +186,7 @@
           :attribution="mapAttribution"
           :copyright="mapCopyright"
           :label="$tc('detailView.address', data.locations.length)"
-          :locations="data.locations"
+          :locations="data.locations.filter((location) => !!location.coordinates)"
           :options="mapOptions"
           :tile-layer-service="mapTileLayerService"
           :url="mapUrl" />
@@ -537,6 +537,15 @@ export default {
       return this.data.entries && this.data.entries.media
         ? this.data.entries.media.map((media, index) => ({ ...media, order: index + 1 }))
         : [];
+    },
+    /**
+     * check locations for coordinates
+     * @returns {boolean}
+     */
+    hasLocations() {
+      return this.data.locations
+        && this.data.locations.length
+        && !!this.data.locations.filter((location) => !!location.coordinates).length;
     },
   },
   watch: {
