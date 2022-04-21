@@ -6,7 +6,7 @@ const state = () => ({
 
 const getters = {
   getFilters(state) {
-    return state.filters || [];
+    return state.filters;
   },
   getEntityFilters: (state) => (id) => state.entityFilters[id],
 };
