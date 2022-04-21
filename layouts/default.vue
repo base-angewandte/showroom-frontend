@@ -45,15 +45,9 @@ export default {
   computed: {
     ...mapGetters({
       lang: 'appData/getLocale',
-      user: 'appData/getUser',
+      profile: 'appData/getUser',
       authenticated: 'appData/getAuthState',
     }),
-    profile() {
-      return this.user ? {
-        ...this.user,
-        showroomID: this.user.showroom_id,
-      } : {};
-    },
     baseUrl() {
       return `${process.env.backendBaseUrl}/`;
     },
