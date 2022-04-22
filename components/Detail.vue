@@ -487,6 +487,10 @@ export default {
        */
       appliedFiltersInt: [],
       pageNumber: this.initialPageNumber,
+      /**
+       * variable to determine display of search element
+       */
+      userHasShowroomEntries: !!this.data.activities[0].total,
     };
   },
   computed: {
@@ -518,12 +522,6 @@ export default {
     },
     userPreferencesUrl() {
       return process.env.userPreferencesUrl;
-    },
-    /**
-     * variable to determine display of search element
-     */
-    userHasShowroomEntries() {
-      return !!this.data.activities[0].total;
     },
     /**
      * check if some edit-mode is active
@@ -592,12 +590,27 @@ export default {
       this.editMode[name] = editMode;
     },
     async search(requestBody) {
+      // TODO: temporary quickfix
+      // when entering a search string and select an activity,
+      // search breaks because filter.type is text and filter_values is an object
+      // filter.type text needs array of strings
+      const requestBodyModified = {
+        ...requestBody,
+        filters: requestBody.filters.map((filter) => ({
+          ...filter,
+          filter_values: filter.type === 'text'
+          && typeof filter.filter_values === 'object'
+          && filter.filter_values[0].title
+            ? [filter.filter_values[0].title] : filter.filter_values,
+        })),
+      };
+
       this.searchOngoing = true;
       try {
         const { data } = await this.$api.public.api_v1_entities_search_create({
           id: this.$route.params.id,
         }, {
-          requestBody,
+          requestBody: requestBodyModified,
         });
         if (data) {
           // assign search results
