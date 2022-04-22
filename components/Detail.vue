@@ -54,6 +54,7 @@
             <!-- otherwise we assume it's an activity and display the type -->
             <template v-else>
               <span
+                v-if="data.type.label"
                 class="base-sr-chips__item base-sr-chips__item--single">
                 {{ toTitleString(data.type.label[$i18n.locale], $i18n.locale) }}
               </span>
