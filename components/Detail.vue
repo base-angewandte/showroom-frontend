@@ -490,7 +490,8 @@ export default {
       /**
        * variable to determine display of search element
        */
-      userHasShowroomEntries: !!this.data.activities[0].total,
+      userHasShowroomEntries: this.data.activities && this.data.activities[0]
+        ? !!this.data.activities[0].total : false,
     };
   },
   computed: {
