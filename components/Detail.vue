@@ -648,12 +648,15 @@ export default {
             },
           });
 
-          // check if response.data is typeof string before processing value.
-          // response.data could also be a blob due to request cancellation.
+          const newResults = JSON.parse(response.data);
+          // now check if parsed string is actual results (if request was cancelled this has
+          // the value false
           // TODO: check if there is better solution to handle requestCancellation
-          if (typeof response.data === 'string') {
-            // TODO: response should be an array always so remove concat as soon as this is the case
-            this.autocompleteResults = [].concat(JSON.parse(response.data));
+          if (newResults) {
+            // if yes - assign the new results (otherwise just do nothing)
+            this.autocompleteResults = [].concat(newResults);
+            // loader index should not be set done when request was cancelled so moving this here!
+            this.autocompleteLoaderIndex = -1;
           }
         } catch (e) {
           this.autocompleteLoaderIndex = -1;
@@ -669,7 +672,6 @@ export default {
             type: 'error',
           });
         }
-        this.autocompleteLoaderIndex = -1;
       } else {
         this.autocompleteResults = [];
       }
