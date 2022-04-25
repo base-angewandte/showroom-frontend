@@ -255,6 +255,7 @@ export default {
           if (parsedResults && parsedResults.data) {
             // assign search results
             this.searchResults = [].concat(parsedResults);
+            this.searchOngoing = false;
           }
         } else {
           if (requestBody.offset === 0 || !this.initialSearchData) {
@@ -264,6 +265,7 @@ export default {
             await this.$store.dispatch('appData/fetchInitialData', { limit: requestBody.limit });
             if (requestBody.offset === 0) {
               this.searchResults = this.getInitialData.results;
+              this.searchOngoing = false;
             }
           }
           if (requestBody.offset !== 0) {
@@ -273,10 +275,18 @@ export default {
                 ...this.initialSearchData,
               },
             });
-            this.searchResults = [JSON.parse(filterRequest.data)];
+            const parsedData = JSON.parse(filterRequest.data);
+            // a cancelled request would return false here so need to check
+            // TODO: seems not ideal to handle cancelled request this way - should go to error?
+            if (parsedData) {
+              this.searchResults = [parsedData];
+              // move search ongoing false here so request cancellation does not stop loader
+              this.searchOngoing = false;
+            }
           }
         }
       } catch (e) {
+        this.searchOngoing = false;
         // TODO: error handling (unify at one place??)
         // TODO: restore previous state of search?
         console.error(e);
@@ -287,7 +297,6 @@ export default {
           type: 'error',
         });
       }
-      this.searchOngoing = false;
     },
     async fetchAutocomplete({ searchString, filter, index }) {
       // needed to add trim because space leads to evaluation true

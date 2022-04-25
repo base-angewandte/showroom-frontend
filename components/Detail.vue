@@ -603,6 +603,9 @@ export default {
           const parsedResults = JSON.parse(data);
           if (parsedResults && parsedResults.data) {
             this.searchResults = [].concat(parsedResults);
+            // move search ongoing assignment to here so request cancellation does
+            // not cause loader to disappear
+            this.searchOngoing = false;
           }
         } else {
           this.searchResults = [];
@@ -611,6 +614,7 @@ export default {
         // TODO: error handling (unify at one place??)
         // TODO: restore previous state of search?
         console.error(e);
+        this.searchOngoing = false;
         this.$notify({
           group: 'request-notifications',
           title: this.$t('notify.searchError'),
@@ -618,14 +622,15 @@ export default {
           type: 'error',
         });
       }
-      this.searchOngoing = false;
     },
     async fetchAutocomplete({ searchString, filter, index }) {
       // needed to add trim because space leads to evaluation true
       if (searchString && searchString.trim()) {
         this.autocompleteLoaderIndex = index;
         try {
-          const response = await this.$api.public.api_v1_autocomplete_create({}, {
+          const response = await this.$api.public.api_v1_entities_autocomplete_create({
+            id: this.$route.params.id,
+          }, {
             requestBody: {
               q: searchString,
               filter_id: filter.id,
