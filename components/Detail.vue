@@ -644,6 +644,7 @@ export default {
             requestBody: {
               q: searchString,
               filter_id: filter.id,
+              limit: 20,
             },
           });
 
