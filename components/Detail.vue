@@ -297,10 +297,16 @@
         <template
           v-if="data.publisher.length">
           {{ $t('detailView.publisher') }}:
-          <a
-            :href="data.publisher[0].source"
-            :title="data.publisher[0].name"
-            class="base-link base-link--internal">{{ data.publisher[0].name }}</a> |
+          <template
+            v-if="data.publisher[0].source">
+            <a
+              :href="data.publisher[0].source"
+              :title="data.publisher[0].name"
+              class="base-link base-link--internal">{{ data.publisher[0].name }}</a> |
+          </template>
+          <template v-else>
+            {{ data.publisher[0].name }} |
+          </template>
         </template>
         {{ data.source_institution.label }} |
         {{ $t('detailView.publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
