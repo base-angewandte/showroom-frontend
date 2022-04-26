@@ -224,14 +224,6 @@ export default {
       default: false,
     },
     /**
-     * set page number from outside
-     */
-    pageNumber: {
-      type: Number,
-      required: true,
-      default: 1,
-    },
-    /**
      * placeholder for search input field to customize for entity page
      */
     placeholderText: {
@@ -357,39 +349,10 @@ export default {
     },
   },
   watch: {
-    $route(to, from) {
-      let triggerSearch = false;
-      const fromFilters = from.query.filters;
-      const toFilters = to.query.filters;
-      const newPageNumber = Number(to.query.page);
-      // check if page is different (this is here for browser navigation as well
-      // as url set by pagination component directly)
-      if (from.query.page !== to.query.page) {
-        if (this.currentPageNumberInt !== newPageNumber) {
-          this.currentPageNumberInt = Number(to.query.page || 1);
-          triggerSearch = true;
-        }
-        // check the more complicated filters param
-      } if (fromFilters !== toFilters) {
-        const routeToFilters = toFilters ? JSON.parse(toFilters) : [];
-        const routeFromFilters = fromFilters ? JSON.parse(fromFilters) : [];
-        this.appliedFiltersInt = routeToFilters.map((filter) => {
-          const filterMatch = this.filterList.find((f) => f.id === filter.id);
-          return ({
-            ...filterMatch,
-            filter_values: filter.filter_values,
-          });
-        });
-        const fromFilterWithData = routeFromFilters
-          .filter((filter) => hasData(filter.filter_values));
-        const toFilterWithData = routeToFilters.filter((filter) => hasData(filter.filter_values));
-        if (JSON.stringify(fromFilterWithData) !== JSON.stringify(toFilterWithData)) {
-          triggerSearch = true;
-        }
-      }
-      if (triggerSearch) {
-        this.search(this.appliedFiltersInt);
-      }
+    $route: {
+      handler(to, from) {
+        this.parseUrlForSearch(to, from);
+      },
     },
     appliedFiltersInt: {
       handler(val) {
@@ -451,20 +414,11 @@ export default {
         this.search(this.appliedFiltersInt);
       }
     },
-    /**
-     * watching prop pageNumber to keep currentPageNumberInt (needed for search) in
-     * sync as well
-     */
-    pageNumber: {
-      handler(val) {
-        if (this.currentPageNumberInt !== val) {
-          this.currentPageNumberInt = val;
-        }
-      },
-      immediate: true,
-    },
   },
   mounted() {
+    if (this.filterList && this.filterList.length) {
+      this.parseUrlForSearch(this.$route);
+    }
     this.$nextTick(() => {
       this.initialRenderDone = true;
     });
@@ -536,10 +490,11 @@ export default {
      * @param {Filter[]} filters - the filters to be applied in search
      */
     async search(filters) {
-      // TODO: temporary data mapping for text filter so values are only string
       const filterRequestData = filters
         .map((filter) => ({
-          ...filter,
+          // get rid of all other filter properties
+          id: filter.id,
+          type: filter.type,
           // filter_values ALWAYS needs to be array
           filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
             ? filter.filter_values.map((value) => ((!value.id && value.title)
@@ -570,6 +525,41 @@ export default {
      */
     titleCase(string) {
       return toTitleString(string);
+    },
+    parseUrlForSearch(to, from) {
+      let triggerSearch = false;
+      const fromFilters = from ? from.query.filters : null;
+      const toFilters = to.query.filters;
+      const newPageNumber = Number(to.query.page);
+      // check if page is different (this is here for browser navigation as well
+      // as url set by pagination component directly)
+      if ((!from && to.query.page > 1) || (from && from.query.page !== to.query.page)) {
+        if (this.currentPageNumberInt !== newPageNumber) {
+          this.currentPageNumberInt = Number(to.query.page || 1);
+          triggerSearch = true;
+        }
+      }
+      // check the more complicated filters param
+      if (fromFilters !== toFilters) {
+        const routeToFilters = toFilters ? JSON.parse(toFilters) : [];
+        const routeFromFilters = fromFilters ? JSON.parse(fromFilters) : [];
+        this.appliedFiltersInt = routeToFilters.map((filter) => {
+          const filterMatch = this.filterList.find((f) => f.id === filter.id);
+          return ({
+            ...filterMatch,
+            filter_values: filter.filter_values,
+          });
+        });
+        const fromFilterWithData = routeFromFilters
+          .filter((filter) => hasData(filter.filter_values));
+        const toFilterWithData = routeToFilters.filter((filter) => hasData(filter.filter_values));
+        if (JSON.stringify(fromFilterWithData) !== JSON.stringify(toFilterWithData)) {
+          triggerSearch = true;
+        }
+      }
+      if (triggerSearch) {
+        this.search(this.appliedFiltersInt);
+      }
     },
   },
 };

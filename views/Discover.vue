@@ -29,7 +29,6 @@
       :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :use-collapsed-mode="false"
-      :page-number.sync="pageNumber"
       :header-text="filtersHaveValues
         ? $t('resultsView.headerText.results')
         : $t('resultsView.headerText.latestActivities')"
@@ -60,81 +59,28 @@ export default {
     Search,
   },
   async asyncData({
-    $api, query, store, env,
+    store, env,
   }) {
-    const { filters, page } = query;
-    const parsedFilters = filters ? JSON.parse(filters) : [];
-    // define completed filters here so they can be passed on to component in the end
-    let completeFilters = [];
-    // assume 2 entries and configered number of rows or 5 initially
-    // TODO: make configurable??
     // this is starting with the smallest number because otherwise higher page
     // numbers are not rendered with small screensize
     const entryNumber = 2 * env.searchResultRows || 5;
+    let filterList = [];
     let results = [];
-    // get complete filterList from backend
-    const filterList = await store.dispatch('searchData/fetchFilterData');
-    // get initial search results
-    if (parsedFilters && parsedFilters.length) {
-      completeFilters = parsedFilters.map((filter) => {
-        const filterMatch = filterList.find((f) => f.id === filter.id);
-        return ({
-          ...filterMatch,
-          filter_values: filter.filter_values,
-        });
-      });
-      try {
-        const response = await $api.public.api_v1_search_create({}, {
-          requestBody: {
-            // TODO: temporary fix for text filters just being strings
-            filters: completeFilters.filter((filter) => hasData(filter.filter_values))
-              .map((filter) => ({
-                ...filter,
-                // filter_values ALWAYS needs to be array
-                filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
-                  ? filter.filter_values.map((value) => ((!value.id && value.title)
-                    ? value.title : value))
-                  : filter.filter_values),
-              })),
-            offset: (page ? (Number(page) - 1) : 0) * entryNumber,
-            limit: entryNumber,
-          },
-        });
-        results = [JSON.parse(response.data)];
-      } catch (e) {
-        console.error(e);
-      }
-    } else {
-      try {
-        await store.dispatch('appData/fetchInitialData', { limit: entryNumber });
-        const initialData = store.getters['appData/getInitialData'];
-        if (initialData) {
-          const initialResults = initialData.results;
-          // TODO: this is just a temporary fix working only with one result category!
-          const initialSearchData = store.getters['appData/getInitialData'].results[0].search;
-          if (page > 1 && initialResults && initialResults.length) {
-            const paginationResponse = await $api.public.api_v1_search_create({}, {
-              requestBody: {
-                ...initialSearchData,
-                offset: (page ? (Number(page) - 1) : 0) * entryNumber,
-                limit: entryNumber,
-              },
-            });
-            results = [JSON.parse(paginationResponse.data)];
-          } else {
-            results = initialResults;
-          }
-        } else {
-          results = [];
-        }
-      } catch (e) {
-        console.error(e);
-      }
+    try {
+      const requestsArray = [
+        // get complete filterList from backend
+        store.dispatch('searchData/fetchFilterData'),
+        // get initial data
+        store.dispatch('appData/fetchInitialData', { limit: entryNumber }),
+      ];
+      // wait for the requests to return
+      [filterList, { results }] = await Promise
+        .all(requestsArray);
+    } catch (e) {
+      console.error(e);
     }
     return {
-      searchResults: results,
-      appliedFilters: completeFilters,
-      pageNumber: page ? Number(page) : 1,
+      initialResults: [].concat(results),
       filterList,
     };
   },
@@ -145,7 +91,6 @@ export default {
       searchResults: [],
       autocompleteResults: [],
       appliedFilters: [],
-      pageNumber: 1,
       /**
        * edit-mode for different edit sections
        * @type {Object}
@@ -156,6 +101,7 @@ export default {
       filterList: [],
       fadeDuration: 250,
       dateFieldDelay: 0,
+      initialResults: [],
     };
   },
   computed: {
@@ -239,6 +185,11 @@ export default {
       immediate: true,
     },
   },
+  created() {
+    if (!this.searchResults.length) {
+      this.searchResults = JSON.parse(JSON.stringify(this.getInitialData.results));
+    }
+  },
   methods: {
     async search(requestBody) {
       // indicate to component that search is ongoing
@@ -247,8 +198,6 @@ export default {
         // check if there are any filters applied
         if (requestBody.filters && requestBody.filters.length) {
           // if yes apply these filters
-          // TODO: dont need to send options to backend --> get rid of this somehow?
-          // or do this in BaseAdvancedSearch even
           const { data } = await this.$api.public.api_v1_search_create({}, { requestBody });
           const parsedResults = JSON.parse(data);
           // check if there are data (this would e.g. be false if request was cancelled)
