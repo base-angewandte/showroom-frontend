@@ -26,6 +26,7 @@
           selectedOption: 'Change the text of this selected option',
         }"
         :date-field-delay="dateFieldDelay"
+        :language="$i18n.locale"
         class="showroom-search__search"
         @fetch-autocomplete="fetchAutocomplete"
         @search="fetchSearchResults" />
