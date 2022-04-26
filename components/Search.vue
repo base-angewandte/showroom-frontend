@@ -501,12 +501,14 @@ export default {
         id: filter.id,
         filter_values: filter.filter_values,
       }));
+      console.log(minimizedPathFilters);
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
       // in asyncData and search does not need to be triggered here anymore
       if (JSON.stringify(minimizedPathFilters) !== this.$route.query.filters) {
         // whenever a new search is triggered reset the page number to 1
         this.currentPageNumber = 1;
+        console.log(this.currentPageNumberInt);
         // push the filters into the route - this will automatically trigger the search!!
         await this.$router.push({
           path: this.$route.fullPath,
@@ -516,6 +518,11 @@ export default {
             // went through
             page: this.currentPageNumberInt,
             filters: minimizedPathFilters.length
+              // dont add empty default filter
+              && !(minimizedPathFilters.length === 1
+                && minimizedPathFilters[0].id === this.defaultFilter.id
+                && !(minimizedPathFilters[0].filter_values
+                  && minimizedPathFilters[0].filter_values.length))
               ? JSON.stringify(minimizedPathFilters) : undefined,
           },
         });
