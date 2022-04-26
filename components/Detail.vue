@@ -487,11 +487,6 @@ export default {
        */
       appliedFiltersInt: [],
       pageNumber: this.initialPageNumber,
-      /**
-       * variable to determine display of search element
-       */
-      userHasShowroomEntries: this.data.activities && this.data.activities[0]
-        ? !!this.data.activities[0].total : false,
     };
   },
   computed: {
@@ -523,6 +518,14 @@ export default {
     },
     userPreferencesUrl() {
       return process.env.userPreferencesUrl;
+    },
+    /**
+     * variable to determine display of search element
+     */
+    userHasShowroomEntries() {
+      // TODO: this is a quick fix for correctly showing search element on entity site
+      // might become obsolete if url parsing is moved out of async data
+      return !!this.appliedFiltersInt.length || !!this.data.activities[0].total;
     },
     /**
      * check if some edit-mode is active
