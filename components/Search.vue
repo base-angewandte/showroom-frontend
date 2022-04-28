@@ -25,6 +25,8 @@
         :assistive-text="{
           selectedOption: 'Change the text of this selected option',
         }"
+        :date-field-delay="dateFieldDelay"
+        :language="$i18n.locale"
         class="showroom-search__search"
         @fetch-autocomplete="fetchAutocomplete"
         @search="fetchSearchResults" />
@@ -222,19 +224,18 @@ export default {
       default: false,
     },
     /**
-     * set page number from outside
-     */
-    pageNumber: {
-      type: Number,
-      required: true,
-      default: 1,
-    },
-    /**
      * placeholder for search input field to customize for entity page
      */
     placeholderText: {
       type: String,
       default: 'Search and Discover Showroom',
+    },
+    /**
+     * use this prop to set a delay in ms before date input calender is displayed
+     */
+    dateFieldDelay: {
+      type: Number,
+      default: 0,
     },
   },
   data() {
@@ -261,6 +262,7 @@ export default {
       autocompleteTimeout: null,
       currentPageNumberInt: 1,
       appliedFiltersInt: [],
+      originalRequestFilters: [],
     };
   },
   computed: {
@@ -277,21 +279,28 @@ export default {
      * @returns {Filter[]}
      */
     displayFilterList() {
-      return this.filterList.filter((filter) => !filter.hidden);
+      return this.filterList && this.filterList.length
+        ? this.filterList.filter((filter) => !filter.hidden) : [];
     },
     /**
      * get the default filter from the list provided by backend
      * @returns {Filter}
      */
     defaultFilter() {
-      const filteredDefaultFilter = this.filterList.find((filter) => filter.id === 'fulltext');
-      // either get default filter from backend provided filter list or on last resort take
-      // this hardcoded default filter
-      return filteredDefaultFilter || ({
+      // define fallbackfilter
+      const fallbackFilter = {
         label: this.$t('searchView.fulltext'),
         id: 'fulltext',
         type: 'text',
-      });
+      };
+      // check if filterList is present
+      if (this.filterList && this.filterList.length) {
+        // either get default filter from backend provided filter list or on last resort take
+        // this hardcoded default filter
+        return this.filterList.find((filter) => filter.id === 'fulltext') || fallbackFilter;
+      }
+      // else just return fallback filter
+      return fallbackFilter;
     },
     maxRows() {
       // TODO: check if different for different searches -->
@@ -324,10 +333,10 @@ export default {
       set(val) {
         // need internal representation that is immediately updated as well for search request
         this.currentPageNumberInt = val || 1;
-        this.$emit('update:page-number', val);
+        this.$emit('update:page-number', this.currentPageNumberInt);
       },
       get() {
-        return this.pageNumber;
+        return this.currentPageNumberInt;
       },
     },
     /**
@@ -340,38 +349,10 @@ export default {
     },
   },
   watch: {
-    $route(to, from) {
-      let triggerSearch = false;
-      // check if page is different (this is here for browser navigation as well
-      // as url set by pagination component directly)
-      if (from.query.page !== to.query.page) {
-        if (this.currentPageNumberInt !== to.query.page) {
-          this.currentPageNumberInt = Number(to.query.page || 1);
-          triggerSearch = true;
-        }
-        // check the more complicated filters param
-      } if (from.query.filters !== to.query.filters) {
-        // then first check if filters themselves differ from current applied Filters
-        const routeFilters = to.query.filters ? JSON.parse(to.query.filters) : [];
-        const appliedFiltersMinimized = this.appliedFiltersInt.map((filter) => ({
-          id: filter.id,
-          filter_values: filter.filter_values,
-        }));
-        if (JSON.stringify(routeFilters)
-          !== JSON.stringify(appliedFiltersMinimized)) {
-          this.appliedFiltersInt = routeFilters.map((filter) => {
-            const filterMatch = this.filterList.find((f) => f.id === filter.id);
-            return ({
-              ...filterMatch,
-              filter_values: filter.filter_values,
-            });
-          });
-          triggerSearch = true;
-        }
-      }
-      if (triggerSearch) {
-        this.search(this.appliedFiltersInt);
-      }
+    $route: {
+      handler(to, from) {
+        this.parseUrlForSearch(to, from);
+      },
     },
     appliedFiltersInt: {
       handler(val) {
@@ -433,20 +414,11 @@ export default {
         this.search(this.appliedFiltersInt);
       }
     },
-    /**
-     * watching prop pageNumber to keep currentPageNumberInt (needed for search) in
-     * sync as well
-     */
-    pageNumber: {
-      handler(val) {
-        if (this.currentPageNumberInt !== val) {
-          this.currentPageNumberInt = val;
-        }
-      },
-      immediate: true,
-    },
   },
   mounted() {
+    if (this.filterList && this.filterList.length) {
+      this.parseUrlForSearch(this.$route);
+    }
     this.$nextTick(() => {
       this.initialRenderDone = true;
     });
@@ -484,16 +456,13 @@ export default {
         id: filter.id,
         filter_values: filter.filter_values,
       }));
-      // get filters that should be added to search request (=only filter that have data)
-      const requestFilters = filters.filter((filter) => hasData(filter.filter_values));
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
       // in asyncData and search does not need to be triggered here anymore
-      if (JSON.stringify(minimizedPathFilters) !== this.$route.query.filters
-        && !(this.$route.query.filters === undefined && !requestFilters.length)) {
+      if (JSON.stringify(minimizedPathFilters) !== this.$route.query.filters) {
         // whenever a new search is triggered reset the page number to 1
         this.currentPageNumber = 1;
-        // push the filters into the route
+        // push the filters into the route - this will automatically trigger the search!!
         await this.$router.push({
           path: this.$route.fullPath,
           query: {
@@ -502,10 +471,14 @@ export default {
             // went through
             page: this.currentPageNumberInt,
             filters: minimizedPathFilters.length
+              // dont add empty default filter
+              && !(minimizedPathFilters.length === 1
+                && minimizedPathFilters[0].id === this.defaultFilter.id
+                && !(minimizedPathFilters[0].filter_values
+                  && minimizedPathFilters[0].filter_values.length))
               ? JSON.stringify(minimizedPathFilters) : undefined,
           },
         });
-        await this.search(requestFilters);
       }
     },
     /**
@@ -517,10 +490,11 @@ export default {
      * @param {Filter[]} filters - the filters to be applied in search
      */
     async search(filters) {
-      // TODO: temporary data mapping for text filter so values are only string
       const filterRequestData = filters
         .map((filter) => ({
-          ...filter,
+          // get rid of all other filter properties
+          id: filter.id,
+          type: filter.type,
           // filter_values ALWAYS needs to be array
           filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
             ? filter.filter_values.map((value) => ((!value.id && value.title)
@@ -551,6 +525,41 @@ export default {
      */
     titleCase(string) {
       return toTitleString(string);
+    },
+    parseUrlForSearch(to, from) {
+      let triggerSearch = false;
+      const fromFilters = from ? from.query.filters : null;
+      const toFilters = to.query.filters;
+      const newPageNumber = Number(to.query.page);
+      // check if page is different (this is here for browser navigation as well
+      // as url set by pagination component directly)
+      if ((!from && to.query.page > 1) || (from && from.query.page !== to.query.page)) {
+        if (this.currentPageNumberInt !== newPageNumber) {
+          this.currentPageNumberInt = Number(to.query.page || 1);
+          triggerSearch = true;
+        }
+      }
+      // check the more complicated filters param
+      if (fromFilters !== toFilters) {
+        const routeToFilters = toFilters ? JSON.parse(toFilters) : [];
+        const routeFromFilters = fromFilters ? JSON.parse(fromFilters) : [];
+        this.appliedFiltersInt = routeToFilters.map((filter) => {
+          const filterMatch = this.filterList.find((f) => f.id === filter.id);
+          return ({
+            ...filterMatch,
+            filter_values: filter.filter_values,
+          });
+        });
+        const fromFilterWithData = routeFromFilters
+          .filter((filter) => hasData(filter.filter_values));
+        const toFilterWithData = routeToFilters.filter((filter) => hasData(filter.filter_values));
+        if (JSON.stringify(fromFilterWithData) !== JSON.stringify(toFilterWithData)) {
+          triggerSearch = true;
+        }
+      }
+      if (triggerSearch) {
+        this.search(this.appliedFiltersInt);
+      }
     },
   },
 };

@@ -90,17 +90,17 @@ const actions = {
     const requestBody = limit ? {
       limit,
     } : {};
-    try {
-      const response = await this.$api.public.api_v1_initial_retrieve({
-        id: process.env.institutionId,
-        ...requestBody,
-      });
-      if (response.data) {
-        commit('setInitialData', JSON.parse(response.data));
-      }
-    } catch (e) {
-      console.error(e);
+    const response = await this.$api.public.api_v1_initial_retrieve({
+      id: process.env.institutionId,
+      ...requestBody,
+    });
+    if (response.data) {
+      const parsedData = JSON.parse(response.data);
+      commit('setInitialData', parsedData);
+      return parsedData;
     }
+    commit('setInitialData', []);
+    return [];
   },
 };
 

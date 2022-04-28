@@ -1,5 +1,7 @@
 <template>
-  <div class="base-sr-discover">
+  <div
+    class="base-sr-discover"
+    :style="{ '--fade-duration': fadeDuration + 'ms' }">
     <h1 class="hide">
       {{ $t('discoverView.title') }}
     </h1>
@@ -27,10 +29,13 @@
       :search-request-ongoing="searchOngoing"
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :use-collapsed-mode="false"
-      :page-number.sync="pageNumber"
+      :header-text="filtersHaveValues
+        ? $t('resultsView.headerText.results')
+        : $t('resultsView.headerText.latestActivities')"
       :no-results-text-initial="$t('discoverView.noResultsTextInitial')"
       :placeholder-text="$t('searchView.placeholders.main')"
       :class="['base-sr-discover__search', { 'base-sr-discover__search--mt-0': !initialDataMode }]"
+      :date-field-delay="dateFieldDelay"
       @autocomplete="fetchAutocomplete"
       @search="search" />
 
@@ -54,81 +59,29 @@ export default {
     Search,
   },
   async asyncData({
-    $api, query, store, env,
+    store, env,
   }) {
-    const { filters, page } = query;
-    const parsedFilters = filters ? JSON.parse(filters) : [];
-    // define completed filters here so they can be passed on to component in the end
-    let completeFilters = [];
-    // assume 2 entries and configered number of rows or 5 initially
-    // TODO: make configurable??
     // this is starting with the smallest number because otherwise higher page
     // numbers are not rendered with small screensize
     const entryNumber = 2 * env.searchResultRows || 5;
+    let filterList = [];
     let results = [];
-    // get initial search results
-    if (parsedFilters && parsedFilters.length) {
-      // if filters were part of url - get all the data for these filters
-      const filterList = store.getters['searchData/getFilters'];
-      completeFilters = parsedFilters.map((filter) => {
-        const filterMatch = filterList.find((f) => f.id === filter.id);
-        return ({
-          ...filterMatch,
-          filter_values: filter.filter_values,
-        });
-      });
-      try {
-        const response = await $api.public.api_v1_search_create({}, {
-          requestBody: {
-            // TODO: temporary fix for text filters just being strings
-            filters: completeFilters.filter((filter) => hasData(filter.filter_values))
-              .map((filter) => ({
-                ...filter,
-                // filter_values ALWAYS needs to be array
-                filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
-                  ? filter.filter_values.map((value) => ((!value.id && value.title)
-                    ? value.title : value))
-                  : filter.filter_values),
-              })),
-            offset: (page ? (Number(page) - 1) : 0) * entryNumber,
-            limit: entryNumber,
-          },
-        });
-        results = [JSON.parse(response.data)];
-      } catch (e) {
-        console.error(e);
-      }
-    } else {
-      try {
-        await store.dispatch('appData/fetchInitialData', { limit: entryNumber });
-        const initialData = store.getters['appData/getInitialData'];
-        if (initialData) {
-          const initialResults = initialData.results;
-          // TODO: this is just a temporary fix working only with one result category!
-          const initialSearchData = store.getters['appData/getInitialData'].results[0].search;
-          if (page > 1 && initialResults && initialResults.length) {
-            const paginationResponse = await $api.public.api_v1_search_create({}, {
-              requestBody: {
-                ...initialSearchData,
-                offset: (page ? (Number(page) - 1) : 0) * entryNumber,
-                limit: entryNumber,
-              },
-            });
-            results = [JSON.parse(paginationResponse.data)];
-          } else {
-            results = initialResults;
-          }
-        } else {
-          results = [];
-        }
-      } catch (e) {
-        console.error(e);
-      }
+    try {
+      const requestsArray = [
+        // get complete filterList from backend
+        store.dispatch('searchData/fetchFilterData'),
+        // get initial data
+        store.dispatch('appData/fetchInitialData', { limit: entryNumber }),
+      ];
+      // wait for the requests to return
+      [filterList, { results }] = await Promise
+        .all(requestsArray);
+    } catch (e) {
+      console.error(e);
     }
     return {
-      searchResults: results,
-      appliedFilters: completeFilters,
-      pageNumber: page ? Number(page) : 1,
+      initialResults: [].concat(results),
+      filterList,
     };
   },
   data() {
@@ -138,7 +91,6 @@ export default {
       searchResults: [],
       autocompleteResults: [],
       appliedFilters: [],
-      pageNumber: 1,
       /**
        * edit-mode for different edit sections
        * @type {Object}
@@ -146,27 +98,21 @@ export default {
       editMode: {
         showcase: false,
       },
-    };
-  },
-  head() {
-    return {
-      title: `${process.env.appTitle}`,
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: process.env.meta.description[this.lang],
-        },
-      ],
+      filterList: [],
+      fadeDuration: 250,
+      dateFieldDelay: 0,
+      initialResults: [],
     };
   },
   computed: {
+    /**
+     * get the data that only need fetching once for all search components from
+     * the searchData store module
+     */
     ...mapGetters({
-      initialData: 'appData/getInitialData',
       getInitialData: 'appData/getInitialData',
       getInitialShowcaseData: 'appData/getInitialShowcaseData',
-      filterList: 'searchData/getFilters',
-      lang: 'appData/getLocale',
+      userEditPermissions: 'appData/getUserEditPermissions',
     }),
     carouselData() {
       return this.getInitialShowcaseData(0, false);
@@ -192,17 +138,12 @@ export default {
         || (this.appliedFilters.length === 1 && this.appliedFilters[0].id === 'fulltext'
         && !hasData(this.appliedFilters[0].filter_values));
     },
-    /**
-     * get the data that only need fetching once for all search components from
-     * the searchData store module
-     */
-    ...mapGetters({
-      /**
-       * a list of all filters defined in the backend and available to the user
-       */
-      filterList: 'searchData/getFilters',
-      userEditPermissions: 'appData/getUserEditPermissions',
-    }),
+    // TODO: this is a temporary fix since hard in backend to distinguish initial heading and
+    // search result heading and should be obsolete once there is more than one category
+    // (bzw. a solution for more than one category)
+    filtersHaveValues() {
+      return this.appliedFilters.some((filter) => hasData(filter.filter_values));
+    },
     /**
      * check if user is allowed to edit page elements
      *
@@ -223,6 +164,32 @@ export default {
       return Object.values(this.editMode).some((value) => value !== false);
     },
   },
+  watch: {
+    initialDataMode: {
+      handler(val) {
+        // some puffer for the delay
+        const threshold = 50;
+
+        // if showcase is visible, wait until fade-transition duration is done to open calendar
+        const delay = this.fadeDuration + threshold;
+        if (val) {
+          this.dateFieldDelay = delay;
+          return;
+        }
+
+        // if fade-transition is done, date calender should open immediately
+        setTimeout(() => {
+          this.dateFieldDelay = 0;
+        }, delay);
+      },
+      immediate: true,
+    },
+  },
+  created() {
+    if (!this.searchResults.length) {
+      this.searchResults = JSON.parse(JSON.stringify(this.getInitialData.results));
+    }
+  },
   methods: {
     async search(requestBody) {
       // indicate to component that search is ongoing
@@ -231,14 +198,13 @@ export default {
         // check if there are any filters applied
         if (requestBody.filters && requestBody.filters.length) {
           // if yes apply these filters
-          // TODO: dont need to send options to backend --> get rid of this somehow?
-          // or do this in BaseAdvancedSearch even
           const { data } = await this.$api.public.api_v1_search_create({}, { requestBody });
           const parsedResults = JSON.parse(data);
           // check if there are data (this would e.g. be false if request was cancelled)
           if (parsedResults && parsedResults.data) {
             // assign search results
             this.searchResults = [].concat(parsedResults);
+            this.searchOngoing = false;
           }
         } else {
           if (requestBody.offset === 0 || !this.initialSearchData) {
@@ -248,6 +214,7 @@ export default {
             await this.$store.dispatch('appData/fetchInitialData', { limit: requestBody.limit });
             if (requestBody.offset === 0) {
               this.searchResults = this.getInitialData.results;
+              this.searchOngoing = false;
             }
           }
           if (requestBody.offset !== 0) {
@@ -257,10 +224,18 @@ export default {
                 ...this.initialSearchData,
               },
             });
-            this.searchResults = [JSON.parse(filterRequest.data)];
+            const parsedData = JSON.parse(filterRequest.data);
+            // a cancelled request would return false here so need to check
+            // TODO: seems not ideal to handle cancelled request this way - should go to error?
+            if (parsedData) {
+              this.searchResults = [parsedData];
+              // move search ongoing false here so request cancellation does not stop loader
+              this.searchOngoing = false;
+            }
           }
         }
       } catch (e) {
+        this.searchOngoing = false;
         // TODO: error handling (unify at one place??)
         // TODO: restore previous state of search?
         console.error(e);
@@ -271,7 +246,6 @@ export default {
           type: 'error',
         });
       }
-      this.searchOngoing = false;
     },
     async fetchAutocomplete({ searchString, filter, index }) {
       // needed to add trim because space leads to evaluation true
@@ -281,16 +255,20 @@ export default {
           const response = await this.$api.public.api_v1_autocomplete_create({}, {
             requestBody: {
               q: searchString,
-              filter_id: filter.label === this.$t('searchView.fulltext') ? 'fulltext' : filter.id,
+              filter_id: filter.id,
+              limit: 20,
             },
           });
 
-          // check if response.data is typeof string before processing value.
-          // response.data could also be a blob due to request cancellation.
+          const newResults = JSON.parse(response.data);
+          // now check if parsed string is actual results (if request was cancelled this has
+          // the value false
           // TODO: check if there is better solution to handle requestCancellation
-          if (typeof response.data === 'string') {
-            // TODO: response should be an array always so remove concat as soon as this is the case
-            this.autocompleteResults = [].concat(JSON.parse(response.data));
+          if (newResults) {
+            // if yes - assign the new results (otherwise just do nothing)
+            this.autocompleteResults = [].concat(newResults);
+            // loader index should not be set done when request was cancelled so moving this here!
+            this.autocompleteLoaderIndex = -1;
           }
         } catch (e) {
           this.autocompleteLoaderIndex = -1;
@@ -307,9 +285,9 @@ export default {
             type: 'error',
           });
         }
-        this.autocompleteLoaderIndex = -1;
       } else {
         this.autocompleteResults = [];
+        this.autocompleteLoaderIndex = -1;
       }
     },
     /**
@@ -350,7 +328,7 @@ export default {
 }
 
 .fade-enter-active, .fade-move, .fade-leave-active {
-  transition: all 250ms ease;
+  transition: all var(--fade-duration) ease;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;

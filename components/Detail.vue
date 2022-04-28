@@ -54,6 +54,7 @@
             <!-- otherwise we assume it's an activity and display the type -->
             <template v-else>
               <span
+                v-if="data.type.label"
                 class="base-sr-chips__item base-sr-chips__item--single">
                 {{ toTitleString(data.type.label[$i18n.locale], $i18n.locale) }}
               </span>
@@ -172,7 +173,7 @@
 
     <!-- locations -->
     <div
-      v-if="data.locations && data.locations.length"
+      v-if="hasLocations"
       class="base-sr-row">
       <h2 class="base-sr--ml-small">
         {{ $tc('detailView.location', data.locations.length) }}
@@ -186,7 +187,7 @@
           :attribution="mapAttribution"
           :copyright="mapCopyright"
           :label="$tc('detailView.address', data.locations.length)"
-          :locations="data.locations"
+          :locations="data.locations.filter((location) => !!location.coordinates)"
           :options="mapOptions"
           :tile-layer-service="mapTileLayerService"
           :url="mapUrl" />
@@ -283,7 +284,7 @@
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :placeholder-text="$t('searchView.placeholders.entity', {
         entity: getEntityString })"
-      :page-number="1"
+      :page-number.sync="pageNumber"
       :no-results-text-initial="$t('detailView.noResultsTextInitial')"
       @autocomplete="fetchAutocomplete"
       @search="search" />
@@ -296,10 +297,16 @@
         <template
           v-if="data.publisher.length">
           {{ $t('detailView.publisher') }}:
-          <a
-            :href="data.publisher[0].source"
-            :title="data.publisher[0].name"
-            class="base-link base-link--internal">{{ data.publisher[0].name }}</a> |
+          <template
+            v-if="data.publisher[0].source">
+            <a
+              :href="data.publisher[0].source"
+              :title="data.publisher[0].name"
+              class="base-link base-link--internal">{{ data.publisher[0].name }}</a> |
+          </template>
+          <template v-else>
+            {{ data.publisher[0].name }} |
+          </template>
         </template>
         {{ data.source_institution.label }} |
         {{ $t('detailView.publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
@@ -429,6 +436,13 @@ export default {
       type: Array,
       default: () => ([]),
     },
+    /**
+     * set page number from outside
+     */
+    initialPageNumber: {
+      type: Number,
+      default: 1,
+    },
   },
   data() {
     return {
@@ -482,6 +496,7 @@ export default {
        * @type {Filter[]}
        */
       appliedFiltersInt: [],
+      pageNumber: this.initialPageNumber,
     };
   },
   computed: {
@@ -518,7 +533,9 @@ export default {
      * variable to determine display of search element
      */
     userHasShowroomEntries() {
-      return !!this.data.activities[0].total;
+      // TODO: this is a quick fix for correctly showing search element on entity site
+      // might become obsolete if url parsing is moved out of async data
+      return !!this.appliedFiltersInt.length || !!this.data.activities[0].total;
     },
     /**
      * check if some edit-mode is active
@@ -537,6 +554,15 @@ export default {
       return this.data.entries && this.data.entries.media
         ? this.data.entries.media.map((media, index) => ({ ...media, order: index + 1 }))
         : [];
+    },
+    /**
+     * check locations for coordinates
+     * @returns {boolean}
+     */
+    hasLocations() {
+      return this.data.locations
+        && this.data.locations.length
+        && !!this.data.locations.filter((location) => !!location.coordinates).length;
     },
   },
   watch: {
@@ -590,6 +616,9 @@ export default {
           const parsedResults = JSON.parse(data);
           if (parsedResults && parsedResults.data) {
             this.searchResults = [].concat(parsedResults);
+            // move search ongoing assignment to here so request cancellation does
+            // not cause loader to disappear
+            this.searchOngoing = false;
           }
         } else {
           this.searchResults = [];
@@ -598,6 +627,7 @@ export default {
         // TODO: error handling (unify at one place??)
         // TODO: restore previous state of search?
         console.error(e);
+        this.searchOngoing = false;
         this.$notify({
           group: 'request-notifications',
           title: this.$t('notify.searchError'),
@@ -605,26 +635,31 @@ export default {
           type: 'error',
         });
       }
-      this.searchOngoing = false;
     },
     async fetchAutocomplete({ searchString, filter, index }) {
       // needed to add trim because space leads to evaluation true
       if (searchString && searchString.trim()) {
         this.autocompleteLoaderIndex = index;
         try {
-          const response = await this.$api.public.api_v1_autocomplete_create({}, {
+          const response = await this.$api.public.api_v1_entities_autocomplete_create({
+            id: this.$route.params.id,
+          }, {
             requestBody: {
               q: searchString,
-              filter_id: filter.label === this.$t('searchView.fulltext') ? 'fulltext' : filter.id,
+              filter_id: filter.id,
+              limit: 20,
             },
           });
 
-          // check if response.data is typeof string before processing value.
-          // response.data could also be a blob due to request cancellation.
+          const newResults = JSON.parse(response.data);
+          // now check if parsed string is actual results (if request was cancelled this has
+          // the value false
           // TODO: check if there is better solution to handle requestCancellation
-          if (typeof response.data === 'string') {
-            // TODO: response should be an array always so remove concat as soon as this is the case
-            this.autocompleteResults = [].concat(JSON.parse(response.data));
+          if (newResults) {
+            // if yes - assign the new results (otherwise just do nothing)
+            this.autocompleteResults = [].concat(newResults);
+            // loader index should not be set done when request was cancelled so moving this here!
+            this.autocompleteLoaderIndex = -1;
           }
         } catch (e) {
           this.autocompleteLoaderIndex = -1;
@@ -640,7 +675,6 @@ export default {
             type: 'error',
           });
         }
-        this.autocompleteLoaderIndex = -1;
       } else {
         this.autocompleteResults = [];
       }
