@@ -500,9 +500,7 @@ export default {
         await this.$router.push({
           path: this.$route.fullPath,
           query: {
-            // need to user currentpagenumberint here because currentpagenumber is updated
-            // via event to parent and the prop will only be updated after this function
-            // went through
+            // since page number is 1 here just remove it from the url query string
             page: undefined,
             filters: minimizedPathFilters.length
               // dont add empty default filter

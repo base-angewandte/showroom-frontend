@@ -488,6 +488,11 @@ export default {
        * @type {Filter[]}
        */
       appliedFiltersInt: [],
+      /**
+       * variable to determine display of search element
+       * @type {boolean}
+       */
+      userHasShowroomEntries: true,
     };
   },
   computed: {
@@ -519,14 +524,6 @@ export default {
     },
     userPreferencesUrl() {
       return process.env.userPreferencesUrl;
-    },
-    /**
-     * variable to determine display of search element
-     */
-    userHasShowroomEntries() {
-      // TODO: this is a quick fix for correctly showing search element on entity site
-      // might become obsolete if url parsing is moved out of async data
-      return !!this.appliedFiltersInt.length || !!this.data.activities[0].total;
     },
     /**
      * check if some edit-mode is active
@@ -607,6 +604,10 @@ export default {
         // TODO: check if there is better solution to handle requestCancellation
         if (results) {
           this.searchResults = results;
+          // TODO: this only works with one result category - check if this needs improvement
+          // (for entities there should be only one category always anyway so might be okay)
+          this.userHasShowroomEntries = !!this.appliedFiltersInt || !!this.appliedFiltersInt.length
+            || !!results.length || !!results[0].data || !!results[0].data.length;
           // emit event to parent to have the results synced there (necessary for saving to
           // store on beforeRouteLeave)
           this.$emit('update-search-results', this.searchResults);
