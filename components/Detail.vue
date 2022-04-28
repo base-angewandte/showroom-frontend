@@ -284,7 +284,6 @@
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :placeholder-text="$t('searchView.placeholders.entity', {
         entity: getEntityString })"
-      :page-number.sync="pageNumber"
       :no-results-text-initial="$t('detailView.noResultsTextInitial')"
       @autocomplete="fetchAutocomplete"
       @search="search" />
@@ -436,13 +435,6 @@ export default {
       type: Array,
       default: () => ([]),
     },
-    /**
-     * set page number from outside
-     */
-    initialPageNumber: {
-      type: Number,
-      default: 1,
-    },
   },
   data() {
     return {
@@ -496,7 +488,6 @@ export default {
        * @type {Filter[]}
        */
       appliedFiltersInt: [],
-      pageNumber: this.initialPageNumber,
     };
   },
   computed: {
@@ -606,22 +597,22 @@ export default {
     async search(requestBody) {
       this.searchOngoing = true;
       try {
-        const { data } = await this.$api.public.api_v1_entities_search_create({
-          id: this.$route.params.id,
-        }, {
+        const results = await this.$store.dispatch('searchData/fetchSearch', {
           requestBody,
+          entityId: this.$route.params.id,
+          routeParam: 'entities',
         });
-        if (data) {
-          // assign search results
-          const parsedResults = JSON.parse(data);
-          if (parsedResults && parsedResults.data) {
-            this.searchResults = [].concat(parsedResults);
-            // move search ongoing assignment to here so request cancellation does
-            // not cause loader to disappear
-            this.searchOngoing = false;
-          }
-        } else {
-          this.searchResults = [];
+        // now check if parsed string is actual results (if request was cancelled this has
+        // the value false
+        // TODO: check if there is better solution to handle requestCancellation
+        if (results) {
+          this.searchResults = results;
+          // emit event to parent to have the results synced there (necessary for saving to
+          // store on beforeRouteLeave)
+          this.$emit('update-search-results', this.searchResults);
+          // move search ongoing assignment to here so request cancellation does
+          // not cause loader to disappear
+          this.searchOngoing = false;
         }
       } catch (e) {
         // TODO: error handling (unify at one place??)
@@ -637,46 +628,36 @@ export default {
       }
     },
     async fetchAutocomplete({ searchString, filter, index }) {
-      // needed to add trim because space leads to evaluation true
-      if (searchString && searchString.trim()) {
-        this.autocompleteLoaderIndex = index;
-        try {
-          const response = await this.$api.public.api_v1_entities_autocomplete_create({
-            id: this.$route.params.id,
-          }, {
-            requestBody: {
-              q: searchString,
-              filter_id: filter.id,
-              limit: 20,
-            },
-          });
-
-          const newResults = JSON.parse(response.data);
-          // now check if parsed string is actual results (if request was cancelled this has
-          // the value false
-          // TODO: check if there is better solution to handle requestCancellation
-          if (newResults) {
-            // if yes - assign the new results (otherwise just do nothing)
-            this.autocompleteResults = [].concat(newResults);
-            // loader index should not be set done when request was cancelled so moving this here!
-            this.autocompleteLoaderIndex = -1;
-          }
-        } catch (e) {
+      this.autocompleteLoaderIndex = index;
+      try {
+        const newResults = await this.$store.dispatch('searchData/fetchAutocomplete', {
+          queryString: searchString,
+          filterId: filter.id,
+          entityId: this.$route.params.id,
+          routeParam: 'entities',
+        });
+        // now check if parsed string is actual results (if request was cancelled this has
+        // the value false
+        // TODO: check if there is better solution to handle requestCancellation
+        if (newResults) {
+          // if yes - assign the new results (otherwise just do nothing)
+          this.autocompleteResults = [].concat(newResults);
+          // loader index should not be set done when request was cancelled so moving this here!
           this.autocompleteLoaderIndex = -1;
-          console.error(e);
-          // TODO: error handling
-          // TODO: show this information in autocomplete drop down as well?
-          // TODO: reset autocompleteResults??
-          console.error(e);
-          this.$notify({
-            group: 'request-notifications',
-            title: this.$t('notify.autocompleteError'),
-            text: this.$t('notify.autocompleteErrorSubtext'),
-            type: 'error',
-          });
         }
-      } else {
-        this.autocompleteResults = [];
+      } catch (e) {
+        this.autocompleteLoaderIndex = -1;
+        console.error(e);
+        // TODO: error handling
+        // TODO: show this information in autocomplete drop down as well?
+        // TODO: reset autocompleteResults??
+        console.error(e);
+        this.$notify({
+          group: 'request-notifications',
+          title: this.$t('notify.autocompleteError'),
+          text: this.$t('notify.autocompleteErrorSubtext'),
+          type: 'error',
+        });
       }
     },
     /**
