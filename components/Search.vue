@@ -428,14 +428,14 @@ export default {
     },
   },
   mounted() {
+    const { page, filters } = this.$route.query;
     // there should be an initial search request (if necessary parsing url) - however
     // this only works if filterList is there! so checking here (but it should be here)
     // filterList is also the reason why this is here instead of setting $route watcher to
     // immediate (filterList not available yet)
     if (this.filterList && this.filterList.length) {
       // check if url query params are set
-      if ((this.$route.query.page && this.$route.query.page !== '1')
-        || this.$route.query.filters) {
+      if ((page && page !== '1') || filters) {
         // if yes - parse them
         this.parseUrlForSearch(this.$route);
       } else {
@@ -589,7 +589,7 @@ export default {
       // as url set by pagination component directly)
       if (((!from && to.query.page > 1)
         || (from && from.query.page !== to.query.page))
-        && !(!from.query.page && !to.query.page)) {
+        && !((!from || !from.query.page) && !to.query.page)) {
         if (this.currentPageNumber !== newPageNumber) {
           this.currentPageNumber = Number(to.query.page || 1);
           triggerSearch = true;
@@ -602,7 +602,7 @@ export default {
         const routeToFilters = toFilters ? JSON.parse(toFilters) : [];
         // parse the old url filter string if present - this is just for comparison
         // purposes (if filters in route have changed)
-        const routeFromFilters = fromFilters ? JSON.parse(fromFilters) : [];
+        // const routeFromFilters = fromFilters ? JSON.parse(fromFilters) : [];
         // match the new parsed filters with the filterList filters that contain all
         // necessary data
         this.appliedFiltersInt = routeToFilters.map((filter) => {
@@ -614,17 +614,7 @@ export default {
             filter_values: filter.filter_values,
           });
         });
-        // now just keep filters that actually have data
-        const fromFilterWithData = routeFromFilters
-          .filter((filter) => hasData(filter.filter_values));
-        // same for new filters
-        const toFilterWithData = routeToFilters.filter((filter) => hasData(filter.filter_values));
-        // now check if these filters that actually have data have changed from old url
-        // to new url
-        if (JSON.stringify(fromFilterWithData) !== JSON.stringify(toFilterWithData)) {
-          // if yes - trigger search!
-          triggerSearch = true;
-        }
+        triggerSearch = true;
       }
       if (triggerSearch) {
         this.search(this.appliedFiltersInt);
