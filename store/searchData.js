@@ -20,12 +20,18 @@ const mutations = {
   setEntityFilters(state, { data, id }) {
     state.entityFilters[id] = data;
   },
-  setLatestSearchResults(state, { data, id }) {
+  setLatestSearchResults(state, { data, id, searchParams }) {
     if (state.latestSearchResults) {
-      state.latestSearchResults[id] = data;
+      if (state.latestSearchResults[id]) {
+        state.latestSearchResults[id][searchParams] = data;
+      } else {
+        state.latestSearchResults[id] = {
+          [searchParams]: data,
+        };
+      }
     } else {
       state.latestSearchResults = {
-        id: data,
+        [id]: data,
       };
     }
   },

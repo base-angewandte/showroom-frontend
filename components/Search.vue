@@ -519,12 +519,12 @@ export default {
      * @param {Filter[]} filters - the filters to be applied in search
      */
     async search(filters) {
-      if (this.storedData && this.storedData.length) {
-        this.resultListInt = JSON.parse(JSON.stringify(this.storedData));
-        this.setSearchResults({
-          id: this.entityId,
-          data: null,
-        });
+      const pathFilters = this.$route.query.filters || 'noFilters';
+      if (this.storedData
+        && (this.storedData[pathFilters] && this.storedData[pathFilters])) {
+        // once the stored data was used reset it in the store
+        this.resultListInt = JSON.parse(JSON
+          .stringify(this.storedData[pathFilters]));
       } else {
         const filterRequestData = filters
           .map((filter) => ({

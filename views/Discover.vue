@@ -61,6 +61,7 @@ export default {
   beforeRouteLeave(to, from, next) {
     this.setSearchResults({
       id: from.params.id || 'main',
+      searchParams: from.query.filters || 'noFilters',
       data: this.searchResults,
     });
     next();
