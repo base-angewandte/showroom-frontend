@@ -485,17 +485,29 @@ export default {
         filter_values: filter.filter_values,
       }));
       const previousQueryFilterString = this.$route.query.filters;
-      const newFilterIsEmptyDefaultFilter = minimizedPathFilters.length === 1
-        && minimizedPathFilters[0].id === this.defaultFilter.id
+      const newFilterIsEmptyFilter = minimizedPathFilters.length === 1
         && !(hasData(minimizedPathFilters[0].filter_values));
+      const newFilterIsEmptyDefaultFilter = newFilterIsEmptyFilter
+        && minimizedPathFilters[0].id === this.defaultFilter.id;
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
       // in asyncData and search does not need to be triggered here anymore
       if (JSON.stringify(minimizedPathFilters) !== previousQueryFilterString
         // cover special case empty fulltext filter that is removed from route query string
         && !(newFilterIsEmptyDefaultFilter && !previousQueryFilterString)) {
-        // whenever a new search is triggered reset the page number to 1
-        this.currentPageNumber = 1;
+        // need to check if change was just an empty filter because this should
+        // not reset the page
+        const changeWasEmptyFilter = JSON.stringify(minimizedPathFilters
+          .filter((filter) => hasData(filter.filter_values)))
+          === JSON.stringify(previousQueryFilterString
+            ? JSON.parse(previousQueryFilterString)
+              .filter((filter) => hasData(filter.filter_values)) : []);
+        // so only reset page to 1 if some filter values actually changed
+        if (!changeWasEmptyFilter) {
+          // whenever a new search is triggered (and it was not triggered by setting a filter type)
+          // reset the page number to 1
+          this.currentPageNumber = 1;
+        }
         // push the filters into the route - this will automatically trigger the search!!
         await this.$router.push({
           path: this.$route.fullPath,
@@ -575,8 +587,9 @@ export default {
       const newPageNumber = Number(to.query.page);
       // check if page is different (this is here for browser navigation as well
       // as url set by pagination component directly)
-      if ((!from && to.query.page > 1)
-        || (from && from.query.page !== to.query.page)) {
+      if (((!from && to.query.page > 1)
+        || (from && from.query.page !== to.query.page))
+        && !(!from.query.page && !to.query.page)) {
         if (this.currentPageNumber !== newPageNumber) {
           this.currentPageNumber = Number(to.query.page || 1);
           triggerSearch = true;
