@@ -8,10 +8,8 @@
 <script>
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapGetters } from 'vuex';
+import { meta, metaTitle } from '@/utils/metaTags';
 import Detail from '@/components/Detail';
-import {
-  metaDescription,
-} from '@/utils/common';
 
 export default {
   name: 'ActivityView',
@@ -60,14 +58,8 @@ export default {
   },
   head() {
     return {
-      title: `${this.data.title} | ${process.env.appTitle}`,
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: metaDescription(this.data, this.lang),
-        },
-      ],
+      title: metaTitle(this.data),
+      meta: meta(this.data, this.lang, this.$route.path),
     };
   },
   computed: {

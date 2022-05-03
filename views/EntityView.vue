@@ -12,6 +12,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapGetters } from 'vuex';
 import { userInfo } from '@/mixins/userNotifications';
+import { meta, metaTitle } from '@/utils/metaTags';
 import Detail from '@/components/Detail';
 
 export default {
@@ -96,9 +97,9 @@ export default {
   },
   head() {
     return {
-      title: `${this.data.title} | ${process.env.appTitle}`,
+      title: metaTitle(this.data),
+      meta: meta(this.data, this.lang, this.$route.path),
     };
-    // TODO: add additional meta-tags, at least description
   },
   computed: {
     /**
@@ -106,6 +107,7 @@ export default {
      * the searchData store module
      */
     ...mapGetters({
+      lang: 'appData/getLocale',
       /**
        * a list of all filters defined in the backend and available to the user
        */
