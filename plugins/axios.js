@@ -1,6 +1,8 @@
 export default function request({ $axios, error, isDev }) {
   $axios.onRequest((config) => {
-    console.log(`Making request to ${config.url}`);
+    if (isDev) {
+      console.log(`Making request to ${config.url}`);
+    }
   });
   $axios.onError((e) => {
     // not sure what that is doing since this is an int already anyways
