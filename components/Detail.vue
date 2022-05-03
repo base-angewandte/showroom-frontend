@@ -290,26 +290,41 @@
 
     <!-- owner, dates -->
     <div
-      v-if="data.publisher"
+      v-if="publishingInfo"
       class="base-sr-row base-sr-last-modified">
       <p>
         <template
-          v-if="data.publisher.length">
+          v-if="publisher">
           {{ $t('detailView.publisher') }}:
           <template
-            v-if="data.publisher[0].source">
+            v-if="publisher.source">
             <a
-              :href="data.publisher[0].source"
-              :title="data.publisher[0].name"
-              class="base-link base-link--internal">{{ data.publisher[0].name }}</a> |
+              :href="publisher.source"
+              :title="publisher.name"
+              class="base-link base-link--internal">{{ publisher.name }}</a> |
           </template>
           <template v-else>
-            {{ data.publisher[0].name }} |
+            {{ publisher.name }} |
           </template>
         </template>
-        {{ data.source_institution.label }} |
-        {{ $t('detailView.publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
-        {{ $t('detailView.editedDate') }}: {{ createHumanReadableDate(data.date_changed) }}
+        <template v-if="institution">
+          <template
+            v-if="institution.url">
+            <a
+              :href="institution.url"
+              :title="institution.label"
+              class="base-link base-link--internal">{{ institution.label }}</a> |
+          </template>
+          <template v-else>
+            {{ institution.name }} |
+          </template>
+        </template>
+        {{
+          `${$t('detailView.publishedDate')}: ${publishingInfo.date_published
+            || createHumanReadableDate(data.date_created)} |
+          ${$t('detailView.editedDate')}: ${publishingInfo.date_updated
+          || createHumanReadableDate(data.date_changed)}`
+        }}
       </p>
     </div>
 
@@ -551,6 +566,16 @@ export default {
       return this.data.locations
         && this.data.locations.length
         && !!this.data.locations.filter((location) => !!location.coordinates).length;
+    },
+    publishingInfo() {
+      return this.data.publishing_info;
+    },
+    publisher() {
+      return !!this.publishingInfo.publisher && !!this.publishingInfo.publisher.length
+        ? this.publishingInfo.publisher[0] : false;
+    },
+    institution() {
+      return this.publishingInfo.source_institution;
     },
   },
   watch: {
