@@ -1,5 +1,9 @@
 <template>
   <div>
+    <h2 class="hide">
+      {{ $t('detailView.activityLists') }}
+    </h2>
+
     <BaseEditControl
       v-if="userCanEdit"
       :controls="true"

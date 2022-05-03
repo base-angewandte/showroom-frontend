@@ -73,12 +73,12 @@
             class="showroom-search__results"
             @items-per-row-changed="setItemsPerRow($event)">
             <template #header>
-              <h4 class="showroom-search__results-header">
+              <h2 class="showroom-search__results-header">
                 {{ titleCase(headerText || section.label) }}
                 <span class="showroom-search__results-header-number">
                   {{ `(${section.total})` }}
                 </span>
-              </h4>
+              </h2>
             </template>
             <template #resultBox="{ item }">
               <BaseImageBox
