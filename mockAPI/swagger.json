@@ -97,7 +97,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this activity.",
+            "description": "A unique value identifying this showroom object.",
             "required": true
           }
         ],
@@ -198,63 +198,6 @@
               }
             },
             "description": "Forbidden"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "Error": {
-                    "value": {
-                      "detail": "Not found."
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/v1/activities/{id}/media/": {
-      "get": {
-        "operationId": "api_v1_activities_media_list",
-        "description": "",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "schema": {
-              "type": "string"
-            },
-            "description": "A unique value identifying this activity.",
-            "required": true
-          }
-        ],
-        "tags": [
-          "public"
-        ],
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Media"
-                  }
-                }
-              }
-            },
-            "description": ""
           },
           "404": {
             "content": {
@@ -451,7 +394,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this album.",
+            "description": "A unique value identifying this showroom object.",
             "required": true
           }
         ],
@@ -504,7 +447,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this album.",
+            "description": "A unique value identifying this showroom object.",
             "required": true
           }
         ],
@@ -609,7 +552,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this album.",
+            "description": "A unique value identifying this showroom object.",
             "required": true
           }
         ],
@@ -718,92 +661,12 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AutocompleteItem"
+                    "$ref": "#/components/schemas/Autocomplete"
                   }
                 }
               }
             },
             "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/entities/": {
-      "post": {
-        "operationId": "api_v1_entities_create",
-        "description": "",
-        "tags": [
-          "repo"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Entity"
-              }
-            },
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Entity"
-              }
-            },
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/Entity"
-              }
-            }
-          },
-          "required": true
-        },
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "responses": {
-          "201": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Entity"
-                }
-              }
-            },
-            "description": ""
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "Error": {
-                    "value": {
-                      "detail": "Something with your request is wrong. This message should provide more details."
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Bad Request"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "Error": {
-                    "value": {
-                      "detail": "Authentication credentials were not provided."
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Forbidden"
           }
         }
       }
@@ -819,7 +682,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this entity.",
+            "description": "A unique value identifying this showroom object.",
             "required": true
           }
         ],
@@ -829,8 +692,7 @@
         "security": [
           {
             "cookieAuth": []
-          },
-          {}
+          }
         ],
         "responses": {
           "200": {
@@ -862,8 +724,8 @@
           }
         }
       },
-      "patch": {
-        "operationId": "api_v1_entities_partial_update",
+      "put": {
+        "operationId": "api_v1_entities_update",
         "description": "",
         "parameters": [
           {
@@ -872,28 +734,31 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this entity.",
+            "description": "The source repo's id for this entity",
             "required": true
           }
         ],
         "tags": [
-          "auth"
+          "repo"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PatchedEntity"
+                "type": "object",
+                "additionalProperties": {}
               }
             },
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/PatchedEntity"
+                "type": "object",
+                "additionalProperties": {}
               }
             },
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/PatchedEntity"
+                "type": "object",
+                "additionalProperties": {}
               }
             }
           }
@@ -904,8 +769,25 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No response body"
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Showroom id of this entity"
+          },
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Showroom id of this entity"
           },
           "400": {
             "content": {
@@ -940,23 +822,67 @@
               }
             },
             "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/entities/{id}/autocomplete/": {
+      "post": {
+        "operationId": "api_v1_entities_autocomplete_create",
+        "description": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this showroom object.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "public"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutocompleteRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/AutocompleteRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AutocompleteRequest"
+              }
+            }
           },
-          "404": {
+          "required": true
+        },
+        "security": [
+          {
+            "cookieAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "Error": {
-                    "value": {
-                      "detail": "Not found."
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Autocomplete"
                   }
                 }
               }
             },
-            "description": "Not Found"
+            "description": ""
           }
         }
       }
@@ -972,7 +898,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this entity.",
+            "description": "A unique value identifying this showroom object.",
             "required": true
           },
           {
@@ -1005,6 +931,11 @@
         ],
         "tags": [
           "auth"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
         ],
         "responses": {
           "200": {
@@ -1063,7 +994,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this entity.",
+            "description": "A unique value identifying this showroom object.",
             "required": true
           }
         ],
@@ -1089,6 +1020,11 @@
             }
           }
         },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -1137,6 +1073,95 @@
         }
       }
     },
+    "/api/v1/entities/{id}/filters/": {
+      "get": {
+        "operationId": "api_v1_entities_filters_retrieve",
+        "description": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string",
+              "default": "en"
+            },
+            "description": "The ISO 2 letter language code to use for localisation"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "A unique value identifying this showroom object.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "public"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Filter"
+                },
+                "examples": {
+                  "Activities,Persons,DateRangeAndKeywordsFilter": {
+                    "value": [
+                      {
+                        "id": "activities",
+                        "label": "Activities",
+                        "type": "text"
+                      },
+                      {
+                        "id": "persons",
+                        "label": "Persons",
+                        "type": "text"
+                      },
+                      {
+                        "id": "date_range",
+                        "label": "Date Range",
+                        "type": "daterange"
+                      },
+                      {
+                        "id": "keywords",
+                        "type": "chios",
+                        "label": "Keywords",
+                        "freetext_allowed": false,
+                        "options": [
+                          {
+                            "id": "Assemblage",
+                            "label": "Assemblage"
+                          },
+                          {
+                            "id": "Community Radio",
+                            "label": "Community Radio"
+                          },
+                          {
+                            "id": "Explosion Research",
+                            "label": "Explosion Research"
+                          }
+                        ]
+                      }
+                    ],
+                    "summary": "Activities, persons, date range and keywords filter"
+                  }
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/entities/{id}/list/": {
       "get": {
         "operationId": "api_v1_entities_list_retrieve",
@@ -1148,12 +1173,17 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this entity.",
+            "description": "A unique value identifying this showroom object.",
             "required": true
           }
         ],
         "tags": [
           "auth"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
         ],
         "responses": {
           "200": {
@@ -1215,7 +1245,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this entity.",
+            "description": "A unique value identifying this showroom object.",
             "required": true
           }
         ],
@@ -1251,6 +1281,11 @@
           },
           "required": true
         },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -1313,7 +1348,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "A unique value identifying this entity.",
+            "description": "A unique value identifying this showroom object.",
             "required": true
           }
         ],
@@ -1466,6 +1501,16 @@
       "get": {
         "operationId": "api_v1_initial_list",
         "description": "Initial Landing Page request, delivering \"search results\" and carousel\ndata.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Optional limit for the search result. Default: 100"
+          }
+        ],
         "tags": [
           "public"
         ],
@@ -1521,6 +1566,14 @@
             },
             "description": "ShortUUID of the entity for which initial data should be presented",
             "required": true
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Optional limit for the search result. Default: 100"
           }
         ],
         "tags": [
@@ -1886,6 +1939,9 @@
         },
         "security": [
           {
+            "cookieAuth": []
+          },
+          {
             "basicAuth": []
           }
         ],
@@ -1899,6 +1955,71 @@
               }
             },
             "description": ""
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Error": {
+                    "value": {
+                      "detail": "Something with your request is wrong. This message should provide more details."
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/showcase_search/": {
+      "post": {
+        "operationId": "api_v1_showcase_search_create",
+        "description": "Submit a specific search for items used in showcase editing.",
+        "tags": [
+          "public"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShowcaseSearch"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ShowcaseSearch"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ShowcaseSearch"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookieAuth": []
+          },
+          {
+            "basicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResult"
+                }
+              }
+            },
+            "description": "A result set structurally similar to general search results"
           },
           "400": {
             "content": {
@@ -1946,6 +2067,7 @@
                       "name": "Firstname Lastname",
                       "email": "addy@example.org",
                       "entity_id": "xZy2345aceg98QPT0246aC",
+                      "showroom_id": "firstname-lastname-xZy2345aceg98QPT0246aC",
                       "entity_editing": [
                         "xZy2345aceg98QPT0246aC",
                         "MtEaiJ7ZgjhFBbTn6rBMTU"
@@ -1968,6 +2090,7 @@
                       "name": "Firstname Lastname",
                       "email": "addy@example.org",
                       "entity_id": null,
+                      "showroom_id": null,
                       "entity_editing": [],
                       "groups": [
                         "foo_users",
@@ -2016,6 +2139,9 @@
             "type": "string",
             "readOnly": true
           },
+          "type": {
+            "$ref": "#/components/schemas/ShowroomObjectTypeEnum"
+          },
           "title": {
             "type": "string",
             "maxLength": 255
@@ -2049,22 +2175,23 @@
             "type": "integer",
             "maximum": 32767
           },
-          "source_repo_entry_id": {
+          "source_repo_object_id": {
             "type": "string",
             "maxLength": 255
           },
           "source_repo_owner_id": {
             "type": "string",
+            "nullable": true,
             "maxLength": 255
           },
           "source_repo_data": {
             "type": "object",
-            "additionalProperties": {},
-            "nullable": true
+            "additionalProperties": {}
           },
-          "featured_media": {
+          "date_synced": {
             "type": "string",
-            "nullable": true
+            "format": "date-time",
+            "readOnly": true
           },
           "belongs_to": {
             "type": "string",
@@ -2074,25 +2201,18 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
-          },
-          "type": {
-            "type": "object",
-            "additionalProperties": {},
-            "nullable": true
-          },
-          "keywords": {
-            "type": "object",
-            "additionalProperties": {},
-            "nullable": true
+            },
+            "readOnly": true
           }
         },
         "required": [
+          "date_synced",
           "id",
+          "relations_to",
           "source_repo",
-          "source_repo_entry_id",
-          "source_repo_owner_id",
-          "title"
+          "source_repo_object_id",
+          "title",
+          "type"
         ]
       },
       "ActivityRelation": {
@@ -2117,9 +2237,10 @@
             "type": "string",
             "maxLength": 255
           },
-          "subtitle": {
-            "type": "string",
-            "maxLength": 255
+          "subtext": {
+            "type": "object",
+            "additionalProperties": {},
+            "nullable": true
           },
           "secondary_details": {
             "type": "object",
@@ -2127,46 +2248,49 @@
             "nullable": true
           },
           "belongs_to": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
-          "activities": {
+          "relations_to": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "readOnly": true
           }
         },
         "required": [
-          "activities",
-          "belongs_to",
           "id",
-          "subtitle",
+          "relations_to",
           "title"
         ]
       },
-      "AutocompleteItem": {
+      "Autocomplete": {
         "type": "object",
         "properties": {
-          "source": {
-            "type": "string"
+          "filter_id": {
+            "type": "string",
+            "description": "The filter_id that has to be applied if an id from the search result should be used to refine the search."
           },
           "label": {
-            "type": "string"
+            "type": "string",
+            "description": "The label to display for this type of result objects."
           },
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AutocompleteItemData"
-            }
+              "$ref": "#/components/schemas/AutocompleteData"
+            },
+            "description": "A list of autocomplete items within this type of result objects."
           }
         },
         "required": [
           "data",
-          "label",
-          "source"
+          "filter_id",
+          "label"
         ]
       },
-      "AutocompleteItemData": {
+      "AutocompleteData": {
         "type": "object",
         "properties": {
           "id": {
@@ -2196,7 +2320,7 @@
           },
           "filter_id": {
             "type": "string",
-            "default": "activities"
+            "default": "fulltext"
           },
           "limit": {
             "type": "integer"
@@ -2408,6 +2532,9 @@
             "type": "string",
             "readOnly": true
           },
+          "type": {
+            "$ref": "#/components/schemas/ShowroomObjectTypeEnum"
+          },
           "title": {
             "type": "string",
             "maxLength": 255
@@ -2419,7 +2546,8 @@
           },
           "list": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": {},
+            "nullable": true
           },
           "primary_details": {
             "type": "object",
@@ -2440,36 +2568,42 @@
             "type": "integer",
             "maximum": 32767
           },
-          "source_repo_entry_id": {
+          "source_repo_object_id": {
             "type": "string",
             "maxLength": 255
           },
-          "type": {
-            "$ref": "#/components/schemas/EntityTypeEnum"
-          },
-          "expertise": {
-            "type": "object",
-            "additionalProperties": {},
-            "nullable": true
-          },
-          "showcase": {
-            "type": "object",
-            "additionalProperties": {},
-            "nullable": true
-          },
-          "photo": {
+          "source_repo_owner_id": {
             "type": "string",
+            "nullable": true,
             "maxLength": 255
           },
-          "parent": {
+          "source_repo_data": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "date_synced": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "belongs_to": {
             "type": "string",
             "nullable": true
+          },
+          "relations_to": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true
           }
         },
         "required": [
+          "date_synced",
           "id",
+          "relations_to",
           "source_repo",
-          "source_repo_entry_id",
+          "source_repo_object_id",
           "title",
           "type"
         ]
@@ -2544,14 +2678,6 @@
           "activity",
           "album",
           "entity"
-        ],
-        "type": "string"
-      },
-      "EntityTypeEnum": {
-        "enum": [
-          "P",
-          "I",
-          "D"
         ],
         "type": "string"
       },
@@ -2724,7 +2850,7 @@
             "type": "string",
             "maxLength": 255
           },
-          "activity": {
+          "showroom_object": {
             "type": "string"
           },
           "mime_type": {
@@ -2746,16 +2872,24 @@
             "additionalProperties": {},
             "nullable": true
           },
+          "featured": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "integer",
+            "maximum": 2147483647,
+            "minimum": 0
+          },
           "source_repo_media_id": {
             "type": "string",
             "maxLength": 255
           }
         },
         "required": [
-          "activity",
           "file",
           "id",
           "mime_type",
+          "showroom_object",
           "source_repo_media_id",
           "type"
         ]
@@ -2770,38 +2904,19 @@
         ],
         "type": "string"
       },
-      "PatchedAlbum": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "title": {
-            "type": "string",
-            "maxLength": 255
-          },
-          "subtitle": {
-            "type": "string",
-            "maxLength": 255
-          },
-          "secondary_details": {
-            "type": "object",
-            "additionalProperties": {},
-            "nullable": true
-          },
-          "belongs_to": {
-            "type": "string"
-          },
-          "activities": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
+      "OrderByEnum": {
+        "enum": [
+          "currentness",
+          "rank",
+          "default",
+          "title",
+          "-title",
+          "date_changed",
+          "-date_changed"
+        ],
+        "type": "string"
       },
-      "PatchedEntity": {
+      "PatchedAlbum": {
         "type": "object",
         "properties": {
           "id": {
@@ -2817,53 +2932,21 @@
             "additionalProperties": {},
             "nullable": true
           },
-          "list": {
-            "type": "object",
-            "additionalProperties": {}
-          },
-          "primary_details": {
-            "type": "object",
-            "additionalProperties": {},
-            "nullable": true
-          },
           "secondary_details": {
             "type": "object",
             "additionalProperties": {},
             "nullable": true
           },
-          "locations": {
-            "type": "object",
-            "additionalProperties": {},
-            "nullable": true
-          },
-          "source_repo": {
-            "type": "integer",
-            "maximum": 32767
-          },
-          "source_repo_entry_id": {
-            "type": "string",
-            "maxLength": 255
-          },
-          "type": {
-            "$ref": "#/components/schemas/EntityTypeEnum"
-          },
-          "expertise": {
-            "type": "object",
-            "additionalProperties": {},
-            "nullable": true
-          },
-          "showcase": {
-            "type": "object",
-            "additionalProperties": {},
-            "nullable": true
-          },
-          "photo": {
-            "type": "string",
-            "maxLength": 255
-          },
-          "parent": {
+          "belongs_to": {
             "type": "string",
             "nullable": true
+          },
+          "relations_to": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true
           }
         }
       },
@@ -2987,10 +3070,20 @@
             "description": "Array of logical AND filters that should be applied to the search."
           },
           "limit": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Limit the number of results. Default: 100"
           },
           "offset": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Offset for the first item in the results set."
+          },
+          "order_by": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OrderByEnum"
+              }
+            ],
+            "default": "default"
           }
         },
         "required": [
@@ -3019,6 +3112,61 @@
           "total"
         ]
       },
+      "ShowcaseSearch": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Search string to look for in all showroom activities (or those limited by entity_id)."
+          },
+          "entity_id": {
+            "type": "string",
+            "description": "Limit the search to objects belonging to this person or institution."
+          },
+          "exclude": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of object IDs that should be excluded from the result set."
+          },
+          "sort": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SortEnum"
+              }
+            ],
+            "description": "Order results alphabetically or by modified date, ascending or (-) descending. Default: title"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Limit the number of results. Default: 100"
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Offset for the first item in the results set."
+          }
+        }
+      },
+      "ShowroomObjectTypeEnum": {
+        "enum": [
+          "act",
+          "alb",
+          "per",
+          "ins",
+          "dep"
+        ],
+        "type": "string"
+      },
+      "SortEnum": {
+        "enum": [
+          "title",
+          "date_changed",
+          "-title",
+          "-date_changed"
+        ],
+        "type": "string"
+      },
       "UserData": {
         "type": "object",
         "properties": {
@@ -3037,6 +3185,10 @@
           "entity_id": {
             "type": "string",
             "description": "The user's associated showroom entity id. Or null, if no associated showroom entity can be found"
+          },
+          "showroom_id": {
+            "type": "string",
+            "description": "The user's associated showroom id. Or null, if no associated showroom entity can be found or showroom page is deactivated"
           },
           "entity_editing": {
             "type": "array",
@@ -3067,7 +3219,8 @@
           "groups",
           "id",
           "name",
-          "permissions"
+          "permissions",
+          "showroom_id"
         ]
       }
     },

@@ -1,12 +1,16 @@
 <template>
   <div>
+    <h2 class="hide">
+      {{ $t('detailView.activityLists') }}
+    </h2>
+
     <BaseEditControl
       v-if="userCanEdit"
       :controls="true"
       :edit="editModeInt"
       :edit-button-text="$i18n.t('editView.edit')"
       :save-button-text="$i18n.t('editView.ready')"
-      :is-loading="isLoading"
+      :is-loading="isLoading || saveRequestOngoing"
       :subtitle="'(' + getItemCount(listData) + ')'"
       :title="entityType !== 'person' ? $t('detailView.lists') : $t('detailView.activityLists')"
       edit-mode="done"
@@ -238,9 +242,6 @@ export default {
      * save the data
      */
     saveEdit(values) {
-      // TODO: disabling everything with setting this variable true is just an emergency fix
-      // --> find real problem and fix!!
-      this.saveRequestOngoing = true;
       if (this.saveTimeout) {
         clearTimeout(this.saveTimeout);
         this.saveTimeout = null;
@@ -249,6 +250,8 @@ export default {
       // the keyboard user triggers arrow key
       this.saveTimeout = setTimeout(async () => {
         try {
+          // disable list elements while saving
+          this.saveRequestOngoing = true;
           // update database entry with relevant data
           const newData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
           // necessary because if request was cancelled store function returns false
@@ -267,7 +270,7 @@ export default {
         } finally {
           this.saveRequestOngoing = false;
         }
-      }, 500);
+      }, 1000);
     },
     /**
      * get the total of all items at the bottom level of the list

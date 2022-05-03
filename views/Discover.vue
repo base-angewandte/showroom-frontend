@@ -48,7 +48,7 @@
 
 <script>
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import Showcase from '~/components/Edit/Showcase';
 import Search from '~/components/Search';
 import { hasData } from '~/utils/common';
@@ -58,29 +58,37 @@ export default {
     Showcase,
     Search,
   },
+  beforeRouteLeave(to, from, next) {
+    this.setSearchResults({
+      id: from.params.id || 'main',
+      searchParams: from.query.filters || 'noFilters',
+      data: this.searchResults,
+    });
+    next();
+  },
   async asyncData({
     store, env,
   }) {
-    // this is starting with the smallest number because otherwise higher page
-    // numbers are not rendered with small screensize
-    const entryNumber = 2 * env.searchResultRows || 5;
+    // get the entry number to request, get itemsPerRow from store which might already be
+    // adjusted to the screen fitting number if router navigation was done
+    const entryNumber = store.getters['appData/getItemsPerRow'] * env.searchResultRows;
+    // variable to store filter list for discover page
     let filterList = [];
-    let results = [];
     try {
       const requestsArray = [
         // get complete filterList from backend
         store.dispatch('searchData/fetchFilterData'),
-        // get initial data
+        // get initial data here already to have something to show in carousel on render
         store.dispatch('appData/fetchInitialData', { limit: entryNumber }),
       ];
-      // wait for the requests to return
-      [filterList, { results }] = await Promise
+      // wait for the requests to return but only the response of filterList
+      // is necessary here
+      [filterList] = await Promise
         .all(requestsArray);
     } catch (e) {
       console.error(e);
     }
     return {
-      initialResults: [].concat(results),
       filterList,
     };
   },
@@ -101,7 +109,6 @@ export default {
       filterList: [],
       fadeDuration: 250,
       dateFieldDelay: 0,
-      initialResults: [],
     };
   },
   computed: {
@@ -185,54 +192,55 @@ export default {
       immediate: true,
     },
   },
-  created() {
-    if (!this.searchResults.length) {
-      this.searchResults = JSON.parse(JSON.stringify(this.getInitialData.results));
-    }
-  },
   methods: {
+    ...mapMutations({
+      setSearchResults: 'searchData/setLatestSearchResults',
+    }),
+    /**
+     * request to actually carry out search request with provided requestBody
+     *
+     * @param {Object} requestBody - all params necessary for the request
+     * @property {Filter[]} requestBody.filters - applied filters
+     * @property {number} requestBody.offset - current offset for pagination
+     * @property {number} requestBody.limit - number of results to return
+     */
     async search(requestBody) {
       // indicate to component that search is ongoing
       this.searchOngoing = true;
+      // store in variable if filters are applied (relevant to decide which request should
+      // be made
+      const hasFilters = !!requestBody.filters && !!requestBody.filters.length;
+      // variable to store results from the different requests
+      let results = null;
       try {
-        // check if there are any filters applied
-        if (requestBody.filters && requestBody.filters.length) {
-          // if yes apply these filters
-          const { data } = await this.$api.public.api_v1_search_create({}, { requestBody });
-          const parsedResults = JSON.parse(data);
-          // check if there are data (this would e.g. be false if request was cancelled)
-          if (parsedResults && parsedResults.data) {
-            // assign search results
-            this.searchResults = [].concat(parsedResults);
-            this.searchOngoing = false;
-          }
+        // check if this is requesting the data for the start page
+        if (!hasFilters && requestBody.offset === 0) {
+          // get the initial data (if not there they will be fetched via request - otherwise
+          // store saved data will be used!)
+          results = await this.$store.dispatch('appData/fetchInitialData', { limit: requestBody.limit });
         } else {
-          if (requestBody.offset === 0 || !this.initialSearchData) {
-            // if not - refetch default data to be displayed for search
-            // data are always refetched here to always have the latest results (also the
-            // ones added newly from the repository) available here
-            await this.$store.dispatch('appData/fetchInitialData', { limit: requestBody.limit });
-            if (requestBody.offset === 0) {
-              this.searchResults = this.getInitialData.results;
-              this.searchOngoing = false;
-            }
+          // create local variable for requestBody to be able to supplement it if necessary
+          let payload = requestBody;
+          // if there are no filters applied we need to get the initial data filters
+          if (!hasFilters) {
+            payload = {
+              ...requestBody,
+              ...this.initialSearchData,
+            };
           }
-          if (requestBody.offset !== 0) {
-            const filterRequest = await this.$api.public.api_v1_search_create({}, {
-              requestBody: {
-                ...requestBody,
-                ...this.initialSearchData,
-              },
-            });
-            const parsedData = JSON.parse(filterRequest.data);
-            // a cancelled request would return false here so need to check
-            // TODO: seems not ideal to handle cancelled request this way - should go to error?
-            if (parsedData) {
-              this.searchResults = [parsedData];
-              // move search ongoing false here so request cancellation does not stop loader
-              this.searchOngoing = false;
-            }
-          }
+          // now make the search request
+          results = await this.$store.dispatch('searchData/fetchSearch', {
+            requestBody: payload,
+          });
+        }
+        // assign the results to the component variable
+        // a cancelled request would return false here so need to check
+        // TODO: seems not ideal to handle cancelled request this way - should go to error?
+        if (results) {
+          this.searchResults = results;
+          // search ongoing should only be set false if request was not cancelled to this
+          // has to be done here
+          this.searchOngoing = false;
         }
       } catch (e) {
         this.searchOngoing = false;
@@ -248,46 +256,37 @@ export default {
       }
     },
     async fetchAutocomplete({ searchString, filter, index }) {
-      // needed to add trim because space leads to evaluation true
-      if (searchString && searchString.trim()) {
-        this.autocompleteLoaderIndex = index;
-        try {
-          const response = await this.$api.public.api_v1_autocomplete_create({}, {
-            requestBody: {
-              q: searchString,
-              filter_id: filter.id,
-              limit: 20,
-            },
-          });
-
-          const newResults = JSON.parse(response.data);
-          // now check if parsed string is actual results (if request was cancelled this has
-          // the value false
-          // TODO: check if there is better solution to handle requestCancellation
-          if (newResults) {
-            // if yes - assign the new results (otherwise just do nothing)
-            this.autocompleteResults = [].concat(newResults);
-            // loader index should not be set done when request was cancelled so moving this here!
-            this.autocompleteLoaderIndex = -1;
-          }
-        } catch (e) {
+      // set the loader of the relevant advanced search row
+      this.autocompleteLoaderIndex = index;
+      try {
+        // get results from backend via store action
+        const newResults = await this.$store.dispatch('searchData/fetchAutocomplete', {
+          queryString: searchString,
+          filterId: filter.id,
+        });
+        // now check if parsed string is actual results (if request was cancelled this has
+        // the value false
+        // TODO: check if there is better solution to handle requestCancellation
+        if (newResults) {
+          // if yes - assign the new results (otherwise just do nothing)
+          this.autocompleteResults = [].concat(newResults);
+          // loader index should not be set done when request was cancelled so moving this here!
           this.autocompleteLoaderIndex = -1;
-          this.autocompleteResults = [];
-          console.error(e);
-          // TODO: error handling
-          // TODO: show this information in autocomplete drop down as well?
-          // TODO: reset autocompleteResults??
-          console.error(e);
-          this.$notify({
-            group: 'request-notifications',
-            title: this.$t('notify.autocompleteError'),
-            text: this.$t('notify.autocompleteErrorSubtext'),
-            type: 'error',
-          });
         }
-      } else {
-        this.autocompleteResults = [];
+      } catch (e) {
         this.autocompleteLoaderIndex = -1;
+        this.autocompleteResults = [];
+        console.error(e);
+        // TODO: error handling
+        // TODO: show this information in autocomplete drop down as well?
+        // TODO: reset autocompleteResults??
+        console.error(e);
+        this.$notify({
+          group: 'request-notifications',
+          title: this.$t('notify.autocompleteError'),
+          text: this.$t('notify.autocompleteErrorSubtext'),
+          type: 'error',
+        });
       }
     },
     /**

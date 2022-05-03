@@ -6,7 +6,21 @@
     "Teaching",
     "Research"
   ],
-  "list": [],
+  "list": [
+    {
+      "data": [
+        {
+          "value": "Testing & Debugging",
+          "source": "Zu44SEAH2LUt38P2oCqMxe",
+          "attributes": [
+            "Showroom",
+            "(software tester), 2022"
+          ]
+        }
+      ],
+      "label": "Research"
+    }
+  ],
   "featured_media": {
     "id": "123",
     "alternative": [

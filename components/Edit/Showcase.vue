@@ -1,6 +1,11 @@
 <template>
   <div
     :class="[{ 'base-sr-edit-active': editModeInt }]">
+    <!-- HEADLINE  -->
+    <h2 class="hide">
+      {{ $t('detailView.activityShowcase') }}
+    </h2>
+
     <!-- EDIT CONTROLS  -->
     <BaseEditControl
       v-if="userCanEdit && !editModeInt"

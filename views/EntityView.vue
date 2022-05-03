@@ -4,13 +4,13 @@
     :data="data"
     :is-user-profile="isUserProfile"
     :filter-list="filterList"
-    :initial-page-number="pageNumber"
-    :user-can-edit="userCanEdit" />
+    :user-can-edit="userCanEdit"
+    @update-search-results="searchResults = $event" />
 </template>
 
 <script>
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import { userInfo } from '@/mixins/userNotifications';
 import { meta, metaTitle } from '@/utils/metaTags';
 import Detail from '@/components/Detail';
@@ -21,47 +21,41 @@ export default {
     Detail,
   },
   mixins: [userInfo],
+  beforeRouteLeave(to, from, next) {
+    this.setSearchResults({
+      id: from.params.id || 'main',
+      searchParams: from.query.filters || 'noFilters',
+      data: this.searchResults,
+    });
+    next();
+  },
   async asyncData({
-    $api, params, query, isDev, error, store, env,
+    $api, params, isDev, error, store,
   }) {
     const { id } = params;
-    let entryData = {};
+    let entityData = {};
     let filterList = [];
-    // get relevant query params
-    const { page } = query;
     try {
-      // get all the filters specific for that entity
-      // filterList = await store.dispatch('searchData/fetchEntityFilterData', id);
-      // assume 2 entries and configured number of rows or 5 rows initially
-      // TODO: make configurable??
-      // this is starting with the smallest number because otherwise higher page
-      // numbers are not rendered with small screensize
-      const entryNumber = 2 * env.searchResultRows;
-      const results = [];
-      // create requests for all the relevant data
-      ['entities_retrieve', 'entities_search_create'].forEach((operation) => {
-        // add a request body only for search request
-        const requestBody = operation === 'entities_search_create' ? {
-          filters: [],
-          offset: (page ? (Number(page) - 1) : 0) * entryNumber,
-          limit: entryNumber,
-        } : {};
-        // push the request promises into an array
-        results.push($api.public[`api_v1_${operation}`]({
-          id: params.id,
-        }, {
-          requestBody,
-        }));
-      });
-      results.push(store.dispatch('searchData/fetchEntityFilterData', id));
+      const requestsArray = [
+        // get the data for the entity from backend
+        // eslint-disable-next-line
+        $api.public['api_v1_entities_retrieve']({
+          id,
+        }),
+        // get all the filters specific for that entity
+        store.dispatch('searchData/fetchEntityFilterData', id),
+      ];
       // wait for the requests to return
-      const [entityDataResponse, searchResultsResponse, filterResponse] = await Promise
-        .all(results);
-      // assemble all the data to be used in Detail.vue
-      entryData = {
-        ...JSON.parse(entityDataResponse.data),
-        activities: [].concat(JSON.parse(searchResultsResponse.data)),
-      };
+      const [{ data }, filterResponse] = await Promise
+        .all(requestsArray);
+      if (data) {
+        const newEntityData = JSON.parse(data);
+        // this would only turn false if request was cancelled (which should not happen
+        // but just in case)
+        if (newEntityData) {
+          entityData = newEntityData;
+        }
+      }
       filterList = filterResponse;
     } catch (e) {
       if (isDev) {
@@ -78,9 +72,8 @@ export default {
       }
     }
     return {
-      data: entryData,
+      data: entityData,
       filterList,
-      pageNumber: page ? Number(page) : 1,
     };
   },
   data() {
@@ -92,7 +85,7 @@ export default {
        * @type {Filter[]}
        */
       filterList: [],
-      pageNumber: null,
+      searchResults: [],
     };
   },
   head() {
@@ -130,6 +123,11 @@ export default {
         || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId))
         || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId.split('-').pop()));
     },
+  },
+  methods: {
+    ...mapMutations({
+      setSearchResults: 'searchData/setLatestSearchResults',
+    }),
   },
 };
 </script>

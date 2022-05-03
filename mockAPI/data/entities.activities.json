@@ -1,189 +1,182 @@
 [
   {
-    "label": "Exhibitions",
-    "hidden": false,
-    "data": [
-      {
-        "attributes": [
-          "(Autor*in), Frankfurt (Deutschland)",
-          "2018"
-        ],
-        "value": "Erinnerung an John Healy.",
-        "id": "1"
-      },
-      {
-        "attributes": [
-          "(Autor*in)",
-          "Österreich",
-          "2018"
-        ],
-        "value": "Freiheit im Denken, überall. Erinnerung an Louisa Matilda Fagan.",
-        "id": "2"
-      },
-      {
-        "attributes": [
-          "(Autor*in)",
-          "Berlin (Deutschland)",
-          "2017"
-        ],
-        "value": "Nachdenken über Spiele – Zur Funktion der Spieleforschung an der Universität.",
-        "id": "3"
-      },
-      {
-        "attributes": [
-          "(Autor*in)",
-          "Wien (Österreich)",
-          "2004"
-        ],
-        "value": "„Arnold Schönbergs Schachzüge. Dodekaphonie und Spielekonstruktionen“.",
-        "id": "4"
-      }
-    ]
-  },
-  {
-    "label": "Research projects",
-    "hidden": false,
-    "data": [
-      {
-        "value": "qui nesciunt",
-        "attributes": [
-          "molestiae commodi ipsum",
-          "eos dolorem in"
-        ],
-        "id": "10"
-      },
-      {
-        "value": "animi voluptates",
-        "attributes": [
-          "ut eum et",
-          "quis odit est"
-        ],
-        "id": "11"
-      },
-      {
-        "value": "officiis quisquam",
-        "attributes": [
-          "qui et sit",
-          "occaecati facere temporibus"
-        ],
-        "id": "12"
-      }
-    ]
-  },
-  {
     "label": "Documents/Publications",
-    "hidden": false,
-    "data": [
-      {
-        "label": "Articles in anthology",
-        "data": [
-          {
-            "value": "qui nesciunt",
-            "attributes": [
-              "molestiae commodi ipsum",
-              "eos dolorem in"
-            ],
-            "id": "10"
-          },
-          {
-            "value": "animi voluptates",
-            "attributes": [
-              "ut eum et",
-              "quis odit est"
-            ],
-            "id": "11"
-          },
-          {
-            "value": "officiis quisquam",
-            "attributes": [
-              "qui et sit",
-              "occaecati facere temporibus"
-            ],
-            "id": "12"
-          }
-        ]
-      },
-      {
-        "label": "Monographs",
-        "data": [
-          {
-            "value": "qui nesciunt",
-            "attributes": [
-              "molestiae commodi ipsum",
-              "eos dolorem in"
-            ],
-            "id": "10"
-          },
-          {
-            "value": "animi voluptates",
-            "attributes": [
-              "ut eum et",
-              "quis odit est"
-            ],
-            "id": "11"
-          }
-        ]
-      }
-    ]
+    "data": [],
+    "id": "document_publication",
+    "order": 0,
+    "hidden": false
   },
   {
-    "label": "Awards and grants",
-    "hidden": false,
-    "data": [
-      {
-        "value": "qui nesciunt",
-        "attributes": [
-          "molestiae commodi ipsum",
-          "eos dolorem in"
-        ],
-        "id": "10"
-      },
-      {
-        "value": "animi voluptates",
-        "attributes": [
-          "ut eum et",
-          "quis odit est"
-        ],
-        "id": "11"
-      },
-      {
-        "value": "officiis quisquam",
-        "attributes": [
-          "qui et sit",
-          "occaecati facere temporibus"
-        ],
-        "id": "12"
-      }
-    ]
+    "label": "Research and Projects",
+    "data": [],
+    "id": "research_project",
+    "order": 1,
+    "hidden": false
   },
   {
-    "label": "Teaching",
-    "hidden": false,
+    "label": "Awards and Grants",
+    "data": [],
+    "id": "awards_and_grants",
+    "order": 2,
+    "hidden": false
+  },
+  {
+    "label": "Fellowships and Visiting Affiliations",
+    "data": [],
+    "id": "fellowship_visiting_affiliation",
+    "order": 3,
+    "hidden": false
+  },
+  {
+    "label": "Exhibitions",
+    "data": [],
+    "id": "exhibition",
+    "order": 4,
+    "hidden": false
+  },
+  {
+    "label": "Teaching Projects & External Teaching",
+    "data": [],
+    "id": "teaching",
+    "order": 5,
+    "hidden": false
+  },
+  {
+    "label": "Conferences & Symposia",
+    "data": [],
+    "id": "conference_symposium",
+    "order": 6,
+    "hidden": false
+  },
+  {
+    "label": "Conference Contributions",
+    "data": [],
+    "id": "conference_contribution",
+    "order": 7,
+    "hidden": false
+  },
+  {
+    "label": "Architecture",
+    "data": [],
+    "id": "architecture",
+    "order": 8,
+    "hidden": false
+  },
+  {
+    "label": "Audio",
+    "data": [],
+    "id": "audio",
+    "order": 9,
+    "hidden": false
+  },
+  {
+    "label": "Concerts",
+    "data": [],
+    "id": "concert",
+    "order": 10,
+    "hidden": false
+  },
+  {
+    "label": "Design",
+    "data": [],
+    "id": "design",
+    "order": 11,
+    "hidden": false
+  },
+  {
+    "label": "Education & Qualification",
+    "data": [],
+    "id": "education_qualification",
+    "order": 12,
+    "hidden": false
+  },
+  {
+    "label": "Functions & Practice",
     "data": [
       {
-        "value": "qui nesciunt",
-        "attributes": [
-          "molestiae commodi ipsum",
-          "eos dolorem in"
+        "data": [
+          {
+            "value": "Testing Locations",
+            "source": "4hjdfUS6SaANqwGiA6CNJn",
+            "attributes": [
+              " (Expert Function)",
+              "(software developer), Universität Wien, Wien, Österreich, 2022"
+            ]
+          }
         ],
-        "id": "10"
-      },
-      {
-        "value": "animi voluptates",
-        "attributes": [
-          "ut eum et",
-          "quis odit est"
-        ],
-        "id": "11"
-      },
-      {
-        "value": "officiis quisquam",
-        "attributes": [
-          "qui et sit",
-          "occaecati facere temporibus"
-        ],
-        "id": "12"
+        "count": 1,
+        "label": "General Functions & Practice"
       }
-    ]
+    ],
+    "id": "functions_practice",
+    "count": 1,
+    "order": 13,
+    "hidden": false
+  },
+  {
+    "label": "Festivals",
+    "data": [],
+    "id": "festival",
+    "order": 14,
+    "hidden": false
+  },
+  {
+    "label": "Images",
+    "data": [],
+    "id": "image",
+    "order": 15,
+    "hidden": false
+  },
+  {
+    "label": "Performances",
+    "data": [],
+    "id": "performance",
+    "order": 16,
+    "hidden": false
+  },
+  {
+    "label": "Science to Public",
+    "data": [],
+    "id": "science_to_public",
+    "order": 17,
+    "hidden": false
+  },
+  {
+    "label": "Sculptures",
+    "data": [],
+    "id": "sculpture",
+    "order": 18,
+    "hidden": false
+  },
+  {
+    "label": "Software",
+    "data": [
+      {
+        "value": "Testing & Debugging",
+        "source": "nmHPkotrJYJYnMmhThipcG",
+        "attributes": [
+          "Showroom (Software)",
+          "(software developer), 2022"
+        ]
+      }
+    ],
+    "id": "software",
+    "count": 1,
+    "order": 19,
+    "hidden": false
+  },
+  {
+    "label": "Film/Video",
+    "data": [],
+    "id": "film_video",
+    "order": 20,
+    "hidden": false
+  },
+  {
+    "label": "General Activities",
+    "data": [],
+    "id": "general_activity",
+    "order": 21,
+    "hidden": false
   }
 ]
