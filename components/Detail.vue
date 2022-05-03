@@ -840,7 +840,7 @@ export default {
     margin-top: $line-height;
 
     &__label {
-      margin-bottom: $spacing-small;
+      margin-bottom: 0;
     }
 
     &__item {
@@ -850,37 +850,6 @@ export default {
       margin-right: $spacing-small;
       background-color: $background-color;
       white-space: nowrap;
-    }
-
-    // TODO: commenting this out for now since chips hiding not working anyway - FIX IT!!
-    //&::after {
-    //  content: '';
-    //  position: absolute;
-    //  top: 0;
-    //  right: 0;
-    //  height: 100%;
-    //  width: 50px;
-    //  background: linear-gradient(to right, rgba(255, 255, 255, 0) , rgba(255, 255, 255, 1));
-    //}
-  }
-
-  /* chips if baseBoxExpand is expanded */
-  .base-sr-head__primary {
-    &.base-expand-box-open {
-      .base-sr-chips {
-        &::after {
-          display: none;
-        }
-
-        .base-sr-chips__label {
-          margin: 0;
-        }
-
-        .base-sr-chips__item:not(.base-sr-chips__item--single) {
-          display: inline-block;
-          margin-top: $spacing-small;
-        }
-      }
     }
   }
 
