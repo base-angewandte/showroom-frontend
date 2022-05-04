@@ -264,10 +264,9 @@ export default {
           queryString: searchString,
           filterId: filter.id,
         });
-        // now check if parsed string is actual results (if request was cancelled this has
-        // the value false
         // TODO: check if there is better solution to handle requestCancellation
-        if (newResults) {
+        // (is currently returned in an array as [false]
+        if (newResults && (!newResults.length || !newResults.some((res) => !res))) {
           // if yes - assign the new results (otherwise just do nothing)
           this.autocompleteResults = [].concat(newResults);
           // loader index should not be set done when request was cancelled so moving this here!

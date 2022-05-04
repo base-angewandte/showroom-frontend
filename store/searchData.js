@@ -116,13 +116,9 @@ const actions = {
         responses.forEach((response) => {
           if (response.data && typeof response.data === 'string') {
             const responseResult = JSON.parse(response.data);
-            // now check if parsed string is actual results (if request was cancelled this has
-            // the value false
             // TODO: check if there is better solution to handle requestCancellation
-            if (responseResult) {
-              // if yes - add them to results array
-              results = results.concat(responseResult);
-            }
+            // currently they are just returned in the array...
+            results = results.concat(responseResult);
           }
         });
         return results;
