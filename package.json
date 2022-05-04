@@ -34,7 +34,7 @@
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/router": "^1.6.1",
     "@nuxtjs/style-resources": "^1.0.0",
-    "axios": "^0.21.1",
+    "axios": "^0.27.2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "eslint": "^7.5.0",
