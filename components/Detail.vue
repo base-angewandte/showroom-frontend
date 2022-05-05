@@ -521,6 +521,12 @@ export default {
     searchResults: {
       set(val) {
         this.$set(this.data, 'activities', val);
+        /**
+         * emit event to parent to have the results synced there (necessary for saving to
+         * store on beforeRouteLeave)
+         * @event update-search-results
+         */
+        this.$emit('update-search-results', val);
       },
       get() {
         return this.data.activities;
@@ -633,9 +639,6 @@ export default {
           // (for entities there should be only one category always anyway so might be okay)
           this.userHasShowroomEntries = !!this.appliedFiltersInt || !!this.appliedFiltersInt.length
             || !!results.length || !!results[0].data || !!results[0].data.length;
-          // emit event to parent to have the results synced there (necessary for saving to
-          // store on beforeRouteLeave)
-          this.$emit('update-search-results', this.searchResults);
           // move search ongoing assignment to here so request cancellation does
           // not cause loader to disappear
           this.searchOngoing = false;
