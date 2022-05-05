@@ -7,6 +7,7 @@
     <BaseEditControl
       v-if="userCanEdit"
       :controls="true"
+      :disabled="saveRequestOngoing"
       :edit="editModeInt"
       :edit-button-text="$i18n.t('editView.edit')"
       :save-button-text="$i18n.t('editView.ready')"
@@ -51,6 +52,19 @@
         </template>
       </template>
     </BaseExpandList>
+
+    <BaseExpandBox
+      v-if="userCanEdit && !editModeInt && !listData.length"
+      :auto-height="true"
+      padding="small"
+      class="base-sr-row">
+      <span>{{ $t('editView.listNoResults') }}</span>
+      <button
+        class="base-sr-text-button"
+        @click="enableEdit">
+        {{ $t('editView.editNow') }}
+      </button>.
+    </BaseExpandBox>
   </div>
 </template>
 
@@ -61,15 +75,18 @@ import { mapActions } from 'vuex';
 import {
   BaseEditControl,
   BaseExpandList,
+  BaseExpandBox,
 } from 'base-ui-components';
 
 import { userInfo } from '~/mixins/userNotifications';
 
 import 'base-ui-components/dist/components/BaseEditControl/BaseEditControl.css';
 import 'base-ui-components/dist/components/BaseExpandList/BaseExpandList.css';
+import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
 
 Vue.use(BaseEditControl);
 Vue.use(BaseExpandList);
+Vue.use(BaseExpandBox);
 
 /**
  * @typedef {Object} ListDataItem
@@ -236,13 +253,15 @@ export default {
      */
     save() {
       this.editModeInt = false;
-      this.$refs.baseExpandList.save();
+      if (!this.saveRequestOngoing) {
+        this.$refs.baseExpandList.save();
+      }
     },
     /**
      * save the data
      */
-    saveEdit(values) {
-      if (this.saveTimeout) {
+    saveEdit(values, delay = 2000) {
+      if (this.saveTimeout && delay) {
         clearTimeout(this.saveTimeout);
         this.saveTimeout = null;
       }
@@ -276,7 +295,7 @@ export default {
         } finally {
           this.saveRequestOngoing = false;
         }
-      }, 1000);
+      }, delay);
     },
     /**
      * get the total of all items at the bottom level of the list
