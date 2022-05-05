@@ -164,6 +164,11 @@ const api = new OpenAPIBackend({
     api_v1_entities_list_retrieve: async (c, req, res) => res.status(200).json(
       apiV1EntitiesActivitiesRead,
     ),
+    api_v1_entities_list_partial_update: async (c, req, res) => {
+      setTimeout(() => {
+        res.status(200).json(req.body);
+      }, Math.floor(Math.random() * 1500) + 500);
+    },
     api_v1_entities_edit_retrieve: async (c, req, res) => {
       let response = {};
       if (req.query.secondary_details) {

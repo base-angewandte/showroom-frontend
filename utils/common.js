@@ -2,31 +2,6 @@ import Vue from 'vue';
 // eslint-disable-next-line
 import i18n from '@/plugins/i18n';
 
-// eslint-disable-next-line import/prefer-default-export
-export const metaTags = (routerPath, currentLang) => {
-  const locales = JSON.parse(process.env.locales);
-  const data = [];
-
-  // add alternate tag for all locales
-  if (locales) {
-    locales.forEach((locale) => {
-      data.push({
-        rel: 'alternate',
-        href: `${process.env.appBaseUrl}${process.env.appPrefix}/${locale}${routerPath}`,
-        hrefLang: locale,
-      });
-    });
-  }
-
-  // add canonical url
-  data.push({
-    rel: 'canonical',
-    href: `${process.env.appBaseUrl}${process.env.appPrefix}/${currentLang}${routerPath}`,
-  });
-
-  return data;
-};
-
 export const toTitleString = (string = '', language) => {
   if (!string) {
     return '';
@@ -159,4 +134,28 @@ export const titleCaseLabels = (data) => {
     );
   }
   return [];
+};
+
+/**
+ * function to
+ * a) check if provided value is a language object and if yes
+ * b) get the correct label from an object with language (ISO 639-1) as property
+ *    (e.g. { de: 'yyy', en: 'xxx' })
+ * @param {string|Object} value - the string or object to be processed
+ * @param {string} language - the language used (that is the object property)
+ * @param {boolean} useAny - specify if a label in a different language should be used
+ *  if the currently set language has no result
+ * @returns {Object|string}
+ */
+export const getLangLabel = (value, language, useAny = false) => {
+  if (typeof value === 'string') return value;
+  if (value && language && value[language]) {
+    return value[language];
+  }
+  if (value && language && useAny) {
+    const availableLang = Object.keys(value).find((key) => !!value[key]);
+    // return the first one that has content
+    return value[availableLang] || value[language] || '';
+  }
+  return value;
 };

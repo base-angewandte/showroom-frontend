@@ -33,8 +33,10 @@
           :data="[{ data: data.subtext }]" />
 
         <!-- expertise / type -->
+        <!-- TODO: this conditional might need adaptions when more types available -->
         <template
-          v-if="data.expertise || data.type">
+          v-if="(type === 'person' && data.expertise && data.expertise.length)
+            || (type === 'object' && data.type)">
           <div
             class="base-sr-chips">
             <h2
@@ -52,6 +54,7 @@
             <!-- otherwise we assume it's an activity and display the type -->
             <template v-else>
               <span
+                v-if="data.type.label"
                 class="base-sr-chips__item base-sr-chips__item--single">
                 {{ toTitleString(data.type.label[$i18n.locale], $i18n.locale) }}
               </span>
@@ -145,7 +148,7 @@
 
     <!-- lists -->
     <List
-      v-if="data.list && data.list.length"
+      v-if="(data.list && data.list.length) || userCanEdit"
       ref="list"
       :data="titleCaseLabels(data.list)"
       :edit-mode="editMode.list"
@@ -170,7 +173,7 @@
 
     <!-- locations -->
     <div
-      v-if="data.locations && data.locations.length"
+      v-if="hasLocations"
       class="base-sr-row">
       <h2 class="base-sr--ml-small">
         {{ $tc('detailView.location', data.locations.length) }}
@@ -184,7 +187,7 @@
           :attribution="mapAttribution"
           :copyright="mapCopyright"
           :label="$tc('detailView.address', data.locations.length)"
-          :locations="data.locations"
+          :locations="data.locations.filter((location) => !!location.coordinates)"
           :options="mapOptions"
           :tile-layer-service="mapTileLayerService"
           :url="mapUrl" />
@@ -221,17 +224,14 @@
     </BaseResultBoxSection>
 
     <!-- media preview -->
-    <template
-      v-if="type === 'object'">
-      <BaseMediaCarousel
-        :show-preview="showPreview"
-        :initial-slide="initialPreviewSlide"
-        :items="mediaPreviewData"
-        :autoplay-media="true"
-        :allow-download="false"
-        @hide="showPreview = false"
-        @download="downloadFile" />
-    </template>
+    <BaseMediaCarousel
+      :show-preview="showPreview"
+      :initial-slide="initialPreviewSlide"
+      :items="mediaPreviewData"
+      :autoplay-media="true"
+      :allow-download="false"
+      @hide="showPreview = false"
+      @download="downloadFile" />
 
     <!-- linked / parent -->
     <template
@@ -250,8 +250,10 @@
           :use-pagination="true"
           :use-expand-mode="true"
           :max-rows="4"
+          :initial-items-per-row="getItemsPerRow"
           :use-pagination-link-element="'nuxt-link'"
-          class="base-sr-row">
+          class="base-sr-row"
+          @items-per-row-changed="showFooter = true">
           <template #header>
             <h2 class="base-sr--ml-small">
               {{ $t(`detailView.linked_${index}`) }}
@@ -273,8 +275,7 @@
     </template>
 
     <Search
-      v-if="type === 'person' && (userCanEdit
-        || userHasShowroomEntries)"
+      v-if="type === 'person' && (userCanEdit || userHasShowroomEntries)"
       :header-text="$t('resultsView.headerText.entityResults', {
         entity: getEntityString })"
       :result-list.sync="searchResults"
@@ -285,27 +286,47 @@
       :autocomplete-loader-index="autocompleteLoaderIndex"
       :placeholder-text="$t('searchView.placeholders.entity', {
         entity: getEntityString })"
-      :page-number="1"
       :no-results-text-initial="$t('detailView.noResultsTextInitial')"
       @autocomplete="fetchAutocomplete"
       @search="search" />
 
     <!-- owner, dates -->
     <div
-      v-if="data.publisher"
+      v-if="showFooter && publishingInfo"
       class="base-sr-row base-sr-last-modified">
       <p>
         <template
-          v-if="data.publisher.length">
+          v-if="publisher">
           {{ $t('detailView.publisher') }}:
-          <a
-            :href="data.publisher[0].source"
-            :title="data.publisher[0].name"
-            class="base-link base-link--internal">{{ data.publisher[0].name }}</a> |
+          <template
+            v-if="publisher.source">
+            <a
+              :href="publisher.source"
+              :title="publisher.name"
+              class="base-link base-link--internal">{{ publisher.name }}</a> |
+          </template>
+          <template v-else>
+            {{ publisher.name }} |
+          </template>
         </template>
-        {{ data.source_institution.label }} |
-        {{ $t('detailView.publishedDate') }}: {{ createHumanReadableDate(data.date_created) }} |
-        {{ $t('detailView.editedDate') }}: {{ createHumanReadableDate(data.date_changed) }}
+        <template v-if="institution">
+          <template
+            v-if="institution.url">
+            <a
+              :href="institution.url"
+              :title="institution.label"
+              class="base-link base-link--internal">{{ institution.label }}</a> |
+          </template>
+          <template v-else>
+            {{ institution.name }} |
+          </template>
+        </template>
+        {{
+          `${$t('detailView.publishedDate')}: ${publishingInfo.date_published
+            || createHumanReadableDate(data.date_created)} |
+          ${$t('detailView.editedDate')}: ${publishingInfo.date_updated
+          || createHumanReadableDate(data.date_changed)}`
+        }}
       </p>
     </div>
 
@@ -353,7 +374,6 @@ import Search from '~/components/Search';
 import {
   toTitleString,
   titleCaseLabels,
-  hasData,
 } from '~/utils/common';
 
 Vue.use(BaseButton);
@@ -423,6 +443,15 @@ export default {
       type: Array,
       default: () => ([]),
     },
+    /**
+     * get the individualized filter list for each entity (only showing
+     * e.g. keywords that actually exist in the entity's activities)
+     * @type {Filter[]}
+     */
+    filterList: {
+      type: Array,
+      default: () => ([]),
+    },
   },
   data() {
     return {
@@ -477,17 +506,21 @@ export default {
        */
       appliedFiltersInt: [],
       /**
-       * get the individualized filter list for each entity (only showing
-       * e.g. keywords that actually exist in the entity's activities)
-       * @type {Filter[]}
+       * variable to determine display of search element
+       * @type {boolean}
        */
-      filterList: [],
+      userHasShowroomEntries: true,
+      /**
+       * variable necessary so footer is only rendered after initial calc of resultboxsection
+       * bo
+       */
+      showFooter: false,
     };
   },
   computed: {
     ...mapGetters({
       lang: 'appData/getLocale',
-      getFilterList: 'searchData/getEntityFilters',
+      getItemsPerRow: 'appData/getItemsPerRow',
     }),
     /**
      * compute search results from data prop to be able to use
@@ -496,6 +529,12 @@ export default {
     searchResults: {
       set(val) {
         this.$set(this.data, 'activities', val);
+        /**
+         * emit event to parent to have the results synced there (necessary for saving to
+         * store on beforeRouteLeave)
+         * @event update-search-results
+         */
+        this.$emit('update-search-results', val);
       },
       get() {
         return this.data.activities;
@@ -523,17 +562,34 @@ export default {
     editModeIsActive() {
       return Object.values(this.editMode).some((value) => value);
     },
-    userHasShowroomEntries() {
-      return this.searchResults && !!this.searchResults.length
-        && this.searchResults.some((item) => hasData(item.data));
-    },
     /**
      * add order property to media files
      *
      * @returns {Array}
      */
     orderedMedia() {
-      return this.data.entries.media.map((media, index) => ({ ...media, order: index + 1 }));
+      return this.data.entries && this.data.entries.media
+        ? this.data.entries.media.map((media, index) => ({ ...media, order: index + 1 }))
+        : [];
+    },
+    /**
+     * check locations for coordinates
+     * @returns {boolean}
+     */
+    hasLocations() {
+      return this.data.locations
+        && this.data.locations.length
+        && !!this.data.locations.filter((location) => !!location.coordinates).length;
+    },
+    publishingInfo() {
+      return this.data.publishing_info;
+    },
+    publisher() {
+      return !!this.publishingInfo.publisher && !!this.publishingInfo.publisher.length
+        ? this.publishingInfo.publisher[0] : false;
+    },
+    institution() {
+      return this.publishingInfo.source_institution;
     },
   },
   watch: {
@@ -551,12 +607,6 @@ export default {
       },
       deep: true,
     },
-  },
-  async created() {
-    // if type is person an individual filer list is needed which should be fetched here
-    if (this.type === 'person') {
-      this.filterList = await this.$store.dispatch('searchData/fetchEntityFilterData', this.$route.params.id);
-    }
   },
   mounted() {
     // get filters if any were encoded in url then they will be provided
@@ -583,42 +633,29 @@ export default {
     async search(requestBody) {
       this.searchOngoing = true;
       try {
-        const { data } = await this.$api.public.api_v1_entities_search_create({
-          id: this.$route.params.id,
-        }, {
+        const results = await this.$store.dispatch('searchData/fetchSearch', {
           requestBody,
+          entityId: this.$route.params.id,
+          routeParam: 'entities',
         });
-        if (data) {
-          // TODO: this is a temporary fix to not have duplicates in the search
-          // results - REMOVE AGAIN!!
-          // assign search results
-          const parsedResults = JSON.parse(data);
-          if (parsedResults && parsedResults.data) {
-            const dedupedResults = {
-              ...parsedResults,
-              data: parsedResults.data
-                .reduce((prev, curr) => {
-                  if (!prev.map((res) => res.id).includes(curr.id)) {
-                    prev.push(curr);
-                  }
-                  return prev;
-                }, []),
-            };
-            this.searchResults = [{
-              ...dedupedResults,
-              total: parsedResults.total
-                - (parsedResults.data.length - dedupedResults.data.length),
-            }];
-          }
-        } else {
-          this.searchResults = [];
+        // now check if parsed string is actual results (if request was cancelled this has
+        // the value false
+        // TODO: check if there is better solution to handle requestCancellation
+        if (results) {
+          this.searchResults = results;
+          // TODO: this only works with one result category - check if this needs improvement
+          // (for entities there should be only one category always anyway so might be okay)
+          this.userHasShowroomEntries = !!this.appliedFiltersInt || !!this.appliedFiltersInt.length
+            || !!results.length || !!results[0].data || !!results[0].data.length;
+          // move search ongoing assignment to here so request cancellation does
+          // not cause loader to disappear
+          this.searchOngoing = false;
         }
       } catch (e) {
-        // TODO: error handling
-        console.error(e);
         // TODO: error handling (unify at one place??)
         // TODO: restore previous state of search?
         console.error(e);
+        this.searchOngoing = false;
         this.$notify({
           group: 'request-notifications',
           title: this.$t('notify.searchError'),
@@ -626,44 +663,37 @@ export default {
           type: 'error',
         });
       }
-      this.searchOngoing = false;
     },
     async fetchAutocomplete({ searchString, filter, index }) {
-      // needed to add trim because space leads to evaluation true
-      if (searchString && searchString.trim()) {
-        this.autocompleteLoaderIndex = index;
-        try {
-          const response = await this.$api.public.api_v1_autocomplete_create({}, {
-            requestBody: {
-              q: searchString,
-              filter_id: filter.label === this.$t('searchView.fulltext') ? 'fulltext' : filter.id,
-            },
-          });
-
-          // check if response.data is typeof string before processing value.
-          // response.data could also be a blob due to request cancellation.
-          // TODO: check if there is better solution to handle requestCancellation
-          if (typeof response.data === 'string') {
-            // TODO: response should be an array always so remove concat as soon as this is the case
-            this.autocompleteResults = [].concat(JSON.parse(response.data));
-          }
-        } catch (e) {
+      this.autocompleteLoaderIndex = index;
+      try {
+        const newResults = await this.$store.dispatch('searchData/fetchAutocomplete', {
+          queryString: searchString,
+          filterId: filter.id,
+          entityId: this.$route.params.id,
+          routeParam: 'entities',
+        });
+        // TODO: check if there is better solution to handle requestCancellation
+        // (is currently returned in an array as [false]
+        if (newResults && (!newResults.length || !newResults.some((res) => !res))) {
+          // if yes - assign the new results (otherwise just do nothing)
+          this.autocompleteResults = [].concat(newResults);
+          // loader index should not be set done when request was cancelled so moving this here!
           this.autocompleteLoaderIndex = -1;
-          console.error(e);
-          // TODO: error handling
-          // TODO: show this information in autocomplete drop down as well?
-          // TODO: reset autocompleteResults??
-          console.error(e);
-          this.$notify({
-            group: 'request-notifications',
-            title: this.$t('notify.autocompleteError'),
-            text: this.$t('notify.autocompleteErrorSubtext'),
-            type: 'error',
-          });
         }
+      } catch (e) {
         this.autocompleteLoaderIndex = -1;
-      } else {
-        this.autocompleteResults = [];
+        console.error(e);
+        // TODO: error handling
+        // TODO: show this information in autocomplete drop down as well?
+        // TODO: reset autocompleteResults??
+        console.error(e);
+        this.$notify({
+          group: 'request-notifications',
+          title: this.$t('notify.autocompleteError'),
+          text: this.$t('notify.autocompleteErrorSubtext'),
+          type: 'error',
+        });
       }
     },
     /**
@@ -845,44 +875,16 @@ export default {
     margin-top: $line-height;
 
     &__label {
-      margin-bottom: $spacing-small;
+      margin-bottom: 0;
     }
 
     &__item {
+      display: inline-block;
+      margin-top: $spacing-small;
       padding: 0 $spacing-small;
       margin-right: $spacing-small;
       background-color: $background-color;
       white-space: nowrap;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-      width: 50px;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0) , rgba(255, 255, 255, 1));
-    }
-  }
-
-  /* chips if baseBoxExpand is expanded */
-  .base-sr-head__primary {
-    &.base-expand-box-open {
-      .base-sr-chips {
-        &::after {
-          display: none;
-        }
-
-        .base-sr-chips__label {
-          margin: 0;
-        }
-
-        .base-sr-chips__item:not(.base-sr-chips__item--single) {
-          display: inline-block;
-          margin-top: $spacing-small;
-        }
-      }
     }
   }
 

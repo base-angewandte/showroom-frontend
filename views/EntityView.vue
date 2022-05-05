@@ -3,14 +3,16 @@
     type="person"
     :data="data"
     :is-user-profile="isUserProfile"
-    :applied-filters="filters"
-    :user-can-edit="userCanEdit" />
+    :filter-list="filterList"
+    :user-can-edit="userCanEdit"
+    @update-search-results="searchResults = $event" />
 </template>
 
 <script>
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import { userInfo } from '@/mixins/userNotifications';
+import { meta, metaTitle } from '@/utils/metaTags';
 import Detail from '@/components/Detail';
 
 export default {
@@ -19,73 +21,44 @@ export default {
     Detail,
   },
   mixins: [userInfo],
+  beforeRouteLeave(to, from, next) {
+    // need to assemble manually in case there are not filters or no page
+    const searchParams = `${this.$route.query.filters || 'noFilters'}&${this.$route.query.page || 'firstPage'}`;
+    this.setSearchResults({
+      id: from.params.id || 'main',
+      searchParams,
+      data: this.searchResults,
+    });
+    next();
+  },
   async asyncData({
-    $api, params, query, isDev, error, store,
+    $api, params, isDev, error, store,
   }) {
     const { id } = params;
-    let entryData = {};
-    let parsedFilters = [];
-    let completeFilters = [];
+    let entityData = {};
+    let filterList = [];
     try {
-      // get relevant query params
-      const { page, filters } = query;
-      // parse the filters from query params
-      parsedFilters = filters ? JSON.parse(filters) : [];
-      // assume 2 entries and 5 rows initially
-      // TODO: make configurable??
-      // this is starting with the smallest number because otherwise higher page
-      // numbers are not rendered with small screensize
-      const entryNumber = 2 * 5;
-      const results = [];
-      // if filters were part of url - get all the data for these filters for this entity
-      const filterList = await store.dispatch('searchData/fetchEntityFilterData', id);
-      if (parsedFilters && parsedFilters.length) {
-        completeFilters = parsedFilters.map((filter) => {
-          const filterMatch = filterList.find((f) => f.id === filter.id);
-          return ({
-            ...filterMatch,
-            filter_values: filter.filter_values,
-          });
-        });
-      }
-      // create requests for all the relevant data
-      ['entities_retrieve', 'entities_search_create'].forEach((operation) => {
-        // add a request body only for search request
-        const requestBody = operation === 'entities_search_create' ? {
-          filters: completeFilters.length ? completeFilters.map((filter) => ({
-            ...filter,
-            // TODO: 'chips' with freetext currently only taking string --> remove
-            // again should this work at some point
-            filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
-              ? filter.filter_values.map((value) => ((!value.id && value.title)
-                ? value.title : value))
-              : filter.filter_values),
-          })) : [],
-          offset: (page ? (Number(page) - 1) : 0) * entryNumber,
-          limit: entryNumber,
-        } : {};
-        // push the request promises into an array
-        results.push($api.public[`api_v1_${operation}`]({
-          id: params.id,
-        }, {
-          requestBody,
-        }));
-      });
+      const requestsArray = [
+        // get the data for the entity from backend
+        // eslint-disable-next-line
+        $api.public['api_v1_entities_retrieve']({
+          id,
+        }),
+        // get all the filters specific for that entity
+        store.dispatch('searchData/fetchEntityFilterData', id),
+      ];
       // wait for the requests to return
-      const [entityDataResponse, searchResultsResponse] = await Promise
-        .all(results);
-      // assemble all the data to be used in Detail.vue
-      entryData = {
-        ...JSON.parse(entityDataResponse.data),
-        activities: [].concat(JSON.parse(searchResultsResponse.data)),
-      };
-      // add an href element that is currently necessary for carousel data
-      if (entryData.showcase && entryData.showcase.length) {
-        entryData.showcase = entryData.showcase.map((entry) => ({
-          ...entry,
-          href: entry.id,
-        }));
+      const [{ data }, filterResponse] = await Promise
+        .all(requestsArray);
+      if (data) {
+        const newEntityData = JSON.parse(data);
+        // this would only turn false if request was cancelled (which should not happen
+        // but just in case)
+        if (newEntityData) {
+          entityData = newEntityData;
+        }
       }
+      filterList = filterResponse;
     } catch (e) {
       if (isDev) {
         console.error(e);
@@ -100,19 +73,28 @@ export default {
         });
       }
     }
-    return { data: entryData, filters: completeFilters };
+    return {
+      data: entityData,
+      filterList,
+    };
   },
   data() {
     return {
       data: {},
-      filters: [],
+      /**
+       * get the individualized filter list for each entity (only showing
+       * e.g. keywords that actually exist in the entity's activities)
+       * @type {Filter[]}
+       */
+      filterList: [],
+      searchResults: [],
     };
   },
   head() {
     return {
-      title: `${this.data.title} | ${process.env.appTitle}`,
+      title: metaTitle(this.data),
+      meta: meta(this.data, this.lang, this.$route.path),
     };
-    // TODO: add additional meta-tags, at least description
   },
   computed: {
     /**
@@ -120,6 +102,7 @@ export default {
      * the searchData store module
      */
     ...mapGetters({
+      lang: 'appData/getLocale',
       /**
        * a list of all filters defined in the backend and available to the user
        */
@@ -142,6 +125,11 @@ export default {
         || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId))
         || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId.split('-').pop()));
     },
+  },
+  methods: {
+    ...mapMutations({
+      setSearchResults: 'searchData/setLatestSearchResults',
+    }),
   },
 };
 </script>

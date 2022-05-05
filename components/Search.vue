@@ -20,11 +20,13 @@
             date: $t('searchView.placeholders.date'),
           },
         }"
-        :autocomplete-property-names="{ id: 'source', label: 'label', data: 'data' }"
+        :autocomplete-property-names="{ id: 'filter_id', label: 'label', data: 'data' }"
         :is-loading-index="autocompleteLoaderIndex"
         :assistive-text="{
           selectedOption: 'Change the text of this selected option',
         }"
+        :date-field-delay="dateFieldDelay"
+        :language="$i18n.locale"
         class="showroom-search__search"
         @fetch-autocomplete="fetchAutocomplete"
         @search="fetchSearchResults" />
@@ -56,7 +58,7 @@
               [1150, 6],
             ]"
             :expanded="!useCollapsedMode"
-            :current-page-number="currentPageNumberInt"
+            :current-page-number="currentPageNumber"
             :expand-text="$t('resultsView.expand')"
             :total="section.total"
             :max-show-more-rows="resultListInt.length > 1 ? 2 : 3"
@@ -64,18 +66,19 @@
             :jump-to-top="true"
             :fetch-data-externally="true"
             :use-expand-mode="useCollapsedMode"
+            :initial-items-per-row="getItemsPerRow"
             :max-rows="maxRows"
             :use-pagination-link-element="'nuxt-link'"
             :scroll-to-offset="55 + 16"
             class="showroom-search__results"
-            @items-per-row-changed="itemsPerRow = $event">
+            @items-per-row-changed="setItemsPerRow($event)">
             <template #header>
-              <h4 class="showroom-search__results-header">
+              <h2 class="showroom-search__results-header">
                 {{ titleCase(headerText || section.label) }}
                 <span class="showroom-search__results-header-number">
                   {{ `(${section.total})` }}
                 </span>
-              </h4>
+              </h2>
             </template>
             <template #resultBox="{ item }">
               <BaseImageBox
@@ -145,6 +148,8 @@ import {
   BaseResultBoxSection,
   BaseLoader,
 } from 'base-ui-components';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { mapGetters, mapMutations } from 'vuex';
 
 import 'base-ui-components/dist/components/BaseAdvancedSearch/BaseAdvancedSearch.css';
 import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSection.css';
@@ -221,19 +226,18 @@ export default {
       default: false,
     },
     /**
-     * set page number from outside
-     */
-    pageNumber: {
-      type: Number,
-      required: true,
-      default: 1,
-    },
-    /**
      * placeholder for search input field to customize for entity page
      */
     placeholderText: {
       type: String,
       default: 'Search and Discover Showroom',
+    },
+    /**
+     * use this prop to set a delay in ms before date input calender is displayed
+     */
+    dateFieldDelay: {
+      type: Number,
+      default: 0,
     },
   },
   data() {
@@ -250,19 +254,18 @@ export default {
        * // TODO: there seem to be some inconsistencies between API spec mock data --> clarify!
        */
       resultListInt: [],
-      /**
-       * define an initial number of items per result section row
-       * (6 is the max number assuming large desktop screen)
-       * @type {number}
-       */
-      itemsPerRow: 2,
       initialRenderDone: false,
       autocompleteTimeout: null,
       currentPageNumberInt: 1,
       appliedFiltersInt: [],
+      originalRequestFilters: [],
     };
   },
   computed: {
+    ...mapGetters({
+      getStoredData: 'searchData/getLatestSearchResults',
+      getItemsPerRow: 'appData/getItemsPerRow',
+    }),
     /**
      * get the entity id (used now to store appliedFilters)
      * @returns {string}
@@ -270,36 +273,42 @@ export default {
     entityId() {
       return this.$route.params.id || 'main';
     },
+    storedData() {
+      return this.getStoredData(this.entityId);
+    },
     /**
      * remove hidden filters from the filter list supplied to the component
      * (done here because hidden filters are needed to get default filter)
      * @returns {Filter[]}
      */
     displayFilterList() {
-      return this.filterList.filter((filter) => !filter.hidden);
+      return this.filterList && this.filterList.length
+        ? this.filterList.filter((filter) => !filter.hidden) : [];
     },
     /**
      * get the default filter from the list provided by backend
      * @returns {Filter}
      */
     defaultFilter() {
-      const filteredDefaultFilter = this.filterList.find((filter) => filter.id === 'fulltext');
-      // either get default filter from backend provided filter list or on last resort take
-      // this hardcoded default filter
-      return filteredDefaultFilter ? ({
-        ...filteredDefaultFilter,
-        // replace label since quite a long string atm
-        label: this.$t('searchView.fulltext'),
-      }) : ({
+      // define fallbackfilter
+      const fallbackFilter = {
         label: this.$t('searchView.fulltext'),
         id: 'fulltext',
         type: 'text',
-      });
+      };
+      // check if filterList is present
+      if (this.filterList && this.filterList.length) {
+        // either get default filter from backend provided filter list or on last resort take
+        // this hardcoded default filter
+        return this.filterList.find((filter) => filter.id === 'fulltext') || fallbackFilter;
+      }
+      // else just return fallback filter
+      return fallbackFilter;
     },
     maxRows() {
-      // TODO: put in config? and check if different for different searches -->
+      // TODO: check if different for different searches -->
       // then it should be prop
-      return this.resultListInt.length > 1 ? 2 : 5;
+      return this.resultListInt.length > 1 ? 2 : process.env.searchResultRows;
     },
     /**
      * calculate the number of entries that should be on one page - needed for limit
@@ -308,7 +317,7 @@ export default {
      * @return {number}
      */
     numberOfEntriesOnPage() {
-      return this.maxRows * this.itemsPerRow;
+      return this.maxRows * this.getItemsPerRow;
     },
     /**
      * returns if any of the resultList sections has values to determine
@@ -327,10 +336,10 @@ export default {
       set(val) {
         // need internal representation that is immediately updated as well for search request
         this.currentPageNumberInt = val || 1;
-        this.$emit('update:page-number', val);
+        this.$emit('update:page-number', this.currentPageNumberInt);
       },
       get() {
-        return this.pageNumber;
+        return this.currentPageNumberInt;
       },
     },
     /**
@@ -343,38 +352,18 @@ export default {
     },
   },
   watch: {
+    /**
+     * basically search is always triggered just by watching the url with one exception -
+     * if itemsPerRow changes (mostly on resize) this will separately trigger search
+     * (this can not be set immediate because prop filterList is necessary which is not
+     * available when $route changes for the first time)
+     *
+     * @param {Object} to - the new url
+     * @param {Object} from - the previous url
+     */
     $route(to, from) {
-      let triggerSearch = false;
-      // check if page is different (this is here for browser navigation as well
-      // as url set by pagination component directly)
-      if (from.query.page !== to.query.page) {
-        if (this.currentPageNumberInt !== to.query.page) {
-          this.currentPageNumberInt = Number(to.query.page || 1);
-          triggerSearch = true;
-        }
-        // check the more complicated filters param
-      } if (from.query.filters !== to.query.filters) {
-        // then first check if filters themselves differ from current applied Filters
-        const routeFilters = to.query.filters ? JSON.parse(to.query.filters) : [];
-        const appliedFiltersMinimized = this.appliedFiltersInt.map((filter) => ({
-          id: filter.id,
-          filter_values: filter.filter_values,
-        }));
-        if (JSON.stringify(routeFilters)
-          !== JSON.stringify(appliedFiltersMinimized)) {
-          this.appliedFiltersInt = routeFilters.map((filter) => {
-            const filterMatch = this.filterList.find((f) => f.id === filter.id);
-            return ({
-              ...filterMatch,
-              filter_values: filter.filter_values,
-            });
-          });
-          triggerSearch = true;
-        }
-      }
-      if (triggerSearch) {
-        this.search(this.appliedFiltersInt);
-      }
+      // call the function for checking url and parse params
+      this.parseUrlForSearch(to, from);
     },
     appliedFiltersInt: {
       handler(val) {
@@ -409,32 +398,59 @@ export default {
      * watch itemsPerRow since it changes on resizing and then the number of
      * displayed items should change --> retrigger search
      */
-    itemsPerRow(val, old) {
-      // only retrigger search if page is other than 1
-      // or page is 1 and more items need to be shown than before
-      if (this.currentPageNumber !== 1 || val > old) {
+    getItemsPerRow(val, old) {
+      // get new offset
+      const proposedOffset = (this.currentPageNumber - 1) * this.numberOfEntriesOnPage;
+      // check if current page number is not covered anymore if more items fit on one page than
+      // before - if so set page to keep previous offset item in view
+      if (this.currentPageNumber > 1 && old < val
+        && proposedOffset > this.resultListInt[0].total) {
+        // get first previous item number
+        const firstPreviousItem = (old * this.maxRows * (this.currentPageNumber - 1)) + 1;
+        // set current page number to the page the first previous item should be on now
+        this.currentPageNumber = Math.ceil(firstPreviousItem / this.numberOfEntriesOnPage)
+          || 1;
+        // set router accordingly (this will trigger search as well)
+        this.$router.push({
+          path: this.$route.fullPath,
+          query: {
+            // need to user currentpagenumberint here because currentpagenumber is updated
+            // via event to parent and the prop will only be updated after this function
+            // went through
+            page: this.currentPageNumber,
+          },
+        });
+        // only retrigger search if page is other than 1
+        // or page is 1 and more items need to be shown than before
+      } else if (this.currentPageNumber !== 1 || val > old) {
         this.search(this.appliedFiltersInt);
       }
     },
-    /**
-     * watching prop pageNumber to keep currentPageNumberInt (needed for search) in
-     * sync as well
-     */
-    pageNumber: {
-      handler(val) {
-        if (this.currentPageNumberInt !== val) {
-          this.currentPageNumberInt = val;
-        }
-      },
-      immediate: true,
-    },
   },
   mounted() {
+    const { page, filters } = this.$route.query;
+    // there should be an initial search request (if necessary parsing url) - however
+    // this only works if filterList is there! so checking here (but it should be here)
+    // filterList is also the reason why this is here instead of setting $route watcher to
+    // immediate (filterList not available yet)
+    if (this.filterList && this.filterList.length) {
+      // check if url query params are set
+      if ((page && page !== '1') || filters) {
+        // if yes - parse them
+        this.parseUrlForSearch(this.$route);
+      } else {
+        // else just trigger regular search without filters
+        this.search([]);
+      }
+    }
     this.$nextTick(() => {
       this.initialRenderDone = true;
     });
   },
   methods: {
+    ...mapMutations({
+      setItemsPerRow: 'appData/setItemsPerRow',
+    }),
     /**
      * function triggered by the BaseAdvancedSearch component as soon as typing in any filter row
      * occurs
@@ -467,28 +483,42 @@ export default {
         id: filter.id,
         filter_values: filter.filter_values,
       }));
-      // get filters that should be added to search request (=only filter that have data)
-      const requestFilters = filters.filter((filter) => hasData(filter.filter_values));
+      const previousQueryFilterString = this.$route.query.filters;
+      const newFilterIsEmptyFilter = minimizedPathFilters.length === 1
+        && !(hasData(minimizedPathFilters[0].filter_values));
+      const newFilterIsEmptyDefaultFilter = newFilterIsEmptyFilter
+        && minimizedPathFilters[0].id === this.defaultFilter.id;
       // check if filters are in route already - first of all to avoid double routing but secondly
       // also because if filters are already in route this means a request was already made
       // in asyncData and search does not need to be triggered here anymore
-      if (JSON.stringify(minimizedPathFilters) !== this.$route.query.filters
-        && !(this.$route.query.filters === undefined && !requestFilters.length)) {
-        // whenever a new search is triggered reset the page number to 1
-        this.currentPageNumber = 1;
-        // push the filters into the route
+      if (JSON.stringify(minimizedPathFilters) !== previousQueryFilterString
+        // cover special case empty fulltext filter that is removed from route query string
+        && !(newFilterIsEmptyDefaultFilter && !previousQueryFilterString)) {
+        // need to check if change was just an empty filter because this should
+        // not reset the page
+        const changeWasEmptyFilter = JSON.stringify(minimizedPathFilters
+          .filter((filter) => hasData(filter.filter_values)))
+          === JSON.stringify(previousQueryFilterString
+            ? JSON.parse(previousQueryFilterString)
+              .filter((filter) => hasData(filter.filter_values)) : []);
+        // so only reset page to 1 if some filter values actually changed
+        if (!changeWasEmptyFilter) {
+          // whenever a new search is triggered (and it was not triggered by setting a filter type)
+          // reset the page number to 1
+          this.currentPageNumber = 1;
+        }
+        // push the filters into the route - this will automatically trigger the search!!
         await this.$router.push({
           path: this.$route.fullPath,
           query: {
-            // need to user currentpagenumberint here because currentpagenumber is updated
-            // via event to parent and the prop will only be updated after this function
-            // went through
-            page: this.currentPageNumberInt,
+            // since page number is 1 here just remove it from the url query string
+            page: undefined,
             filters: minimizedPathFilters.length
+              // dont add empty default filter
+              && !newFilterIsEmptyDefaultFilter
               ? JSON.stringify(minimizedPathFilters) : undefined,
           },
         });
-        await this.search(requestFilters);
       }
     },
     /**
@@ -500,32 +530,43 @@ export default {
      * @param {Filter[]} filters - the filters to be applied in search
      */
     async search(filters) {
-      // TODO: temporary data mapping for text filter so values are only string
-      const filterRequestData = filters
-        .map((filter) => ({
-          ...filter,
-          // filter_values ALWAYS needs to be array
-          filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
-            ? filter.filter_values.map((value) => ((!value.id && value.title)
-              ? value.title : value))
-            : filter.filter_values),
-        }));
-      /**
-       * event to parent to make search happening in parent (the actual request was moved to parent
-       * because the request params were to different between the views using this component)
-       *
-       * @event search
-       * @type {Object} - an object already containing al the necessary request data
-       *  @property {Filter[]} filters - the filters to be applied
-       *  @property {number} offset - the request offset
-       *  @property {number} limit - the number of items to be returned
-       */
-      this.$emit('search', {
-        // filter filters that dont contain any values
-        filters: filterRequestData.filter((filter) => hasData(filter.filter_values)) || [],
-        offset: (this.currentPageNumberInt - 1) * this.numberOfEntriesOnPage,
-        limit: this.numberOfEntriesOnPage,
-      });
+      // need to assemble manually in case there are not filters or no page
+      const queryParams = `${this.$route.query.filters || 'noFilters'}&${this.$route.query.page || 'firstPage'}`;
+      if (this.storedData
+        && (this.storedData[queryParams] && this.storedData[queryParams])) {
+        // once the stored data was used reset it in the store
+        this.resultListInt = JSON.parse(JSON
+          .stringify(this.storedData[queryParams]));
+      } else {
+        const filterRequestData = filters
+          .map((filter) => ({
+            // get rid of all other filter properties
+            id: filter.id,
+            type: filter.type,
+            // filter_values ALWAYS needs to be array
+            filter_values: [].concat(filter.type === 'chips' && filter.freetext_allowed
+              ? filter.filter_values.map((value) => ((!value.id && value.title)
+                ? value.title : value))
+              : filter.filter_values),
+          }));
+        /**
+         * event to parent to make search happening in parent (the actual request was moved to
+         * parent because the request params were to different between the views using this
+         * component)
+         *
+         * @event search
+         * @type {Object} - an object already containing al the necessary request data
+         *  @property {Filter[]} filters - the filters to be applied
+         *  @property {number} offset - the request offset
+         *  @property {number} limit - the number of items to be returned
+         */
+        this.$emit('search', {
+          // filter filters that dont contain any values
+          filters: filterRequestData.filter((filter) => hasData(filter.filter_values)) || [],
+          offset: (this.currentPageNumber - 1) * this.numberOfEntriesOnPage,
+          limit: this.numberOfEntriesOnPage,
+        });
+      }
     },
     /**
      * method to trigger en lang title casing
@@ -534,6 +575,50 @@ export default {
      */
     titleCase(string) {
       return toTitleString(string);
+    },
+    parseUrlForSearch(to, from) {
+      // variable to indicate if search should be triggered in the end
+      let triggerSearch = false;
+      // get the past url filter string
+      const fromFilters = from ? from.query.filters : null;
+      // get the new url filter string
+      const toFilters = to.query.filters;
+      // get the new page number and make it a number
+      const newPageNumber = Number(to.query.page);
+      // check if page is different (this is here for browser navigation as well
+      // as url set by pagination component directly)
+      if (((!from && to.query.page > 1)
+        || (from && from.query.page !== to.query.page))
+        && !((!from || !from.query.page) && !to.query.page)) {
+        if (this.currentPageNumber !== newPageNumber) {
+          this.currentPageNumber = Number(to.query.page || 1);
+          triggerSearch = true;
+        }
+      }
+      // check the more complicated filters param
+      if (fromFilters !== toFilters) {
+        // parse the new url filter string if present - they are used to set the
+        // applied filters variable
+        const routeToFilters = toFilters ? JSON.parse(toFilters) : [];
+        // parse the old url filter string if present - this is just for comparison
+        // purposes (if filters in route have changed)
+        // const routeFromFilters = fromFilters ? JSON.parse(fromFilters) : [];
+        // match the new parsed filters with the filterList filters that contain all
+        // necessary data
+        this.appliedFiltersInt = routeToFilters.map((filter) => {
+          const filterMatch = this.filterList.find((f) => f.id === filter.id);
+          return ({
+            // add all properties from the matched filterList filter
+            ...filterMatch,
+            // except keep the filter_values
+            filter_values: filter.filter_values,
+          });
+        });
+        triggerSearch = true;
+      }
+      if (triggerSearch) {
+        this.search(this.appliedFiltersInt);
+      }
     },
   },
 };

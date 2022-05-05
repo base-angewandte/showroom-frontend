@@ -13,7 +13,7 @@ export default {
       { charset: 'utf-8' },
       { lang: 'en' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.APP_TITLE },
+      { hid: 'description', name: 'description', content: settings.META.description.en },
       { name: 'apple-mobile-web-app-title', content: 'base' },
       { name: 'application-name', content: 'base' },
       { name: 'theme-color', content: '#ffffff' },
@@ -70,11 +70,13 @@ export default {
     headerUrlsTerms: process.env.HEADER_URLS_TERMS,
     headerUrlsNotice: process.env.HEADER_URLS_NOTICE,
     leaflet: settings.LEAFLET,
+    meta: settings.META,
     locales: process.env.LOCALES,
     defaultLocale: process.env.DEFAULT_LOCALE,
     enTitleCasing: JSON.parse(process.env.EN_TITLE_CASING),
     userPreferencesUrl: process.env.USER_PREFERENCES_URL,
     authRequired: JSON.parse(process.env.AUTH_REQUIRED),
+    searchResultRows: JSON.parse(process.env.SEARCH_RESULT_ROWS),
   },
   /*
   ** Plugins to load before mounting the App

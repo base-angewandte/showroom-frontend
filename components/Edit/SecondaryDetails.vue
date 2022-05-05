@@ -176,10 +176,24 @@ export default {
      * @returns {{{ [lang: string]: string }}}
      */
     editData() {
-      return this.getEditDataItem({
+      const backendEditDataItem = this.getEditDataItem({
         type: 'secondary_details',
         id: this.$route.params.id,
       });
+      // check if backend was initialized correctly
+      if (!(backendEditDataItem && backendEditDataItem.length && this.locales
+        .every((locale) => Object.keys(backendEditDataItem[0]).includes(locale)))) {
+        // if not provide a default empty data structure for the input field
+        return [this.locales.reduce((prev, locale) => ({
+          ...prev,
+          [locale]: {
+            label: this.$t('detailView.cv', locale),
+            data: '',
+          },
+        }), {})];
+      }
+      // else return the backend data
+      return backendEditDataItem;
     },
     /**
      * variable actually used for the BaseMultilineTextInput component (v-model)

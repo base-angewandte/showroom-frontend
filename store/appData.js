@@ -3,7 +3,21 @@ const state = () => ({
   locales: process.env.locales,
   locale: '',
   user: null,
+  /**
+   * data for landing page which however are also used for base carousel mock data
+   * (since only loaded once they should be available already everytime i navigate
+   * to a page)
+   * @type {?Object}
+   */
   initialData: null,
+  /**
+   * this is universal depending solely on page resize so it should
+   * be available for all pages
+   * this is starting with the smallest number because otherwise higher page
+   * numbers are not rendered with small screensize
+   * @type {number}
+   */
+  itemsPerRow: 2,
 });
 
 const getters = {
@@ -47,6 +61,7 @@ const getters = {
     }
     return [];
   },
+  getItemsPerRow: (state) => state.itemsPerRow,
 };
 
 const mutations = {
@@ -64,6 +79,9 @@ const mutations = {
   },
   setInitialData(state, data) {
     state.initialData = data;
+  },
+  setItemsPerRow(state, data) {
+    state.itemsPerRow = data;
   },
 };
 
@@ -86,23 +104,45 @@ const actions = {
       }
     }
   },
-  async fetchInitialData({ commit }, { limit }) {
-    const requestBody = limit ? {
-      limit,
-    } : {};
-    try {
-      const response = await this.$api.public.api_v1_initial_retrieve({
-        id: process.env.institutionId,
-      },
-      {
-        requestBody,
-      });
-      if (response.data) {
-        commit('setInitialData', JSON.parse(response.data));
-      }
-    } catch (e) {
-      console.error(e);
+  /**
+   * request for fetching initial results for start page (but also used for default carousel
+   * data on entity page)
+   *
+   * @param getters
+   * @param commit
+   * @param {number} [limit=100] - a limit applied to the initial request
+   * @returns {Promise<boolean|*[]>}
+   */
+  async fetchInitialData({ getters, commit }, { limit = 100 }) {
+    // get the data already in the store if there are any
+    const storedInitialData = getters.getInitialData;
+    // check if data are here and if these data have results, and if so if the results length
+    // covers the set limit
+    if (storedInitialData && storedInitialData.results && storedInitialData.results.length
+      && storedInitialData.results[0].data.length >= limit) {
+      return storedInitialData.results;
     }
+    // if not fetch the data anew
+    const response = await this.$api.public.api_v1_initial_retrieve({
+      id: process.env.institutionId,
+      requestBody: {
+        limit,
+      },
+    });
+    // check if response data came back
+    if (response.data) {
+      // if yes - parse them
+      const parsedData = JSON.parse(response.data);
+      // now check if they are not boolean false (for request cancellation)
+      if (parsedData) {
+        // save them in store
+        commit('setInitialData', parsedData);
+        // return only the search results to the component
+        return [].concat(parsedData.results) || [];
+      }
+    }
+    // return false for cancellation
+    return false;
   },
 };
 

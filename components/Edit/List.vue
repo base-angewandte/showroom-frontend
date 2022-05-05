@@ -1,12 +1,17 @@
 <template>
   <div>
+    <h2 class="hide">
+      {{ $t('detailView.activityLists') }}
+    </h2>
+
     <BaseEditControl
       v-if="userCanEdit"
       :controls="true"
+      :disabled="saveRequestOngoing"
       :edit="editModeInt"
       :edit-button-text="$i18n.t('editView.edit')"
       :save-button-text="$i18n.t('editView.ready')"
-      :is-loading="isLoading"
+      :is-loading="isLoading || saveRequestOngoing"
       :subtitle="'(' + getItemCount(listData) + ')'"
       :title="entityType !== 'person' ? $t('detailView.lists') : $t('detailView.activityLists')"
       edit-mode="done"
@@ -24,9 +29,8 @@
       :supportive-text="$t('editView.listText')"
       :edit-hide-text="$t('editView.listItemHide')"
       :edit-show-text="$t('editView.listItemShow')"
-      :expanded="expandedListItems"
+      :disabled="saveRequestOngoing"
       control-type="toggle"
-      @expanded-state="setExpandedState"
       @update:data="saveEdit">
       <template #content="{ data: slotListData }">
         <!-- if entry has a link use baseLink -->
@@ -48,6 +52,19 @@
         </template>
       </template>
     </BaseExpandList>
+
+    <BaseExpandBox
+      v-if="userCanEdit && !editModeInt && !listData.length"
+      :auto-height="true"
+      padding="small"
+      class="base-sr-row">
+      <span>{{ $t('editView.listNoResults') }}</span>
+      <button
+        class="base-sr-text-button"
+        @click="enableEdit">
+        {{ $t('editView.editNow') }}
+      </button>.
+    </BaseExpandBox>
   </div>
 </template>
 
@@ -58,15 +75,18 @@ import { mapActions } from 'vuex';
 import {
   BaseEditControl,
   BaseExpandList,
+  BaseExpandBox,
 } from 'base-ui-components';
 
 import { userInfo } from '~/mixins/userNotifications';
 
 import 'base-ui-components/dist/components/BaseEditControl/BaseEditControl.css';
 import 'base-ui-components/dist/components/BaseExpandList/BaseExpandList.css';
+import 'base-ui-components/dist/components/BaseExpandBox/BaseExpandBox.css';
 
 Vue.use(BaseEditControl);
 Vue.use(BaseExpandList);
+Vue.use(BaseExpandBox);
 
 /**
  * @typedef {Object} ListDataItem
@@ -145,9 +165,10 @@ export default {
        */
       saveTimeout: null,
       /**
-       * expanded state of list
+       * variable to store if a save request is ongoing
+       * @type {boolean}
        */
-      expandedListItems: [],
+      saveRequestOngoing: false,
     };
   },
   computed: {
@@ -201,11 +222,6 @@ export default {
       }
     },
   },
-  mounted() {
-    if (process.browser) {
-      this.expandedListItems = this.getExpandedState();
-    }
-  },
   methods: {
     ...mapActions({
       fetchEditData: 'editData/fetchEditData',
@@ -237,22 +253,36 @@ export default {
      */
     save() {
       this.editModeInt = false;
-      this.$refs.baseExpandList.save();
+      if (!this.saveRequestOngoing) {
+        this.$refs.baseExpandList.save();
+      }
     },
     /**
      * save the data
      */
-    saveEdit(values) {
-      if (this.saveTimeout) {
+    saveEdit(values, delay = 2000) {
+      if (this.saveTimeout && delay) {
         clearTimeout(this.saveTimeout);
         this.saveTimeout = null;
       }
-      // set a timeout that expecially keeps save from being triggered every time
+      // set a timeout that especially keeps save from being triggered every time
       // the keyboard user triggers arrow key
       this.saveTimeout = setTimeout(async () => {
         try {
-          // update database entry with relevant data
-          this.listData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
+          // disable list elements while saving
+          this.saveRequestOngoing = true;
+          // serialize values to relevant data
+          const serializedValues = values.map((value) => ({ id: value.id, hidden: value.hidden }));
+          // update database entry
+          const newData = await this.saveEditData({
+            type: 'list',
+            id: this.$route.params.id,
+            values: serializedValues,
+          });
+          // necessary because if request was cancelled store function returns false
+          if (newData) {
+            this.listData = newData;
+          }
         } catch (e) {
           console.error(e);
           // only inform user when operation failed
@@ -262,8 +292,10 @@ export default {
             type: 'list',
             notificationType: 'error',
           });
+        } finally {
+          this.saveRequestOngoing = false;
         }
-      }, 500);
+      }, delay);
     },
     /**
      * get the total of all items at the bottom level of the list
@@ -293,43 +325,6 @@ export default {
         }
         return listItem;
       });
-    },
-    /**
-     * get expanded list state of current page from localStorage
-     */
-    getExpandedState() {
-      const key = this.$route.path;
-      const history = JSON.parse(window.localStorage.getItem('history'));
-      return history
-        && history[key]
-        && history[key].list ? history[key].list : [];
-    },
-    /**
-     * set expanded list state to local storage
-     * @param {Array} state - expanded level, comma separated
-     */
-    setExpandedState(state) {
-      const key = this.$route.path;
-
-      // get current history from localStorage
-      const history = JSON.parse(window.localStorage.getItem('history')) || {};
-
-      // if state is set, store it to object
-      if (state.length) {
-        // if object does not exist, create it
-        if (!history[key]) {
-          history[key] = {};
-        }
-        // set value
-        history[key].list = state;
-      }
-      // otherwise remove it
-      if (!state.length && history[key]) {
-        delete history[key];
-      }
-
-      // set new history to localStorage
-      window.localStorage.setItem('history', JSON.stringify(history));
     },
   },
 };

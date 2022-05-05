@@ -25,7 +25,7 @@ import Vue from 'vue';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapGetters } from 'vuex';
 import Notifications from 'vue-notification/dist/ssr';
-import { metaTags } from '~/utils/common';
+import { metaRelAlternate } from '@/utils/metaTags';
 
 Vue.use(Notifications);
 
@@ -39,7 +39,7 @@ export default {
       htmlAttrs: {
         lang: this.lang,
       },
-      link: metaTags(this.routerPath, this.lang),
+      link: metaRelAlternate(this.routerPath, this.lang),
     };
   },
   computed: {
@@ -54,9 +54,9 @@ export default {
     urls() {
       const backendUrl = `${process.env.backendBaseUrl}${process.env.backendPrefix}`;
       return {
-        de: `${process.env.appPrefix}/de${this.$route.path}`,
-        en: `${process.env.appPrefix}/en${this.$route.path}`,
-        login: `${backendUrl}/accounts/login/?next=${process.env.appPrefix}${this.$route.path}`,
+        de: `${process.env.appPrefix}/de${this.$route.fullPath}`,
+        en: `${process.env.appPrefix}/en${this.$route.fullPath}`,
+        login: `${backendUrl}/accounts/login/?next=${process.env.appPrefix}${this.$route.fullPath}`,
         logout: `${backendUrl}/accounts/logout/?next=${process.env.headerLogoutRedirectUrl}`,
         terms: process.env.headerUrlsTerms,
         siteNotice: process.env.headerUrlsNotice,

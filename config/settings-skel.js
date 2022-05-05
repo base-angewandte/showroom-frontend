@@ -9,4 +9,10 @@ export default {
       layers: 'OSM-WMS',
     },
   },
+  META: {
+    description: {
+      de: 'Kuratieren Sie Ihr akademisches Profil. Erzählen Sie die Geschichte Ihrer Arbeit, kooperieren Sie mit Kolleg*innen, erkunden und entdecken Sie.',
+      en: 'Curate your academic profile. Tell the story of your work, collaborate, explore, discover.',
+    },
+  },
 };

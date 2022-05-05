@@ -10,11 +10,11 @@
     "details": "Details",
     "cv": "Curriculum Vitae",
     "address": "Addresses | Address | Addresses",
-    "expertise": "Expertise",
+    "expertise": "Skills and Expertise",
     "publisher": "Published by",
     "editedDate": "Edit Date",
     "publishedDate": "Publication Date",
-    "linked_from": "Parent Activity",
+    "linked_from": "Parent Activities",
     "linked_to": "Related Activities",
     "location": "Locations | Location | Locations",
     "showMore": "Show more",
@@ -105,6 +105,7 @@
       "visible": "visible",
       "hidden": "hidden"
     },
+    "listNoResults": "You don't have any entries yet that can be displayed or none of your activity categories are currently visible.",
     "listItemShow": "Show",
     "listItemHide": "Hide",
     "selectOptionsText": {

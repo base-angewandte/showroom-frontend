@@ -57,6 +57,7 @@ Following variables in the `.env` file contained in project folder can be define
 | Variable                    | Description                                                                         |
 |-----------------------------|-------------------------------------------------------------------------------------|
 | APP_TITLE                   | name of the app, used to set title tag                                              |
+| INSTITUTION_ID              | the id of the institution this showroom belongs to as assigned in showroom backend                                                   |
 | APP_BASE_URL                | url where the frontend is located                                                   |
 | APP_PREFIX                  | desired prefix of the application                                                   |
 | API_SPEC_URL                | url to the open-api-definition in json format                                       |
@@ -70,6 +71,8 @@ Following variables in the `.env` file contained in project folder can be define
 | DEFAULT_LOCALE              | default language, if one should be set (else the browser language will be used)     |
 | EN_TITLE_CASING             | as per default with locale set to english, all text except complete sentences will be title-cased. Set false to turn this behaviour off.     |
 | USER_PREFERENCES_URL        | url where the user preferences app is located                                       |
+| AUTH_REQUIRED               | set true for users to be redirected to login page if not authenticated                                       |
+| USER_PREFERENCES_URL        | define how many rows of search results should be displayed                                       |
 
 Following `.env` variable get updated during project start up - so no need to set up!
 

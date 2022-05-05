@@ -1,6 +1,11 @@
 <template>
   <div
     :class="[{ 'base-sr-edit-active': editModeInt }]">
+    <!-- HEADLINE  -->
+    <h2 class="hide">
+      {{ $t('detailView.activityShowcase') }}
+    </h2>
+
     <!-- EDIT CONTROLS  -->
     <BaseEditControl
       v-if="userCanEdit && !editModeInt"
@@ -131,7 +136,7 @@
           label: $t('editView.sortBy'),
           default: {
             label: $t('editView.sortOptions.lastModified'),
-            value: 'date_modified',
+            value: 'date_changed',
           },
           valuePropertyName: 'value',
         }"
@@ -177,6 +182,7 @@ import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSec
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapActions, mapGetters } from 'vuex';
 import { userInfo } from '@/mixins/userNotifications';
+import { getLangLabel } from '@/utils/common';
 
 Vue.use(BaseButton);
 Vue.use(BaseBoxButton);
@@ -334,10 +340,6 @@ export default {
        */
       sortOptions: [
         {
-          label: this.$t('editView.sortOptions.byType'),
-          value: 'type_en',
-        },
-        {
           label: this.$t('editView.sortOptions.AZ'),
           value: 'title',
         },
@@ -346,16 +348,8 @@ export default {
           value: '-title',
         },
         {
-          label: this.$t('editView.sortOptions.lastCreated'),
-          value: '-date_created',
-        },
-        {
-          label: this.$t('editView.sortOptions.firstCreated'),
-          value: 'date_created',
-        },
-        {
           label: this.$t('editView.sortOptions.lastModified'),
-          value: 'date_modified',
+          value: 'date_changed',
         },
       ],
       /**
@@ -630,22 +624,27 @@ export default {
       try {
         this.isLoading = true;
         this.selectorEntriesPerPage = this.calcSelectorEntriesPerPage();
+        const excludedEntries = this.editInput && this.editInput.length ? this.editInput
+          .map((selectedEntry) => selectedEntry.id) : [];
 
-        const filters = [
-          {
-            label: 'Fulltext',
-            id: 'fulltext',
-            // TODO: check how to fetch all entries without setting filter_value to ['a']
-            filter_values: requestObject.query.length ? requestObject.query.split(' ') : ['a'],
-            type: 'activity',
-          },
-        ];
+        const queryString = requestObject.query;
+        const requestBodyDefaults = {
+          exclude: excludedEntries,
+          sort: requestObject.sort.value,
+          offset: (requestObject.page - 1) * this.selectorEntriesPerPage,
+          limit: this.selectorEntriesPerPage,
+        };
+        const optionalParams = {};
+        if (queryString) {
+          this.$set(optionalParams, 'q', queryString);
+        } else {
+          this.$set(optionalParams, 'entity_id', this.$route.params.id.split('-').pop());
+        }
 
-        const response = await this.$api.public.api_v1_search_create({}, {
+        const response = await this.$api.public.api_v1_showcase_search_create({}, {
           requestBody: {
-            filters,
-            offset: (requestObject.page - 1) * this.selectorEntriesPerPage,
-            limit: this.selectorEntriesPerPage,
+            ...requestBodyDefaults,
+            ...optionalParams,
           },
         });
 
@@ -785,8 +784,14 @@ export default {
     formatData(data) {
       return data.map((entry) => ({
         ...entry,
+        // adding a description which should be the entry type
+        description: entry.type && entry.type.label
+          ? getLangLabel(entry.type.label, this.$i18n.locale, true) : '',
+        // needed for correct saving to db
         type: entry.showcase_type,
+        // needed for the correct link
         href: entry.id,
+        // needed for correct image display
         imageUrl: entry.previews && entry.previews.length
           ? Object.values(entry.previews[0])[0] : entry.image_url || '',
       }));
