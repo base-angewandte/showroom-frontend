@@ -246,14 +246,20 @@ export default {
         clearTimeout(this.saveTimeout);
         this.saveTimeout = null;
       }
-      // set a timeout that expecially keeps save from being triggered every time
+      // set a timeout that especially keeps save from being triggered every time
       // the keyboard user triggers arrow key
       this.saveTimeout = setTimeout(async () => {
         try {
           // disable list elements while saving
           this.saveRequestOngoing = true;
-          // update database entry with relevant data
-          const newData = await this.saveEditData({ type: 'list', id: this.$route.params.id, values });
+          // serialize values to relevant data
+          const serializedValues = values.map((value) => ({ id: value.id, hidden: value.hidden }));
+          // update database entry
+          const newData = await this.saveEditData({
+            type: 'list',
+            id: this.$route.params.id,
+            values: serializedValues,
+          });
           // necessary because if request was cancelled store function returns false
           if (newData) {
             this.listData = newData;
