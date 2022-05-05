@@ -394,7 +394,7 @@ export default {
     editData() {
       const tempEditData = this.getEditDataItem({
         type: 'showcase',
-        id: this.$route.params.id,
+        id: this.$route.params.id || process.env.institutionId,
       });
       return this.dataInt.map((item) => {
         const editDataItem = tempEditData ? tempEditData
@@ -638,7 +638,8 @@ export default {
         if (queryString) {
           this.$set(optionalParams, 'q', queryString);
         } else {
-          this.$set(optionalParams, 'entity_id', this.$route.params.id.split('-').pop());
+          const id = this.$route.params.id || process.env.institutionId;
+          this.$set(optionalParams, 'entity_id', id.split('-').pop());
         }
 
         const response = await this.$api.public.api_v1_showcase_search_create({}, {
