@@ -449,7 +449,6 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setSearchResults: 'searchData/setLatestSearchResults',
       setItemsPerRow: 'appData/setItemsPerRow',
     }),
     /**
@@ -531,12 +530,13 @@ export default {
      * @param {Filter[]} filters - the filters to be applied in search
      */
     async search(filters) {
-      const pathFilters = this.$route.query.filters || 'noFilters';
+      // need to assemble manually in case there are not filters or no page
+      const queryParams = `${this.$route.query.filters || 'noFilters'}&${this.$route.query.page || 'firstPage'}`;
       if (this.storedData
-        && (this.storedData[pathFilters] && this.storedData[pathFilters])) {
+        && (this.storedData[queryParams] && this.storedData[queryParams])) {
         // once the stored data was used reset it in the store
         this.resultListInt = JSON.parse(JSON
-          .stringify(this.storedData[pathFilters]));
+          .stringify(this.storedData[queryParams]));
       } else {
         const filterRequestData = filters
           .map((filter) => ({

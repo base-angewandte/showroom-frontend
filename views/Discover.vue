@@ -59,9 +59,10 @@ export default {
     Search,
   },
   beforeRouteLeave(to, from, next) {
+    const searchParams = `${this.$route.query.filters || 'noFilters'}&${this.$route.query.page || 'firstPage'}`;
     this.setSearchResults({
       id: from.params.id || 'main',
-      searchParams: from.query.filters || 'noFilters',
+      searchParams,
       data: this.searchResults,
     });
     next();

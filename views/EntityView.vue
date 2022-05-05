@@ -22,9 +22,11 @@ export default {
   },
   mixins: [userInfo],
   beforeRouteLeave(to, from, next) {
+    // need to assemble manually in case there are not filters or no page
+    const searchParams = `${this.$route.query.filters || 'noFilters'}&${this.$route.query.page || 'firstPage'}`;
     this.setSearchResults({
       id: from.params.id || 'main',
-      searchParams: from.query.filters || 'noFilters',
+      searchParams,
       data: this.searchResults,
     });
     next();
