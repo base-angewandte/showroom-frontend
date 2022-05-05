@@ -250,8 +250,10 @@
           :use-pagination="true"
           :use-expand-mode="true"
           :max-rows="4"
+          :initial-items-per-row="getItemsPerRow"
           :use-pagination-link-element="'nuxt-link'"
-          class="base-sr-row">
+          class="base-sr-row"
+          @items-per-row-changed="showFooter = true">
           <template #header>
             <h2 class="base-sr--ml-small">
               {{ $t(`detailView.linked_${index}`) }}
@@ -290,7 +292,7 @@
 
     <!-- owner, dates -->
     <div
-      v-if="publishingInfo"
+      v-if="showFooter && publishingInfo"
       class="base-sr-row base-sr-last-modified">
       <p>
         <template
@@ -508,11 +510,17 @@ export default {
        * @type {boolean}
        */
       userHasShowroomEntries: true,
+      /**
+       * variable necessary so footer is only rendered after initial calc of resultboxsection
+       * bo
+       */
+      showFooter: false,
     };
   },
   computed: {
     ...mapGetters({
       lang: 'appData/getLocale',
+      getItemsPerRow: 'appData/getItemsPerRow',
     }),
     /**
      * compute search results from data prop to be able to use
