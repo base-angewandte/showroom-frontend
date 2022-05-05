@@ -105,6 +105,7 @@
       "visible": "visible",
       "hidden": "hidden"
     },
+    "listNoResults": "You don't have any entries yet that can be displayed or none of your activity categories are currently visible.",
     "listItemShow": "Show",
     "listItemHide": "Hide",
     "selectOptionsText": {

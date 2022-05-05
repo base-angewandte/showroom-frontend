@@ -148,7 +148,7 @@
 
     <!-- lists -->
     <List
-      v-if="data.list && data.list.length"
+      v-if="(data.list && data.list.length) || userCanEdit"
       ref="list"
       :data="titleCaseLabels(data.list)"
       :edit-mode="editMode.list"
