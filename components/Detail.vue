@@ -292,7 +292,7 @@
 
     <!-- owner, dates -->
     <div
-      v-if="showFooter && publishingInfo"
+      v-if="(!entryHasLinked || showFooter) && publishingInfo"
       class="base-sr-row base-sr-last-modified">
       <p>
         <template
@@ -590,6 +590,10 @@ export default {
     },
     institution() {
       return this.publishingInfo.source_institution;
+    },
+    entryHasLinked() {
+      return this.data.entries && this.data.entries.linked
+        && Object.values(this.data.entries.linked).some((linkedArray) => !!linkedArray.length);
     },
   },
   watch: {
