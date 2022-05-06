@@ -199,6 +199,7 @@
       v-if="data.entries && data.entries.media && data.entries.media.length"
       :entry-list="orderedMedia"
       :expand-text="$t('resultsView.expand')"
+      :initial-items-per-row="getItemsPerRow"
       :is-loading="isLoading"
       :jump-to-top="true"
       :max-rows="4"
@@ -252,8 +253,7 @@
           :max-rows="4"
           :initial-items-per-row="getItemsPerRow"
           :use-pagination-link-element="'nuxt-link'"
-          class="base-sr-row"
-          @items-per-row-changed="showFooter = true">
+          class="base-sr-row">
           <template #header>
             <h2 class="base-sr--ml-small">
               {{ $t(`detailView.linked_${index}`) }}
@@ -292,9 +292,9 @@
 
     <!-- owner, dates -->
     <div
-      v-if="(!entryHasLinked || showFooter) && publishingInfo"
+      v-if="publishingInfo"
       class="base-sr-row base-sr-last-modified">
-      <p>
+      <div>
         <template
           v-if="publisher">
           {{ $t('detailView.publisher') }}:
@@ -327,7 +327,7 @@
           ${$t('detailView.editedDate')}: ${publishingInfo.date_updated
           || createHumanReadableDate(data.date_changed)}`
         }}
-      </p>
+      </div>
     </div>
 
     <!-- edit-mode-background -->
@@ -510,11 +510,6 @@ export default {
        * @type {boolean}
        */
       userHasShowroomEntries: true,
-      /**
-       * variable necessary so footer is only rendered after initial calc of resultboxsection
-       * bo
-       */
-      showFooter: false,
     };
   },
   computed: {
