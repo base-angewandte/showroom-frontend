@@ -414,9 +414,6 @@ export default {
         this.$router.push({
           path: this.$route.fullPath,
           query: {
-            // need to user currentpagenumberint here because currentpagenumber is updated
-            // via event to parent and the prop will only be updated after this function
-            // went through
             page: this.currentPageNumber,
           },
         });
