@@ -61,17 +61,17 @@ export default {
        */
 
       // image
-      if (this.data.type === 'i') {
+      if (this.data.type === 'i' && this.data.previews.length) {
         return this.firstPreviewsImage(this.data.previews);
       }
 
       // video
-      if (this.data.type === 'v') {
+      if (this.data.type === 'v' && this.data.cover.jpg) {
         return this.data.cover.jpg;
       }
 
       // document
-      if (this.data.type === 'd') {
+      if (this.data.type === 'd' && this.data.thumbnail) {
         return this.data.thumbnail;
       }
 
