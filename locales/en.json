@@ -114,13 +114,15 @@
       "entriesSelected": "{type} selected"
     },
     "selectActivitiesPopUp": {
-      "noEntriesTitle": "No matching activities found",
-      "noEntriesSubtext": "Please adjust your search criteria.",
+      "noEntriesMatchTitle": "No matching activities found",
+      "noEntriesMatchSubtext": "Please adjust your search criteria.",
+      "noEntriesUserTitle": "No activities available",
+      "noEntriesUserSubtext": "Please use the search field to search through all activities available in Showroom or publish your activities in Portfolio.",
       "options": {
         "show": "Options",
         "hide": "Options"
       },
-      "search": "Search all Activities",
+      "search": "Enter text here to search through all activities in Showroom",
       "maxEntries": "Maximum Number Reached"
     },
     "sortBy": "Sort by",

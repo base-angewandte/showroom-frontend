@@ -145,8 +145,10 @@
           selectNone: $t('editView.selectOptionsText.selectNone'),
           entriesSelected: $t('editView.selectOptionsText.entriesSelected',
                               { type: $tc('activity', selectorSelectedEntries.length || 0) }),
-          noEntriesTitle: $t('editView.selectActivitiesPopUp.noEntriesTitle'),
-          noEntriesSubtext: $t('editView.selectActivitiesPopUp.noEntriesSubtext'),
+          noEntriesTitle: $t(`editView.selectActivitiesPopUp.noEntries${showNoMatchText
+            ? 'Match' : 'User'}Title`),
+          noEntriesSubtext: $t(`editView.selectActivitiesPopUp.noEntries${showNoMatchText
+            ? 'Match' : 'User'}Subtext`),
           search: $t('editView.selectActivitiesPopUp.search'),
           options: $t('editView.selectActivitiesPopUp.options'),
           maxEntriesReached: $t('editView.selectActivitiesPopUp.maxEntries'),
@@ -363,6 +365,11 @@ export default {
        * @type {number}
        */
       maxItems: 24,
+      /**
+       * need this variable to control text displayed in EntrySelector with
+       * no results
+       */
+      showNoMatchText: true,
     };
   },
   computed: {
@@ -628,6 +635,8 @@ export default {
           .map((selectedEntry) => selectedEntry.id) : [];
 
         const queryString = requestObject.query;
+        // set the variable that determines which text should be shown if no results
+        this.showNoMatchText = !!queryString;
         const requestBodyDefaults = {
           exclude: excludedEntries,
           sort: requestObject.sort.value,
