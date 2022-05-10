@@ -1,4 +1,6 @@
 /* eslint-disable no-shadow */
+import { checkForLabel, toTitleString } from '~/utils/common';
+
 const state = () => ({
   filters: [],
   entityFilters: {},
@@ -52,13 +54,17 @@ const actions = {
       const filteredData = parsedData
         // filter duplicate keywords
         .map((item) => {
+          let options = {};
           if (item.id === 'keyword') {
-            return {
-              ...item,
+            options = {
               options: [...new Map(item.options.map((item) => [item.id, item])).values()],
             };
           }
-          return item;
+          return {
+            ...item,
+            label: toTitleString(item.label),
+            ...options,
+          };
         });
 
       commit('setFilters', filteredData);
@@ -79,7 +85,9 @@ const actions = {
       // this is mainly if a cancelled request returns false as value
       // TODO: this seems not ideal
       if (entityFilterData) {
-        commit('setEntityFilters', { data: entityFilterData, id });
+        const entityFilterDataWithLabel = checkForLabel(entityFilterData);
+        commit('setEntityFilters', { data: entityFilterDataWithLabel, id });
+        return entityFilterDataWithLabel;
       }
       return entityFilterData;
     }
