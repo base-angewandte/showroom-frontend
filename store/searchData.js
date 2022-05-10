@@ -47,14 +47,22 @@ const actions = {
     }
     // else fetch them from backend
     const { data } = await this.$api.public.api_v1_filters_list();
-    if (data) {
-      const parsedData = JSON.parse(data);
-      // this is mainly if a cancelled request returns false as value
-      // TODO: this seems not ideal
-      if (parsedData) {
-        commit('setFilters', JSON.parse(data));
-      }
-      return JSON.parse(data);
+    const parsedData = JSON.parse(data);
+    if (parsedData) {
+      const filteredData = parsedData
+        // filter duplicate keywords
+        .map((item) => {
+          if (item.id === 'keyword') {
+            return {
+              ...item,
+              options: [...new Map(item.options.map((item) => [item.id, item])).values()],
+            };
+          }
+          return item;
+        });
+
+      commit('setFilters', filteredData);
+      return filteredData;
     }
     return [];
   },
