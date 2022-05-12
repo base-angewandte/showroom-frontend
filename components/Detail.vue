@@ -199,6 +199,7 @@
       v-if="data.entries && data.entries.media && data.entries.media.length"
       :entry-list="orderedMedia"
       :expand-text="$t('resultsView.expand')"
+      :initial-items-per-row="getItemsPerRow"
       :is-loading="isLoading"
       :jump-to-top="true"
       :max-rows="4"
@@ -252,8 +253,7 @@
           :max-rows="4"
           :initial-items-per-row="getItemsPerRow"
           :use-pagination-link-element="'nuxt-link'"
-          class="base-sr-row"
-          @items-per-row-changed="showFooter = true">
+          class="base-sr-row">
           <template #header>
             <h2 class="base-sr--ml-small">
               {{ $t(`detailView.linked_${index}`) }}
@@ -292,9 +292,9 @@
 
     <!-- owner, dates -->
     <div
-      v-if="showFooter && publishingInfo"
+      v-if="publishingInfo"
       class="base-sr-row base-sr-last-modified">
-      <p>
+      <div>
         <template
           v-if="publisher">
           {{ $t('detailView.publisher') }}:
@@ -327,7 +327,7 @@
           ${$t('detailView.editedDate')}: ${publishingInfo.date_updated
           || createHumanReadableDate(data.date_changed)}`
         }}
-      </p>
+      </div>
     </div>
 
     <!-- edit-mode-background -->
@@ -341,6 +341,11 @@
 import Vue from 'vue';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { mapGetters } from 'vuex';
+import {
+  hasData,
+  toTitleString,
+  titleCaseLabels,
+} from '~/utils/common';
 
 import {
   BaseButton,
@@ -370,11 +375,6 @@ import 'base-ui-components/dist/components/BaseMediaCarousel/BaseMediaCarousel.c
 import 'base-ui-components/dist/components/BaseTextList/BaseTextList.css';
 import 'base-ui-components/dist/components/BaseResultBoxSection/BaseResultBoxSection.css';
 import Search from '~/components/Search';
-
-import {
-  toTitleString,
-  titleCaseLabels,
-} from '~/utils/common';
 
 Vue.use(BaseButton);
 Vue.use(BaseCarousel);
@@ -510,11 +510,6 @@ export default {
        * @type {boolean}
        */
       userHasShowroomEntries: true,
-      /**
-       * variable necessary so footer is only rendered after initial calc of resultboxsection
-       * bo
-       */
-      showFooter: false,
     };
   },
   computed: {
@@ -591,6 +586,10 @@ export default {
     institution() {
       return this.publishingInfo.source_institution;
     },
+    entryHasLinked() {
+      return this.data.entries && this.data.entries.linked
+        && Object.values(this.data.entries.linked).some((linkedArray) => !!linkedArray.length);
+    },
   },
   watch: {
     editModeIsActive: {
@@ -645,8 +644,9 @@ export default {
           this.searchResults = results;
           // TODO: this only works with one result category - check if this needs improvement
           // (for entities there should be only one category always anyway so might be okay)
-          this.userHasShowroomEntries = !!this.appliedFiltersInt || !!this.appliedFiltersInt.length
-            || !!results.length || !!results[0].data || !!results[0].data.length;
+          this.userHasShowroomEntries = !!(this.appliedFiltersInt && this.appliedFiltersInt.length
+              && this.appliedFiltersInt.some((filter) => hasData(filter.filter_values)))
+            || !!(results.length && results[0].data && results[0].data.length);
           // move search ongoing assignment to here so request cancellation does
           // not cause loader to disappear
           this.searchOngoing = false;

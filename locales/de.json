@@ -114,13 +114,15 @@
       "entriesSelected": "{type} ausgewählt"
     },
     "selectActivitiesPopUp": {
-      "noEntriesTitle": "Keine passenden Aktivitäten gefunden",
-      "noEntriesSubtext": "Bitte passen Sie die Suchkriterien an.",
+      "noEntriesMatchTitle": "Keine passenden Aktivitäten gefunden",
+      "noEntriesMatchSubtext": "Bitte passen Sie die Suchkriterien an.",
+      "noEntriesUserTitle": "Keine Aktivitäten vorhanden",
+      "noEntriesUserSubtext": "Bitte verwenden Sie die Suche um alle Aktivitäten in Showroom zu durchsuchen oder veröffentlichen Sie Aktivitäten in Portfolio.",
       "options": {
         "show": "Optionen",
         "hide": "Optionen"
       },
-      "search": "Alle Aktivitiäten durchsuchen",
+      "search": "Text eingeben um alle Showroom Aktivitiäten durchsuchen",
       "maxEntries": "Maximale Anzahl erreicht"
     },
     "sortBy": "Sortieren nach",
