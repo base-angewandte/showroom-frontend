@@ -1,7 +1,7 @@
 let previousPage = '';
 
 export default ({ app }) => {
-  app.router.beforeEach((to, from) => {
+  app.router.beforeEach((to, from, next) => {
     // if ssr, do nothing
     if (!process.client) return;
 
@@ -17,6 +17,7 @@ export default ({ app }) => {
 
     // set new history to localStorage
     window.localStorage.setItem('history', JSON.stringify(history));
+    next();
   });
 
   app.router.afterEach((to, from) => {
