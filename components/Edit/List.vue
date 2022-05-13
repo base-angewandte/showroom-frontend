@@ -30,7 +30,9 @@
       :edit-hide-text="$t('editView.listItemHide')"
       :edit-show-text="$t('editView.listItemShow')"
       :disabled="saveRequestOngoing"
+      :expanded="expandedListItems"
       control-type="toggle"
+      @expanded-state="setExpandedState"
       @update:data="saveEdit">
       <template #content="{ data: slotListData }">
         <!-- if entry has a link use baseLink -->
@@ -169,6 +171,12 @@ export default {
        * @type {boolean}
        */
       saveRequestOngoing: false,
+      /**
+       * expanded state of list
+       * * @type {array}
+       */
+      expandedListItems: [],
+
     };
   },
   computed: {
@@ -221,6 +229,11 @@ export default {
         this.$emit('update:edit-mode', { name: 'list', editMode: val });
       }
     },
+  },
+  mounted() {
+    if (process.browser) {
+      this.expandedListItems = this.getExpandedState();
+    }
   },
   methods: {
     ...mapActions({
@@ -326,6 +339,47 @@ export default {
         return listItem;
       });
     },
+    /**
+     * get expanded list state of current page from sessionStorage
+     */
+    getExpandedState() {
+      const key = this.$route.path;
+      const history = JSON.parse(window.sessionStorage.getItem('history'));
+      return history
+      && history[key]
+      && history[key].list ? history[key].list : [];
+    },
+    /**
+     * set expanded list state to session storage
+     * @param {Array} state - expanded level, comma separated
+     */
+    setExpandedState(state) {
+      // if type is not person, do nothing
+      if (this.entityType !== 'person') return;
+
+      const key = this.$route.path;
+
+      // get current history from sessionStorage
+      const history = JSON.parse(window.sessionStorage.getItem('history')) || {};
+
+      // if state is set, store it to object
+      if (state.length) {
+        // if object does not exist, create it
+        if (!history[key]) {
+          history[key] = {};
+        }
+        // set value
+        history[key].list = state;
+      }
+      // otherwise remove it
+      if (!state.length && history[key]) {
+        delete history[key];
+      }
+
+      // set new history to sessionStorage
+      window.sessionStorage.setItem('history', JSON.stringify(history));
+    },
+
   },
 };
 </script>
