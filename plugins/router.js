@@ -5,23 +5,27 @@ export default ({ app }) => {
     // if ssr, do nothing
     if (!process.client) return;
 
-    const key = from.path;
-    const history = JSON.parse(window.localStorage.getItem('history')) || {};
+    const fromIsEntityPerson = !!from.path.match(/[\w-]+-[\w]+/gm);
 
-    // if object does not exist, create it
-    if (!history[key]) {
-      history[key] = {};
+    if (fromIsEntityPerson) {
+      const key = from.path;
+      const history = JSON.parse(window.sessionStorage.getItem('history')) || {};
+
+      // if object does not exist, create it
+      if (!history[key]) {
+        history[key] = {};
+      }
+      // set scroll y position to object
+      history[key].y = window.scrollY;
+
+      // set new history to sessionStorage
+      window.sessionStorage.setItem('history', JSON.stringify(history));
     }
-    // set scroll y position to object
-    history[key].y = window.scrollY;
 
-    // set new history to localStorage
-    window.localStorage.setItem('history', JSON.stringify(history));
     next();
   });
 
   app.router.afterEach((to, from) => {
-    console.log('here now');
     // if ssr, do nothing
     if (!process.browser) return;
 
@@ -29,7 +33,7 @@ export default ({ app }) => {
     if (to.path === previousPage) {
       // get history from current page
       const key = to.path;
-      const history = JSON.parse(window.localStorage.getItem('history'));
+      const history = JSON.parse(window.sessionStorage.getItem('history'));
 
       // get scroll y position
       const y = history
@@ -37,13 +41,13 @@ export default ({ app }) => {
       && history[key].y ? history[key].y : 0;
 
       // scroll to y position
-      setTimeout(() => {
-        window.scrollTo(0, y);
-      }, 100);
+      window.scrollTo(0, y);
 
       return;
     }
 
+    // TODO: when from entity person to a activity then it should stay on current scroll position
+    //       currently on an entity page it always scrolls to 0
     // otherwise scroll to top
     window.scrollTo(0, 0);
 
