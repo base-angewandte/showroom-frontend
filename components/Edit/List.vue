@@ -343,7 +343,7 @@ export default {
      * get expanded list state of current page from sessionStorage
      */
     getExpandedState() {
-      const key = this.$route.path;
+      const { key } = window.history.state;
       const history = JSON.parse(window.sessionStorage.getItem('history'));
       return history
       && history[key]
@@ -354,10 +354,8 @@ export default {
      * @param {Array} state - expanded level, comma separated
      */
     setExpandedState(state) {
-      // if type is not person, do nothing
-      if (this.entityType !== 'person') return;
-
-      const key = this.$route.path;
+      // get a unique identifier from the window history
+      const { key } = window.history.state;
 
       // get current history from sessionStorage
       const history = JSON.parse(window.sessionStorage.getItem('history')) || {};
