@@ -18,6 +18,7 @@ const state = () => ({
    * @type {number}
    */
   itemsPerRow: 2,
+  listState: {},
 });
 
 const getters = {
@@ -62,6 +63,12 @@ const getters = {
     return [];
   },
   getItemsPerRow: (state) => state.itemsPerRow,
+  getListStateItem: (state) => (id) => {
+    if (id && state.listState && state.listState[id]) {
+      return state.listState[id];
+    }
+    return [];
+  },
 };
 
 const mutations = {
@@ -82,6 +89,13 @@ const mutations = {
   },
   setItemsPerRow(state, data) {
     state.itemsPerRow = data;
+  },
+  setListState(state, { id, data }) {
+    if (data) {
+      state.listState[id] = data;
+    } else {
+      delete state.listState[id];
+    }
   },
 };
 

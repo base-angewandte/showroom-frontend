@@ -73,7 +73,7 @@
 <script>
 import Vue from 'vue';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import {
   BaseEditControl,
   BaseExpandList,
@@ -180,6 +180,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      getListStateItem: 'appData/getListStateItem',
+    }),
     /**
      * the actual data used in BaseExpandList component depending on view or edit mode
      */
@@ -202,6 +205,15 @@ export default {
         // add count property for correct bracket number
         return this.addItemCount(data);
       },
+    },
+    historyStateKey() {
+      if (process.browser) {
+        return window.history.state.key;
+      }
+      return null;
+    },
+    getExpandedState() {
+      return this.getListStateItem(this.historyStateKey);
     },
   },
   watch: {
@@ -232,10 +244,13 @@ export default {
   },
   mounted() {
     if (process.browser) {
-      this.expandedListItems = this.getExpandedState();
+      this.expandedListItems = this.getExpandedState;
     }
   },
   methods: {
+    ...mapMutations({
+      setListState: 'appData/setListState',
+    }),
     ...mapActions({
       fetchEditData: 'editData/fetchEditData',
       saveEditData: 'editData/saveEditData',
@@ -340,44 +355,23 @@ export default {
       });
     },
     /**
-     * get expanded list state of current page from sessionStorage
-     */
-    getExpandedState() {
-      const { key } = window.history.state;
-      const history = JSON.parse(window.sessionStorage.getItem('history'));
-      return history
-      && history[key]
-      && history[key].list ? history[key].list : [];
-    },
-    /**
-     * set expanded list state to session storage
+     * save expanded list state to store
+     * TODO: it would actually be enough to save it before component is destroyed?
      * @param {Array} state - expanded level, comma separated
      */
     setExpandedState(state) {
-      // get a unique identifier from the window history
-      const { key } = window.history.state;
-
-      // get current history from sessionStorage
-      const history = JSON.parse(window.sessionStorage.getItem('history')) || {};
-
       // if state is set, store it to object
       if (state.length) {
-        // if object does not exist, create it
-        if (!history[key]) {
-          history[key] = {};
-        }
-        // set value
-        history[key].list = state;
+        this.setListState({
+          id: this.historyStateKey,
+          data: state,
+        });
       }
       // otherwise remove it
-      if (!state.length && history[key]) {
-        delete history[key];
+      if (!state.length && this.getExpandedState) {
+        this.setListState({ id: this.historyStateKey, data: null });
       }
-
-      // set new history to sessionStorage
-      window.sessionStorage.setItem('history', JSON.stringify(history));
     },
-
   },
 };
 </script>
