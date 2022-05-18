@@ -49,5 +49,22 @@ export function createRouter() {
         component: ActivityView,
       },
     ],
+    scrollBehavior(to, from, savedPosition) {
+      // use a promise to delay the scrolling until page transition has finished
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          // check if saved position was provided (=this will only be the case if
+          // popstate event was triggered)
+          if (savedPosition) {
+            resolve(savedPosition);
+          } else {
+            // else return to page top
+            resolve({ x: 0, y: 0 });
+          }
+          // if it should be scrolled to a certain place delay the scroll
+          // to give page a chance to render completely first
+        }, savedPosition ? 500 : 250);
+      });
+    },
   });
 }
