@@ -294,11 +294,17 @@ export default {
      *
      * @param {Object} component - { name: 'componentName', editMode: boolean }
      */
-    editModeHandler(component) {
+    editModeHandler({ name, editMode }) {
       // close all edit sections
       this.editMode = Object.fromEntries(Object.keys(this.editMode).map((key) => [key, false]));
       // set edit-mode for current object
-      this.editMode[component.name] = component.editMode;
+      this.editMode[name] = editMode;
+      // if edit mode is done refetch initial data to avoid problems with history.back() that
+      // would use initialData that are not updated after edit!
+      if (name === 'showcase' && !editMode) {
+        const entryNumber = this.$store.getters['appData/getItemsPerRow'] * process.env.searchResultRows;
+        this.$store.dispatch('appData/fetchInitialData', { limit: entryNumber });
+      }
     },
     /**
      * animation fade after leave
