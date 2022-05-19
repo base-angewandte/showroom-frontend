@@ -128,7 +128,7 @@ export default {
     // save the filters from initial request in a variable so they are available
     // when changing pages
     // TODO: this only works with one result category for now!!
-    initialSearchData() {
+    initialSearchFilterData() {
       // TODO: this is just a temporary fix working only with one result category!
       const data = this.getInitialData;
       if (data && data.results && data.results[0] && data.results[0].search) {
@@ -226,7 +226,7 @@ export default {
           if (!hasFilters) {
             payload = {
               ...requestBody,
-              ...this.initialSearchData,
+              ...this.initialSearchFilterData,
             };
           }
           // now make the search request

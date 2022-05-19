@@ -123,8 +123,6 @@
         :style="featuredMediaHeight"
         class="base-sr-row base-sr-head__media base-sr-featured-media
                base-sr-featured-media__profile-image">
-        <!-- TODO: this is just a placeholder - add properly styled user
-        add image elements and info! -->
         <base-icon
           name="camera"
           class="base-sr-featured-media__profile-image__icon" />
@@ -642,11 +640,12 @@ export default {
         // TODO: check if there is better solution to handle requestCancellation
         if (results) {
           this.searchResults = results;
-          // TODO: this only works with one result category - check if this needs improvement
-          // (for entities there should be only one category always anyway so might be okay)
+          // from search results determine if search component of entities should be visible
+          // yes if: a) user is owner of page or b) entity has activities
           this.userHasShowroomEntries = !!(this.appliedFiltersInt && this.appliedFiltersInt.length
-              && this.appliedFiltersInt.some((filter) => hasData(filter.filter_values)))
-            || !!(results.length && results[0].data && results[0].data.length);
+            && this.appliedFiltersInt.some((filter) => hasData(filter.filter_values)))
+            || !!(results.length && results
+              .some((category) => category.data && category.data.length));
           // move search ongoing assignment to here so request cancellation does
           // not cause loader to disappear
           this.searchOngoing = false;

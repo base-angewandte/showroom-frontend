@@ -356,7 +356,6 @@ export default {
     },
     /**
      * save expanded list state to store
-     * TODO: it would actually be enough to save it before component is destroyed?
      * @param {Array} state - expanded level, comma separated
      */
     setExpandedState(state) {

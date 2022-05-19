@@ -142,6 +142,22 @@
  * @property {Object[]|string[]|string|Object} [filter_values] - the values a filter contains - only
  *  relevant for applied filters, not for filters coming from backend presented in the drop down
  */
+
+/**
+ * @typedef ResultListItem
+ * @property {string} id - the result item id
+ * @property {string} type - the type of the result item (e.g. 'activity', 'person')
+ * @property {string} title - the title of the result item
+ * @property {string} subtitle - the result item second line of text after title
+ * @property {string} description - text line displayed at the bottom of result box
+ *  (e.g. contains type of actvitiy)
+ * @property {string[]} alternative_text - array with text that is displayed when there
+ *  is no image available
+ * @property {string} image_url - url for the image displayed in result box
+ * @property {Object} source_institution - source repository object incl. label and url
+ *  (and icon in theory)
+ *
+ */
 import Vue from 'vue';
 import {
   BaseAdvancedSearch,
@@ -166,10 +182,7 @@ export default {
     /**
      * @property {string} label - the label to display for the section
      * @property {number} total - total number of results available
-     * @property {Object[]} data - the actual search results
-     * @property {string} data.id - the activity id
-     * @property {string} data.title - the title of the activity
-     * // TODO: there seem to be some inconsistencies between API spec mock data --> clarify!
+     * @property {ResultListItem[]} data - the actual search results
      */
     resultList: {
       type: Array,
@@ -245,20 +258,29 @@ export default {
       /**
        * store data returned from a search request and pass on to
        * BaseResultBoxSection
-       * @type {Object[]}
-       * @property {string} label - the label to display for the section
-       * @property {number} total - total number of results available
-       * @property {Object[]} data - the actual search results
-       * @property {string} data.id - the activity id
-       * @property {string} data.title - the title of the activity
-       * // TODO: there seem to be some inconsistencies between API spec mock data --> clarify!
+       * @type {ResultListItem[]}
        */
       resultListInt: [],
+      /**
+       * variable to determine if showcase should be shown
+       * @type {boolean}
+       */
       initialRenderDone: false,
+      /**
+       * store autocomplete timeout in a variable to be able to cancel and reset
+       * if necessary
+       * @type {?number}
+       */
       autocompleteTimeout: null,
+      /**
+       * for internal handling of current page number for BasePagination
+       */
       currentPageNumberInt: 1,
+      /**
+       * the currently applied filters
+       * @type {Filter[]}
+       */
       appliedFiltersInt: [],
-      originalRequestFilters: [],
     };
   },
   computed: {
@@ -382,6 +404,10 @@ export default {
       immediate: true,
     },
     resultList: {
+      /**
+       * watch prop resultList to update internal variable if necessary
+       * @param {ResultListItem[]} val - the value provided by parent
+       */
       handler(val) {
         if (JSON.stringify(val) !== JSON.stringify(this.resultListInt)) {
           this.resultListInt = JSON.parse(JSON.stringify(val));
@@ -389,6 +415,10 @@ export default {
       },
       immediate: true,
     },
+    /**
+     * watch internal resultListInt to notify parent of changes if necessary
+     * @param {ResultListItem[]} val - the new internal value
+     */
     resultListInt(val) {
       if (JSON.stringify(val) !== JSON.stringify(this.resultList)) {
         this.$emit('update:result-list', val);
