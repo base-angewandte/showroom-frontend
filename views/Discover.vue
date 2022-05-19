@@ -303,7 +303,7 @@ export default {
       // would use initialData that are not updated after edit!
       if (name === 'showcase' && !editMode) {
         const entryNumber = this.$store.getters['appData/getItemsPerRow'] * process.env.searchResultRows;
-        this.$store.dispatch('appData/fetchInitialData', { limit: entryNumber });
+        this.$store.dispatch('appData/fetchInitialData', { limit: entryNumber, forceFetch: true });
       }
     },
     /**
