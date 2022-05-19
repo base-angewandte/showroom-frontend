@@ -125,14 +125,17 @@ const actions = {
    * @param getters
    * @param commit
    * @param {number} [limit=100] - a limit applied to the initial request
+   * @param {boolean} [forceFetch=false] - determine if request should be sent rather than take
+   *  data already available
    * @returns {Promise<boolean|*[]>}
    */
-  async fetchInitialData({ getters, commit }, { limit = 100 }) {
+  async fetchInitialData({ getters, commit }, { limit = 100, forceFetch = false }) {
     // get the data already in the store if there are any
     const storedInitialData = getters.getInitialData;
     // check if data are here and if these data have results, and if so if the results length
     // covers the set limit
-    if (storedInitialData && storedInitialData.results && storedInitialData.results.length
+    if (!forceFetch && storedInitialData && storedInitialData.results
+      && storedInitialData.results.length
       && storedInitialData.results[0].data.length >= limit) {
       return storedInitialData.results;
     }
