@@ -726,8 +726,10 @@ export default {
         // video
         if (item.type === 'v') {
           obj = {
-            mediaPosterUrl: item.poster,
+            mediaPosterUrl: process.env.backendBaseUrl + item.poster,
             mediaUrl: item.playlist,
+            displaySize: { 'max-width': '1200px', width: '100%' },
+            hlsStartLevel: 2,
           };
         }
 
