@@ -4,13 +4,25 @@ import { toTitleString } from '~/utils/common';
  * generate generic meta tag
  * @param {String} hid - unique
  * @param {String} content - content to add
- * @returns {{hid, name, content}}
+ * @param {Boolean} property - use attribute property instead of name
+ * @returns {{hid, content}}
  */
-export const metaTag = (hid, content) => ({
-  hid,
-  name: hid,
-  content,
-});
+export const metaTag = (hid, content, property = false) => {
+  const obj = {
+    hid,
+    content,
+  };
+
+  if (!property) {
+    obj.name = hid;
+  }
+
+  if (property) {
+    obj.property = hid;
+  }
+
+  return obj;
+};
 
 /**
  * generate rel alternate and canonical tags
@@ -146,9 +158,9 @@ export const metaImages = (data) => {
     // get with of image
     const width = parseInt(key, 10);
     // define related meta image tag objects
-    images.push(metaTag('og:image', url));
-    images.push(metaTag('og:image:type', obj.mime_type));
-    images.push(metaTag('og:image:width', width));
+    images.push(metaTag('og:image', url, true));
+    images.push(metaTag('og:image:type', obj.mime_type, true));
+    images.push(metaTag('og:image:width', width, true));
   }
   return images;
 };
@@ -165,9 +177,9 @@ export const metaImages = (data) => {
 export const meta = (data, currentLang, routerPath) => {
   let tags = [];
   tags.push(metaTag('description', metaDescription(data, currentLang)));
-  tags.push(metaTag('og:title', metaTitle(data)));
-  tags.push(metaTag('og:description', metaDescription(data, currentLang)));
-  tags.push(metaTag('og:url', `${process.env.appBaseUrl}${process.env.appPrefix}/${currentLang}${routerPath}`));
+  tags.push(metaTag('og:title', metaTitle(data), true));
+  tags.push(metaTag('og:description', metaDescription(data, currentLang), true));
+  tags.push(metaTag('og:url', `${process.env.appBaseUrl}${process.env.appPrefix}/${currentLang}${routerPath}`, true));
   // og:image
   if (metaImages(data)) {
     tags = tags.concat(metaImages(data));
