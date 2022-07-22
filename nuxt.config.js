@@ -77,6 +77,7 @@ export default {
     userPreferencesUrl: process.env.USER_PREFERENCES_URL,
     authRequired: JSON.parse(process.env.AUTH_REQUIRED),
     searchResultRows: JSON.parse(process.env.SEARCH_RESULT_ROWS),
+    baseIcons: `${process.env.BASE_UI_ICONS}?${Date.now().toString()}`
   },
   /*
   ** Plugins to load before mounting the App

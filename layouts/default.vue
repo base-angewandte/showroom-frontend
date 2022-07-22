@@ -8,6 +8,7 @@
       :profile.prop="profile"
       :urls.prop="urls" />
     <BaseNotification />
+    <script>var base_ui_icons = {{ baseIconsPath }}</script>
     <main class="main">
       <nuxt />
     </main>
@@ -68,6 +69,9 @@ export default {
     },
     routerPath() {
       return this.$route.path;
+    },
+    baseIconsPath() {
+      return process.env.baseIcons;
     },
   },
 };

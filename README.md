@@ -73,6 +73,7 @@ Following variables in the `.env` file contained in project folder can be define
 | USER_PREFERENCES_URL        | url where the user preferences app is located                                       |
 | AUTH_REQUIRED               | set true for users to be redirected to login page if not authenticated                                       |
 | USER_PREFERENCES_URL        | define how many rows of search results should be displayed                                       |
+| BASE_UI_ICONS               | url to icons spriteSheet (base-ui-icons.svg)                                        |
 
 Following `.env` variable get updated during project start up - so no need to set up!
 
