@@ -916,10 +916,12 @@ export default {
 
       &__icon {
         width: $icon-large;
+        height: $icon-large;
         margin-bottom: $spacing-small;
 
         @media screen and (min-width: $breakpoint-small) {
           width: $icon-large * 2;
+          height: $icon-large * 2;
         }
       }
 
