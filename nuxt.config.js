@@ -2,6 +2,9 @@
 require('dotenv').config({ path: './.env' });
 const resolve = require('path').resolve;
 const settings = require('./config/settings.js').default;
+// eslint-disable-next-line import/no-extraneous-dependencies
+const webpack = require('webpack');
+const __CACHE_HASH__ = Date.now().toString();
 
 export default {
   /*
@@ -30,7 +33,15 @@ export default {
     ],
     script: [
       { src: `${process.env.HEADER}`, body: true },
+      {
+        hid: 'base-ui-icons-var',
+        type: 'application/javascript',
+        innerHTML: `var base_ui_icons = "${process.env.BASE_UI_ICONS}?${__CACHE_HASH__}"`,
+      }
     ],
+    __dangerouslyDisableSanitizersByTagID: {
+      'base-ui-icons-var': ['innerHTML']
+    },
   },
   router: {
     base: `${process.env.APP_PREFIX}/`,
@@ -77,7 +88,7 @@ export default {
     userPreferencesUrl: process.env.USER_PREFERENCES_URL,
     authRequired: JSON.parse(process.env.AUTH_REQUIRED),
     searchResultRows: JSON.parse(process.env.SEARCH_RESULT_ROWS),
-    baseIcons: `${process.env.BASE_UI_ICONS}?${Date.now().toString()}`
+    baseIcons: `${process.env.BASE_UI_ICONS}?${__CACHE_HASH__}`
   },
   /*
   ** Plugins to load before mounting the App
