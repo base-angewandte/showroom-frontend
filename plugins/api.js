@@ -38,9 +38,7 @@ export default async ({
           if (cancelRequest[cancelId]) {
             cancelRequest[cancelId]('new request started');
           }
-
-          // eslint-disable-next-line no-param-reassign
-          req.headers = { 'Accept-Language': store.state.appData.locale };
+          $axios.setHeader('Accept-Language', store.state.appData.locale);
           const data = req.body ? JSON.parse(req.body) : {};
           const axiosRequest = {
             ...req,
