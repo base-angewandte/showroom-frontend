@@ -55,7 +55,10 @@ export default async ({
           try {
             const axiosResponse = await $axios(axiosRequest);
 
-            if (axiosResponse.data) {
+            // needed to exclude redirect responses since this is throwing an error
+            // with the swagger-client module (however this is redirected manually in
+            // axios.js file anyway)
+            if (axiosResponse.data && axiosResponse.status < 300) {
               return new Response(JSON.stringify(axiosResponse.data), {
                 status: axiosResponse.status,
                 headers: axiosResponse.headers,

@@ -8,10 +8,12 @@ export default ({
     if (isDev) {
       console.log(`Making request to ${config.url}`);
     }
-    // TODO: either add this somewhere else or find a more specific condition just
-    // for /users and /activities route to add this
-    // add special handling for person and object routes concerning redirect
-    if (!config.url.includes('filters')) {
+    // create a regex to match entities
+    const regex = /[\w-]+-[\w]+\/?$/;
+    const personMatch = config.url.match(regex);
+    // add special handling for /entity request concerning redirect to short UUID
+    // TODO: eventually also match activities
+    if (personMatch) {
       // eslint-disable-next-line no-param-reassign
       config.maxRedirects = 0;
       // eslint-disable-next-line no-param-reassign
@@ -23,8 +25,9 @@ export default ({
     const { status } = response;
     if (status >= 300 && status < 400) {
       if (response && response.data) {
-        // TODO: see if this can be improved or backend to only return new id not full route
-        redirect(response.data.to.split('/')[4]);
+        const regex = /\/([\w-]+-[\w]+\/?)$/;
+        const personMatch = response.data.to.match(regex);
+        redirect(personMatch[1]);
       }
     }
   });
