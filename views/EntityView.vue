@@ -103,9 +103,6 @@ export default {
      */
     ...mapGetters({
       lang: 'appData/getLocale',
-      /**
-       * a list of all filters defined in the backend and available to the user
-       */
       userId: 'appData/getUserId',
       userEditPermissions: 'appData/getUserEditPermissions',
     }),
@@ -122,8 +119,7 @@ export default {
      */
     userCanEdit() {
       return !!this.entryId.includes(this.userId)
-        || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId))
-        || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId.split('-').pop()));
+        || (this.userEditPermissions && this.userEditPermissions.includes(this.entryId));
     },
   },
   methods: {
