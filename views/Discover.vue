@@ -158,10 +158,8 @@ export default {
      * @returns {boolean}
      */
     userCanEdit() {
-      // get the id without name prefix
-      const institutionId = process.env.institutionId.split('-').pop();
       return !!this.userEditPermissions && !!this.userEditPermissions.length
-        && this.userEditPermissions.includes(institutionId);
+        && this.userEditPermissions.includes(process.env.institutionId);
     },
     /**
      * check if some edit-mode is active
