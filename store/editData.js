@@ -53,7 +53,7 @@ const actions = {
     });
     if (response.data) {
       const values = JSON.parse(response.data);
-      commit('setEditDataItem', { type, values: checkForLabel(values[type] || values), id });
+      commit('setEditDataItem', { type, values: checkForLabel(values[type] || values, this.getters['appData/getLocale']), id });
       return values[type] || values;
     }
     throw new Error('no data');
@@ -87,7 +87,7 @@ const actions = {
       // if so parse the data
       const updatedData = JSON.parse(response.data);
       // and return them
-      return checkForLabel(updatedData[type] || updatedData);
+      return checkForLabel(updatedData[type] || updatedData, this.getters['appData/getLocale']);
     }
     // if not throw an error
     throw new Error('no data');

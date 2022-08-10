@@ -69,7 +69,7 @@
     },
     "noResultsHeading": "No results found.",
     "noResultsText": "No results were found with the specified search criteria.\nPlease adjust your search.",
-    "noResultsInitial": "No Data for Display Available.",
+    "noResultsInitial": "no data available for display",
     "changeChipsText": "Change the text of the selected option"
   },
   "resultsView": {

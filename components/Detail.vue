@@ -66,7 +66,7 @@
         <BaseTextList
           v-if="data.primary_details && data.primary_details.length"
           render-label-as="h2"
-          :data="titleCaseLabels(data.primary_details)"
+          :data="titleCaseLabels(data.primary_details, lang)"
           class="base-sr-head__text-list" />
 
         <!-- action links: eg. print, sharing, subscribe -->
@@ -91,7 +91,7 @@
           && data.secondary_details[0].data.length)
           || userCanEdit"
         ref="secondary_details"
-        :data="titleCaseLabels(data.secondary_details)"
+        :data="titleCaseLabels(data.secondary_details, lang)"
         :entity-type="type"
         :user-can-edit="userCanEdit"
         :edit-mode="editMode.secondary_details"
@@ -148,7 +148,7 @@
     <List
       v-if="(data.list && data.list.length) || userCanEdit"
       ref="list"
-      :data="titleCaseLabels(data.list)"
+      :data="titleCaseLabels(data.list, this.lang)"
       :edit-mode="editMode.list"
       :entity-type="type"
       :user-can-edit="userCanEdit"

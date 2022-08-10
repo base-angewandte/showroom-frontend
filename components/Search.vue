@@ -601,7 +601,7 @@ export default {
      * @returns {string} - the title cased string
      */
     titleCase(string) {
-      return toTitleString(string);
+      return toTitleString(string, this.$i18n.locale);
     },
     parseUrlForSearch(to, from) {
       // variable to indicate if search should be triggered in the end

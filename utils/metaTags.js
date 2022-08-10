@@ -99,7 +99,7 @@ export const metaDescription = (data, currentLang) => {
       const group = [];
 
       // eslint-disable-next-line no-use-before-define
-      group.push(toTitleString(elem.label[currentLang] || elem.label));
+      group.push(toTitleString(elem.label[currentLang] || elem.label), currentLang);
 
       // data: string
       if (elem.data && typeof elem.data === 'string') {

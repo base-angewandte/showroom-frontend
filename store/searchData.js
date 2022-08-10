@@ -62,7 +62,7 @@ const actions = {
           }
           return {
             ...item,
-            label: toTitleString(item.label),
+            label: toTitleString(item.label, this.getters['appData/getLocale']),
             ...options,
           };
         });
@@ -85,7 +85,7 @@ const actions = {
       // this is mainly if a cancelled request returns false as value
       // TODO: this seems not ideal
       if (entityFilterData) {
-        const entityFilterDataWithLabel = checkForLabel(entityFilterData);
+        const entityFilterDataWithLabel = checkForLabel(entityFilterData, this.getters['appData/getLocale']);
         commit('setEntityFilters', { data: entityFilterDataWithLabel, id });
         return entityFilterDataWithLabel;
       }

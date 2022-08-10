@@ -1,12 +1,10 @@
 import Vue from 'vue';
-// eslint-disable-next-line
-import i18n from '@/plugins/i18n';
 
 export const toTitleString = (string = '', language) => {
   if (!string) {
     return '';
   }
-  const functionLang = language || i18n.locale || 'en';
+  const functionLang = language || 'en';
   const sentenceIndicators = /[.!?:]$/;
   const enTitleCasing = process.env.EN_TITLE_CASING || process.env.enTitleCasing;
   if (enTitleCasing && functionLang === 'en'
@@ -68,27 +66,28 @@ export const toTitleString = (string = '', language) => {
  *    label: 'Label to title case'),
  *  },
  *  could also be several objects wrapped in an array
+ *  @param {string} lang - ISO 639-1 language string
  * @returns {Object} - the same object with en label string title cased
  */
-export const checkForLabel = (value) => {
+export const checkForLabel = (value, lang) => {
   let newValue = value;
   // check if value is array or object
   if (newValue && typeof value === 'object') {
     // check if value is array
     if (newValue.length) {
       // if yes - go through every single item
-      newValue = newValue.map((entry) => checkForLabel(entry));
+      newValue = newValue.map((entry) => checkForLabel(entry, lang));
       // else check if there the object has properties
     } else if (Object.keys(newValue).length) {
       // check if these properties include a label and if the label object has an 'en' property
       if (Object.keys(newValue).includes('label')) {
-        Vue.set(newValue, 'label', toTitleString(newValue.label));
+        Vue.set(newValue, 'label', toTitleString(newValue.label, lang));
       }
       // also check if there are deeper nested object properties that need translation (e.g. roles)
       newValue = Object.entries(newValue)
         .reduce((prev, [propKey, propValue]) => ({
           ...prev,
-          ...{ [propKey]: checkForLabel(propValue) },
+          ...{ [propKey]: checkForLabel(propValue, lang) },
         }), {});
     }
   }
@@ -121,14 +120,15 @@ export const hasData = (fieldValues) => {
  * function to walk through object array and title case values with key 'label'
  *
  * @param {Array} data - data array
+ * @param {string} lang - ISO 639-1 language string
  * @returns {Array} - modified data array
  */
-export const titleCaseLabels = (data) => {
+export const titleCaseLabels = (data, lang) => {
   if (data) {
     return Object.values(
       Object.entries(data)
         .reduce((prev, [key, value]) => {
-          const newVal = checkForLabel(value);
+          const newVal = checkForLabel(value, lang);
           return { ...prev, ...{ [key]: newVal } };
         }, {}),
     );
