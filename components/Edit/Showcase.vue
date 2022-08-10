@@ -648,7 +648,7 @@ export default {
           this.$set(optionalParams, 'q', queryString);
         } else {
           const id = this.$route.params.id || process.env.institutionId;
-          this.$set(optionalParams, 'entity_id', id.split('-').pop());
+          this.$set(optionalParams, 'entity_id', id);
         }
 
         const response = await this.$api.public.api_v1_showcase_search_create({}, {
