@@ -188,6 +188,8 @@
           :locations="data.locations.filter((location) => !!location.coordinates)"
           :options="mapOptions"
           :tile-layer-service="mapTileLayerService"
+          :zoom="14"
+          :max-zoom="14"
           :url="mapUrl" />
       </base-expand-box>
     </div>
