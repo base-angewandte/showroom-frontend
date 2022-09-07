@@ -800,7 +800,7 @@ export default {
         // needed for correct saving to db
         type: entry.showcase_type,
         // needed for the correct link
-        href: entry.id,
+        href: `/${entry.id}/`,
         // needed for correct image display
         imageUrl: entry.previews && entry.previews.length
           ? Object.values(entry.previews[0])[0] : entry.image_url || '',
