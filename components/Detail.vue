@@ -267,7 +267,7 @@
               :description="item.description"
               :image-url="item.image_url"
               :lazyload="true"
-              :link-to="item.id"
+              :link-to="`/${item.id}/`"
               render-element-as="nuxt-link" />
           </template>
         </BaseResultBoxSection>
