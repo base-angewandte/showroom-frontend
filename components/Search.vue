@@ -70,6 +70,7 @@
             :max-rows="maxRows"
             :use-pagination-link-element="'nuxt-link'"
             :scroll-to-offset="55 + 16"
+            :disable-list-element-focus="true"
             class="showroom-search__results"
             @items-per-row-changed="setItemsPerRow($event)">
             <template #header>
@@ -87,7 +88,7 @@
                 :subtext="item.subtitle"
                 :description="item.description"
                 :image-url="item.image_url"
-                :link-to="item.id"
+                :link-to="`/${item.id}/`"
                 :box-text="item.alternative_text"
                 :lazyload="true"
                 render-element-as="nuxt-link" />
