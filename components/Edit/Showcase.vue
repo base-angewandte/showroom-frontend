@@ -78,6 +78,13 @@
       }"
       :show-options="true"
       :show-action-button-box="true"
+      :supportive-text="{
+        description: $t('editView.showCaseSupportiveText.description',
+                        { number: remainingSelectorEntryNumber }),
+        activated: $t('editView.showCaseSupportiveText.activated', { pos: '{pos}' }),
+        moved: $t('editView.showCaseSupportiveText.moved', { pos: '{pos}', total: '{total}' }),
+      }"
+      :header-text="title"
       class="base-sr-showcase-edit"
       @submit-action="actionHandler"
       @entries-changed="actionHandler('sort', $event)">

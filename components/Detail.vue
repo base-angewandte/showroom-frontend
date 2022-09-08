@@ -148,7 +148,7 @@
     <List
       v-if="(data.list && data.list.length) || userCanEdit"
       ref="list"
-      :data="titleCaseLabels(data.list, this.lang)"
+      :data="titleCaseLabels(data.list, lang)"
       :edit-mode="editMode.list"
       :entity-type="type"
       :user-can-edit="userCanEdit"
@@ -208,7 +208,9 @@
       :show-options="false"
       :use-expand-mode="true"
       :use-pagination="true"
-      class="base-sr-row">
+      :header-text="$t('detailView.associatedMediaFiles')"
+      class="base-sr-row"
+      @entry-clicked="previewMedia(data.entries.media, $event)">
       <template #header>
         <h2 class="base-sr--ml-small">
           {{ $t('detailView.associatedMediaFiles') }}
@@ -253,6 +255,8 @@
           :max-rows="4"
           :initial-items-per-row="getItemsPerRow"
           :use-pagination-link-element="'nuxt-link'"
+          :disable-list-element-focus="true"
+          :header-text="$t(`detailView.linked_${index}`)"
           class="base-sr-row">
           <template #header>
             <h2 class="base-sr--ml-small">

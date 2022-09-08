@@ -144,7 +144,12 @@
       "hide": "Fertig"
     },
     "placeholderTitle": "Ihr Eintrag hier",
-    "placeholderSubtext": "Fügen Sie Aktivitäten hinzu um zu beginnen."
+    "placeholderSubtext": "Fügen Sie Aktivitäten hinzu um zu beginnen.",
+    "showCaseSupportiveText": {
+      "description": "Wählen Sie Einträge mittels Leertaste aus um Aktionen durchzuführen oder mittels Enter Taste um einen Eintrag verschieben zu können. Navigieren Sie mittels Tab Taste zwischen den Einträgen. Es können noch {number} Aktivitäten hinzugefügt werden.",
+      "activated": "Eintrag auf Position {pos} zum Verschieben ausgewählt. Verwenden Sie die Pfeiltasten um den Eintrag zu verschieben.",
+      "moved": "Eintrag auf Position {pos} von {total} verschoben."
+    }
   },
   "notify": {
     "searchError": "Suche fehlgeschlagen",

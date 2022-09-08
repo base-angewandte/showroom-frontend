@@ -144,7 +144,12 @@
       "hide": "Done"
     },
     "placeholderTitle": "This could be your entry",
-    "placeholderSubtext": "Add activities to start."
+    "placeholderSubtext": "Add activities to start.",
+    "showCaseSupportiveText": {
+      "description": "Select items via space bar to carry out actions or use enter key to select an item for reordering. Use Tab key to navigate between items. You may add {number} more items to your Showcase.",
+      "activated": "Item at position {pos} selected for reordering. Use arrow keys to order item.",
+      "moved": "Item moved to position {pos} of {total}."
+    }
   },
   "notify": {
     "searchError": "Search failed",
